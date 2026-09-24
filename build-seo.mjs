@@ -50,6 +50,7 @@ function hashOf(...segments) {
 const V = {
   catalog: hashOf('assets', 'js', 'catalog.js'),
   layout: hashOf('assets', 'js', 'layout.js'),
+  cities: hashOf('assets', 'js', 'cities.js'),
   css: hashOf('assets', 'css', 'main.css')
 };
 
@@ -59,6 +60,7 @@ function versionAssets(html) {
   return html
     .replace(/((?:\.\.\/)?assets\/js\/catalog\.js)(\?v=[0-9a-f]+)?/g, (m, p) => `${p}?v=${V.catalog}`)
     .replace(/((?:\.\.\/)?assets\/js\/layout\.js)(\?v=[0-9a-f]+)?/g, (m, p) => `${p}?v=${V.layout}`)
+    .replace(/((?:\.\.\/)?assets\/js\/cities\.js)(\?v=[0-9a-f]+)?/g, (m, p) => `${p}?v=${V.cities}`)
     .replace(/((?:\.\.\/)?assets\/css\/main\.css)(\?v=[0-9a-f]+)?/g, (m, p) => `${p}?v=${V.css}`);
 }
 
@@ -161,7 +163,10 @@ const sitemapEntries = [];
 /* ---------- 首頁 ---------- */
 {
   const file = join(ROOT, 'index.html');
-  const html = readFileSync(file, 'utf8');
+  /* 首頁文案裡寫死的工具數量會過時，每次建置直接對齊 catalog 的實際筆數。
+     只換「N 種免費線上」這個固定句型，不會誤傷其他數字。 */
+  const html = readFileSync(file, 'utf8')
+    .replace(/\d+(?= 種免費線上)/g, String(TOOLS.length));
   const title = extractTag(html, 'title');
   const desc = extractMeta(html, 'description');
   const url = `${ORIGIN}/`;

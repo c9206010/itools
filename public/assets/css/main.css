@@ -25,6 +25,9 @@
   --warn: #b8860b;
   --danger: #c0392b;
 
+  --sky-wash: rgba(30, 77, 92, .055);
+  --tag-line: rgba(30, 77, 92, .30);
+
   --radius: 12px;
   --radius-sm: 8px;
   --radius-lg: 18px;
@@ -63,6 +66,9 @@
     --warn: #dfb45b;
     --danger: #ef7a6c;
 
+    --sky-wash: rgba(127, 196, 216, .05);
+    --tag-line: rgba(127, 196, 216, .28);
+
     --shadow-1: 0 1px 2px rgba(0, 0, 0, .3);
     --shadow-2: 0 4px 14px rgba(0, 0, 0, .35);
     --shadow-3: 0 12px 32px rgba(0, 0, 0, .45);
@@ -90,6 +96,9 @@
   --ok: #6ec48e;
   --warn: #dfb45b;
   --danger: #ef7a6c;
+
+  --sky-wash: rgba(127, 196, 216, .05);
+  --tag-line: rgba(127, 196, 216, .28);
 
   --shadow-1: 0 1px 2px rgba(0, 0, 0, .3);
   --shadow-2: 0 4px 14px rgba(0, 0, 0, .35);
@@ -544,4 +553,101 @@ table.data th { color: var(--ink-2); font-weight: 600; background: var(--surface
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
   html { scroll-behavior: auto; }
+}
+
+/* ==========================================================================
+   旅行感的細節
+   原則：只加裝飾，不動版面尺寸。所有顏色都走既有色票，深淺色模式一起生效。
+   ========================================================================== */
+
+/* 頁面頂端一層極淡的天空色。放在 z-index -1，壓在內容底下但蓋過底色 */
+html { background: var(--bg); }
+body::before {
+  content: '';
+  position: fixed; inset: 0 0 auto 0; height: 420px; z-index: -1;
+  background: radial-gradient(120% 100% at 50% 0%, var(--sky-wash) 0%, transparent 72%);
+  pointer-events: none;
+}
+
+/* header 底下一條像航線的漸層帶 */
+.site-header::after {
+  content: '';
+  position: absolute; left: 0; right: 0; bottom: -1px; height: 2px;
+  background: linear-gradient(90deg,
+    var(--brand) 0%, var(--accent) 45%, var(--brand) 100%);
+  opacity: .32;
+}
+
+/* 站名旁的標記做成行李吊牌：缺一角，再打一個孔 */
+.brand__mark {
+  position: relative;
+  border-radius: 9px 9px 9px 3px;
+  clip-path: polygon(22% 0, 100% 0, 100% 100%, 0 100%, 0 22%);
+}
+.brand__mark::after {
+  content: '';
+  position: absolute; left: 4.5px; top: 4.5px;
+  width: 4px; height: 4px; border-radius: 50%;
+  background: color-mix(in srgb, var(--bg) 75%, transparent);
+}
+
+/* 首頁主視覺下方的虛線航線 */
+.hero { position: relative; }
+.hero::after {
+  content: '';
+  display: block; margin: 18px auto 0;
+  width: min(520px, 78%); height: 30px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 520 30'%3E%3Cpath d='M10 25C140 -6 380 -6 510 25' fill='none' stroke='%23999999' stroke-width='2' stroke-dasharray='6 8' stroke-linecap='round'/%3E%3Ccircle cx='10' cy='25' r='4.5' fill='%23e8562a'/%3E%3Ccircle cx='510' cy='25' r='4.5' fill='%23e8562a'/%3E%3C/svg%3E")
+    no-repeat center / contain;
+  opacity: .6;
+}
+
+/* 分類標題的圖示做成護照戳章 */
+.group__head h2 { display: flex; align-items: center; gap: 11px; }
+.stamp {
+  display: inline-grid; place-items: center; flex: none;
+  width: 36px; height: 36px; font-size: 1rem;
+  border: 2px dashed var(--tag-line);
+  border-radius: 10px;
+  background: var(--surface);
+  transform: rotate(-3deg);
+}
+
+/* 工具卡片左側的撕票虛線 */
+.card { position: relative; padding-left: 22px; }
+.card::before {
+  content: '';
+  position: absolute; left: 9px; top: 15px; bottom: 15px;
+  border-left: 2px dashed var(--tag-line);
+  transition: border-color .14s ease;
+}
+.card:hover::before { border-color: var(--brand); }
+
+/* 工具頁標題下的撕線，像登機證的分隔 */
+.tool-head {
+  padding-bottom: 18px;
+  margin-bottom: 22px;
+  border-bottom: 2px dashed var(--border);
+}
+
+/* 說明區的小標前面掛一段航線 */
+/* 上緣改用 padding 撐開，所以 margin 要收回來，總間距才不會暴增 */
+.prose h2 { position: relative; margin-top: .9em; padding-top: 24px; }
+.prose h2::before {
+  content: '';
+  position: absolute; top: 8px; left: 0;
+  width: 54px; border-top: 2px dashed var(--brand);
+  opacity: .5;
+}
+
+/* 頁尾也用撕線收尾 */
+.site-footer { border-top: 2px dashed var(--border); }
+
+/* 想要減少動態效果的人，裝飾一律讓路 */
+@media (prefers-reduced-motion: reduce) {
+  .card, .card::before { transition: none; }
+}
+
+@media print {
+  body::before, .hero::after, .site-header::after { display: none; }
 }

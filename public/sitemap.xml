@@ -349,6 +349,30 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://tools.luka-life.com/t/flight.html</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tools.luka-life.com/t/packing.html</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tools.luka-life.com/t/weather.html</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tools.luka-life.com/t/tax-refund.html</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://tools.luka-life.com/t/luggage.html</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>

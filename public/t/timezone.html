@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>世界時區換算｜各國現在幾點，時差一次看 - 順手工具箱</title>
-<meta name="description" content="免費世界時鐘與時差換算，一次比較台灣、日本、美國、歐洲等主要城市的當地時間，也能指定某個時間點換算各地對應時刻，自動處理日光節約時間。">
+<meta name="description" content="免費世界時鐘與時差換算，收錄一百多個城市可自由搜尋加入，比較各地當地時間與時差，也能指定某個時間點換算各地對應時刻，自動處理日光節約時間。">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌏</text></svg>">
-<link rel="stylesheet" href="../assets/css/main.css?v=0b9e51d6">
+<link rel="stylesheet" href="../assets/css/main.css?v=35ffc45a">
 <style>
   .tz-row td:first-child { font-weight: 600; }
   .tz-time { font-family: var(--mono); font-size: 1.05rem; font-weight: 700; }
@@ -14,23 +14,41 @@
   .tz-day.prev { background: var(--accent-wash); color: var(--accent); }
   .tz-day.next { background: var(--brand-wash); color: var(--brand-ink); }
   .tz-home { background: var(--brand-wash); }
+  .tz-country { display: block; font-size: .76rem; font-weight: 400; color: var(--ink-3); }
+
+  .sugg { position: absolute; z-index: 30; left: 0; right: 0; margin-top: 4px;
+          max-height: 310px; overflow-y: auto;
+          background: var(--surface); border: 1px solid var(--border-strong);
+          border-radius: var(--radius); box-shadow: var(--shadow-3); padding: 5px; }
+  .sugg button { display: flex; width: 100%; align-items: baseline; gap: 8px; text-align: left;
+                 padding: 8px 10px; border: 0; border-radius: var(--radius-sm);
+                 background: none; color: var(--ink); font: inherit; cursor: pointer; }
+  .sugg button:hover { background: var(--brand-wash); }
+  .sugg button b { font-weight: 700; }
+  .sugg button span { font-size: .8rem; color: var(--ink-3); }
+  .sugg__none { padding: 12px 10px; font-size: .88rem; color: var(--ink-3); }
+
+  .chip--x { cursor: pointer; }
+  .chip--x span { opacity: .55; margin-left: 2px; }
+  .chip--x:hover { border-color: var(--danger); color: var(--danger); }
+  .chip--ghost { border-style: dashed; color: var(--ink-3); cursor: pointer; }
 </style>
 <!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
 <link rel="canonical" href="https://tools.luka-life.com/t/timezone.html">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
-<meta name="keywords" content="時差, 時區, 世界時間, timezone, utc">
+<meta name="keywords" content="時差, 時區, 世界時間, timezone, utc, 幾點, 當地時間">
 
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="順手工具箱">
 <meta property="og:locale" content="zh_TW">
 <meta property="og:title" content="世界時區換算｜各國現在幾點，時差一次看 - 順手工具箱">
-<meta property="og:description" content="免費世界時鐘與時差換算，一次比較台灣、日本、美國、歐洲等主要城市的當地時間，也能指定某個時間點換算各地對應時刻，自動處理日光節約時間。">
+<meta property="og:description" content="免費世界時鐘與時差換算，收錄一百多個城市可自由搜尋加入，比較各地當地時間與時差，也能指定某個時間點換算各地對應時刻，自動處理日光節約時間。">
 <meta property="og:url" content="https://tools.luka-life.com/t/timezone.html">
 <meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="世界時區換算｜各國現在幾點，時差一次看 - 順手工具箱">
-<meta name="twitter:description" content="免費世界時鐘與時差換算，一次比較台灣、日本、美國、歐洲等主要城市的當地時間，也能指定某個時間點換算各地對應時刻，自動處理日光節約時間。">
+<meta name="twitter:description" content="免費世界時鐘與時差換算，收錄一百多個城市可自由搜尋加入，比較各地當地時間與時差，也能指定某個時間點換算各地對應時刻，自動處理日光節約時間。">
 <meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
 
 <script type="application/ld+json">
@@ -38,7 +56,7 @@
   "@context": "https://schema.org",
   "@type": "WebApplication",
   "name": "世界時區換算",
-  "description": "免費世界時鐘與時差換算，一次比較台灣、日本、美國、歐洲等主要城市的當地時間，也能指定某個時間點換算各地對應時刻，自動處理日光節約時間。",
+  "description": "免費世界時鐘與時差換算，收錄一百多個城市可自由搜尋加入，比較各地當地時間與時差，也能指定某個時間點換算各地對應時刻，自動處理日光節約時間。",
   "url": "https://tools.luka-life.com/t/timezone.html",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "任何支援現代瀏覽器的系統",
@@ -93,7 +111,7 @@
       "name": "可以加入沒列出來的城市嗎？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "目前是固定清單，收錄了台灣人最常需要對時的城市。如果你要查的城市剛好跟清單中某個城市同一個時區（例如首爾跟東京都是 UTC+9），直接看那一列就可以。"
+        "text": "搜尋框收錄了一百多個城市，中文、英文、國家名都可以搜。如果真的找不到，先想想那個地方跟哪個大城市同一個時區——例如整個馬來西亞都跟吉隆坡一樣，找吉隆坡就對了。你選的城市會記在這台裝置上，下次打開還在。"
       }
     },
     {
@@ -124,7 +142,7 @@
 
   <div class="tool-head">
     <h1><span class="emoji" aria-hidden="true">🌏</span>世界時區換算</h1>
-    <p class="lede">要跟國外開會、打電話回家、算航班落地時間，一次看清楚各地現在幾點、差幾小時。</p>
+    <p class="lede">要跟國外開會、打電話回家、算航班落地時間，一次看清楚各地現在幾點、差幾小時。一百多個城市可以自己搜尋加入，選過的會記住。</p>
   </div>
 
   <div class="panel">
@@ -139,6 +157,14 @@
       </div>
     </div>
     <p class="hint mb-2">基準時間是<strong>你所在時區</strong>（<span class="mono" id="myTz"></span>）的時間，下表會換算成各地的當地時刻。</p>
+
+    <div class="field" style="position:relative">
+      <label for="citySearch">加入城市（可搜尋中文、英文或國家）</label>
+      <input type="search" id="citySearch" placeholder="例如：倫敦、Osaka、越南" autocomplete="off">
+      <div class="sugg hidden" id="sugg"></div>
+    </div>
+
+    <div class="chips mb-2" id="picked"></div>
 
     <div class="table-scroll">
       <table class="data">
@@ -161,7 +187,7 @@
     <div class="faq">
       <details>
         <summary>可以加入沒列出來的城市嗎？</summary>
-        <div class="a">目前是固定清單，收錄了台灣人最常需要對時的城市。如果你要查的城市剛好跟清單中某個城市同一個時區（例如首爾跟東京都是 UTC+9），直接看那一列就可以。</div>
+        <div class="a">搜尋框收錄了一百多個城市，中文、英文、國家名都可以搜。如果真的找不到，先想想那個地方跟哪個大城市同一個時區——例如整個馬來西亞都跟吉隆坡一樣，找吉隆坡就對了。你選的城市會記在這台裝置上，下次打開還在。</div>
       </details>
       <details>
         <summary>為什麼有些地方的時差不是整數？</summary>
@@ -177,32 +203,38 @@
   <section class="related" id="relatedTools"></section>
 </main>
 
-<script src="../assets/js/catalog.js?v=aac7f832"></script>
+<script src="../assets/js/cities.js?v=c16ad570"></script>
+<script src="../assets/js/catalog.js?v=4e50a508"></script>
 <script src="../assets/js/layout.js?v=483231ca"></script>
 <script>
 (function () {
   'use strict';
   const { $, esc, pad } = window.U;
 
-  const CITIES = [
-    ['台北', 'Asia/Taipei'],
-    ['東京・首爾', 'Asia/Tokyo'],
-    ['香港・新加坡', 'Asia/Hong_Kong'],
-    ['曼谷・胡志明市', 'Asia/Bangkok'],
-    ['雅加達', 'Asia/Jakarta'],
-    ['新德里', 'Asia/Kolkata'],
-    ['杜拜', 'Asia/Dubai'],
-    ['莫斯科', 'Europe/Moscow'],
-    ['巴黎・柏林・羅馬', 'Europe/Paris'],
-    ['倫敦', 'Europe/London'],
-    ['紐約・多倫多', 'America/New_York'],
-    ['芝加哥', 'America/Chicago'],
-    ['丹佛', 'America/Denver'],
-    ['洛杉磯・西雅圖', 'America/Los_Angeles'],
-    ['夏威夷', 'Pacific/Honolulu'],
-    ['雪梨', 'Australia/Sydney'],
-    ['奧克蘭', 'Pacific/Auckland']
-  ];
+
+  const CITY_DB = window.CITY_DB;
+
+  const DEFAULTS = ['台北', '東京', '首爾', '香港', '曼谷', '新加坡', '杜拜',
+                    '倫敦', '巴黎', '紐約', '洛杉磯', '雪梨'];
+  const STORE_KEY = 'sst-tz-cities';
+
+  function loadPicked() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
+      if (Array.isArray(saved) && saved.length) {
+        const valid = saved.filter(n => CITY_DB.some(c => c[0] === n));
+        if (valid.length) return valid;
+      }
+    } catch (e) { /* 無痕模式或資料壞掉就用預設 */ }
+    return DEFAULTS.slice();
+  }
+  function savePicked() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(picked)); } catch (e) { /* 忽略 */ }
+  }
+
+  let picked = loadPicked();
+  const cityOf = name => CITY_DB.find(c => c[0] === name);
+  const CITIES = () => picked.map(cityOf).filter(Boolean);
 
   const myTz = (() => {
     try { return Intl.DateTimeFormat().resolvedOptions().timeZone; }
@@ -249,9 +281,21 @@
     const myOffset = offsetMinutes(base, myTz);
     const myDay = partsIn(base, myTz).day;
 
-    $('#tzBody').innerHTML = CITIES.map(([name, tz]) => {
+    /* 依時差排序，表格讀起來就是由西到東 */
+    const list = CITIES()
+      .map(c => ({ c, diff: offsetMinutes(base, c[1]) - myOffset }))
+      .sort((a, b) => a.diff - b.diff);
+
+    if (!list.length) {
+      $('#tzBody').innerHTML =
+        `<tr><td colspan="4" class="muted" style="text-align:center;padding:24px">
+          還沒有選城市，用上面的搜尋框加幾個吧。</td></tr>`;
+      return;
+    }
+
+    $('#tzBody').innerHTML = list.map(({ c, diff: diffMin }) => {
+      const [name, tz, country] = c;
       const p = partsIn(base, tz);
-      const diffMin = offsetMinutes(base, tz) - myOffset;
       const diffH = diffMin / 60;
 
       let diffText;
@@ -273,7 +317,7 @@
 
       const isHome = tz === myTz;
       return `<tr class="tz-row ${isHome ? 'tz-home' : ''}">
-        <td>${esc(name)}${isHome ? ' <span class="small muted">你在這</span>' : ''}</td>
+        <td>${esc(name)}<span class="tz-country">${esc(country)}</span>${isHome ? '<span class="tz-country">你在這</span>' : ''}</td>
         <td class="tz-time">${p.hour}:${p.minute}</td>
         <td>${p.month}/${p.day}${dayTag}</td>
         <td>${diffText}</td>
@@ -281,8 +325,78 @@
     }).join('');
   }
 
+  /* ---------- 城市挑選 ---------- */
+  function renderPicked() {
+    $('#picked').innerHTML = picked.map(n =>
+      `<button class="chip chip--x" type="button" data-rm="${esc(n)}">
+        ${esc(n)} <span aria-hidden="true">✕</span>
+       </button>`).join('') +
+      (picked.length > 1
+        ? `<button class="chip chip--ghost" type="button" id="resetCities">回到預設</button>` : '');
+  }
+
+  $('#picked').addEventListener('click', e => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    if (btn.id === 'resetCities') picked = DEFAULTS.slice();
+    else if (btn.dataset.rm) picked = picked.filter(n => n !== btn.dataset.rm);
+    else return;
+    savePicked(); renderPicked(); render();
+  });
+
+  function showSugg(q) {
+    const key = q.trim().toLowerCase();
+    const box = $('#sugg');
+    if (!key) { box.classList.add('hidden'); return; }
+
+    const hit = CITY_DB
+      .filter(c => !picked.includes(c[0]))
+      .filter(c => (c[0] + c[2] + c[3] + c[4]).toLowerCase().includes(key))
+      .slice(0, 12);
+
+    if (!hit.length) {
+      box.innerHTML = `<div class="sugg__none">找不到「${esc(q)}」，換個關鍵字或用英文試試</div>`;
+    } else {
+      box.innerHTML = hit.map(c =>
+        `<button type="button" data-add="${esc(c[0])}">
+          <b>${esc(c[0])}</b><span>${esc(c[2])}．${esc(c[3])}</span>
+         </button>`).join('');
+    }
+    box.classList.remove('hidden');
+  }
+
+  $('#citySearch').addEventListener('input', e => showSugg(e.target.value));
+  $('#citySearch').addEventListener('focus', e => showSugg(e.target.value));
+
+  $('#sugg').addEventListener('click', e => {
+    const btn = e.target.closest('button[data-add]');
+    if (!btn) return;
+    picked.push(btn.dataset.add);
+    savePicked();
+    $('#citySearch').value = '';
+    $('#sugg').classList.add('hidden');
+    renderPicked();
+    render();
+  });
+
+  /* 點到別處就收起建議清單 */
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#sugg') && e.target !== $('#citySearch')) {
+      $('#sugg').classList.add('hidden');
+    }
+  });
+
+  $('#citySearch').addEventListener('keydown', e => {
+    if (e.key === 'Escape') { $('#sugg').classList.add('hidden'); e.target.blur(); }
+    if (e.key === 'Enter') {
+      const first = $('#sugg').querySelector('button[data-add]');
+      if (first) first.click();
+    }
+  });
+
   $('#nowBtn').addEventListener('click', () => { setNow(); render(); });
   $('#baseTime').addEventListener('input', render);
+  renderPicked();
 
   setNow();
   render();

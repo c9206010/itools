@@ -77,7 +77,7 @@ const TOOLS = [
   { slug: 'age', cat: 'time', icon: '🎂', name: '年齡計算器',
     desc: '精確到天，附生肖與星座', kw: '年齡 歲數 虛歲 生日 age' },
   { slug: 'timezone', cat: 'travel', icon: '🌏', name: '世界時區換算',
-    desc: '主要城市當地時間對照', kw: '時差 時區 世界時間 timezone utc' },
+    desc: '一百多個城市，時差一次看', kw: '時差 時區 世界時間 timezone utc 幾點 當地時間' },
 
   /* ---------- 文字處理 ---------- */
   { slug: 'diff', cat: 'text', icon: '🔍', name: '文字比對',
@@ -178,6 +178,14 @@ const TOOLS = [
   /* ---------- 旅遊出行 ---------- */
   { slug: 'exchange', cat: 'travel', icon: '💱', name: '匯率換算',
     desc: '即時參考匯率，可估算銀行價差', kw: '匯率 換匯 日圓 美金 兌換 旅費 外幣' },
+  { slug: 'flight', cat: 'travel', icon: '🛫', name: '航班時間轉機計算',
+    desc: '跨時區飛行時數與轉機空檔', kw: '航班 飛行時間 轉機 時差 抵達時間 紅眼 幾小時' },
+  { slug: 'packing', cat: 'travel', icon: '🎒', name: '行李打包清單',
+    desc: '依天數行程自動算件數', kw: '打包 清單 行李 帶什麼 出國 checklist 準備' },
+  { slug: 'weather', cat: 'travel', icon: '🧥', name: '旅遊天氣穿搭建議',
+    desc: '七天預報換成該穿什麼', kw: '天氣 穿搭 氣溫 預報 穿什麼 幾度 weather' },
+  { slug: 'tax-refund', cat: 'travel', icon: '🧾', name: '出國退稅計算器',
+    desc: '估算扣手續費後實拿多少', kw: '退稅 免稅 tax refund 消費稅 日本 歐洲 機場' },
   { slug: 'luggage', cat: 'travel', icon: '🧳', name: '行李重量尺寸檢查',
     desc: '算線性尺寸，比對手提託運上限', kw: '行李 尺寸 重量 手提 託運 登機箱 幾吋 限制' },
 

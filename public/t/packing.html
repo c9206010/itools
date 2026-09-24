@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>行李打包清單產生器｜依天數與行程自動算件數 - 順手工具箱</title>
+<meta name="description" content="免費行李打包清單產生器，輸入天數、季節與行程類型，自動算出衣物件數並列出證件、電器、藥品與出門前確認事項，可勾選記錄進度、自行增減項目並複製整份清單。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎒</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css?v=35ffc45a">
+<style>
+  .bar { height: 10px; border-radius: 999px; background: var(--bg-sunk);
+         overflow: hidden; margin: 10px 0 4px; }
+  .bar i { display: block; height: 100%; background: var(--brand);
+           border-radius: 999px; transition: width .25s ease; }
+
+  .sec { border: 1px solid var(--border); border-radius: var(--radius);
+         background: var(--surface); margin-bottom: 10px; overflow: hidden; }
+  .sec__head { display: flex; align-items: center; justify-content: space-between; gap: 10px;
+               padding: 11px 14px; background: var(--surface-2);
+               border-bottom: 1px solid var(--border); font-weight: 700; font-size: .95rem; }
+  .sec__head em { font-style: normal; font-size: .8rem; font-weight: 400; color: var(--ink-3); }
+
+  .item { display: flex; align-items: flex-start; gap: 10px; padding: 9px 14px;
+          border-bottom: 1px solid var(--border); cursor: pointer; }
+  .item:last-child { border-bottom: 0; }
+  .item:hover { background: var(--surface-2); }
+  .item input { margin-top: 3px; flex: 0 0 auto; }
+  .item__body { flex: 1; min-width: 0; }
+  .item__name { font-size: .94rem; }
+  .item.done .item__name { text-decoration: line-through; color: var(--ink-3); }
+  .item__qty { font-weight: 700; color: var(--brand); margin-left: 5px; font-variant-numeric: tabular-nums; }
+  .item.done .item__qty { color: var(--ink-3); }
+  .item__note { display: block; font-size: .78rem; color: var(--ink-3); margin-top: 2px; }
+  .item__del { border: 0; background: none; color: var(--ink-3); cursor: pointer;
+               padding: 0 4px; font-size: .85rem; }
+  .item__del:hover { color: var(--danger); }
+
+  .tag-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { padding: 7px 13px; font: inherit; font-size: .88rem; cursor: pointer;
+         border: 1px solid var(--border-strong); border-radius: 999px;
+         background: var(--surface); color: var(--ink-2); }
+  .tag:hover { border-color: var(--brand); color: var(--brand); }
+  .tag.is-on { background: var(--brand); border-color: var(--brand); color: #fff; font-weight: 600; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/packing.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="打包, 清單, 行李, 帶什麼, 出國, checklist, 準備">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="行李打包清單產生器｜依天數與行程自動算件數 - 順手工具箱">
+<meta property="og:description" content="免費行李打包清單產生器，輸入天數、季節與行程類型，自動算出衣物件數並列出證件、電器、藥品與出門前確認事項，可勾選記錄進度、自行增減項目並複製整份清單。">
+<meta property="og:url" content="https://tools.luka-life.com/t/packing.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="行李打包清單產生器｜依天數與行程自動算件數 - 順手工具箱">
+<meta name="twitter:description" content="免費行李打包清單產生器，輸入天數、季節與行程類型，自動算出衣物件數並列出證件、電器、藥品與出門前確認事項，可勾選記錄進度、自行增減項目並複製整份清單。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "行李打包清單",
+  "description": "免費行李打包清單產生器，輸入天數、季節與行程類型，自動算出衣物件數並列出證件、電器、藥品與出門前確認事項，可勾選記錄進度、自行增減項目並複製整份清單。",
+  "url": "https://tools.luka-life.com/t/packing.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "旅遊出行",
+      "item": "https://tools.luka-life.com/#travel"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "行李打包清單",
+      "item": "https://tools.luka-life.com/t/packing.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "只帶手提有什麼要注意？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "液體單瓶不能超過 100 毫升，而且要全部裝進一個約一公升的透明夾鏈袋裡。刀具、剪刀這類尖銳物品也不能帶上機艙。選「只帶手提」時清單會自動換成旅行分裝瓶並加上提醒。實際規定以出發機場的安檢公告為準。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "行動電源到底能不能帶？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "要隨身帶上機艙，絕對不能託運，這是全球通則。容量上限與是否需要申報各家航空公司規定不同，超大容量的出發前務必先查。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "清單可以自己改嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以。上面有欄位能自己加項目，自己加的項目旁邊有刪除鈕。系統產生的項目不能刪，但可以直接勾起來當作「不需要」。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "換個天數之後勾選會不見嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會。勾選是記在項目本身上的，改天數只會讓件數跟著變，已經勾好的項目維持勾選。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="packing">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🎒</span>行李打包清單</h1>
+    <p class="lede">最常忘的從來不是衣服，是充電線、轉接頭跟隱形眼鏡藥水。設定好行程，清單自己長出來，件數也幫你算好。</p>
+  </div>
+
+  <div class="panel">
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="days">幾天</label>
+        <input type="number" id="days" value="5" min="1" max="60" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="climate">當地氣候</label>
+        <select id="climate">
+          <option value="hot">炎熱（25 度以上）</option>
+          <option value="warm" selected>溫暖（18 到 25 度）</option>
+          <option value="cool">涼爽（10 到 18 度）</option>
+          <option value="cold">寒冷（10 度以下）</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label for="region">目的地</label>
+        <select id="region">
+          <option value="abroad" selected>國外</option>
+          <option value="local">國內</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label for="bag">行李形式</label>
+        <select id="bag">
+          <option value="checked" selected>有託運行李</option>
+          <option value="carry">只帶手提</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>這趟會做什麼（可複選）</label>
+      <div class="tag-grid" id="tags"></div>
+    </div>
+
+    <div class="field mb-0">
+      <label for="extra">自己加項目</label>
+      <div class="row mb-0">
+        <input type="text" id="extra" placeholder="例如：媽媽的降血壓藥" style="flex:1 1 200px">
+        <button class="btn" type="button" id="addExtra" style="flex:0 0 auto">加入清單</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title">打包進度</div>
+    <div class="bar"><i id="barFill" style="width:0%"></i></div>
+    <p class="hint mb-2" id="progress"></p>
+
+    <div class="btn-group mb-2">
+      <button class="btn btn--ghost" type="button" id="copyBtn">複製整份清單</button>
+      <button class="btn btn--ghost" type="button" id="uncheckBtn">全部取消勾選</button>
+    </div>
+
+    <div id="list"></div>
+  </div>
+
+  <div class="note">
+    <strong>勾選狀態存在這台裝置上。</strong>關掉分頁再回來還在，但不會同步到手機。打包時建議直接用手機開這一頁。
+  </div>
+
+  <section class="prose">
+    <h2>件數是怎麼算的</h2>
+    <p>衣物數量不是照天數一比一堆上去，那樣行李會爆炸。這裡用的規則是：</p>
+    <ul>
+      <li><strong>內衣褲與襪子</strong>抓天數加一件，多的那件是給突發狀況用的。超過八天就不再往上加，改成建議中途洗衣。</li>
+      <li><strong>上衣</strong>抓天數，但七天以上一樣封頂。旅途中洗兩件比多背五件划算。</li>
+      <li><strong>褲子</strong>每三天一件。褲子不像上衣那麼容易髒，重複穿是常態。</li>
+      <li><strong>外套</strong>看氣候給，寒冷才會出現厚外套與發熱衣。</li>
+    </ul>
+    <p>這些是通則，不是規定。你如果每天要拍照換裝，那就自己往上加。</p>
+
+    <h2>最容易漏掉的幾樣</h2>
+    <p>經驗上會讓人在異地跳腳的通常是這些小東西：<strong>轉接頭</strong>（歐洲、英國、日本插座都不一樣）、<strong>行動電源</strong>（而且只能手提不能託運）、<strong>隱形眼鏡藥水</strong>、<strong>常備藥</strong>、<strong>證件影本</strong>。清單裡都留了位置。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>只帶手提有什麼要注意？</summary>
+        <div class="a">液體單瓶不能超過 100 毫升，而且要全部裝進一個約一公升的透明夾鏈袋裡。刀具、剪刀這類尖銳物品也不能帶上機艙。選「只帶手提」時清單會自動換成旅行分裝瓶並加上提醒。實際規定以出發機場的安檢公告為準。</div>
+      </details>
+      <details>
+        <summary>行動電源到底能不能帶？</summary>
+        <div class="a">要<strong>隨身帶上機艙，絕對不能託運</strong>，這是全球通則。容量上限與是否需要申報各家航空公司規定不同，超大容量的出發前務必先查。</div>
+      </details>
+      <details>
+        <summary>清單可以自己改嗎？</summary>
+        <div class="a">可以。上面有欄位能自己加項目，自己加的項目旁邊有刪除鈕。系統產生的項目不能刪，但可以直接勾起來當作「不需要」。</div>
+      </details>
+      <details>
+        <summary>換個天數之後勾選會不見嗎？</summary>
+        <div class="a">不會。勾選是記在項目本身上的，改天數只會讓件數跟著變，已經勾好的項目維持勾選。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js?v=4e50a508"></script>
+<script src="../assets/js/layout.js?v=483231ca"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc } = window.U;
+
+  const ACTIVITIES = [
+    ['beach', '海邊泳池'], ['hike', '登山健行'], ['snow', '滑雪玩雪'],
+    ['onsen', '溫泉大眾池'], ['business', '出差開會'], ['kids', '帶小孩'],
+    ['drive', '自駕'], ['camp', '露營'], ['photo', '認真拍照']
+  ];
+
+  const CHECK_KEY = 'sst-packing-done';
+  const EXTRA_KEY = 'sst-packing-extra';
+  const CONF_KEY = 'sst-packing-conf';
+
+  const store = {
+    get(k, fallback) {
+      try { const v = JSON.parse(localStorage.getItem(k) || 'null'); return v === null ? fallback : v; }
+      catch (e) { return fallback; }
+    },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* 無痕模式 */ } }
+  };
+
+  let done = new Set(store.get(CHECK_KEY, []));
+  let extras = store.get(EXTRA_KEY, []);
+  let acts = new Set(store.get(CONF_KEY, {}).acts || ['photo']);
+
+  /* ---------- 件數規則 ---------- */
+  /** 上限型件數：天數照算，但超過上限就封頂並提示洗衣 */
+  function capped(days, plus, cap) {
+    const want = days + plus;
+    return want > cap
+      ? { qty: cap, note: `超過 ${cap} 件就別帶了，安排一次洗衣比較輕鬆` }
+      : { qty: want };
+  }
+
+  /**
+   * 產生清單。每個項目的 id 必須穩定，勾選狀態是綁在 id 上的，
+   * 改天數只會讓件數變動，不會把打好的勾清掉。
+   */
+  function build(ctx) {
+    const { days, climate, abroad, carry } = ctx;
+    const has = k => acts.has(k);
+    const cold = climate === 'cold';
+    const cool = climate === 'cool' || cold;
+    const hot = climate === 'hot';
+
+    const sec = [];
+
+    sec.push({
+      name: '證件與金錢', hint: '掉了最麻煩的一類',
+      items: [
+        abroad && { id: 'passport', name: '護照', note: '確認效期距離回國日還有六個月以上' },
+        abroad && { id: 'visa', name: '簽證或電子旅行許可', note: '有些國家要先線上申請，不是落地就能辦' },
+        { id: 'id', name: '身分證或駕照' },
+        { id: 'boarding', name: '機票或訂位代號', note: '截圖存一份，機場網路不一定順' },
+        { id: 'hotel', name: '住宿訂房確認信' },
+        abroad && { id: 'insurance', name: '旅平險保單與保險公司電話' },
+        abroad && { id: 'cash', name: '當地現金', note: '先換一點小鈔，下機後的交通跟寄物會用到' },
+        { id: 'card', name: '信用卡（兩張不同家）', note: '一張被鎖卡還有另一張' },
+        abroad && { id: 'copy', name: '證件影本或雲端備份', note: '護照遺失時補辦會快很多' },
+        has('drive') && { id: 'idp', name: '國際駕照', note: '多數國家要連同台灣駕照一起出示' }
+      ]
+    });
+
+    const tops = capped(days, 0, 7);
+    const under = capped(days, 1, 8);
+    sec.push({
+      name: '衣物', hint: `依 ${days} 天與氣候估算`,
+      items: [
+        { id: 'top', name: '上衣', qty: tops.qty, note: tops.note },
+        { id: 'under', name: '內衣褲', qty: under.qty, note: under.note },
+        { id: 'sock', name: '襪子', qty: under.qty },
+        { id: 'pants', name: '褲子或裙子', qty: Math.min(Math.ceil(days / 3), 4) },
+        { id: 'sleep', name: '睡衣', qty: days <= 4 ? 1 : 2 },
+        cold && { id: 'heattech', name: '發熱衣', qty: Math.min(days, 3) },
+        cold && { id: 'coat', name: '厚外套', qty: 1, note: '穿在身上不佔行李' },
+        cool && !cold && { id: 'jacket', name: '薄外套', qty: 1 },
+        hot && { id: 'hat', name: '帽子' },
+        cold && { id: 'warm', name: '圍巾、手套、毛帽' },
+        { id: 'shoes', name: '好走的鞋', note: '旅行一天走一萬步是常態，別穿新鞋出門' },
+        hot && { id: 'sandal', name: '涼鞋或拖鞋' },
+        { id: 'laundry', name: '裝髒衣服的袋子' }
+      ]
+    });
+
+    sec.push({
+      name: '盥洗與保養',
+      hint: carry ? '只帶手提，液體單瓶不能超過 100 毫升' : null,
+      items: [
+        { id: 'tooth', name: '牙刷牙膏', note: '很多國外旅館不提供' },
+        carry
+          ? { id: 'bottle', name: '旅行分裝瓶（單瓶 100ml 以下）', note: '全部裝進一個透明夾鏈袋' }
+          : { id: 'shampoo', name: '洗髮沐浴用品' },
+        { id: 'skincare', name: '保養品與乳液' },
+        { id: 'sun', name: '防曬乳', note: hot || has('beach') || has('snow') ? '雪地跟海邊的反射特別強，要勤補' : null },
+        { id: 'razor', name: '刮鬍刀或除毛刀' },
+        { id: 'contact', name: '隱形眼鏡與藥水', note: '藥水是最常忘的一樣' },
+        { id: 'glasses', name: '備用眼鏡' },
+        { id: 'towel', name: '快乾毛巾' },
+        { id: 'tissue', name: '面紙與濕紙巾' },
+        has('onsen') && { id: 'onsen-towel', name: '小方巾', note: '日本大眾池習慣自備' },
+        has('onsen') && { id: 'hairband', name: '綁頭髮的髮圈', note: '長髮不能泡進池水裡' }
+      ]
+    });
+
+    sec.push({
+      name: '電器與充電',
+      items: [
+        { id: 'phone-charger', name: '手機充電線與豆腐頭' },
+        abroad && { id: 'adapter', name: '轉接頭', note: '日本美國用扁腳、歐洲用圓腳、英國是三隻方腳，出發前先查' },
+        { id: 'powerbank', name: '行動電源', note: '一定要隨身，不能託運' },
+        { id: 'earphone', name: '耳機' },
+        has('photo') && { id: 'camera', name: '相機與備用電池' },
+        has('photo') && { id: 'sdcard', name: '記憶卡', note: '出發前先清空' },
+        { id: 'multiplug', name: '一分多插座或小延長線', note: '旅館插座永遠不夠用' },
+        has('business') && { id: 'laptop', name: '筆電與充電器' },
+        has('drive') && { id: 'carmount', name: '車用手機架與車充' }
+      ]
+    });
+
+    sec.push({
+      name: '藥品與健康',
+      items: [
+        { id: 'meds', name: '個人慢性病藥', note: abroad ? '帶原包裝，必要時附英文處方' : null },
+        { id: 'cold-med', name: '感冒藥與退燒藥' },
+        { id: 'stomach', name: '腸胃藥', note: '換水土不服很常見' },
+        { id: 'painkiller', name: '止痛藥' },
+        { id: 'bandaid', name: 'OK 繃與水泡貼', note: '走到起水泡的機率比你想的高' },
+        { id: 'mask', name: '口罩' },
+        has('hike') && { id: 'muscle', name: '痠痛貼布' },
+        has('kids') && { id: 'kid-med', name: '兒童專用藥與體溫計' },
+        (has('beach') || has('hike')) && { id: 'bug', name: '防蚊液' }
+      ]
+    });
+
+    const actItems = [
+      has('beach') && { id: 'swim', name: '泳衣泳褲與泳鏡' },
+      has('beach') && { id: 'dry-bag', name: '防水袋或防水手機套' },
+      has('hike') && { id: 'hike-shoes', name: '登山鞋' },
+      has('hike') && { id: 'raincoat', name: '輕便雨衣', note: '山上的雨傘常常撐不住風' },
+      has('hike') && { id: 'headlamp', name: '頭燈' },
+      has('snow') && { id: 'snow-gear', name: '防水外套與雪褲' },
+      has('snow') && { id: 'goggles', name: '雪鏡與防水手套' },
+      has('business') && { id: 'suit', name: '正式服裝與皮鞋' },
+      has('business') && { id: 'namecard', name: '名片' },
+      has('kids') && { id: 'diaper', name: '尿布與濕紙巾' },
+      has('kids') && { id: 'kid-snack', name: '小孩的零食與安撫玩具' },
+      has('kids') && { id: 'stroller', name: '推車或揹巾' },
+      has('camp') && { id: 'sleepbag', name: '睡袋與睡墊' },
+      has('camp') && { id: 'lamp', name: '營燈與備用電池' },
+      has('photo') && { id: 'tripod', name: '腳架或自拍棒' }
+    ].filter(Boolean);
+
+    if (actItems.length) sec.push({ name: '依這趟行程加的', items: actItems });
+
+    sec.push({
+      name: '隨身別放行李箱',
+      hint: '託運行李有機會延誤，這些要在身上',
+      items: [
+        { id: 'c-passport', name: '證件、錢包、手機' },
+        { id: 'c-power', name: '行動電源與充電線' },
+        { id: 'c-med', name: '當天要吃的藥' },
+        { id: 'c-jacket', name: '一件外套', note: '機艙冷氣很強' },
+        !carry && { id: 'c-clothes', name: '一套換洗衣物', note: '行李沒跟到的時候救命用' },
+        { id: 'c-pen', name: '一支筆', note: '填入境卡會用到' }
+      ]
+    });
+
+    sec.push({
+      name: '出門前最後確認',
+      items: [
+        { id: 'checkin', name: '線上報到並存好登機證' },
+        { id: 'roam', name: '開通漫遊或準備網卡、eSIM' },
+        { id: 'gas', name: '關瓦斯、拔插頭' },
+        { id: 'trash', name: '倒垃圾', note: '回來才不會被熏' },
+        { id: 'window', name: '關窗戶與冷氣' },
+        { id: 'plant', name: '植物澆水、寵物安排好' },
+        { id: 'weight', name: '行李秤重', note: '在家秤比在櫃檯重秤便宜' }
+      ]
+    });
+
+    if (extras.length) {
+      sec.push({
+        name: '你自己加的',
+        items: extras.map(e => ({ id: 'x-' + e.id, name: e.name, custom: e.id }))
+      });
+    }
+
+    return sec
+      .map(s => ({ ...s, items: s.items.filter(Boolean) }))
+      .filter(s => s.items.length);
+  }
+
+  /* ---------- 畫面 ---------- */
+  function ctxNow() {
+    return {
+      days: Math.max(1, Math.min(60, Number($('#days').value) || 1)),
+      climate: $('#climate').value,
+      abroad: $('#region').value === 'abroad',
+      carry: $('#bag').value === 'carry'
+    };
+  }
+
+  let sections = [];
+
+  function render() {
+    sections = build(ctxNow());
+
+    $('#list').innerHTML = sections.map(s => {
+      const total = s.items.length;
+      const ok = s.items.filter(i => done.has(i.id)).length;
+      return `<div class="sec">
+        <div class="sec__head">
+          <span>${esc(s.name)}</span>
+          <em>${s.hint ? esc(s.hint) + '．' : ''}${ok} / ${total}</em>
+        </div>
+        ${s.items.map(i => `
+          <label class="item ${done.has(i.id) ? 'done' : ''}">
+            <input type="checkbox" data-id="${esc(i.id)}" ${done.has(i.id) ? 'checked' : ''}>
+            <span class="item__body">
+              <span class="item__name">${esc(i.name)}${i.qty ? `<span class="item__qty">× ${i.qty}</span>` : ''}</span>
+              ${i.note ? `<span class="item__note">${esc(i.note)}</span>` : ''}
+            </span>
+            ${i.custom ? `<button class="item__del" type="button" data-x="${esc(i.custom)}"
+                                  title="刪除" aria-label="刪除">✕</button>` : ''}
+          </label>`).join('')}
+      </div>`;
+    }).join('');
+
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const all = sections.reduce((n, s) => n + s.items.length, 0);
+    const ok = sections.reduce((n, s) => n + s.items.filter(i => done.has(i.id)).length, 0);
+    const pct = all ? Math.round(ok / all * 100) : 0;
+    $('#barFill').style.width = pct + '%';
+    $('#progress').textContent = `${ok} / ${all} 項，完成 ${pct}％`;
+  }
+
+  $('#list').addEventListener('change', e => {
+    const cb = e.target.closest('input[data-id]');
+    if (!cb) return;
+    if (cb.checked) done.add(cb.dataset.id); else done.delete(cb.dataset.id);
+    store.set(CHECK_KEY, [...done]);
+    cb.closest('.item').classList.toggle('done', cb.checked);
+    /* 只重畫標頭的計數，避免整份重繪讓畫面跳掉 */
+    sections.forEach((s, si) => {
+      const ok = s.items.filter(i => done.has(i.id)).length;
+      const em = $('#list').children[si].querySelector('.sec__head em');
+      em.textContent = `${s.hint ? s.hint + '．' : ''}${ok} / ${s.items.length}`;
+    });
+    updateProgress();
+  });
+
+  $('#list').addEventListener('click', e => {
+    const btn = e.target.closest('button[data-x]');
+    if (!btn) return;
+    e.preventDefault();
+    extras = extras.filter(x => x.id !== btn.dataset.x);
+    store.set(EXTRA_KEY, extras);
+    render();
+  });
+
+  /* ---------- 行程標籤 ---------- */
+  $('#tags').innerHTML = ACTIVITIES.map(([k, n]) =>
+    `<button class="tag ${acts.has(k) ? 'is-on' : ''}" type="button" data-k="${k}">${esc(n)}</button>`).join('');
+
+  $('#tags').addEventListener('click', e => {
+    const btn = e.target.closest('.tag');
+    if (!btn) return;
+    const k = btn.dataset.k;
+    if (acts.has(k)) acts.delete(k); else acts.add(k);
+    btn.classList.toggle('is-on', acts.has(k));
+    store.set(CONF_KEY, { acts: [...acts] });
+    render();
+  });
+
+  /* ---------- 自訂項目 ---------- */
+  function addExtra() {
+    const v = $('#extra').value.trim();
+    if (!v) return;
+    /* id 用內容做，同名項目不會重複新增，勾選也能跟著內容走 */
+    const id = v.replace(/\s+/g, '-').slice(0, 40);
+    if (!extras.some(x => x.id === id)) {
+      extras.push({ id, name: v });
+      store.set(EXTRA_KEY, extras);
+    }
+    $('#extra').value = '';
+    render();
+  }
+  $('#addExtra').addEventListener('click', addExtra);
+  $('#extra').addEventListener('keydown', e => { if (e.key === 'Enter') addExtra(); });
+
+  /* ---------- 其他操作 ---------- */
+  $('#copyBtn').addEventListener('click', () => {
+    const text = sections.map(s =>
+      `【${s.name}】\n` + s.items.map(i =>
+        `${done.has(i.id) ? '[v]' : '[ ]'} ${i.name}${i.qty ? ` × ${i.qty}` : ''}`).join('\n')
+    ).join('\n\n');
+    window.copyText(text);
+  });
+
+  $('#uncheckBtn').addEventListener('click', () => {
+    done = new Set();
+    store.set(CHECK_KEY, []);
+    render();
+  });
+
+  ['#days', '#climate', '#region', '#bag'].forEach(s =>
+    $(s).addEventListener('input', render));
+
+  render();
+})();
+</script>
+</body>
+</html>

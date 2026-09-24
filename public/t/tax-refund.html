@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>出國退稅計算器｜估算實際能拿回多少 - 順手工具箱</title>
+<meta name="description" content="免費出國購物退稅試算工具，輸入消費金額即可估算內含稅額、理論退稅與扣掉手續費後實際能拿回的金額，並換算成台幣，稅率與門檻皆可自行調整。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧾</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css?v=35ffc45a">
+<style>
+  .board { border: 2px solid var(--border-strong); border-radius: var(--radius-lg);
+           background: var(--surface-2); padding: 18px 16px; }
+  .board__row { display: flex; justify-content: space-between; align-items: baseline;
+                gap: 12px; padding: 9px 0; border-bottom: 1px dashed var(--border); }
+  .board__row:last-of-type { border-bottom: 0; }
+  .board__row b { font-family: var(--mono); font-size: 1.1rem; font-weight: 700; }
+  .board__row.main b { color: var(--brand); font-size: 1.45rem; }
+  .board__row.muted-row, .board__row.muted-row b { color: var(--ink-3); font-weight: 400; }
+  .board__note { font-size: .84rem; color: var(--ink-3); margin: 12px 0 0; }
+
+  .gate { padding: 11px 14px; border-radius: var(--radius); font-size: .9rem;
+          margin-bottom: 14px; border: 1px solid transparent; }
+  .gate.ok { background: rgba(47,125,79,.1); border-color: var(--ok); color: var(--ok); }
+  .gate.no { background: rgba(192,57,43,.08); border-color: var(--danger); color: var(--danger); }
+  .gate.na { background: var(--bg-sunk); border-color: var(--border); color: var(--ink-2); }
+  .gate b { font-family: var(--mono); }
+
+  .warn-box { border: 1px solid var(--warn); border-radius: var(--radius);
+              background: rgba(184,134,11,.08); padding: 13px 15px;
+              font-size: .89rem; margin-bottom: 16px; }
+  .warn-box strong { color: var(--warn); }
+
+  td.num, th.num { text-align: right; font-family: var(--mono); }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/tax-refund.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="退稅, 免稅, tax, refund, 消費稅, 日本, 歐洲, 機場">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="出國退稅計算器｜估算實際能拿回多少 - 順手工具箱">
+<meta property="og:description" content="免費出國購物退稅試算工具，輸入消費金額即可估算內含稅額、理論退稅與扣掉手續費後實際能拿回的金額，並換算成台幣，稅率與門檻皆可自行調整。">
+<meta property="og:url" content="https://tools.luka-life.com/t/tax-refund.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="出國退稅計算器｜估算實際能拿回多少 - 順手工具箱">
+<meta name="twitter:description" content="免費出國購物退稅試算工具，輸入消費金額即可估算內含稅額、理論退稅與扣掉手續費後實際能拿回的金額，並換算成台幣，稅率與門檻皆可自行調整。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "出國退稅計算器",
+  "description": "免費出國購物退稅試算工具，輸入消費金額即可估算內含稅額、理論退稅與扣掉手續費後實際能拿回的金額，並換算成台幣，稅率與門檻皆可自行調整。",
+  "url": "https://tools.luka-life.com/t/tax-refund.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "旅遊出行",
+      "item": "https://tools.luka-life.com/#travel"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "出國退稅計算器",
+      "item": "https://tools.luka-life.com/t/tax-refund.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "門檻是整趟加起來還是單筆？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "多數國家看的是同一天、同一間店的金額，不能把不同店家的收據湊在一起。有些百貨公司設有統一的退稅櫃檯，館內各專櫃可以合併計算，那是百貨自己的服務，不是通例。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "英國為什麼寫不能退？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "英國在 2021 年 1 月取消了給旅客的退稅制度，大不列顛地區買東西現在拿不回消費稅。零售與觀光業者持續在遊說政府恢復，但到目前為止還沒有。北愛爾蘭的規定與大不列顛不同。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "日本的制度是不是要改了？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "是。日本原本是在店家現場就直接不收稅，2026 年 11 月 1 日起改成先付含稅價、到機場經海關確認後才退還。也就是說旅途中要先墊那筆錢，離境時再拿回來。新制同時取消了消耗品與一般物品的分類。出發前請再確認最新規定。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "值得為了退稅特地排隊嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "自己算一下時薪就知道。買了台幣五千塊的東西，實際可能拿回三、四百元，如果要排四十分鐘的隊還可能錯過登機，那就不划算。金額大的時候才值得。工具下方會直接告訴你換算成台幣大概多少。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="tax-refund">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🧾</span>出國退稅計算器</h1>
+    <p class="lede">退稅不等於退全部的稅。扣掉代辦手續費之後真正進口袋的通常少一大截，先算清楚再決定要不要排那條隊。</p>
+  </div>
+
+  <div class="warn-box">
+    <strong>先說清楚：</strong>各國的稅率、門檻與退稅方式會改，代辦業者的收費每家也不一樣。下面的數字是<strong>常見值，不是保證</strong>，每一欄都可以自己改。實際能拿多少以現場核發的單據為準。
+  </div>
+
+  <div class="panel">
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="country">在哪裡買</label>
+        <select id="country"></select>
+      </div>
+      <div class="field mb-0">
+        <label for="amount">消費金額（含稅，<span id="curLabel">JPY</span>）</label>
+        <input type="number" id="amount" value="30000" min="0" step="100">
+      </div>
+    </div>
+
+    <p class="hint mb-2" id="countryNote"></p>
+
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="rate">稅率（％）</label>
+        <input type="number" id="rate" value="10" min="0" max="50" step="0.5">
+      </div>
+      <div class="field mb-0">
+        <label for="gate">最低消費門檻</label>
+        <input type="number" id="gate" value="5000" min="0" step="100">
+      </div>
+      <div class="field mb-0">
+        <label for="recover">實拿比例：<strong id="recLabel">100</strong>％</label>
+        <input type="range" id="recover" min="0" max="100" step="5" value="100">
+      </div>
+    </div>
+
+    <div class="gate na" id="gateBox"></div>
+    <div class="board" id="board"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title">各地常見稅率與門檻</div>
+    <div class="table-scroll">
+      <table class="data">
+        <thead>
+          <tr><th>地區</th><th class="num">稅率</th><th class="num">常見門檻</th><th>退稅方式</th></tr>
+        </thead>
+        <tbody id="refTable"></tbody>
+      </table>
+    </div>
+    <p class="hint mb-0">整理自各地公開資訊，僅供估算。實際規定請以當地稅務機關或店家公告為準。</p>
+  </div>
+
+  <section class="prose">
+    <h2>為什麼拿到的比算出來的少</h2>
+    <p>因為中間有人要抽成。多數國家的退稅是交給民間代辦公司處理的，他們會從稅額裡扣一筆服務費，剩下的才給你。實務上拿回<strong>稅額的六到八成</strong>是常態，金額越小被抽的比例通常越高。</p>
+    <p>另外還有兩種常見的額外損耗：</p>
+    <ul>
+      <li><strong>領現金要再扣一筆</strong>。機場櫃檯給現金方便，但通常會再收一次手續費。退到信用卡雖然要等幾週，金額多半比較好看。</li>
+      <li><strong>換匯吃一段</strong>。如果你選擇退成台幣或美金，匯率是代辦公司自己定的，那裡面也有價差。退回原幣別再自己處理通常比較划算。</li>
+    </ul>
+
+    <h2>稅是「內含」還是「外加」差很多</h2>
+    <p>台灣、日本、歐洲的標價多半已經含稅，所以 10% 的稅在 11,000 元的商品裡面，稅額是 1,000 元而不是 1,100 元。這個工具是用<strong>含稅價往回推</strong>的，公式是「含稅價 × 稅率 ÷（1＋稅率）」。</p>
+    <p>美國那種標價不含稅、結帳才加上去的情況不適用這個算法，不過美國本來也沒有給旅客的退稅制度。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>門檻是整趟加起來還是單筆？</summary>
+        <div class="a">多數國家看的是<strong>同一天、同一間店</strong>的金額，不能把不同店家的收據湊在一起。有些百貨公司設有統一的退稅櫃檯，館內各專櫃可以合併計算，那是百貨自己的服務，不是通例。</div>
+      </details>
+      <details>
+        <summary>英國為什麼寫不能退？</summary>
+        <div class="a">英國在 2021 年 1 月取消了給旅客的退稅制度，大不列顛地區買東西現在拿不回消費稅。零售與觀光業者持續在遊說政府恢復，但到目前為止還沒有。北愛爾蘭的規定與大不列顛不同。</div>
+      </details>
+      <details>
+        <summary>日本的制度是不是要改了？</summary>
+        <div class="a">是。日本原本是在店家現場就直接不收稅，<strong>2026 年 11 月 1 日起改成先付含稅價、到機場經海關確認後才退還</strong>。也就是說旅途中要先墊那筆錢，離境時再拿回來。新制同時取消了消耗品與一般物品的分類。出發前請再確認最新規定。</div>
+      </details>
+      <details>
+        <summary>值得為了退稅特地排隊嗎？</summary>
+        <div class="a">自己算一下時薪就知道。買了台幣五千塊的東西，實際可能拿回三、四百元，如果要排四十分鐘的隊還可能錯過登機，那就不划算。金額大的時候才值得。工具下方會直接告訴你換算成台幣大概多少。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js?v=4e50a508"></script>
+<script src="../assets/js/layout.js?v=483231ca"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc } = window.U;
+
+  /* 各地常見值。會變動，所以畫面上每一欄都允許使用者自己改。 */
+  const PLACES = [
+    { key: 'jp', name: '日本', cur: 'JPY', rate: 10, gate: 5000, rec: 100,
+      how: '店內免稅（2026/11 起改機場退）',
+      note: '目前是在店家現場就不課稅，等於拿回全額。2026 年 11 月 1 日起改為先付含稅價、離境時在機場退還，實拿比例可能因此下降。門檻為同一天同一間店 5,000 日圓。' },
+    { key: 'kr', name: '韓國', cur: 'KRW', rate: 10, gate: 15000, rec: 75,
+      how: '店內即時退或機場退',
+      note: '小額消費多半可以在店內即時退稅，金額較大或超過上限則要到機場辦理。代辦手續費會吃掉一部分。' },
+    { key: 'fr', name: '法國', cur: 'EUR', rate: 20, gate: 100.01, rec: 70,
+      how: '機場電子核銷（PABLO）',
+      note: '標準稅率 20％，食品與書籍等適用較低稅率則不同。門檻為同一天同一間店 100.01 歐元。' },
+    { key: 'it', name: '義大利', cur: 'EUR', rate: 22, gate: 70.01, rec: 70,
+      how: '機場核章或電子核銷',
+      note: '標準稅率 22％，是歐洲主要觀光國中較高的一個。門檻 70.01 歐元。' },
+    { key: 'es', name: '西班牙', cur: 'EUR', rate: 21, gate: 0, rec: 70,
+      how: '機場電子核銷（DIVA）',
+      note: '西班牙已取消最低消費門檻，買多少都能辦，但小額扣完手續費往往所剩無幾。' },
+    { key: 'de', name: '德國', cur: 'EUR', rate: 19, gate: 50.01, rec: 70,
+      how: '機場核章',
+      note: '標準稅率 19％，門檻 50.01 歐元，是歐洲門檻較低的國家之一。' },
+    { key: 'nl', name: '荷蘭', cur: 'EUR', rate: 21, gate: 50, rec: 70,
+      how: '機場核章',
+      note: '標準稅率 21％，實務上各店家對門檻的認定略有差異。' },
+    { key: 'uk', name: '英國（已取消）', cur: 'GBP', rate: 20, gate: 0, rec: 0,
+      how: '目前不提供旅客退稅',
+      note: '英國自 2021 年 1 月起取消旅客退稅制度，在大不列顛地區購物無法退還加值稅。唯一的替代方式是請店家直接寄送到英國境外的地址。北愛爾蘭規定不同。' },
+    { key: 'sg', name: '新加坡', cur: 'SGD', rate: 9, gate: 100, rec: 80,
+      how: '機場電子退稅（eTRS）',
+      note: '消費稅 9％，門檻 100 新幣，同一店家當日的收據可以合併計算。' },
+    { key: 'th', name: '泰國', cur: 'THB', rate: 7, gate: 2000, rec: 75,
+      how: '機場退稅櫃檯',
+      note: '單店單日門檻 2,000 泰銖，且全程累計需達一定金額才能申辦。退稅金額越大，被扣的服務費比例越低。' },
+    { key: 'au', name: '澳洲', cur: 'AUD', rate: 10, gate: 300, rec: 90,
+      how: '機場 TRS 櫃檯',
+      note: '同一店家 60 天內累計滿 300 澳幣即可，由海關直接退款，沒有民間代辦抽成，實拿比例較高。' },
+    { key: 'tw', name: '台灣（外籍旅客）', cur: 'TWD', rate: 5, gate: 2000, rec: 86,
+      how: '特約櫃檯或機場退稅',
+      note: '營業稅 5％，同一天同一家特約商店滿 2,000 元可辦。辦理時會收取一定比例的手續費。' }
+  ];
+
+  const RATE_API = 'https://open.er-api.com/v6/latest/TWD';
+  let rates = null;
+
+  /* ---------- 畫面初始化 ---------- */
+  $('#country').innerHTML = PLACES.map((p, i) =>
+    `<option value="${i}">${esc(p.name)}</option>`).join('');
+
+  $('#refTable').innerHTML = PLACES.map(p => `
+    <tr>
+      <td>${esc(p.name)}</td>
+      <td class="num">${p.rate}%</td>
+      <td class="num">${p.gate ? p.gate.toLocaleString() + ' ' + p.cur : '無'}</td>
+      <td class="small">${esc(p.how)}</td>
+    </tr>`).join('');
+
+  function applyPlace() {
+    const p = PLACES[+$('#country').value];
+    $('#rate').value = p.rate;
+    $('#gate').value = p.gate;
+    $('#recover').value = p.rec;
+    $('#recLabel').textContent = p.rec;
+    $('#curLabel').textContent = p.cur;
+    $('#countryNote').textContent = p.note;
+    calc();
+  }
+
+  const fmt = (n, d = 0) => isFinite(n)
+    ? n.toLocaleString('zh-TW', { maximumFractionDigits: d }) : '—';
+
+  function calc() {
+    const p = PLACES[+$('#country').value];
+    const amount = Math.max(0, Number($('#amount').value) || 0);
+    const rate = Math.max(0, Number($('#rate').value) || 0) / 100;
+    const gate = Math.max(0, Number($('#gate').value) || 0);
+    const rec = Number($('#recover').value) / 100;
+
+    /* 標價含稅，所以稅額要往回推，不是直接乘 */
+    const tax = amount * rate / (1 + rate);
+    const net = tax * rec;
+    const pretax = amount - tax;
+
+    /* 門檻判定 */
+    const box = $('#gateBox');
+    if (p.rec === 0) {
+      box.className = 'gate no';
+      box.innerHTML = `這個地區目前<strong>不提供旅客退稅</strong>，下面的數字只是告訴你價格裡含了多少稅。`;
+    } else if (gate === 0) {
+      box.className = 'gate ok';
+      box.innerHTML = `沒有最低消費門檻，買多少都可以辦。`;
+    } else if (amount >= gate) {
+      box.className = 'gate ok';
+      box.innerHTML = `已達門檻（<b>${fmt(gate)}</b> ${esc(p.cur)}），可以辦理。門檻通常是算<strong>同一天同一間店</strong>的。`;
+    } else {
+      box.className = 'gate no';
+      box.innerHTML = `未達門檻，還差 <b>${fmt(gate - amount)}</b> ${esc(p.cur)}。`;
+    }
+
+    const twd = toTwd(net, p.cur);
+    const twdAmount = toTwd(amount, p.cur);
+
+    $('#board').innerHTML = `
+      <div class="board__row muted-row">
+        <span>未稅價</span><b>${fmt(pretax)} ${esc(p.cur)}</b>
+      </div>
+      <div class="board__row">
+        <span>價格裡內含的稅</span><b>${fmt(tax)} ${esc(p.cur)}</b>
+      </div>
+      <div class="board__row muted-row">
+        <span>手續費吃掉</span><b>−${fmt(tax - net)} ${esc(p.cur)}</b>
+      </div>
+      <div class="board__row main">
+        <span>估計實際拿回</span><b>${fmt(net)} ${esc(p.cur)}</b>
+      </div>
+      <div class="board__row">
+        <span>相當於消費金額的</span><b>${amount ? (net / amount * 100).toFixed(1) : '0.0'}%</b>
+      </div>
+      ${twd !== null ? `
+      <div class="board__row">
+        <span>約合台幣</span>
+        <b>NT$ ${fmt(twd)}</b>
+      </div>` : ''}
+      <p class="board__note">
+        ${twd !== null
+          ? `這筆消費約為台幣 ${fmt(twdAmount)} 元。匯率為國際市場參考價，僅供概估。`
+          : `匯率載入中或無法取得，金額僅顯示當地幣別。`}
+        實拿比例預設帶的是常見值，代辦公司實際怎麼收請看你拿到的單據。
+      </p>`;
+  }
+
+  /** 當地幣別換成台幣。rates 以台幣為基準，rates[X] 是 1 TWD 等於多少 X */
+  function toTwd(amount, cur) {
+    if (!rates || !rates[cur] || !isFinite(amount)) return null;
+    return amount / rates[cur];
+  }
+
+  async function loadRates() {
+    try {
+      const res = await fetch(RATE_API, { cache: 'no-cache' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const json = await res.json();
+      if (!json.rates || !json.rates.JPY) throw new Error('格式不符');
+      rates = json.rates;
+      calc();
+    } catch (e) {
+      /* 匯率拿不到不影響主要功能，只是少一行台幣換算 */
+      rates = null;
+    }
+  }
+
+  $('#country').addEventListener('change', applyPlace);
+  ['#amount', '#rate', '#gate', '#recover'].forEach(s =>
+    $(s).addEventListener('input', calc));
+  $('#recover').addEventListener('input', e => { $('#recLabel').textContent = e.target.value; });
+
+  applyPlace();
+  loadRates();
+})();
+</script>
+</body>
+</html>

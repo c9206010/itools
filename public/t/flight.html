@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>航班時間轉機計算｜跨時區飛行時數與轉機時間 - 順手工具箱</title>
+<meta name="description" content="免費航班時間計算工具，輸入機票上的各段當地起降時刻，自動算出實際飛行時數、轉機停留時間與總耗時，跨時區與跨日自動處理，也能由飛行時數推算抵達當地時間。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛫</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css?v=35ffc45a">
+<style>
+  .leg { border: 1px solid var(--border); border-radius: var(--radius);
+         background: var(--surface); padding: 14px; margin-bottom: 10px; }
+  .leg__head { display: flex; align-items: center; justify-content: space-between;
+               gap: 10px; margin-bottom: 10px; }
+  .leg__no { font-weight: 800; font-size: .92rem; }
+  .leg__no span { display: inline-block; min-width: 22px; height: 22px; line-height: 22px;
+                  text-align: center; border-radius: 999px; margin-right: 6px;
+                  background: var(--brand); color: #fff; font-size: .78rem; }
+  .leg__del { border: 0; background: none; color: var(--ink-3); cursor: pointer;
+              font-size: .85rem; padding: 4px 6px; border-radius: 6px; }
+  .leg__del:hover { color: var(--danger); background: var(--brand-wash); }
+
+  .layover { display: flex; align-items: center; gap: 10px; margin: 0 0 10px 14px;
+             padding: 9px 13px; border-left: 3px dashed var(--border-strong);
+             font-size: .9rem; }
+  .layover b { font-family: var(--mono); font-size: 1rem; }
+  .layover.tight { border-left-color: var(--warn); color: var(--warn); }
+  .layover.bad { border-left-color: var(--danger); color: var(--danger); }
+  .layover.neg { border-left-color: var(--danger); color: var(--danger); font-weight: 700; }
+
+  .board { border: 2px solid var(--border-strong); border-radius: var(--radius-lg);
+           background: var(--surface-2); padding: 18px 16px; }
+  .board__row { display: flex; justify-content: space-between; align-items: baseline;
+                gap: 12px; padding: 9px 0; border-bottom: 1px dashed var(--border); }
+  .board__row:last-child { border-bottom: 0; }
+  .board__row b { font-family: var(--mono); font-size: 1.12rem; font-weight: 800; }
+  .board__row.total b { color: var(--brand); font-size: 1.32rem; }
+  .board__note { font-size: .84rem; color: var(--ink-3); margin-top: 10px; }
+
+  .day-tag { font-size: .74rem; margin-left: 5px; padding: 1px 6px; border-radius: 999px;
+             background: var(--brand-wash); color: var(--brand-ink); white-space: nowrap; }
+
+  .tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+  .tabs button { flex: 1; padding: 10px; font: inherit; cursor: pointer;
+                 border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+                 background: var(--surface); color: var(--ink-2); }
+  .tabs button.is-on { background: var(--brand); border-color: var(--brand); color: #fff; font-weight: 700; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/flight.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="航班, 飛行時間, 轉機, 時差, 抵達時間, 紅眼, 幾小時">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="航班時間轉機計算｜跨時區飛行時數與轉機時間 - 順手工具箱">
+<meta property="og:description" content="免費航班時間計算工具，輸入機票上的各段當地起降時刻，自動算出實際飛行時數、轉機停留時間與總耗時，跨時區與跨日自動處理，也能由飛行時數推算抵達當地時間。">
+<meta property="og:url" content="https://tools.luka-life.com/t/flight.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="航班時間轉機計算｜跨時區飛行時數與轉機時間 - 順手工具箱">
+<meta name="twitter:description" content="免費航班時間計算工具，輸入機票上的各段當地起降時刻，自動算出實際飛行時數、轉機停留時間與總耗時，跨時區與跨日自動處理，也能由飛行時數推算抵達當地時間。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "航班時間轉機計算",
+  "description": "免費航班時間計算工具，輸入機票上的各段當地起降時刻，自動算出實際飛行時數、轉機停留時間與總耗時，跨時區與跨日自動處理，也能由飛行時數推算抵達當地時間。",
+  "url": "https://tools.luka-life.com/t/flight.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "旅遊出行",
+      "item": "https://tools.luka-life.com/#travel"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "航班時間轉機計算",
+      "item": "https://tools.luka-life.com/t/flight.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "日光節約時間會算進去嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "會。換算是交給瀏覽器內建的時區資料庫處理，如果你的航班剛好跨越某地的夏令時間切換日，時差會按當天實際的規則計算。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "找不到我的機場怎麼辦？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "清單是以城市為單位，不是機場代碼。只要選同一個時區的城市就好——例如仁川機場選首爾、成田與羽田都選東京。同一個國家不同時區的情況（例如美國、澳洲）才需要留意選對城市。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "總耗時為什麼比各段飛行時間加起來多很多？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "因為總耗時把轉機的等待也算進去了。這個數字才是你真正「花在路上」的時間，訂票比價時用它來比較才公平——便宜兩千但多花八小時轉機，值不值得你自己判斷。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "抵達時間顯示「＋1 天」是什麼意思？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "代表當地日期已經跨到隔天。長程航班很常見，訂接駁車或旅館時要特別注意，很多人就是在這裡訂錯日期。顯示「−1 天」則是往東飛越過換日線的情況，抵達時的當地日期反而比出發早。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="flight">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🛫</span>航班時間轉機計算</h1>
+    <p class="lede">機票上印的都是當地時間，跨時區之後根本看不出到底飛了多久、轉機有幾個小時。把時刻抄進來，剩下的交給它算。</p>
+  </div>
+
+  <div class="panel">
+    <div class="tabs" id="tabs">
+      <button type="button" class="is-on" data-mode="ticket">我有機票，算飛行與轉機時間</button>
+      <button type="button" data-mode="estimate">只知道飛行時數，推算抵達時間</button>
+    </div>
+
+    <!-- 模式一：由起降時刻反推 -->
+    <div id="ticketMode">
+      <div id="legs"></div>
+      <div class="btn-group mb-2">
+        <button class="btn btn--ghost" type="button" id="addLeg">＋ 加一段轉機</button>
+      </div>
+
+      <div class="board" id="board"></div>
+    </div>
+
+    <!-- 模式二：由飛行時數推算 -->
+    <div id="estimateMode" class="hidden">
+      <div class="row mb-2">
+        <div class="field mb-0">
+          <label for="eFrom">出發地</label>
+          <select id="eFrom"></select>
+        </div>
+        <div class="field mb-0">
+          <label for="eDep">出發當地時間</label>
+          <input type="datetime-local" id="eDep">
+        </div>
+      </div>
+      <div class="row mb-2">
+        <div class="field mb-0">
+          <label for="eTo">目的地</label>
+          <select id="eTo"></select>
+        </div>
+        <div class="field mb-0">
+          <label for="eH">飛行時數</label>
+          <input type="number" id="eH" value="3" min="0" max="30" step="1">
+        </div>
+        <div class="field mb-0">
+          <label for="eM">加上幾分</label>
+          <input type="number" id="eM" value="30" min="0" max="59" step="5">
+        </div>
+      </div>
+
+      <div class="board" id="eBoard"></div>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>轉機時間只是參考。</strong>每個機場、每家航空公司公告的「最短轉機時間」都不一樣，同一張票轉機跟分開買票更是兩回事。這裡算的是時刻表上的空檔，實際夠不夠請以訂位時的規定為準。
+  </div>
+
+  <section class="prose">
+    <h2>為什麼機票上的時間看起來很怪</h2>
+    <p>因為起飛與降落印的都是<strong>當地時間</strong>。台北飛東京看起來像是「10:00 出發、14:00 抵達」的四小時，實際只飛三小時，因為日本快一小時。反過來飛美國西岸更誇張，早上出發、當天早上更早的時間抵達，看起來像時光倒流。</p>
+    <p>要算真正的飛行時數，必須先把兩端的當地時間都換算回同一個基準才能相減。這個工具做的就是這件事，日光節約時間也會一起處理掉。</p>
+
+    <h2>轉機要留多久</h2>
+    <p>沒有一體適用的答案，但可以用幾個因素判斷自己該保守還是可以冒險：</p>
+    <ul>
+      <li><strong>同一張票</strong>（同一個訂位代號）比較安心。銜接不上時，航空公司通常有義務幫你改搭下一班。</li>
+      <li><strong>分開買的票</strong>風險自負。前段延誤導致後段沒搭上，錢就是白花的，這種情況建議留非常寬鬆的時間，甚至分兩天。</li>
+      <li><strong>要不要入境或換航廈</strong>影響很大。需要提領行李重新報到、過海關、換航廈接駁，一小時通常不夠用。</li>
+      <li><strong>國際轉國內</strong>幾乎都要重新過安檢，時間要抓得比純國際轉機更長。</li>
+    </ul>
+    <p>工具會在轉機時間偏短時給你提醒，但那只是粗略的燈號，真正的門檻要看你訂的那個機場怎麼規定。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>日光節約時間會算進去嗎？</summary>
+        <div class="a">會。換算是交給瀏覽器內建的時區資料庫處理，如果你的航班剛好跨越某地的夏令時間切換日，時差會按當天實際的規則計算。</div>
+      </details>
+      <details>
+        <summary>找不到我的機場怎麼辦？</summary>
+        <div class="a">清單是<strong>以城市為單位</strong>，不是機場代碼。只要選同一個時區的城市就好——例如仁川機場選首爾、成田與羽田都選東京。同一個國家不同時區的情況（例如美國、澳洲）才需要留意選對城市。</div>
+      </details>
+      <details>
+        <summary>總耗時為什麼比各段飛行時間加起來多很多？</summary>
+        <div class="a">因為總耗時把轉機的等待也算進去了。這個數字才是你真正「花在路上」的時間，訂票比價時用它來比較才公平——便宜兩千但多花八小時轉機，值不值得你自己判斷。</div>
+      </details>
+      <details>
+        <summary>抵達時間顯示「＋1 天」是什麼意思？</summary>
+        <div class="a">代表當地日期已經跨到隔天。長程航班很常見，訂接駁車或旅館時要特別注意，很多人就是在這裡訂錯日期。顯示「−1 天」則是往東飛越過換日線的情況，抵達時的當地日期反而比出發早。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/cities.js?v=c16ad570"></script>
+<script src="../assets/js/catalog.js?v=4e50a508"></script>
+<script src="../assets/js/layout.js?v=483231ca"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc, pad } = window.U;
+  const CITY_DB = window.CITY_DB;
+
+  /* ---------- 時區換算 ---------- */
+  function partsIn(date, tz) {
+    const fmt = new Intl.DateTimeFormat('en-CA', {
+      timeZone: tz, hour12: false,
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit'
+    });
+    const o = {};
+    fmt.formatToParts(date).forEach(p => { o[p.type] = p.value; });
+    if (o.hour === '24') o.hour = '00';
+    return o;
+  }
+
+  /** 某個瞬間在指定時區相對 UTC 的位移（分鐘） */
+  function offsetMinutes(ts, tz) {
+    const p = partsIn(new Date(ts), tz);
+    const asUTC = Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute);
+    return Math.round((asUTC - ts) / 60000);
+  }
+
+  /**
+   * 把「某地當地的牆上時間」換回世界時間。
+   * 位移本身會隨日期變動（夏令時間），所以先用猜的位移求一次，
+   * 再用求出的瞬間重新取位移修正一次——兩次就夠收斂了。
+   */
+  function localToTs(localStr, tz) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(localStr || '');
+    if (!m) return NaN;
+    const wall = Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]);
+    let ts = wall - offsetMinutes(wall, tz) * 60000;
+    ts = wall - offsetMinutes(ts, tz) * 60000;
+    return ts;
+  }
+
+  /** 分鐘轉成「3 小時 25 分」 */
+  function dur(min) {
+    if (!isFinite(min)) return '—';
+    const neg = min < 0;
+    const a = Math.abs(Math.round(min));
+    const h = Math.floor(a / 60), mm = a % 60;
+    const s = h ? (mm ? `${h} 小時 ${mm} 分` : `${h} 小時`) : `${mm} 分`;
+    return neg ? '−' + s : s;
+  }
+
+  /** 當地日期比出發地晚／早幾天 */
+  function dayShift(depLocal, arrTs, arrTz) {
+    const dep = /^(\d{4})-(\d{2})-(\d{2})/.exec(depLocal);
+    if (!dep) return 0;
+    const a = partsIn(new Date(arrTs), arrTz);
+    const d1 = Date.UTC(+dep[1], +dep[2] - 1, +dep[3]);
+    const d2 = Date.UTC(+a.year, +a.month - 1, +a.day);
+    return Math.round((d2 - d1) / 86400000);
+  }
+
+  const dayTag = n => n === 0 ? ''
+    : `<span class="day-tag">${n > 0 ? '＋' : '−'}${Math.abs(n)} 天</span>`;
+
+  /* ---------- 城市選單 ---------- */
+  const cityOptions = (() => {
+    const groups = {};
+    CITY_DB.forEach(c => { (groups[c[3]] = groups[c[3]] || []).push(c); });
+    return Object.keys(groups).map(region =>
+      `<optgroup label="${esc(region)}">` +
+      groups[region].map(c =>
+        `<option value="${esc(c[1])}" data-name="${esc(c[0])}">${esc(c[0])}（${esc(c[2])}）</option>`
+      ).join('') + `</optgroup>`
+    ).join('');
+  })();
+
+  const nameOfTz = tz => {
+    const c = CITY_DB.find(x => x[1] === tz);
+    return c ? c[0] : tz;
+  };
+
+  /* ---------- 模式切換 ---------- */
+  $('#tabs').addEventListener('click', e => {
+    const btn = e.target.closest('button[data-mode]');
+    if (!btn) return;
+    [...$('#tabs').children].forEach(b => b.classList.toggle('is-on', b === btn));
+    const ticket = btn.dataset.mode === 'ticket';
+    $('#ticketMode').classList.toggle('hidden', !ticket);
+    $('#estimateMode').classList.toggle('hidden', ticket);
+  });
+
+  /* ==================== 模式一：由機票時刻反推 ==================== */
+  function defaultDate(offsetDays) {
+    const d = new Date();
+    d.setDate(d.getDate() + (offsetDays || 0));
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  }
+
+  let legs = [
+    { fromTz: 'Asia/Taipei', dep: defaultDate(7) + 'T09:00',
+      toTz: 'Asia/Tokyo',    arr: defaultDate(7) + 'T13:10' }
+  ];
+
+  function legHTML(leg, i) {
+    return `<div class="leg" data-i="${i}">
+      <div class="leg__head">
+        <div class="leg__no"><span>${i + 1}</span>第 ${i + 1} 段</div>
+        ${legs.length > 1 ? `<button class="leg__del" type="button" data-del="${i}">移除這段</button>` : ''}
+      </div>
+      <div class="row mb-2">
+        <div class="field mb-0">
+          <label>出發城市</label>
+          <select data-f="fromTz">${cityOptions}</select>
+        </div>
+        <div class="field mb-0">
+          <label>出發當地時間</label>
+          <input type="datetime-local" data-f="dep" value="${esc(leg.dep)}">
+        </div>
+      </div>
+      <div class="row mb-0">
+        <div class="field mb-0">
+          <label>抵達城市</label>
+          <select data-f="toTz">${cityOptions}</select>
+        </div>
+        <div class="field mb-0">
+          <label>抵達當地時間</label>
+          <input type="datetime-local" data-f="arr" value="${esc(leg.arr)}">
+        </div>
+      </div>
+    </div>`;
+  }
+
+  function renderLegs() {
+    const host = $('#legs');
+    let html = '';
+    legs.forEach((leg, i) => {
+      html += legHTML(leg, i);
+      if (i < legs.length - 1) html += `<div class="layover" data-lay="${i}"></div>`;
+    });
+    host.innerHTML = html;
+
+    /* select 的預設值要用 JS 設，才能正確對到 optgroup 裡的項目 */
+    host.querySelectorAll('.leg').forEach((el, i) => {
+      el.querySelector('[data-f="fromTz"]').value = legs[i].fromTz;
+      el.querySelector('[data-f="toTz"]').value = legs[i].toTz;
+    });
+    calcTicket();
+  }
+
+  $('#legs').addEventListener('input', e => {
+    const f = e.target.dataset.f;
+    if (!f) return;
+    const i = +e.target.closest('.leg').dataset.i;
+    legs[i][f] = e.target.value;
+    calcTicket();
+  });
+
+  $('#legs').addEventListener('click', e => {
+    const btn = e.target.closest('button[data-del]');
+    if (!btn) return;
+    legs.splice(+btn.dataset.del, 1);
+    renderLegs();
+  });
+
+  $('#addLeg').addEventListener('click', () => {
+    if (legs.length >= 5) { window.toast('最多五段，再多就該考慮換條航線了'); return; }
+    const last = legs[legs.length - 1];
+    /* 新一段從上一段的抵達地接續，預設停留兩小時 */
+    const nextDep = shiftLocal(last.arr, 120);
+    legs.push({
+      fromTz: last.toTz, dep: nextDep,
+      toTz: last.toTz === 'Asia/Taipei' ? 'Asia/Tokyo' : 'Asia/Taipei',
+      arr: shiftLocal(nextDep, 180)
+    });
+    renderLegs();
+  });
+
+  /** 純粹在字串上加減分鐘，不牽涉時區 */
+  function shiftLocal(localStr, addMin) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(localStr || '');
+    if (!m) return localStr;
+    const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]) + addMin * 60000);
+    return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}` +
+           `T${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}`;
+  }
+
+  function calcTicket() {
+    const seg = legs.map(l => ({
+      depTs: localToTs(l.dep, l.fromTz),
+      arrTs: localToTs(l.arr, l.toTz),
+      leg: l
+    }));
+
+    if (seg.some(s => !isFinite(s.depTs) || !isFinite(s.arrTs))) {
+      $('#board').innerHTML = `<p class="muted mb-0">把每一段的起降時間都填好，就會出現結果。</p>`;
+      return;
+    }
+
+    /* 轉機時間 */
+    let layoverTotal = 0;
+    for (let i = 0; i < legs.length - 1; i++) {
+      const gap = (seg[i + 1].depTs - seg[i].arrTs) / 60000;
+      layoverTotal += gap;
+      const el = $(`.layover[data-lay="${i}"]`);
+      if (!el) continue;
+
+      let cls = '', note = '';
+      if (gap < 0) {
+        cls = 'neg';
+        note = '下一段比這段落地還早，時間或城市可能填錯了';
+      } else if (gap < 60) {
+        cls = 'bad';
+        note = '不到一小時，除非同航廈又不用重新報到，否則風險很高';
+      } else if (gap < 120) {
+        cls = 'tight';
+        note = '偏緊，要換航廈或重新過安檢的話要留意';
+      } else if (gap > 60 * 8) {
+        note = '超過八小時，可以考慮出機場走走或找過境旅館';
+      } else {
+        note = '看起來還算充裕';
+      }
+      el.className = 'layover ' + cls;
+      el.innerHTML = `<span>在 <strong>${esc(nameOfTz(legs[i].toTz))}</strong> 轉機</span>
+                      <b>${dur(gap)}</b>
+                      <span class="small">${esc(note)}</span>`;
+    }
+
+    const flightTotal = seg.reduce((n, s) => n + (s.arrTs - s.depTs) / 60000, 0);
+    const journey = (seg[seg.length - 1].arrTs - seg[0].depTs) / 60000;
+    const shift = dayShift(legs[0].dep, seg[seg.length - 1].arrTs, legs[legs.length - 1].toTz);
+    const arrP = partsIn(new Date(seg[seg.length - 1].arrTs), legs[legs.length - 1].toTz);
+
+    const rows = seg.map((s, i) => `
+      <div class="board__row">
+        <span>第 ${i + 1} 段　${esc(nameOfTz(s.leg.fromTz))} → ${esc(nameOfTz(s.leg.toTz))}</span>
+        <b>${dur((s.arrTs - s.depTs) / 60000)}</b>
+      </div>`).join('');
+
+    $('#board').innerHTML = rows +
+      (legs.length > 1
+        ? `<div class="board__row"><span>轉機等待合計</span><b>${dur(layoverTotal)}</b></div>` : '') +
+      `<div class="board__row"><span>純飛行時間合計</span><b>${dur(flightTotal)}</b></div>
+       <div class="board__row total"><span>門到門總耗時</span><b>${dur(journey)}</b></div>
+       <div class="board__row">
+         <span>抵達當地時刻</span>
+         <b>${arrP.month}/${arrP.day} ${arrP.hour}:${arrP.minute}${dayTag(shift)}</b>
+       </div>` +
+      (seg.some(s => s.arrTs < s.depTs)
+        ? `<p class="board__note" style="color:var(--danger)">
+             有一段的抵達時間早於出發時間，請確認城市與日期是否填對。</p>`
+        : `<p class="board__note">總耗時是從第一段起飛到最後一段落地，不含報到與出關的時間。</p>`);
+  }
+
+  /* ==================== 模式二：由飛行時數推算 ==================== */
+  $('#eFrom').innerHTML = cityOptions;
+  $('#eTo').innerHTML = cityOptions;
+  $('#eFrom').value = 'Asia/Taipei';
+  $('#eTo').value = 'Asia/Tokyo';
+  $('#eDep').value = defaultDate(7) + 'T09:00';
+
+  function calcEstimate() {
+    const fromTz = $('#eFrom').value;
+    const toTz = $('#eTo').value;
+    const depLocal = $('#eDep').value;
+    const mins = (Number($('#eH').value) || 0) * 60 + (Number($('#eM').value) || 0);
+
+    const depTs = localToTs(depLocal, fromTz);
+    if (!isFinite(depTs)) {
+      $('#eBoard').innerHTML = `<p class="muted mb-0">請填出發當地時間。</p>`;
+      return;
+    }
+
+    const arrTs = depTs + mins * 60000;
+    const p = partsIn(new Date(arrTs), toTz);
+    const shift = dayShift(depLocal, arrTs, toTz);
+
+    /* 出發當下兩地的時差，寫成「你的手錶要調幾小時」 */
+    const diffMin = offsetMinutes(arrTs, toTz) - offsetMinutes(depTs, fromTz);
+    const diffText = diffMin === 0 ? '兩地沒有時差'
+      : `抵達後手錶要${diffMin > 0 ? '往前調' : '往後調'} ${dur(Math.abs(diffMin))}`;
+
+    $('#eBoard').innerHTML = `
+      <div class="board__row">
+        <span>${esc(nameOfTz(fromTz))} 起飛</span>
+        <b>${depLocal.slice(5, 10).replace('-', '/')} ${depLocal.slice(11, 16)}</b>
+      </div>
+      <div class="board__row"><span>飛行時間</span><b>${dur(mins)}</b></div>
+      <div class="board__row total">
+        <span>${esc(nameOfTz(toTz))} 落地（當地時間）</span>
+        <b>${p.month}/${p.day} ${p.hour}:${p.minute}${dayTag(shift)}</b>
+      </div>
+      <p class="board__note">${esc(diffText)}。飛行時數請以訂位系統顯示的為準，這裡只是照你輸入的數字往後推。</p>`;
+  }
+
+  ['#eFrom', '#eTo', '#eDep', '#eH', '#eM'].forEach(s =>
+    $(s).addEventListener('input', calcEstimate));
+
+  renderLegs();
+  calcEstimate();
+})();
+</script>
+</body>
+</html>
