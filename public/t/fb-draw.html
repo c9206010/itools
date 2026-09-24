@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FB 留言抽獎｜貼上留言自動去重複並抽出得獎者 - 順手工具箱</title>
+<meta name="description" content="免費臉書留言抽獎工具，把貼文留言貼上即可自動清除介面文字、合併同一人的重複留言，依關鍵字篩選資格並抽出得獎者與備取名單，不需要任何授權。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎁</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .tabs { display: flex; gap: 6px; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
+  .tab {
+    padding: 9px 18px; border: 0; background: none; cursor: pointer;
+    font: inherit; font-size: .93rem; font-weight: 600; color: var(--ink-3);
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+  }
+  .tab.is-on { color: var(--brand); border-bottom-color: var(--brand); }
+
+  .slot {
+    background: linear-gradient(180deg, var(--surface-2), var(--bg-sunk));
+    border: 2px dashed var(--border-strong); border-radius: var(--radius-lg);
+    padding: 30px 16px; text-align: center; min-height: 128px;
+    display: grid; place-items: center; gap: 8px;
+  }
+  .slot__name {
+    font-size: clamp(1.5rem, 1rem + 3.4vw, 2.4rem);
+    font-weight: 800; line-height: 1.3; word-break: break-all;
+  }
+  .slot.is-live { border-color: var(--brand); border-style: solid; }
+  .slot.is-live .slot__name { color: var(--ink-3); }
+  .slot.is-done .slot__name { color: var(--brand); }
+
+  .ptable { max-height: 320px; overflow: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); }
+  .ptable thead th { position: sticky; top: 0; z-index: 1; }
+  .ptable td.msg { color: var(--ink-3); font-size: .85rem; max-width: 320px; }
+  tr.out td { opacity: .5; }
+  tr.out td.why { opacity: 1; color: var(--warn); font-size: .82rem; }
+
+  .winner-card {
+    display: grid; grid-template-columns: 38px 1fr; gap: 12px; align-items: center;
+    padding: 12px 14px; border: 1px solid var(--ok); border-radius: var(--radius);
+    background: rgba(47,125,79,.08); margin-bottom: 8px;
+  }
+  .winner-card .no {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--ok); color: #fff; display: grid; place-items: center;
+    font-weight: 800; font-size: .9rem;
+  }
+  .winner-card.backup { border-color: var(--border-strong); background: var(--surface-2); }
+  .winner-card.backup .no { background: var(--ink-3); }
+  .winner-card b { font-size: 1.02rem; }
+  .winner-card small { display: block; color: var(--ink-3); margin-top: 2px; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/fb-draw.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="fb, 臉書, 抽獎, 留言, 抽獎小幫手, 社團, 粉專, 得獎">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="FB 留言抽獎｜貼上留言自動去重複並抽出得獎者 - 順手工具箱">
+<meta property="og:description" content="免費臉書留言抽獎工具，把貼文留言貼上即可自動清除介面文字、合併同一人的重複留言，依關鍵字篩選資格並抽出得獎者與備取名單，不需要任何授權。">
+<meta property="og:url" content="https://tools.luka-life.com/t/fb-draw.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="FB 留言抽獎｜貼上留言自動去重複並抽出得獎者 - 順手工具箱">
+<meta name="twitter:description" content="免費臉書留言抽獎工具，把貼文留言貼上即可自動清除介面文字、合併同一人的重複留言，依關鍵字篩選資格並抽出得獎者與備取名單，不需要任何授權。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "FB 留言抽獎",
+  "description": "免費臉書留言抽獎工具，把貼文留言貼上即可自動清除介面文字、合併同一人的重複留言，依關鍵字篩選資格並抽出得獎者與備取名單，不需要任何授權。",
+  "url": "https://tools.luka-life.com/t/fb-draw.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "隨機抽籤",
+      "item": "https://tools.luka-life.com/#random"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "FB 留言抽獎",
+      "item": "https://tools.luka-life.com/t/fb-draw.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "抽籤是真的隨機嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "是。用瀏覽器內建的 crypto.getRandomValues，並修正了取餘數造成的機率偏差，每位符合資格的參加者中獎機率完全相同。不過這個工具不會留下任何紀錄，如果是金額較大、需要事後舉證的活動，建議全程錄影。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "可以要求「標記兩位朋友」嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "沒有做這個判斷，因為從 FB 複製出來的文字不會保留標記格式，被標記的朋友看起來就是普通文字，程式無法可靠分辨。硬做會誤判，不如不做。實務上可以改用關鍵字條件，或抽出後人工複核得獎者的留言。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "解析出來的名字怪怪的？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "FB 的留言區結構會隨版本調整，複製下來的文字也會因瀏覽器而異。遇到這種情況，切到「直接貼名單」分頁，自己把名單整理成一行一個名字，那樣百分之百準確。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "同名同姓怎麼辦？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "工具是用「顯示名稱」來判斷是否為同一人，所以同名的兩個人會被合併。這種情況建議關掉「同一人只算一次」，或抽出後人工確認。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="fb-draw">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🎁</span>FB 留言抽獎</h1>
+    <p class="lede">把留言整段貼過來，自動清掉「讚、回覆、3 天」那些介面文字，同一個人洗十次版也只算一次。</p>
+  </div>
+
+  <div class="panel">
+    <div class="tabs" role="tablist">
+      <button class="tab is-on" type="button" data-tab="paste" role="tab">從 FB 貼上留言</button>
+      <button class="tab" type="button" data-tab="list" role="tab">直接貼名單</button>
+    </div>
+
+    <div class="field mb-2">
+      <label for="raw" id="rawLabel">在 FB 貼文的留言區全選複製，整段貼進來</label>
+      <textarea id="raw" rows="10" spellcheck="false"></textarea>
+      <p class="hint" id="rawHint">
+        操作方式：在電腦版瀏覽器打開貼文 → 先點「查看更多留言」把留言全部展開 →
+        用滑鼠拖曳選取整個留言區 → 複製 → 貼到這裡。
+      </p>
+    </div>
+
+    <div class="panel__title">參加資格</div>
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="mustHave">留言必須包含（可留空）</label>
+        <input type="text" id="mustHave" placeholder="例如 +1　多個用逗號分隔">
+      </div>
+      <div class="field mb-0">
+        <label for="mustMode">多個關鍵字時</label>
+        <select id="mustMode">
+          <option value="any">符合任一個就好</option>
+          <option value="all">必須全部符合</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label for="exclude">排除這些人（可留空）</label>
+        <input type="text" id="exclude" placeholder="小編, 工作人員　逗號分隔">
+      </div>
+    </div>
+
+    <div class="chips mb-2">
+      <label class="chip is-on"><input type="checkbox" id="dedupe" hidden checked> 同一人只算一次</label>
+      <label class="chip"><input type="checkbox" id="weighted" hidden> 留言越多機會越高</label>
+    </div>
+
+    <div class="stat-row mb-2">
+      <div class="stat"><div class="stat__num" id="sTotal">0</div><div class="stat__label">解析到留言</div></div>
+      <div class="stat"><div class="stat__num" id="sPeople">0</div><div class="stat__label">不重複人數</div></div>
+      <div class="stat"><div class="stat__num" id="sValid">0</div><div class="stat__label">符合資格</div></div>
+      <div class="stat"><div class="stat__num" id="sOut">0</div><div class="stat__label">不符資格</div></div>
+    </div>
+
+    <div class="panel__title">參加者清單（抽獎前請先確認解析正確）</div>
+    <div class="ptable mb-2">
+      <table class="data">
+        <thead><tr><th>參加者</th><th>留言內容</th><th class="nowrap">留言數</th><th>狀態</th></tr></thead>
+        <tbody id="ptable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="slot mb-2" id="slot">
+      <div class="slot__name" id="slotName">準備抽獎</div>
+      <div class="small muted" id="slotSub">貼上留言後按下面的按鈕</div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="field mb-0" style="flex:0 1 130px">
+        <label for="winCount">抽出幾位</label>
+        <input type="number" id="winCount" value="1" min="1" max="100" step="1">
+      </div>
+      <div class="field mb-0" style="flex:0 1 130px">
+        <label for="backupCount">備取幾位</label>
+        <input type="number" id="backupCount" value="2" min="0" max="50" step="1">
+      </div>
+      <div class="field mb-0" style="flex:2 1 200px">
+        <label>&nbsp;</label>
+        <button class="btn btn--lg btn--block" type="button" id="drawBtn">開始抽獎</button>
+      </div>
+    </div>
+
+    <div id="winners"></div>
+
+    <div class="btn-group hidden mt-2" id="resultActions">
+      <button class="btn btn--ghost btn--sm" type="button" id="copyBtn">複製得獎名單</button>
+      <button class="btn btn--ghost btn--sm" type="button" id="againBtn">重抽一次</button>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>為什麼不直接串接 Facebook？</strong>
+    讀取貼文留言需要送出 App 審查與企業驗證，而且<strong>只能讀你自己管理的粉絲專頁</strong>——
+    個人頁面的貼文拿不到。多數人辦抽獎用的是個人頁，所以那條路實際上走不通。
+    用複製貼上反而不挑貼文來源、不用授權、名單也不會外流。
+    <br><br>
+    <strong>留言內容不會上傳。</strong>解析與抽獎全部在你的瀏覽器裡完成，關掉分頁就沒了。
+  </div>
+
+  <section class="prose">
+    <h2>怎麼把留言複製下來</h2>
+    <ol>
+      <li>用<strong>電腦版瀏覽器</strong>打開那篇貼文（手機 App 不好選取）。</li>
+      <li>留言區底部通常有「查看更多留言」，<strong>一直點到全部展開</strong>。沒展開的留言複製不到。</li>
+      <li>從第一則留言的上方按住滑鼠，拖曳到最後一則的下方，複製。</li>
+      <li>貼到上面的框裡，工具會自動清掉「讚」「回覆」「3 天」這些介面文字。</li>
+    </ol>
+    <p><strong>貼完一定要看一下參加者清單。</strong>FB 的版面偶爾會變，解析不可能百分之百準確。清單如果怪怪的，改用「直接貼名單」分頁，自己整理成一行一個名字最保險。</p>
+
+    <h2>辦抽獎的幾個實務建議</h2>
+    <ul>
+      <li><strong>先講清楚規則再開抽</strong>：抽幾位、什麼時候抽、資格條件是什麼，事後才補規則容易有爭議。</li>
+      <li><strong>抽備取</strong>：得獎者常常已經不用那個帳號或看不到通知。備取名單能省掉重抽的麻煩。</li>
+      <li><strong>公布時截圖</strong>：把抽獎當下的畫面截圖貼在留言區，比單純打字公布更有說服力。</li>
+      <li><strong>同一人洗版</strong>：預設是一人只算一次。如果你的規則是「留言越多機會越大」，勾上面那個選項。</li>
+    </ul>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>抽籤是真的隨機嗎？</summary>
+        <div class="a">是。用瀏覽器內建的 <code>crypto.getRandomValues</code>，並修正了取餘數造成的機率偏差，每位符合資格的參加者中獎機率完全相同。不過這個工具不會留下任何紀錄，如果是金額較大、需要事後舉證的活動，建議全程錄影。</div>
+      </details>
+      <details>
+        <summary>可以要求「標記兩位朋友」嗎？</summary>
+        <div class="a">沒有做這個判斷，因為<strong>從 FB 複製出來的文字不會保留標記格式</strong>，被標記的朋友看起來就是普通文字，程式無法可靠分辨。硬做會誤判，不如不做。實務上可以改用關鍵字條件，或抽出後人工複核得獎者的留言。</div>
+      </details>
+      <details>
+        <summary>解析出來的名字怪怪的？</summary>
+        <div class="a">FB 的留言區結構會隨版本調整，複製下來的文字也會因瀏覽器而異。遇到這種情況，切到「直接貼名單」分頁，自己把名單整理成一行一個名字，那樣百分之百準確。</div>
+      </details>
+      <details>
+        <summary>同名同姓怎麼辦？</summary>
+        <div class="a">工具是用「顯示名稱」來判斷是否為同一人，所以同名的兩個人會被合併。這種情況建議關掉「同一人只算一次」，或抽出後人工確認。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, esc, randInt, shuffle } = window.U;
+
+  /* FB 介面文字，解析時要濾掉。只比對整行完全相符或明顯的時間字樣，
+     避免誤刪含有這些字的真實留言。 */
+  const UI_EXACT = new Set([
+    '讚', '回覆', '分享', '留言', '最相關', '最新', '所有留言',
+    '查看更多留言', '查看更多回覆', '查看全部', '更多', '編輯', '刪除',
+    '隱藏', '檢舉', '追蹤', '取消追蹤', '作者', '已編輯',
+    '翻譯年糕', '查看翻譯', '顯示更多', '看更多', '回覆留言',
+    'Like', 'Reply', 'Share', 'Comment', 'Top comments', 'Most relevant',
+    'View more comments', 'See more', 'Edited', 'Author', 'Translate'
+  ]);
+  /* 刻意不把「小編」列入：那是很常見的真實暱稱，列入會讓整個人被濾掉。 */
+
+  /* 「3 天」「2 週前」「剛剛」這類時間戳 */
+  const TIME_RE = /^(剛剛|\d+\s*(秒|分鐘|分|小時|天|週|周|個月|年)(前)?|\d+\s*(s|m|h|d|w|y))$/i;
+  /* 純數字（按讚數）或單一表情符號 */
+  const NOISE_RE = /^[\d\s,.·•・]+$/;
+
+  let participants = [];   // { name, messages: [], count }
+  let lastResult = null;
+  let mode = 'paste';
+
+  /** 判斷一行是不是 FB 的介面雜訊 */
+  function isNoise(line) {
+    const t = line.trim();
+    if (!t) return true;
+    if (UI_EXACT.has(t)) return true;
+    if (TIME_RE.test(t)) return true;
+    if (NOISE_RE.test(t)) return true;
+    /* 「讚 · 回覆 · 3 天」這種用分隔點串起來的整行 */
+    const parts = t.split(/\s*[·•・]\s*/).map(s => s.trim()).filter(Boolean);
+    if (parts.length > 1 && parts.every(p => UI_EXACT.has(p) || TIME_RE.test(p))) return true;
+    return false;
+  }
+
+  /** 解析「從 FB 貼上」的整段文字。
+   *
+   *  關鍵在於不要去猜「哪一行是名字」——短留言跟名字根本分不出來。
+   *  改用結構：FB 每則留言底下都跟著「讚 · 回覆 · 3 天」，
+   *  那些介面文字實際上就是留言之間的分隔線。
+   *  用它們把內容切成區塊，每塊的第一行就是留言者，其餘是留言內容。 */
+  function parsePasted(text) {
+    const raw = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+    if (!raw.length) return [];
+
+    /* 整段都沒有介面文字，代表使用者貼的其實是純名單 */
+    if (!raw.some(isNoise)) return parseList(text);
+
+    const out = [];
+    let block = [];
+
+    const flush = () => {
+      if (!block.length) return;
+      const [name, ...rest] = block;
+      out.push({ name, message: rest.join(' ') });
+      block = [];
+    };
+
+    for (const line of raw) {
+      if (isNoise(line)) { flush(); continue; }
+
+      /* 「名字：留言」單行格式，自成一則 */
+      const inline = line.match(/^(.{1,30}?)\s*[:：\t]\s*(.+)$/);
+      if (inline && !block.length) {
+        out.push({ name: inline[1].trim(), message: inline[2].trim() });
+        continue;
+      }
+      block.push(line);
+    }
+    flush();
+
+    return out;
+  }
+
+  /** 解析「直接貼名單」：一行一位，可用分隔符帶留言 */
+  function parseList(text) {
+    return text.split(/\r?\n/)
+      .map(l => l.trim())
+      .filter(Boolean)
+      .map(l => {
+        const m = l.match(/^(.+?)\s*[:：\t]\s*(.+)$/);
+        return m ? { name: m[1].trim(), message: m[2].trim() } : { name: l, message: '' };
+      });
+  }
+
+  function analyse() {
+    const text = $('#raw').value;
+    const entries = mode === 'paste' ? parsePasted(text) : parseList(text);
+
+    /* 以名字合併同一人的多則留言 */
+    const map = new Map();
+    entries.forEach(e => {
+      if (!e.name) return;
+      if (!map.has(e.name)) map.set(e.name, { name: e.name, messages: [], count: 0 });
+      const p = map.get(e.name);
+      p.count++;
+      if (e.message) p.messages.push(e.message);
+    });
+
+    /* 資格判定 */
+    const keywords = $('#mustHave').value.split(/[,，、]+/).map(s => s.trim()).filter(Boolean);
+    const needAll = $('#mustMode').value === 'all';
+    const excludes = $('#exclude').value.split(/[,，、]+/).map(s => s.trim()).filter(Boolean);
+
+    participants = Array.from(map.values()).map(p => {
+      const joined = p.messages.join(' ');
+      let ok = true, why = '';
+
+      if (excludes.some(x => p.name.includes(x))) {
+        ok = false; why = '在排除名單中';
+      } else if (keywords.length) {
+        const hits = keywords.filter(k => joined.includes(k));
+        const pass = needAll ? hits.length === keywords.length : hits.length > 0;
+        if (!pass) {
+          ok = false;
+          why = needAll ? '留言未包含全部關鍵字' : '留言未包含指定關鍵字';
+        }
+      }
+      return { ...p, joined, ok, why };
+    });
+
+    render();
+  }
+
+  function render() {
+    const valid = participants.filter(p => p.ok);
+    const out = participants.filter(p => !p.ok);
+
+    $('#sTotal').textContent = participants.reduce((s, p) => s + p.count, 0);
+    $('#sPeople').textContent = participants.length;
+    $('#sValid').textContent = valid.length;
+    $('#sOut').textContent = out.length;
+
+    $('#ptable').innerHTML = participants.length
+      ? participants.map(p => `
+        <tr class="${p.ok ? '' : 'out'}">
+          <td><strong>${esc(p.name)}</strong></td>
+          <td class="msg">${esc(p.joined.slice(0, 60))}${p.joined.length > 60 ? '…' : ''}</td>
+          <td class="num">${p.count}</td>
+          <td class="${p.ok ? '' : 'why'}">${p.ok ? '✅ 符合' : '⚠️ ' + esc(p.why)}</td>
+        </tr>`).join('')
+      : '<tr><td colspan="4" class="muted">還沒有參加者，先在上面貼上留言</td></tr>';
+  }
+
+  /* ---------- 抽獎 ---------- */
+  function buildPool() {
+    const valid = participants.filter(p => p.ok);
+    if (!$('#dedupe').checked || $('#weighted').checked) {
+      /* 留言越多機會越高：依留言次數放進多張籤 */
+      const pool = [];
+      valid.forEach(p => {
+        const times = $('#weighted').checked ? p.count : 1;
+        for (let i = 0; i < times; i++) pool.push(p);
+      });
+      return pool;
+    }
+    return valid.slice();
+  }
+
+  function drawUnique(pool, n) {
+    const picked = [];
+    const used = new Set();
+    const bag = shuffle(pool);
+    for (const p of bag) {
+      if (picked.length >= n) break;
+      if (used.has(p.name)) continue;   // 同一人不重複中獎
+      used.add(p.name);
+      picked.push(p);
+    }
+    return picked;
+  }
+
+  let busy = false;
+  function draw() {
+    if (busy) return;
+    const pool = buildPool();
+    if (!pool.length) { window.toast('沒有符合資格的參加者'); return; }
+
+    const wantWin = Math.max(1, Math.floor(Number($('#winCount').value) || 1));
+    const wantBackup = Math.max(0, Math.floor(Number($('#backupCount').value) || 0));
+
+    const picked = drawUnique(pool, wantWin + wantBackup);
+    const winners = picked.slice(0, wantWin);
+    const backups = picked.slice(wantWin);
+
+    busy = true;
+    $('#drawBtn').disabled = true;
+    $('#slot').classList.add('is-live');
+    $('#slot').classList.remove('is-done');
+    $('#slotSub').textContent = '抽選中…';
+    $('#winners').innerHTML = '';
+    $('#resultActions').classList.add('hidden');
+
+    const names = pool.map(p => p.name);
+    let elapsed = 0;
+    (function tick() {
+      $('#slotName').textContent = names[randInt(0, names.length - 1)];
+      elapsed += 60 + elapsed / 12;
+      if (elapsed < 1900) setTimeout(tick, 60 + elapsed / 12);
+      else settle(winners, backups);
+    })();
+  }
+
+  function settle(winners, backups) {
+    $('#slot').classList.remove('is-live');
+    $('#slot').classList.add('is-done');
+    $('#slotName').textContent = winners.map(w => w.name).join('、');
+    $('#slotSub').textContent = `抽出 ${winners.length} 位得獎者`
+      + (backups.length ? `，另有 ${backups.length} 位備取` : '');
+
+    const card = (p, i, isBackup) => `
+      <div class="winner-card ${isBackup ? 'backup' : ''}">
+        <span class="no">${isBackup ? '備' + (i + 1) : i + 1}</span>
+        <div>
+          <b>${esc(p.name)}</b>
+          ${p.joined ? `<small>${esc(p.joined.slice(0, 50))}${p.joined.length > 50 ? '…' : ''}</small>` : ''}
+        </div>
+      </div>`;
+
+    let html = '<div class="panel__title">🎉 得獎者</div>'
+      + winners.map((p, i) => card(p, i, false)).join('');
+    if (backups.length) {
+      html += '<div class="panel__title mt-2">備取名單</div>'
+        + backups.map((p, i) => card(p, i, true)).join('');
+    }
+    $('#winners').innerHTML = html;
+    $('#resultActions').classList.remove('hidden');
+
+    lastResult = { winners, backups, at: new Date() };
+    busy = false;
+    $('#drawBtn').disabled = false;
+  }
+
+  /* ---------- 事件 ---------- */
+  $$('.chip input').forEach(cb => {
+    cb.addEventListener('change', () => {
+      cb.parentElement.classList.toggle('is-on', cb.checked);
+      analyse();
+    });
+  });
+
+  $$('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      $$('.tab').forEach(t => t.classList.toggle('is-on', t === tab));
+      mode = tab.dataset.tab;
+      const isPaste = mode === 'paste';
+      $('#rawLabel').textContent = isPaste
+        ? '在 FB 貼文的留言區全選複製，整段貼進來'
+        : '一行一位參加者，也可以寫成「名字：留言」';
+      $('#rawHint').textContent = isPaste
+        ? '工具會自動清掉「讚」「回覆」「3 天」這類介面文字，貼完請確認下方清單。'
+        : '這個模式不做任何猜測，一行就是一位，最準確。';
+      analyse();
+    });
+  });
+
+  ['#raw', '#mustHave', '#mustMode', '#exclude'].forEach(s =>
+    $(s).addEventListener('input', analyse));
+
+  $('#drawBtn').addEventListener('click', draw);
+  $('#againBtn').addEventListener('click', draw);
+
+  $('#copyBtn').addEventListener('click', () => {
+    if (!lastResult) return;
+    const { winners, backups, at } = lastResult;
+    const lines = [`抽獎結果（${at.getFullYear()}/${at.getMonth() + 1}/${at.getDate()}）`, ''];
+    lines.push('得獎者：');
+    winners.forEach((w, i) => lines.push(`  ${i + 1}. ${w.name}`));
+    if (backups.length) {
+      lines.push('', '備取：');
+      backups.forEach((b, i) => lines.push(`  備${i + 1}. ${b.name}`));
+    }
+    lines.push('', `參加人數 ${participants.filter(p => p.ok).length} 位`);
+    window.copyText(lines.join('\n'), '已複製得獎名單');
+  });
+
+  analyse();
+})();
+</script>
+</body>
+</html>

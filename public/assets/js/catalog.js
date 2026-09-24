@@ -59,6 +59,8 @@ const TOOLS = [
     desc: '從名單抽一個或多個', kw: '抽籤 點名 抽人 lucky draw' },
   { slug: 'rps', cat: 'random', icon: '✊', name: '猜拳',
     desc: '跟電腦剪刀石頭布，記錄戰績', kw: '猜拳 剪刀石頭布 rps 划拳' },
+  { slug: 'fb-draw', cat: 'random', icon: '🎁', name: 'FB 留言抽獎',
+    desc: '貼上留言自動去重複並抽出得獎者', kw: 'fb 臉書 抽獎 留言 抽獎小幫手 社團 粉專 得獎' },
 
   /* ---------- 時間計時 ---------- */
   { slug: 'countdown', cat: 'time', icon: '⏳', name: '倒數計時器',
