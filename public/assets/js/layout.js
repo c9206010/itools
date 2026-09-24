@@ -86,6 +86,7 @@
     <div class="site-footer__base">
       <span>© ${new Date().getFullYear()} ${esc(SITE.name)}．${esc(SITE.tagline)}</span>
       <span>所有運算都在你的瀏覽器完成，不會上傳任何資料</span>
+      <span><a href="${ROOT}privacy.html">隱私權政策</a></span>
     </div>
   </div>
 </footer>`;

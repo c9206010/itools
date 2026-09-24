@@ -310,6 +310,46 @@ for (const tool of TOOLS) {
   }
 }
 
+/* ---------- 隱私權政策 ----------
+   不是工具頁，但需要被索引（AdSense 要求政策可公開存取），
+   所以加上 canonical 與基本的 OG，並列入 sitemap。 */
+{
+  const file = join(ROOT, 'privacy.html');
+  if (existsSync(file)) {
+    const html = readFileSync(file, 'utf8');
+    const title = extractTag(html, 'title');
+    const desc = extractMeta(html, 'description');
+    const url = `${ORIGIN}/privacy.html`;
+
+    const block = [
+      `<link rel="canonical" href="${attrEsc(url)}">`,
+      `<meta name="robots" content="index, follow">`,
+      ``,
+      `<meta property="og:type" content="article">`,
+      `<meta property="og:site_name" content="${attrEsc(SITE.name)}">`,
+      `<meta property="og:locale" content="zh_TW">`,
+      `<meta property="og:title" content="${attrEsc(title)}">`,
+      `<meta property="og:description" content="${attrEsc(desc)}">`,
+      `<meta property="og:url" content="${attrEsc(url)}">`,
+      ``,
+      ld({
+        '@context': 'https://schema.org',
+        '@type': 'WebPage',
+        name: title,
+        description: desc,
+        url: url,
+        inLanguage: 'zh-Hant',
+        isPartOf: { '@type': 'WebSite', name: SITE.name, url: `${ORIGIN}/` }
+      })
+    ].join('\n');
+
+    writeFileSync(file, versionAssets(inject(html, block)), 'utf8');
+    sitemapEntries.push({ loc: url, priority: '0.3', changefreq: 'yearly' });
+    console.log('✓ privacy.html    已注入 SEO 並列入 sitemap');
+    count++;
+  }
+}
+
 /* ---------- sitemap.xml ---------- */
 const sitemap =
   `<?xml version="1.0" encoding="UTF-8"?>\n` +
