@@ -1,0 +1,22 @@
+# Cloudflare Pages 的回應標頭設定
+#
+# 為什麼需要這個檔案：
+# 這個站的檔名沒有版本雜湊（catalog.js 永遠叫 catalog.js），
+# 所以一旦被邊緣節點長時間快取，更新後訪客會拿到舊版，
+# 出現「新工具上線了但首頁看不到」的狀況。
+#
+# 解法是讓所有檔案都必須回源驗證。檔案都很小（最大約 20KB），
+# 而且內容沒變時會回 304 不傳輸內容，效能影響很小。
+
+/*
+  Cache-Control: public, max-age=0, must-revalidate
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+# 資料檔每期會由 Actions 更新，同樣不能快取住
+/assets/data/*
+  Cache-Control: public, max-age=0, must-revalidate
+
+# 分享圖幾乎不會變動，可以放心快取一天
+/assets/og.svg
+  Cache-Control: public, max-age=86400
