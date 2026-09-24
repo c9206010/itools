@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>九宮格切圖｜大圖切成 IG 版面並附上傳順序 - 順手工具箱</title>
+<meta name="description" content="免費九宮格切圖工具，把一張大圖切成 3×3、3×1 等 IG 版面配置，自動標示正確的上傳順序避免貼錯，全程在瀏覽器完成圖片不上傳。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔲</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css?v=0b9e51d6">
+<style>
+  .drop {
+    border: 2px dashed var(--border-strong); border-radius: var(--radius-lg);
+    padding: 36px 20px; text-align: center; cursor: pointer;
+    background: var(--surface-2); transition: all .15s ease;
+  }
+  .drop:hover, .drop.is-over { border-color: var(--brand); background: var(--brand-wash); }
+  .drop strong { display: block; font-size: 1.05rem; margin-bottom: 4px; }
+
+  .stage { background: var(--bg-sunk); border: 1px solid var(--border);
+           border-radius: var(--radius); padding: 16px; display: grid; place-items: center; }
+  .preview-wrap { position: relative; display: inline-block; max-width: 100%; }
+  .preview-wrap img { display: block; max-width: 100%; max-height: 400px; border-radius: 4px; }
+  .grid-lines { position: absolute; inset: 0; display: grid; pointer-events: none; }
+  .grid-lines div {
+    border: 1px solid rgba(255,255,255,.85);
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.35);
+    display: grid; place-items: center;
+    font-weight: 800; font-size: 1.3rem; color: #fff;
+    text-shadow: 0 1px 4px rgba(0,0,0,.8);
+  }
+
+  .pieces { display: grid; gap: 8px; }
+  .piece { border: 1px solid var(--border); border-radius: var(--radius-sm);
+           background: var(--surface); padding: 7px; text-align: center; }
+  .piece img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 4px; background: var(--bg-sunk); }
+  .piece__no { font-size: .78rem; color: var(--ink-3); margin-top: 5px; }
+  .piece__no b { color: var(--brand); }
+
+  .layout-grid { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); }
+  .layout-btn {
+    padding: 11px 8px; text-align: center; font: inherit; cursor: pointer;
+    border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+    background: var(--surface); color: var(--ink);
+  }
+  .layout-btn:hover { border-color: var(--brand); background: var(--brand-wash); }
+  .layout-btn.is-on { border-color: var(--brand); background: var(--brand); color: #fff; }
+  .layout-btn b { display: block; font-size: .88rem; }
+  .layout-btn small { display: block; font-size: .74rem; opacity: .75; margin-top: 2px; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/grid-split.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="九宮格, 切圖, ig, 版面, 分割, 大圖, 拼圖">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="九宮格切圖｜大圖切成 IG 版面並附上傳順序 - 順手工具箱">
+<meta property="og:description" content="免費九宮格切圖工具，把一張大圖切成 3×3、3×1 等 IG 版面配置，自動標示正確的上傳順序避免貼錯，全程在瀏覽器完成圖片不上傳。">
+<meta property="og:url" content="https://tools.luka-life.com/t/grid-split.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="九宮格切圖｜大圖切成 IG 版面並附上傳順序 - 順手工具箱">
+<meta name="twitter:description" content="免費九宮格切圖工具，把一張大圖切成 3×3、3×1 等 IG 版面配置，自動標示正確的上傳順序避免貼錯，全程在瀏覽器完成圖片不上傳。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "九宮格切圖",
+  "description": "免費九宮格切圖工具，把一張大圖切成 3×3、3×1 等 IG 版面配置，自動標示正確的上傳順序避免貼錯，全程在瀏覽器完成圖片不上傳。",
+  "url": "https://tools.luka-life.com/t/grid-split.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "社群小幫手",
+      "item": "https://tools.luka-life.com/#social"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "九宮格切圖",
+      "item": "https://tools.luka-life.com/t/grid-split.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "原圖要多大才夠？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "用 3×3、每格輸出 1080 來算，理想的原圖至少要 3240×3240。小於這個尺寸工具還是會切，但等於在放大，成品會糊。手機直接拍的照片通常夠用，從網路存下來的小圖就不建議。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "3×1 是什麼用途？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "一排三格的橫幅，常用在個人檔案最上方做標題或歡迎語。優點是只佔一排，不會像 3×3 那樣把整個版面綁死，之後發新貼文推走的成本也低很多。想試水溫的話建議從 3×1 開始。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "發布之後發現順序錯了怎麼辦？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "IG 無法調整貼文順序，只能刪掉重發。所以發之前務必對照工具給的編號再三確認，這也是為什麼我把編號直接畫在預覽圖上。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "可以做成正方形以外的比例嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "目前每一格都是正方形，因為 IG 個人檔案的縮圖一律裁成正方形。就算你上傳直式圖，在版面上也只會顯示中間的正方形區域，所以直接切成正方形最準確。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="grid-split">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🔲</span>九宮格切圖</h1>
+    <p class="lede">一張大圖切成 IG 版面。最重要的是它會告訴你<strong>該照什麼順序上傳</strong>——順序錯了整面就拼不起來。</p>
+  </div>
+
+  <div class="panel">
+    <div class="drop mb-2" id="drop" role="button" tabindex="0">
+      <strong>把圖片拖進來，或點這裡選檔案</strong>
+      <span class="muted small">建議用解析度高一點的原圖，切完每格才夠清晰</span>
+      <input type="file" id="fileInput" accept="image/*" hidden>
+    </div>
+
+    <div id="editor" class="hidden">
+      <div class="panel__title">版面配置</div>
+      <div class="layout-grid mb-2" id="layouts"></div>
+
+      <div class="stage mb-2">
+        <div class="preview-wrap">
+          <img id="preview" alt="切圖預覽，格線上的數字是上傳順序">
+          <div class="grid-lines" id="lines"></div>
+        </div>
+      </div>
+      <p class="hint tc mb-2">格線上的數字是<strong>上傳順序</strong>，照著 1、2、3 依序發文就會拼成完整的圖。</p>
+
+      <div class="row mb-2">
+        <div class="field mb-0">
+          <label for="cropMode">來源比例不符時</label>
+          <select id="cropMode">
+            <option value="cover" selected>裁切填滿（可能切掉邊緣）</option>
+            <option value="contain">完整放入（補背景色）</option>
+          </select>
+        </div>
+        <div class="field mb-0" style="flex:0 1 130px">
+          <label for="bgColor">補邊顏色</label>
+          <input type="color" id="bgColor" value="#ffffff">
+        </div>
+        <div class="field mb-0">
+          <label for="cellSize">每格輸出尺寸</label>
+          <select id="cellSize">
+            <option value="1080" selected>1080 px（IG 建議）</option>
+            <option value="1440">1440 px</option>
+            <option value="720">720 px</option>
+          </select>
+        </div>
+        <div class="field mb-0">
+          <label for="quality">畫質：<strong id="qLabel">92</strong>％</label>
+          <input type="range" id="quality" min="60" max="100" value="92">
+        </div>
+      </div>
+
+      <div class="btn-group mb-2">
+        <button class="btn btn--lg" type="button" id="cutBtn">切圖</button>
+        <button class="btn btn--ghost btn--lg" type="button" id="downloadAll" disabled>依順序全部下載</button>
+        <button class="btn btn--ghost btn--lg" type="button" id="clearBtn">換一張</button>
+      </div>
+
+      <p class="hint" id="statusText"></p>
+
+      <div id="piecesWrap" class="hidden">
+        <div class="panel__title">切好的圖（數字是上傳順序）</div>
+        <div class="pieces" id="pieces"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>圖片不會上傳。</strong>切圖是用瀏覽器的 Canvas 在你自己的裝置上完成的，檔案沒有經過網路。
+  </div>
+
+  <section class="prose">
+    <h2>為什麼上傳順序是反的</h2>
+    <p>因為 IG 的版面是<strong>最新的貼文排在左上角</strong>，往右往下才是舊的。所以要拼出一張完整的大圖，你得<strong>從右下角那一格開始上傳，最後才上傳左上角那一格</strong>。</p>
+    <p>這是最多人做壞的地方——切得再準，順序反了就變成一團亂。這個工具的編號已經幫你算好，照著 1 到 9 依序發就對了。</p>
+
+    <h2>做之前先想清楚兩件事</h2>
+    <ul>
+      <li><strong>之後的貼文會把它推走。</strong>九宮格只在「它還在最上面三排」時才完整。你再發三篇新貼文，它就被擠到中間，看起來會怪怪的。適合用在個人檔案的門面，不適合天天發文的帳號。</li>
+      <li><strong>單看一格要能見人。</strong>別人在動態消息裡看到的是<strong>單獨一格</strong>，不是整面。如果某一格單看只是一塊沒有意義的色塊，那則貼文的互動會很差。好的九宮格，每一格單獨看也還算完整。</li>
+    </ul>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>原圖要多大才夠？</summary>
+        <div class="a">用 3×3、每格輸出 1080 來算，理想的原圖至少要 3240×3240。小於這個尺寸工具還是會切，但等於在放大，成品會糊。手機直接拍的照片通常夠用，從網路存下來的小圖就不建議。</div>
+      </details>
+      <details>
+        <summary>3×1 是什麼用途？</summary>
+        <div class="a">一排三格的橫幅，常用在個人檔案最上方做標題或歡迎語。優點是只佔一排，不會像 3×3 那樣把整個版面綁死，之後發新貼文推走的成本也低很多。想試水溫的話建議從 3×1 開始。</div>
+      </details>
+      <details>
+        <summary>發布之後發現順序錯了怎麼辦？</summary>
+        <div class="a">IG 無法調整貼文順序，只能刪掉重發。所以發之前務必對照工具給的編號再三確認，這也是為什麼我把編號直接畫在預覽圖上。</div>
+      </details>
+      <details>
+        <summary>可以做成正方形以外的比例嗎？</summary>
+        <div class="a">目前每一格都是正方形，因為 IG 個人檔案的縮圖一律裁成正方形。就算你上傳直式圖，在版面上也只會顯示中間的正方形區域，所以直接切成正方形最準確。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js?v=7cb1885c"></script>
+<script src="../assets/js/layout.js?v=483231ca"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, esc, download } = window.U;
+
+  const LAYOUTS = [
+    { key: '3x3', cols: 3, rows: 3, name: '3 × 3', note: '完整九宮格' },
+    { key: '3x1', cols: 3, rows: 1, name: '3 × 1', note: '一排橫幅' },
+    { key: '3x2', cols: 3, rows: 2, name: '3 × 2', note: '兩排' },
+    { key: '2x2', cols: 2, rows: 2, name: '2 × 2', note: '四格' },
+    { key: '3x4', cols: 3, rows: 4, name: '3 × 4', note: '四排' }
+  ];
+
+  let img = null;
+  let srcName = '';
+  let layout = LAYOUTS[0];
+  let pieces = [];   // { blob, url, order, row, col }
+
+  /* ---------- 選檔 ---------- */
+  const drop = $('#drop');
+  const input = $('#fileInput');
+
+  drop.addEventListener('click', () => input.click());
+  drop.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
+  });
+  ['dragenter', 'dragover'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('is-over'); }));
+  ['dragleave', 'drop'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('is-over'); }));
+
+  drop.addEventListener('drop', e => loadFile(e.dataTransfer.files[0]));
+  input.addEventListener('change', e => loadFile(e.target.files[0]));
+
+  function loadFile(file) {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { window.toast('請選擇圖片檔'); return; }
+
+    const im = new Image();
+    im.onload = () => {
+      img = im;
+      srcName = file.name.replace(/\.[^.]+$/, '');
+      $('#editor').classList.remove('hidden');
+      $('#preview').src = im.src;
+      renderLayouts();
+      renderLines();
+      checkResolution();
+    };
+    im.onerror = () => window.toast('圖片讀取失敗');
+    im.src = URL.createObjectURL(file);
+  }
+
+  /* ---------- 版面選擇與預覽 ---------- */
+  function renderLayouts() {
+    $('#layouts').innerHTML = LAYOUTS.map((l, i) =>
+      `<button class="layout-btn ${l === layout ? 'is-on' : ''}" type="button" data-i="${i}">
+         <b>${esc(l.name)}</b><small>${esc(l.note)}</small>
+       </button>`).join('');
+  }
+
+  /** 上傳順序：IG 最新的排左上，所以要從右下往左上倒著發。
+   *  第 (row, col) 格的上傳序號 = 總格數 − (row × cols + col) */
+  function orderOf(row, col) {
+    const total = layout.rows * layout.cols;
+    return total - (row * layout.cols + col);
+  }
+
+  function renderLines() {
+    const el = $('#lines');
+    el.style.gridTemplateColumns = `repeat(${layout.cols}, 1fr)`;
+    el.style.gridTemplateRows = `repeat(${layout.rows}, 1fr)`;
+
+    let html = '';
+    for (let r = 0; r < layout.rows; r++) {
+      for (let c = 0; c < layout.cols; c++) {
+        html += `<div>${orderOf(r, c)}</div>`;
+      }
+    }
+    el.innerHTML = html;
+  }
+
+  function checkResolution() {
+    const cell = Number($('#cellSize').value);
+    const needW = cell * layout.cols;
+    const needH = cell * layout.rows;
+    const enough = img.naturalWidth >= needW && img.naturalHeight >= needH;
+
+    $('#statusText').innerHTML = enough
+      ? `原圖 ${img.naturalWidth}×${img.naturalHeight}，解析度充足。`
+      : `原圖 ${img.naturalWidth}×${img.naturalHeight}，<span style="color:var(--warn)">` +
+        `低於建議的 ${needW}×${needH}，切出來可能偏糊</span>。可以改用較小的每格尺寸。`;
+  }
+
+  $('#layouts').addEventListener('click', e => {
+    const btn = e.target.closest('.layout-btn');
+    if (!btn) return;
+    layout = LAYOUTS[+btn.dataset.i];
+    renderLayouts();
+    renderLines();
+    checkResolution();
+    resetPieces();
+  });
+
+  /* ---------- 切圖 ---------- */
+  function resetPieces() {
+    pieces.forEach(p => URL.revokeObjectURL(p.url));
+    pieces = [];
+    $('#piecesWrap').classList.add('hidden');
+    $('#downloadAll').disabled = true;
+  }
+
+  async function cut() {
+    if (!img) return;
+    resetPieces();
+    $('#cutBtn').disabled = true;
+
+    const cell = Number($('#cellSize').value);
+    const cols = layout.cols, rows = layout.rows;
+    const outW = cell * cols, outH = cell * rows;
+    const cover = $('#cropMode').value === 'cover';
+    const q = Number($('#quality').value) / 100;
+
+    /* 先把原圖畫成「整面拼起來」的大圖，再等分切開，
+       這樣才能保證每一格接縫完全對齊，不會有一兩像素的錯位。 */
+    const full = document.createElement('canvas');
+    full.width = outW;
+    full.height = outH;
+    const fctx = full.getContext('2d');
+
+    fctx.fillStyle = $('#bgColor').value;
+    fctx.fillRect(0, 0, outW, outH);
+
+    const scale = cover
+      ? Math.max(outW / img.naturalWidth, outH / img.naturalHeight)
+      : Math.min(outW / img.naturalWidth, outH / img.naturalHeight);
+    const dw = img.naturalWidth * scale;
+    const dh = img.naturalHeight * scale;
+
+    fctx.imageSmoothingQuality = 'high';
+    fctx.drawImage(img, (outW - dw) / 2, (outH - dh) / 2, dw, dh);
+
+    /* 逐格裁出 */
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const cv = document.createElement('canvas');
+        cv.width = cell;
+        cv.height = cell;
+        cv.getContext('2d').drawImage(full, c * cell, r * cell, cell, cell, 0, 0, cell, cell);
+
+        const blob = await new Promise(res => cv.toBlob(res, 'image/jpeg', q));
+        pieces.push({
+          blob,
+          url: URL.createObjectURL(blob),
+          order: orderOf(r, c),
+          row: r + 1,
+          col: c + 1
+        });
+      }
+      await new Promise(res => setTimeout(res, 0));   // 讓出主執行緒
+    }
+
+    /* 依上傳順序排列，使用者照著下載就不會錯 */
+    pieces.sort((a, b) => a.order - b.order);
+    renderPieces();
+
+    $('#cutBtn').disabled = false;
+    $('#downloadAll').disabled = false;
+    window.toast(`切好了，共 ${pieces.length} 格`);
+  }
+
+  function renderPieces() {
+    const el = $('#pieces');
+    el.style.gridTemplateColumns = `repeat(${Math.min(layout.cols, 4)}, 1fr)`;
+    el.innerHTML = pieces.map(p => `
+      <div class="piece">
+        <img src="${p.url}" alt="第 ${p.order} 張，位於第 ${p.row} 排第 ${p.col} 格">
+        <div class="piece__no">第 <b>${p.order}</b> 個上傳<br>
+          <span class="muted">${p.row} 排 ${p.col} 格</span></div>
+        <button class="btn btn--ghost btn--sm mt-1" type="button" data-dl="${p.order}">下載</button>
+      </div>`).join('');
+    $('#piecesWrap').classList.remove('hidden');
+  }
+
+  function fileNameOf(p) {
+    const pad = String(pieces.length).length;
+    return `${srcName}_${String(p.order).padStart(pad, '0')}_第${p.row}排第${p.col}格.jpg`;
+  }
+
+  $('#pieces').addEventListener('click', e => {
+    const btn = e.target.closest('[data-dl]');
+    if (!btn) return;
+    const p = pieces.find(x => x.order === +btn.dataset.dl);
+    if (p) download(p.blob, fileNameOf(p));
+  });
+
+  $('#downloadAll').addEventListener('click', () => {
+    if (!pieces.length) return;
+    /* 依上傳順序逐一下載，中間留間隔避免被瀏覽器當成濫用擋掉 */
+    pieces.forEach((p, i) => setTimeout(() => download(p.blob, fileNameOf(p)), i * 320));
+    window.toast(`開始下載 ${pieces.length} 個檔案，檔名前面的數字就是上傳順序`);
+  });
+
+  $('#cutBtn').addEventListener('click', cut);
+
+  $('#clearBtn').addEventListener('click', () => {
+    resetPieces();
+    img = null;
+    input.value = '';
+    $('#editor').classList.add('hidden');
+  });
+
+  $('#quality').addEventListener('input', e => { $('#qLabel').textContent = e.target.value; });
+  $('#cellSize').addEventListener('change', () => { checkResolution(); resetPieces(); });
+  ['#cropMode', '#bgColor'].forEach(s => $(s).addEventListener('input', resetPieces));
+})();
+</script>
+</body>
+</html>

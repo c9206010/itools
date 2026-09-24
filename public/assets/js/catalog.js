@@ -163,6 +163,12 @@ const TOOLS = [
     desc: '貼網址取得各尺寸封面圖', kw: 'youtube 縮圖 封面 thumbnail 下載' },
   { slug: 'divider', cat: 'social', icon: '〰️', name: '分隔線裝飾產生器',
     desc: '貼文用的線條與裝飾框', kw: '分隔線 裝飾 線條 貼文 排版 花邊' },
+  { slug: 'grid-split', cat: 'social', icon: '🔲', name: '九宮格切圖',
+    desc: '大圖切成 IG 版面，附上傳順序', kw: '九宮格 切圖 ig 版面 分割 大圖 拼圖' },
+  { slug: 'square-fit', cat: 'social', icon: '⬜', name: '圖片轉正方形',
+    desc: '不裁切放進正方形，可模糊補邊', kw: '正方形 ig 不裁切 補白邊 模糊背景 直式' },
+  { slug: 'watermark', cat: 'social', icon: '💧', name: '圖片浮水印',
+    desc: '批次加上帳號名稱或標誌', kw: '浮水印 watermark 版權 logo 批次 加字' },
 
   /* ---------- 台灣生活 ---------- */
   { slug: 'mortgage', cat: 'tw', icon: '🏠', name: '房貸試算',

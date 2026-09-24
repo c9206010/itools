@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>圖片浮水印｜批次加上帳號名稱或標誌 - 順手工具箱</title>
+<meta name="description" content="免費圖片浮水印工具，批次為照片加上文字或標誌浮水印，可調位置、大小、透明度、旋轉與平鋪，全程在瀏覽器完成圖片不上傳。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💧</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css?v=0b9e51d6">
+<style>
+  .drop {
+    border: 2px dashed var(--border-strong); border-radius: var(--radius-lg);
+    padding: 32px 20px; text-align: center; cursor: pointer;
+    background: var(--surface-2); transition: all .15s ease;
+  }
+  .drop:hover, .drop.is-over { border-color: var(--brand); background: var(--brand-wash); }
+  .drop strong { display: block; font-size: 1.02rem; margin-bottom: 4px; }
+  .drop--small { padding: 18px 14px; }
+
+  .stage { background: var(--bg-sunk); border: 1px solid var(--border);
+           border-radius: var(--radius); padding: 16px; display: grid; place-items: center; }
+  #canvas { max-width: 100%; max-height: 420px; border-radius: 6px; box-shadow: var(--shadow-2); }
+
+  .pos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; max-width: 190px; }
+  .pos-btn {
+    aspect-ratio: 1.5; border: 1px solid var(--border-strong); border-radius: 6px;
+    background: var(--surface); cursor: pointer; font-size: .7rem; color: var(--ink-3);
+    display: grid; place-items: center; font-family: inherit; padding: 0;
+  }
+  .pos-btn:hover { border-color: var(--brand); }
+  .pos-btn.is-on { background: var(--brand); border-color: var(--brand); color: #fff; }
+
+  .item { display: grid; grid-template-columns: 58px 1fr auto; gap: 11px; align-items: center;
+          padding: 10px; border: 1px solid var(--border); border-radius: var(--radius);
+          background: var(--surface); margin-bottom: 8px; }
+  .item img { width: 58px; height: 58px; object-fit: cover; border-radius: 6px; background: var(--bg-sunk); }
+  .item-name { font-size: .87rem; font-weight: 600; word-break: break-all; line-height: 1.4; }
+  .item-meta { font-size: .79rem; color: var(--ink-3); margin-top: 2px; }
+
+  .logo-preview { max-height: 56px; border-radius: 4px; background: var(--bg-sunk); }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/watermark.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="浮水印, watermark, 版權, logo, 批次, 加字">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="圖片浮水印｜批次加上帳號名稱或標誌 - 順手工具箱">
+<meta property="og:description" content="免費圖片浮水印工具，批次為照片加上文字或標誌浮水印，可調位置、大小、透明度、旋轉與平鋪，全程在瀏覽器完成圖片不上傳。">
+<meta property="og:url" content="https://tools.luka-life.com/t/watermark.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="圖片浮水印｜批次加上帳號名稱或標誌 - 順手工具箱">
+<meta name="twitter:description" content="免費圖片浮水印工具，批次為照片加上文字或標誌浮水印，可調位置、大小、透明度、旋轉與平鋪，全程在瀏覽器完成圖片不上傳。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "圖片浮水印",
+  "description": "免費圖片浮水印工具，批次為照片加上文字或標誌浮水印，可調位置、大小、透明度、旋轉與平鋪，全程在瀏覽器完成圖片不上傳。",
+  "url": "https://tools.luka-life.com/t/watermark.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "社群小幫手",
+      "item": "https://tools.luka-life.com/#social"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "圖片浮水印",
+      "item": "https://tools.luka-life.com/t/watermark.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "大小的百分比是相對什麼？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "相對於圖片的較短邊。這樣不管橫圖直圖、大圖小圖，浮水印在視覺上的比例都一致，批次處理不同尺寸的照片時不會有的大有的小。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "標誌圖片要用什麼格式？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "建議用去背的 PNG，這樣只有圖案本身會蓋在照片上。如果用 JPG，白色背景會一起蓋上去變成一個方塊。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "加了浮水印畫質會變差嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "影像本身不會被重新縮放（除非你設定了最大寬度），但輸出成 JPG 時會重新編碼一次，畫質滑桿設 90 以上肉眼幾乎看不出差別。要完全無損就選 PNG，代價是檔案較大。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "可以只處理其中幾張嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "清單裡每一張旁邊都有「下載」，處理完之後只下載你要的那幾張就好。不想處理的也可以先從清單移除。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="watermark">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">💧</span>圖片浮水印</h1>
+    <p class="lede">一次幫一整批照片加上你的帳號名稱或標誌。位置、大小、透明度都能調，也能平鋪蓋滿防止被裁掉。</p>
+  </div>
+
+  <div class="panel">
+    <div class="drop mb-2" id="drop" role="button" tabindex="0">
+      <strong>把要加浮水印的圖片拖進來</strong>
+      <span class="muted small">可一次選多張批次處理</span>
+      <input type="file" id="fileInput" accept="image/*" multiple hidden>
+    </div>
+
+    <div id="editor" class="hidden">
+      <div class="stage mb-2"><canvas id="canvas"></canvas></div>
+      <p class="hint tc mb-2" id="previewInfo"></p>
+
+      <div class="field">
+        <label for="wmType">浮水印類型</label>
+        <select id="wmType">
+          <option value="text" selected>文字</option>
+          <option value="logo">圖片標誌</option>
+        </select>
+      </div>
+
+      <!-- 文字設定 -->
+      <div id="textOpts">
+        <div class="row mb-2">
+          <div class="field mb-0" style="flex:2 1 220px">
+            <label for="wmText">浮水印文字</label>
+            <input type="text" id="wmText" value="@your_account" maxlength="60">
+          </div>
+          <div class="field mb-0" style="flex:0 1 120px">
+            <label for="textColor">文字顏色</label>
+            <input type="color" id="textColor" value="#ffffff">
+          </div>
+          <div class="field mb-0">
+            <label for="fontWeight">字重</label>
+            <select id="fontWeight">
+              <option value="400">一般</option>
+              <option value="700" selected>粗體</option>
+              <option value="800">特粗</option>
+            </select>
+          </div>
+          <div class="field mb-0">
+            <label for="shadow">文字外框</label>
+            <select id="shadow">
+              <option value="shadow" selected>陰影（深色底好讀）</option>
+              <option value="outline">描邊（任何底都清楚）</option>
+              <option value="none">無</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- 標誌設定 -->
+      <div id="logoOpts" class="hidden">
+        <div class="drop drop--small mb-2" id="logoDrop" role="button" tabindex="0">
+          <strong>選擇標誌圖片</strong>
+          <span class="muted small">建議用去背的 PNG</span>
+          <input type="file" id="logoInput" accept="image/*" hidden>
+        </div>
+        <div id="logoPreviewWrap" class="hidden mb-2 tc">
+          <img id="logoPreview" class="logo-preview" alt="標誌預覽">
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="field mb-0">
+          <label for="wmSize">大小：<strong id="sizeLabel">5</strong>％</label>
+          <input type="range" id="wmSize" min="2" max="25" value="5">
+        </div>
+        <div class="field mb-0">
+          <label for="opacity">透明度：<strong id="opacityLabel">70</strong>％</label>
+          <input type="range" id="opacity" min="5" max="100" value="70">
+        </div>
+        <div class="field mb-0">
+          <label for="margin">邊距：<strong id="marginLabel">4</strong>％</label>
+          <input type="range" id="margin" min="0" max="15" value="4">
+        </div>
+        <div class="field mb-0">
+          <label for="rotate">旋轉：<strong id="rotateLabel">0</strong>°</label>
+          <input type="range" id="rotate" min="-45" max="45" value="0">
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="field mb-0" style="flex:0 1 210px">
+          <label>位置</label>
+          <div class="pos-grid" id="posGrid"></div>
+        </div>
+        <div class="field mb-0">
+          <label for="tile">平鋪模式</label>
+          <select id="tile">
+            <option value="off" selected>關閉（只放一個）</option>
+            <option value="on">開啟（整張鋪滿）</option>
+          </select>
+          <p class="hint">平鋪會蓋滿整張圖，別人很難裁掉，但也比較干擾畫面。</p>
+        </div>
+        <div class="field mb-0">
+          <label for="tileGap">平鋪間距：<strong id="gapLabel">25</strong>％</label>
+          <input type="range" id="tileGap" min="10" max="60" value="25">
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="field mb-0">
+          <label for="format">輸出格式</label>
+          <select id="format">
+            <option value="image/jpeg" selected>JPG</option>
+            <option value="image/png">PNG</option>
+            <option value="image/webp">WebP</option>
+          </select>
+        </div>
+        <div class="field mb-0">
+          <label for="quality">畫質：<strong id="qLabel">92</strong>％</label>
+          <input type="range" id="quality" min="60" max="100" value="92">
+        </div>
+        <div class="field mb-0">
+          <label for="maxWidth">最大寬度（0 表示不縮）</label>
+          <input type="number" id="maxWidth" value="0" min="0" max="8000" step="100">
+        </div>
+      </div>
+
+      <div class="btn-group mb-2">
+        <button class="btn btn--lg" type="button" id="processBtn">加上浮水印</button>
+        <button class="btn btn--ghost btn--lg" type="button" id="downloadAll" disabled>全部下載</button>
+        <button class="btn btn--ghost btn--lg" type="button" id="clearBtn">清空</button>
+      </div>
+
+      <div id="list"></div>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>圖片不會上傳。</strong>處理是用瀏覽器的 Canvas 在你自己的裝置上完成的，檔案沒有經過網路。
+  </div>
+
+  <section class="prose">
+    <h2>浮水印放哪裡比較有效</h2>
+    <p>放在角落最不干擾畫面，但<strong>也最容易被裁掉</strong>。如果你的目的是防止盜用，有幾個折衷做法：</p>
+    <ul>
+      <li><strong>放在中下偏內側</strong>：離邊緣有一段距離，單純裁邊裁不掉。</li>
+      <li><strong>壓在主體上</strong>：透明度調低一點，壓在畫面重點上，要移除就會破壞內容。</li>
+      <li><strong>開平鋪</strong>：整張蓋滿，幾乎無法清除，但畫面會比較雜，適合樣張或預覽用圖。</li>
+    </ul>
+    <p>老實說，浮水印<strong>擋得住順手轉貼，擋不住真的想盜用的人</strong>。它的實際價值比較像是「來源標示」——別人轉貼時順便幫你曝光帳號。所以文字內容建議直接用你的帳號名稱。</p>
+
+    <h2>文字要用陰影還是描邊</h2>
+    <ul>
+      <li><strong>陰影</strong>：在深色或複雜背景上好讀，視覺較柔和，日常使用夠了。</li>
+      <li><strong>描邊</strong>：白字加深色外框，<strong>在任何底色上都清楚</strong>。如果你的照片明暗差異很大，或要批次處理一堆不同的圖，選描邊比較保險。</li>
+    </ul>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>大小的百分比是相對什麼？</summary>
+        <div class="a">相對於圖片的<strong>較短邊</strong>。這樣不管橫圖直圖、大圖小圖，浮水印在視覺上的比例都一致，批次處理不同尺寸的照片時不會有的大有的小。</div>
+      </details>
+      <details>
+        <summary>標誌圖片要用什麼格式？</summary>
+        <div class="a">建議用<strong>去背的 PNG</strong>，這樣只有圖案本身會蓋在照片上。如果用 JPG，白色背景會一起蓋上去變成一個方塊。</div>
+      </details>
+      <details>
+        <summary>加了浮水印畫質會變差嗎？</summary>
+        <div class="a">影像本身不會被重新縮放（除非你設定了最大寬度），但輸出成 JPG 時會重新編碼一次，畫質滑桿設 90 以上肉眼幾乎看不出差別。要完全無損就選 PNG，代價是檔案較大。</div>
+      </details>
+      <details>
+        <summary>可以只處理其中幾張嗎？</summary>
+        <div class="a">清單裡每一張旁邊都有「下載」，處理完之後只下載你要的那幾張就好。不想處理的也可以先從清單移除。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js?v=7cb1885c"></script>
+<script src="../assets/js/layout.js?v=483231ca"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, esc, bytes, download } = window.U;
+
+  /* 九宮格位置：x/y 為 0（靠左/上）、0.5（置中）、1（靠右/下） */
+  const POSITIONS = [
+    { key: 'tl', x: 0, y: 0, label: '↖' }, { key: 'tc', x: .5, y: 0, label: '↑' }, { key: 'tr', x: 1, y: 0, label: '↗' },
+    { key: 'ml', x: 0, y: .5, label: '←' }, { key: 'mc', x: .5, y: .5, label: '●' }, { key: 'mr', x: 1, y: .5, label: '→' },
+    { key: 'bl', x: 0, y: 1, label: '↙' }, { key: 'bc', x: .5, y: 1, label: '↓' }, { key: 'br', x: 1, y: 1, label: '↘' }
+  ];
+
+  let files = [];
+  let logoImg = null;
+  let pos = 'br';
+  let previewIndex = 0;
+
+  /* ---------- 選檔 ---------- */
+  function wireDrop(dropEl, inputEl, handler) {
+    dropEl.addEventListener('click', () => inputEl.click());
+    dropEl.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); inputEl.click(); }
+    });
+    ['dragenter', 'dragover'].forEach(ev =>
+      dropEl.addEventListener(ev, e => { e.preventDefault(); dropEl.classList.add('is-over'); }));
+    ['dragleave', 'drop'].forEach(ev =>
+      dropEl.addEventListener(ev, e => { e.preventDefault(); dropEl.classList.remove('is-over'); }));
+    dropEl.addEventListener('drop', e => handler(e.dataTransfer.files));
+    inputEl.addEventListener('change', e => handler(e.target.files));
+  }
+
+  wireDrop($('#drop'), $('#fileInput'), addFiles);
+  wireDrop($('#logoDrop'), $('#logoInput'), list => {
+    const f = Array.from(list).find(x => x.type.startsWith('image/'));
+    if (!f) return;
+    const im = new Image();
+    im.onload = () => {
+      logoImg = im;
+      $('#logoPreview').src = im.src;
+      $('#logoPreviewWrap').classList.remove('hidden');
+      drawPreview();
+    };
+    im.src = URL.createObjectURL(f);
+  });
+
+  function addFiles(list) {
+    const incoming = Array.from(list).filter(f => f.type.startsWith('image/'));
+    if (!incoming.length) { window.toast('請選擇圖片檔'); return; }
+
+    let loaded = 0;
+    incoming.forEach(file => {
+      const im = new Image();
+      im.onload = () => {
+        files.push({ file, name: file.name, img: im });
+        if (++loaded === incoming.length) {
+          $('#editor').classList.remove('hidden');
+          renderPositions();
+          render();
+          drawPreview();
+        }
+      };
+      im.onerror = () => { if (++loaded === incoming.length) render(); };
+      im.src = URL.createObjectURL(file);
+    });
+  }
+
+  /* ---------- 位置按鈕 ---------- */
+  function renderPositions() {
+    $('#posGrid').innerHTML = POSITIONS.map(p =>
+      `<button class="pos-btn ${p.key === pos ? 'is-on' : ''}" type="button"
+               data-k="${p.key}" aria-label="浮水印位置">${p.label}</button>`).join('');
+  }
+
+  $('#posGrid').addEventListener('click', e => {
+    const btn = e.target.closest('.pos-btn');
+    if (!btn) return;
+    pos = btn.dataset.k;
+    renderPositions();
+    drawPreview();
+  });
+
+  /* ---------- 繪製浮水印 ---------- */
+  function drawWatermark(ctx, w, h) {
+    const isText = $('#wmType').value === 'text';
+    if (!isText && !logoImg) return;
+
+    const shortSide = Math.min(w, h);
+    const sizePct = Number($('#wmSize').value) / 100;
+    const opacity = Number($('#opacity').value) / 100;
+    const marginPx = shortSide * (Number($('#margin').value) / 100);
+    const rotate = Number($('#rotate').value) * Math.PI / 180;
+
+    /* 算出浮水印本身的尺寸 */
+    let wmW, wmH, fontSize = 0;
+    if (isText) {
+      fontSize = shortSide * sizePct;
+      ctx.font = `${$('#fontWeight').value} ${fontSize}px "Noto Sans TC", "PingFang TC", sans-serif`;
+      wmW = ctx.measureText($('#wmText').value || ' ').width;
+      wmH = fontSize;
+    } else {
+      wmH = shortSide * sizePct * 2;   // 標誌給大一點才看得清楚
+      wmW = logoImg.naturalWidth * (wmH / logoImg.naturalHeight);
+    }
+
+    const paint = (cx, cy) => {
+      ctx.save();
+      ctx.globalAlpha = opacity;
+      ctx.translate(cx, cy);
+      if (rotate) ctx.rotate(rotate);
+
+      if (isText) {
+        const text = $('#wmText').value || '';
+        ctx.font = `${$('#fontWeight').value} ${fontSize}px "Noto Sans TC", "PingFang TC", sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        const style = $('#shadow').value;
+        if (style === 'shadow') {
+          ctx.shadowColor = 'rgba(0,0,0,.6)';
+          ctx.shadowBlur = fontSize * 0.25;
+          ctx.shadowOffsetY = fontSize * 0.05;
+        } else if (style === 'outline') {
+          ctx.lineWidth = Math.max(1, fontSize * 0.1);
+          ctx.strokeStyle = 'rgba(0,0,0,.75)';
+          ctx.lineJoin = 'round';
+          ctx.strokeText(text, 0, 0);
+        }
+        ctx.fillStyle = $('#textColor').value;
+        ctx.fillText(text, 0, 0);
+      } else {
+        ctx.drawImage(logoImg, -wmW / 2, -wmH / 2, wmW, wmH);
+      }
+      ctx.restore();
+    };
+
+    if ($('#tile').value === 'on') {
+      /* 平鋪：以浮水印尺寸加間距為步距鋪滿整張，交錯排列比較自然 */
+      const gap = Number($('#tileGap').value) / 100;
+      const stepX = wmW * (1 + gap * 2);
+      const stepY = wmH * (1 + gap * 4);
+      let rowIndex = 0;
+      for (let y = stepY / 2; y < h + stepY; y += stepY) {
+        const offset = (rowIndex % 2) * (stepX / 2);
+        for (let x = stepX / 2 - offset; x < w + stepX; x += stepX) {
+          paint(x, y);
+        }
+        rowIndex++;
+      }
+      return;
+    }
+
+    /* 單一位置：依九宮格算出中心點，並保留邊距 */
+    const p = POSITIONS.find(x => x.key === pos);
+    const cx = marginPx + wmW / 2 + (w - marginPx * 2 - wmW) * p.x;
+    const cy = marginPx + wmH / 2 + (h - marginPx * 2 - wmH) * p.y;
+    paint(cx, cy);
+  }
+
+  function compose(img, canvas) {
+    const maxW = Number($('#maxWidth').value) || 0;
+    let w = img.naturalWidth, h = img.naturalHeight;
+    if (maxW > 0 && w > maxW) { h = Math.round(h * (maxW / w)); w = maxW; }
+
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(img, 0, 0, w, h);
+    drawWatermark(ctx, w, h);
+  }
+
+  function drawPreview() {
+    if (!files.length) return;
+    const item = files[Math.min(previewIndex, files.length - 1)];
+    compose(item.img, $('#canvas'));
+    $('#previewInfo').textContent = `預覽：${item.name}`;
+  }
+
+  /* ---------- 批次處理 ---------- */
+  async function processAll() {
+    if (!files.length) return;
+    if ($('#wmType').value === 'logo' && !logoImg) {
+      window.toast('請先選擇標誌圖片');
+      return;
+    }
+
+    $('#processBtn').disabled = true;
+    $('#processBtn').textContent = '處理中…';
+
+    const type = $('#format').value;
+    const q = Number($('#quality').value) / 100;
+    const ext = type === 'image/png' ? '.png' : type === 'image/webp' ? '.webp' : '.jpg';
+
+    for (const item of files) {
+      const cv = document.createElement('canvas');
+      compose(item.img, cv);
+      item.blob = await new Promise(res =>
+        cv.toBlob(res, type, type === 'image/png' ? undefined : q));
+      item.outName = item.name.replace(/\.[^.]+$/, '') + '_浮水印' + ext;
+      if (item.url) URL.revokeObjectURL(item.url);
+      item.url = URL.createObjectURL(item.blob);
+      render();
+      await new Promise(r => setTimeout(r, 0));
+    }
+
+    $('#processBtn').disabled = false;
+    $('#processBtn').textContent = '重新處理';
+    $('#downloadAll').disabled = false;
+    window.toast('處理完成');
+  }
+
+  function render() {
+    $('#list').innerHTML = files.map((it, i) => `
+      <div class="item">
+        <img src="${it.url || it.img.src}" alt="${esc(it.name)} 預覽">
+        <div>
+          <div class="item-name">${esc(it.name)}</div>
+          <div class="item-meta">${
+            it.blob ? `${bytes(it.blob.size)}．已加浮水印`
+                    : `${it.img.naturalWidth}×${it.img.naturalHeight}　<span class="muted">等待處理</span>`
+          }</div>
+        </div>
+        <div>
+          <button class="btn btn--ghost btn--sm" type="button" data-pv="${i}">預覽</button>
+          ${it.blob ? `<button class="btn btn--sm" type="button" data-dl="${i}">下載</button>` : ''}
+          <button class="btn btn--ghost btn--sm" type="button" data-rm="${i}">移除</button>
+        </div>
+      </div>`).join('');
+  }
+
+  $('#list').addEventListener('click', e => {
+    const pv = e.target.closest('[data-pv]');
+    if (pv) { previewIndex = +pv.dataset.pv; drawPreview(); return; }
+
+    const dl = e.target.closest('[data-dl]');
+    if (dl) { const it = files[+dl.dataset.dl]; if (it.blob) download(it.blob, it.outName); return; }
+
+    const rm = e.target.closest('[data-rm]');
+    if (rm) {
+      const i = +rm.dataset.rm;
+      if (files[i].url) URL.revokeObjectURL(files[i].url);
+      files.splice(i, 1);
+      if (!files.length) { $('#editor').classList.add('hidden'); }
+      render();
+      drawPreview();
+    }
+  });
+
+  $('#processBtn').addEventListener('click', processAll);
+
+  $('#downloadAll').addEventListener('click', () => {
+    const done = files.filter(f => f.blob);
+    if (!done.length) return window.toast('請先按「加上浮水印」');
+    done.forEach((it, i) => setTimeout(() => download(it.blob, it.outName), i * 300));
+    window.toast(`開始下載 ${done.length} 個檔案`);
+  });
+
+  $('#clearBtn').addEventListener('click', () => {
+    files.forEach(f => { if (f.url) URL.revokeObjectURL(f.url); });
+    files = [];
+    $('#fileInput').value = '';
+    $('#editor').classList.add('hidden');
+    $('#downloadAll').disabled = true;
+    $('#processBtn').textContent = '加上浮水印';
+  });
+
+  $('#wmType').addEventListener('change', () => {
+    const isText = $('#wmType').value === 'text';
+    $('#textOpts').classList.toggle('hidden', !isText);
+    $('#logoOpts').classList.toggle('hidden', isText);
+    drawPreview();
+  });
+
+  ['#wmText', '#textColor', '#fontWeight', '#shadow', '#wmSize', '#opacity',
+   '#margin', '#rotate', '#tile', '#tileGap', '#maxWidth'].forEach(s =>
+    $(s).addEventListener('input', drawPreview));
+
+  $('#wmSize').addEventListener('input', e => { $('#sizeLabel').textContent = e.target.value; });
+  $('#opacity').addEventListener('input', e => { $('#opacityLabel').textContent = e.target.value; });
+  $('#margin').addEventListener('input', e => { $('#marginLabel').textContent = e.target.value; });
+  $('#rotate').addEventListener('input', e => { $('#rotateLabel').textContent = e.target.value; });
+  $('#tileGap').addEventListener('input', e => { $('#gapLabel').textContent = e.target.value; });
+  $('#quality').addEventListener('input', e => { $('#qLabel').textContent = e.target.value; });
+  $('#format').addEventListener('change', () => {
+    $('#quality').disabled = $('#format').value === 'image/png';
+  });
+})();
+</script>
+</body>
+</html>

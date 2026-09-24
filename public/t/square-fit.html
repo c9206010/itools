@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>圖片轉正方形｜不裁切放進版位，可模糊補邊 - 順手工具箱</title>
+<meta name="description" content="免費圖片轉正方形工具，把直式或橫式照片完整放進 IG 版位不裁切，補邊可選白底、自訂顏色或模糊延伸背景，全程在瀏覽器完成不上傳。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⬜</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css?v=0b9e51d6">
+<style>
+  .drop {
+    border: 2px dashed var(--border-strong); border-radius: var(--radius-lg);
+    padding: 36px 20px; text-align: center; cursor: pointer;
+    background: var(--surface-2); transition: all .15s ease;
+  }
+  .drop:hover, .drop.is-over { border-color: var(--brand); background: var(--brand-wash); }
+  .drop strong { display: block; font-size: 1.05rem; margin-bottom: 4px; }
+
+  .stage { background: var(--bg-sunk); border: 1px solid var(--border);
+           border-radius: var(--radius); padding: 16px; display: grid; place-items: center; }
+  #canvas { max-width: 100%; max-height: 420px; border-radius: 6px; box-shadow: var(--shadow-2); }
+
+  .opt-grid { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(124px, 1fr)); }
+  .opt-btn {
+    padding: 11px 9px; text-align: center; font: inherit; cursor: pointer;
+    border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+    background: var(--surface); color: var(--ink);
+  }
+  .opt-btn:hover { border-color: var(--brand); background: var(--brand-wash); }
+  .opt-btn.is-on { border-color: var(--brand); background: var(--brand); color: #fff; }
+  .opt-btn b { display: block; font-size: .87rem; }
+  .opt-btn small { display: block; font-size: .73rem; opacity: .75; margin-top: 2px; }
+
+  .item { display: grid; grid-template-columns: 62px 1fr auto; gap: 11px; align-items: center;
+          padding: 10px; border: 1px solid var(--border); border-radius: var(--radius);
+          background: var(--surface); margin-bottom: 8px; }
+  .item img { width: 62px; height: 62px; object-fit: cover; border-radius: 6px; background: var(--bg-sunk); }
+  .item-name { font-size: .87rem; font-weight: 600; word-break: break-all; line-height: 1.4; }
+  .item-meta { font-size: .79rem; color: var(--ink-3); margin-top: 2px; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/square-fit.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="正方形, ig, 不裁切, 補白邊, 模糊背景, 直式">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="圖片轉正方形｜不裁切放進版位，可模糊補邊 - 順手工具箱">
+<meta property="og:description" content="免費圖片轉正方形工具，把直式或橫式照片完整放進 IG 版位不裁切，補邊可選白底、自訂顏色或模糊延伸背景，全程在瀏覽器完成不上傳。">
+<meta property="og:url" content="https://tools.luka-life.com/t/square-fit.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="圖片轉正方形｜不裁切放進版位，可模糊補邊 - 順手工具箱">
+<meta name="twitter:description" content="免費圖片轉正方形工具，把直式或橫式照片完整放進 IG 版位不裁切，補邊可選白底、自訂顏色或模糊延伸背景，全程在瀏覽器完成不上傳。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "圖片轉正方形",
+  "description": "免費圖片轉正方形工具，把直式或橫式照片完整放進 IG 版位不裁切，補邊可選白底、自訂顏色或模糊延伸背景，全程在瀏覽器完成不上傳。",
+  "url": "https://tools.luka-life.com/t/square-fit.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "社群小幫手",
+      "item": "https://tools.luka-life.com/#social"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "圖片轉正方形",
+      "item": "https://tools.luka-life.com/t/square-fit.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "「內縮留白」是做什麼的？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "讓主體再往內縮一點，四周留更多空間。適合想要留白感的版面，或是照片主體太貼邊的時候。設 0 就是在不裁切的前提下盡量放大。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "橫式照片也能用嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以，原理一樣。橫圖轉正方形會在上下補邊，直圖則是左右補邊。工具會自動判斷方向。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "模糊背景在舊瀏覽器上沒效果？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "模糊用的是 Canvas 的濾鏡功能，極舊的瀏覽器可能不支援，那種情況下背景會變成單色。如果你發現模糊沒作用，改用純色補邊即可，結果一樣可用。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "一次可以處理幾張？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "沒有硬性限制，但每張都要載進記憶體，建議一次 20 張以內。處理期間畫面可能短暫沒有反應，是正常的。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="square-fit">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">⬜</span>圖片轉正方形</h1>
+    <p class="lede">直式照片發 IG 常常被切到人頭。這裡整張完整放進去，兩側自動補邊，模糊延伸的效果看起來最自然。</p>
+  </div>
+
+  <div class="panel">
+    <div class="drop mb-2" id="drop" role="button" tabindex="0">
+      <strong>把圖片拖進來，或點這裡選檔案</strong>
+      <span class="muted small">支援一次選多張批次處理</span>
+      <input type="file" id="fileInput" accept="image/*" multiple hidden>
+    </div>
+
+    <div id="editor" class="hidden">
+      <div class="panel__title">補邊方式</div>
+      <div class="opt-grid mb-2" id="fillModes"></div>
+
+      <div class="stage mb-2">
+        <canvas id="canvas"></canvas>
+      </div>
+      <p class="hint tc mb-2" id="previewInfo"></p>
+
+      <div class="row mb-2">
+        <div class="field mb-0">
+          <label for="ratio">輸出比例</label>
+          <select id="ratio">
+            <option value="1:1" selected>1:1 正方形（貼文）</option>
+            <option value="4:5">4:5 直式（IG 最高版位）</option>
+            <option value="9:16">9:16 限時動態</option>
+            <option value="16:9">16:9 橫式</option>
+          </select>
+        </div>
+        <div class="field mb-0">
+          <label for="size">輸出尺寸</label>
+          <select id="size">
+            <option value="1080" selected>1080 px</option>
+            <option value="1440">1440 px</option>
+            <option value="2048">2048 px</option>
+          </select>
+        </div>
+        <div class="field mb-0" style="flex:0 1 120px">
+          <label for="bgColor">補邊顏色</label>
+          <input type="color" id="bgColor" value="#ffffff">
+        </div>
+        <div class="field mb-0">
+          <label for="padding">內縮留白：<strong id="padLabel">0</strong>％</label>
+          <input type="range" id="padding" min="0" max="25" value="0">
+        </div>
+      </div>
+
+      <div class="row mb-2" id="blurRow">
+        <div class="field mb-0">
+          <label for="blurAmount">模糊強度：<strong id="blurLabel">40</strong></label>
+          <input type="range" id="blurAmount" min="10" max="100" value="40">
+        </div>
+        <div class="field mb-0">
+          <label for="blurDim">背景暗度：<strong id="dimLabel">0</strong>％</label>
+          <input type="range" id="blurDim" min="0" max="60" value="0">
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="field mb-0">
+          <label for="format">輸出格式</label>
+          <select id="format">
+            <option value="image/jpeg" selected>JPG</option>
+            <option value="image/png">PNG</option>
+            <option value="image/webp">WebP</option>
+          </select>
+        </div>
+        <div class="field mb-0">
+          <label for="quality">畫質：<strong id="qLabel">92</strong>％</label>
+          <input type="range" id="quality" min="60" max="100" value="92">
+        </div>
+      </div>
+
+      <div class="btn-group mb-2">
+        <button class="btn btn--lg" type="button" id="processBtn">處理全部</button>
+        <button class="btn btn--ghost btn--lg" type="button" id="downloadAll" disabled>全部下載</button>
+        <button class="btn btn--ghost btn--lg" type="button" id="clearBtn">清空</button>
+      </div>
+
+      <div id="list"></div>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>圖片不會上傳。</strong>處理是用瀏覽器的 Canvas 在你自己的裝置上完成的，檔案沒有經過網路。
+  </div>
+
+  <section class="prose">
+    <h2>模糊補邊為什麼比白邊好看</h2>
+    <p>白邊會在版面上切出明顯的硬邊界，一眼就看得出「這張是硬塞進來的」。模糊延伸則是把原圖放大、模糊之後鋪在背景，<strong>顏色自然延續到邊緣</strong>，視覺上像是整張圖本來就是這個比例。</p>
+    <p>這也是多數影音與社群 App 處理比例不符時的做法。想更低調一點，可以把「背景暗度」往上調，讓主體更突出。</p>
+
+    <h2>IG 各版位怎麼選</h2>
+    <ul>
+      <li><strong>1:1 正方形</strong>：最安全，個人檔案的縮圖也是正方形，不會二次裁切。</li>
+      <li><strong>4:5 直式</strong>：IG 貼文允許的<strong>最高版位</strong>，在動態消息裡佔的螢幕面積最大，曝光效果較好。但要注意個人檔案的縮圖仍會裁成正方形，重點別放太上面或太下面。</li>
+      <li><strong>9:16</strong>：限時動態與 Reels 的全螢幕比例。上下各約兩成會被介面元件遮住，重要內容盡量放中間。</li>
+    </ul>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>「內縮留白」是做什麼的？</summary>
+        <div class="a">讓主體再往內縮一點，四周留更多空間。適合想要留白感的版面，或是照片主體太貼邊的時候。設 0 就是在不裁切的前提下盡量放大。</div>
+      </details>
+      <details>
+        <summary>橫式照片也能用嗎？</summary>
+        <div class="a">可以，原理一樣。橫圖轉正方形會在上下補邊，直圖則是左右補邊。工具會自動判斷方向。</div>
+      </details>
+      <details>
+        <summary>模糊背景在舊瀏覽器上沒效果？</summary>
+        <div class="a">模糊用的是 Canvas 的濾鏡功能，極舊的瀏覽器可能不支援，那種情況下背景會變成單色。如果你發現模糊沒作用，改用純色補邊即可，結果一樣可用。</div>
+      </details>
+      <details>
+        <summary>一次可以處理幾張？</summary>
+        <div class="a">沒有硬性限制，但每張都要載進記憶體，建議一次 20 張以內。處理期間畫面可能短暫沒有反應，是正常的。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js?v=7cb1885c"></script>
+<script src="../assets/js/layout.js?v=483231ca"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, esc, bytes, download } = window.U;
+
+  const FILL_MODES = [
+    { key: 'blur', name: '模糊延伸', note: '最自然，推薦' },
+    { key: 'white', name: '白色', note: '乾淨俐落' },
+    { key: 'color', name: '自訂顏色', note: '配合品牌色' },
+    { key: 'edge', name: '邊緣取色', note: '取圖片平均色' }
+  ];
+
+  let files = [];     // { file, name, img, blob, url, outName }
+  let fillMode = 'blur';
+  let previewIndex = 0;
+
+  /* ---------- 選檔 ---------- */
+  const drop = $('#drop');
+  const input = $('#fileInput');
+
+  drop.addEventListener('click', () => input.click());
+  drop.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
+  });
+  ['dragenter', 'dragover'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('is-over'); }));
+  ['dragleave', 'drop'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('is-over'); }));
+
+  drop.addEventListener('drop', e => addFiles(e.dataTransfer.files));
+  input.addEventListener('change', e => addFiles(e.target.files));
+
+  function addFiles(list) {
+    const incoming = Array.from(list).filter(f => f.type.startsWith('image/'));
+    if (!incoming.length) { window.toast('請選擇圖片檔'); return; }
+
+    let loaded = 0;
+    incoming.forEach(file => {
+      const im = new Image();
+      im.onload = () => {
+        files.push({ file, name: file.name, img: im });
+        if (++loaded === incoming.length) {
+          $('#editor').classList.remove('hidden');
+          renderModes();
+          render();
+          drawPreview();
+        }
+      };
+      im.onerror = () => { if (++loaded === incoming.length) render(); };
+      im.src = URL.createObjectURL(file);
+    });
+  }
+
+  /* ---------- 補邊模式 ---------- */
+  function renderModes() {
+    $('#fillModes').innerHTML = FILL_MODES.map(m =>
+      `<button class="opt-btn ${m.key === fillMode ? 'is-on' : ''}" type="button" data-k="${m.key}">
+         <b>${esc(m.name)}</b><small>${esc(m.note)}</small>
+       </button>`).join('');
+    $('#blurRow').classList.toggle('hidden', fillMode !== 'blur');
+    $('#bgColor').disabled = fillMode !== 'color';
+  }
+
+  $('#fillModes').addEventListener('click', e => {
+    const btn = e.target.closest('.opt-btn');
+    if (!btn) return;
+    fillMode = btn.dataset.k;
+    renderModes();
+    drawPreview();
+  });
+
+  /* ---------- 繪製 ---------- */
+  function outputSize() {
+    const base = Number($('#size').value);
+    const [rw, rh] = $('#ratio').value.split(':').map(Number);
+    /* 以較長邊為基準，維持指定比例 */
+    return rw >= rh
+      ? { w: base, h: Math.round(base * rh / rw) }
+      : { w: Math.round(base * rw / rh), h: base };
+  }
+
+  /** 取圖片縮圖的平均色，用於「邊緣取色」模式 */
+  function averageColor(img) {
+    const c = document.createElement('canvas');
+    c.width = c.height = 16;
+    const ctx = c.getContext('2d');
+    ctx.drawImage(img, 0, 0, 16, 16);
+    try {
+      const d = ctx.getImageData(0, 0, 16, 16).data;
+      let r = 0, g = 0, b = 0;
+      for (let i = 0; i < d.length; i += 4) { r += d[i]; g += d[i + 1]; b += d[i + 2]; }
+      const n = d.length / 4;
+      return `rgb(${Math.round(r / n)},${Math.round(g / n)},${Math.round(b / n)})`;
+    } catch (e) {
+      return '#ffffff';   // 極少數情況下讀取像素會被擋住
+    }
+  }
+
+  /** 把一張圖畫成指定比例的成品 */
+  function compose(img, canvas) {
+    const { w, h } = outputSize();
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+
+    ctx.clearRect(0, 0, w, h);
+
+    /* --- 背景 --- */
+    if (fillMode === 'blur') {
+      /* 放大到填滿再模糊，邊緣才不會露出空白 */
+      const blur = Number($('#blurAmount').value);
+      const cover = Math.max(w / img.naturalWidth, h / img.naturalHeight) * 1.25;
+      const bw = img.naturalWidth * cover;
+      const bh = img.naturalHeight * cover;
+
+      ctx.save();
+      ctx.filter = `blur(${blur}px)`;
+      ctx.drawImage(img, (w - bw) / 2, (h - bh) / 2, bw, bh);
+      ctx.restore();
+
+      const dim = Number($('#blurDim').value) / 100;
+      if (dim > 0) {
+        ctx.fillStyle = `rgba(0,0,0,${dim})`;
+        ctx.fillRect(0, 0, w, h);
+      }
+    } else {
+      ctx.fillStyle = fillMode === 'white' ? '#ffffff'
+        : fillMode === 'color' ? $('#bgColor').value
+        : averageColor(img);
+      ctx.fillRect(0, 0, w, h);
+    }
+
+    /* --- 主體：完整放入，不裁切 --- */
+    const pad = Number($('#padding').value) / 100;
+    const availW = w * (1 - pad * 2);
+    const availH = h * (1 - pad * 2);
+    const scale = Math.min(availW / img.naturalWidth, availH / img.naturalHeight);
+    const dw = img.naturalWidth * scale;
+    const dh = img.naturalHeight * scale;
+
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh);
+  }
+
+  function drawPreview() {
+    if (!files.length) return;
+    const item = files[Math.min(previewIndex, files.length - 1)];
+    compose(item.img, $('#canvas'));
+    const { w, h } = outputSize();
+    $('#previewInfo').textContent =
+      `預覽：${esc(item.name)}　原圖 ${item.img.naturalWidth}×${item.img.naturalHeight} → 輸出 ${w}×${h}`;
+  }
+
+  /* ---------- 批次處理 ---------- */
+  async function processAll() {
+    if (!files.length) return;
+    $('#processBtn').disabled = true;
+    $('#processBtn').textContent = '處理中…';
+
+    const type = $('#format').value;
+    const q = Number($('#quality').value) / 100;
+    const ext = type === 'image/png' ? '.png' : type === 'image/webp' ? '.webp' : '.jpg';
+    const { w, h } = outputSize();
+
+    for (const item of files) {
+      const cv = document.createElement('canvas');
+      compose(item.img, cv);
+      item.blob = await new Promise(res =>
+        cv.toBlob(res, type, type === 'image/png' ? undefined : q));
+      item.outName = item.name.replace(/\.[^.]+$/, '') + `_${w}x${h}${ext}`;
+      if (item.url) URL.revokeObjectURL(item.url);
+      item.url = URL.createObjectURL(item.blob);
+      render();
+      await new Promise(r => setTimeout(r, 0));
+    }
+
+    $('#processBtn').disabled = false;
+    $('#processBtn').textContent = '重新處理';
+    $('#downloadAll').disabled = false;
+    window.toast('處理完成');
+  }
+
+  function render() {
+    $('#list').innerHTML = files.map((it, i) => `
+      <div class="item">
+        <img src="${it.url || it.img.src}" alt="${esc(it.name)} 預覽">
+        <div>
+          <div class="item-name">${esc(it.name)}</div>
+          <div class="item-meta">${
+            it.blob
+              ? `${it.img.naturalWidth}×${it.img.naturalHeight} → ${outputSize().w}×${outputSize().h}．${bytes(it.blob.size)}`
+              : `${it.img.naturalWidth}×${it.img.naturalHeight}　<span class="muted">等待處理</span>`
+          }</div>
+        </div>
+        <div>
+          <button class="btn btn--ghost btn--sm" type="button" data-pv="${i}">預覽</button>
+          ${it.blob ? `<button class="btn btn--sm" type="button" data-dl="${i}">下載</button>` : ''}
+        </div>
+      </div>`).join('');
+  }
+
+  $('#list').addEventListener('click', e => {
+    const pv = e.target.closest('[data-pv]');
+    if (pv) { previewIndex = +pv.dataset.pv; drawPreview(); return; }
+    const dl = e.target.closest('[data-dl]');
+    if (dl) {
+      const it = files[+dl.dataset.dl];
+      if (it.blob) download(it.blob, it.outName);
+    }
+  });
+
+  $('#processBtn').addEventListener('click', processAll);
+
+  $('#downloadAll').addEventListener('click', () => {
+    const done = files.filter(f => f.blob);
+    if (!done.length) return window.toast('請先按「處理全部」');
+    done.forEach((it, i) => setTimeout(() => download(it.blob, it.outName), i * 300));
+    window.toast(`開始下載 ${done.length} 個檔案`);
+  });
+
+  $('#clearBtn').addEventListener('click', () => {
+    files.forEach(f => { if (f.url) URL.revokeObjectURL(f.url); });
+    files = [];
+    input.value = '';
+    $('#editor').classList.add('hidden');
+    $('#downloadAll').disabled = true;
+    $('#processBtn').textContent = '處理全部';
+  });
+
+  /* 任何設定改變都重畫預覽 */
+  ['#ratio', '#size', '#bgColor', '#padding', '#blurAmount', '#blurDim'].forEach(s =>
+    $(s).addEventListener('input', () => { drawPreview(); render(); }));
+
+  $('#padding').addEventListener('input', e => { $('#padLabel').textContent = e.target.value; });
+  $('#blurAmount').addEventListener('input', e => { $('#blurLabel').textContent = e.target.value; });
+  $('#blurDim').addEventListener('input', e => { $('#dimLabel').textContent = e.target.value; });
+  $('#quality').addEventListener('input', e => { $('#qLabel').textContent = e.target.value; });
+  $('#format').addEventListener('change', () => {
+    $('#quality').disabled = $('#format').value === 'image/png';
+  });
+})();
+</script>
+</body>
+</html>
