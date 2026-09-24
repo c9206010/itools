@@ -186,7 +186,21 @@ const TOOLS = [
   { slug: 'av-test', cat: 'device', icon: '🎙️', name: '麥克風與鏡頭測試',
     desc: '開會前先確認收音與畫面', kw: '麥克風 鏡頭 視訊 測試 收音 webcam' },
   { slug: 'screen-test', cat: 'device', icon: '🔳', name: '螢幕壞點檢測',
-    desc: '純色全螢幕找亮點與暗點', kw: '螢幕 壞點 亮點 檢測 液晶 dead pixel' }
+    desc: '純色全螢幕找亮點與暗點', kw: '螢幕 壞點 亮點 檢測 液晶 dead pixel' },
+  { slug: 'typing', cat: 'device', icon: '⌨️', name: '打字速度測試',
+    desc: '測每分鐘字數與正確率', kw: '打字 速度 測試 wpm 中打 英打 正確率' },
+
+  /* ---------- 台灣生活（續） ---------- */
+  { slug: 'electricity', cat: 'tw', icon: '💡', name: '電費計算',
+    desc: '台電累進電價，夏月非夏月分開算', kw: '電費 台電 度數 夏月 累進 冷氣' },
+  { slug: 'stock-fee', cat: 'tw', icon: '📈', name: '股票手續費計算',
+    desc: '手續費、證交稅與損益兩平價', kw: '股票 手續費 證交稅 台股 損益 折扣' },
+  { slug: 'tax-id', cat: 'tw', icon: '🏢', name: '統一編號驗證',
+    desc: '檢查公司統編格式是否正確', kw: '統編 統一編號 公司行號 驗證 檢查碼' },
+
+  /* ---------- 計算換算（續） ---------- */
+  { slug: 'compound', cat: 'calc', icon: '📊', name: '複利與定存試算',
+    desc: '單筆與定期定額的本利和', kw: '複利 定存 利息 年化 報酬 存錢 試算' }
 ];
 
 /* 便利查詢 */

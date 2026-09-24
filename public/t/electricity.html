@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>電費計算｜台電累進電價，夏月非夏月分開算 - 順手工具箱</title>
+<meta name="description" content="免費台電電費試算，輸入度數即可依累進級距算出電費，自動區分夏月與非夏月，並顯示每一級距各花多少，費率可自行對照台電公告調整。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💡</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .big-num { font-size: clamp(1.8rem, 1rem + 3vw, 2.8rem); font-weight: 800; color: var(--brand); line-height: 1.2; }
+  td.num, th.num { text-align: right; font-family: var(--mono); }
+  tr.total td { font-weight: 800; background: var(--surface-2); }
+  tr.dim td { color: var(--ink-3); }
+  .rate-grid { display: grid; gap: 8px; grid-template-columns: 1fr 110px 110px; align-items: center; }
+  .rate-grid > b { font-size: .85rem; font-weight: 600; }
+  .rate-grid input { font-family: var(--mono); text-align: right; }
+  .rate-head { font-size: .78rem; color: var(--ink-3); text-align: center; }
+  .bar { height: 26px; border-radius: 6px; overflow: hidden; display: flex; font-size: .7rem; font-weight: 700; }
+  .bar div { display: grid; place-items: center; color: #fff; overflow: hidden; white-space: nowrap; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/electricity.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="電費, 台電, 度數, 夏月, 累進, 冷氣">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="電費計算｜台電累進電價，夏月非夏月分開算 - 順手工具箱">
+<meta property="og:description" content="免費台電電費試算，輸入度數即可依累進級距算出電費，自動區分夏月與非夏月，並顯示每一級距各花多少，費率可自行對照台電公告調整。">
+<meta property="og:url" content="https://tools.luka-life.com/t/electricity.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="電費計算｜台電累進電價，夏月非夏月分開算 - 順手工具箱">
+<meta name="twitter:description" content="免費台電電費試算，輸入度數即可依累進級距算出電費，自動區分夏月與非夏月，並顯示每一級距各花多少，費率可自行對照台電公告調整。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "電費計算",
+  "description": "免費台電電費試算，輸入度數即可依累進級距算出電費，自動區分夏月與非夏月，並顯示每一級距各花多少，費率可自行對照台電公告調整。",
+  "url": "https://tools.luka-life.com/t/electricity.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "台灣生活",
+      "item": "https://tools.luka-life.com/#tw"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "電費計算",
+      "item": "https://tools.luka-life.com/t/electricity.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "為什麼要選「兩個月」？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "台電一般住宅是兩個月抄表一次，帳單上的度數是兩個月的總和。但費率表公布的級距是「每月」標準，所以計算時級距要加倍（例如第 1 級從 120 度變成 240 度）。選錯期間會讓結果差很多，記得對照你手上帳單的計費期間。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "夏月怎麼認定？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "每年 6 月 1 日到 9 月 30 日。如果你的計費期間橫跨夏月與非夏月（例如 5 月底到 7 月底），台電會按天數比例分開計算，這個工具沒有處理跨季的情況，請以帳單為準。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "用電大戶會被加價嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "住宅用電沒有額外的加價機制，就是照累進級距算。不過最高級距的單價已經是第 1 級的好幾倍，本身就是很強的抑制效果。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "算出來跟帳單對不起來？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "最常見的三個原因：一是費率版本不同（台電會調整），二是計費期間選錯，三是帳單含有公共電費分攤或代收費用。先確認前兩項，再看帳單上的明細欄位。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="electricity">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">💡</span>電費計算</h1>
+    <p class="lede">夏天帳單為什麼特別貴？輸入度數看每一級距各吃掉多少錢，就知道錢花在哪一段。</p>
+  </div>
+
+  <div class="panel">
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="kwh">本期用電度數</label>
+        <input type="number" id="kwh" value="600" min="0" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="months">計費期間</label>
+        <select id="months">
+          <option value="2" selected>兩個月（台電一般抄表週期）</option>
+          <option value="1">一個月</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label for="season">季節</label>
+        <select id="season">
+          <option value="summer">夏月（6/1～9/30）</option>
+          <option value="normal" selected>非夏月</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="tc mb-2">
+      <div class="big-num" id="total">—</div>
+      <div class="small muted" id="totalSub">本期電費（未含分攤的公共電費與代收費用）</div>
+    </div>
+
+    <div class="bar mb-2" id="bar"></div>
+
+    <div class="table-scroll mb-2">
+      <table class="data">
+        <thead>
+          <tr><th>級距</th><th class="num">本期度數範圍</th><th class="num">用到幾度</th>
+              <th class="num">每度</th><th class="num">金額</th></tr>
+        </thead>
+        <tbody id="breakdown"></tbody>
+      </table>
+    </div>
+
+    <div class="stat-row mb-2">
+      <div class="stat"><div class="stat__num" id="avgRate">—</div><div class="stat__label">平均每度</div></div>
+      <div class="stat"><div class="stat__num" id="perMonth">—</div><div class="stat__label">換算每月</div></div>
+      <div class="stat"><div class="stat__num" id="topTier">—</div><div class="stat__label">用到第幾級距</div></div>
+      <div class="stat"><div class="stat__num" id="nextTier">—</div><div class="stat__label">距離下一級距</div></div>
+    </div>
+
+    <details>
+      <summary style="cursor:pointer;font-weight:600;font-size:.92rem;padding:8px 0">
+        費率設定（可自行對照台電公告修改）
+      </summary>
+      <p class="hint mt-1">
+        單位為元／度。級距的度數範圍是<strong>每月</strong>標準，選「兩個月」時工具會自動加倍。
+      </p>
+      <div class="rate-grid mb-1">
+        <b></b><div class="rate-head">非夏月</div><div class="rate-head">夏月</div>
+      </div>
+      <div class="rate-grid" id="rateGrid"></div>
+      <button class="btn btn--ghost btn--sm mt-2" type="button" id="resetRates">還原預設費率</button>
+    </details>
+  </div>
+
+  <div class="note note--warn">
+    <strong>費率請務必對照台電官網確認。</strong>我在整理這份預設值時，不同來源對第 2 級距的非夏月費率有出入，
+    而台電官網的費率表是動態網頁無法直接讀取。<strong>預設值僅供參考</strong>，
+    請到 <a href="https://www.taipower.com.tw/2289/2363/2388/2389/10735/" target="_blank" rel="noopener">台電電價知識專區</a>
+    核對後，用上方的費率設定修改。
+    <br><br>
+    另外，實際帳單還會有<strong>公共電費分攤、代收的水費或清潔費</strong>等項目，這裡只算純電費。
+    若你適用時間電價（有尖離峰之分）或非住宅用電，計算方式完全不同，這個工具不適用。
+  </div>
+
+  <section class="prose">
+    <h2>累進電價是怎麼運作的</h2>
+    <p>跟所得稅一樣是<strong>分段計費</strong>，不是「用超過就整批變貴」。以每月 400 度為例：前 120 度用第 1 級的價格、121 到 330 度用第 2 級、331 到 400 度才用第 3 級，三段加起來才是總電費。</p>
+    <p>所以「省下最後那幾度」特別划算——因為那幾度是用<strong>最高的級距單價</strong>在算。冷氣少開一小時，省下的錢比你想像中多。</p>
+
+    <h2>為什麼夏天帳單特別可怕</h2>
+    <p>兩個原因疊加。第一，<strong>夏月費率本身較高</strong>，而且是從第 3 級距開始加價，愈高段加得愈兇。第二，冷氣讓你的用電度數<strong>往上跳好幾個級距</strong>。兩個效果相乘，帳單就不只是多一點點了。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>為什麼要選「兩個月」？</summary>
+        <div class="a">台電一般住宅是<strong>兩個月抄表一次</strong>，帳單上的度數是兩個月的總和。但費率表公布的級距是「每月」標準，所以計算時級距要加倍（例如第 1 級從 120 度變成 240 度）。選錯期間會讓結果差很多，記得對照你手上帳單的計費期間。</div>
+      </details>
+      <details>
+        <summary>夏月怎麼認定？</summary>
+        <div class="a">每年 6 月 1 日到 9 月 30 日。如果你的計費期間橫跨夏月與非夏月（例如 5 月底到 7 月底），台電會按天數比例分開計算，這個工具沒有處理跨季的情況，請以帳單為準。</div>
+      </details>
+      <details>
+        <summary>用電大戶會被加價嗎？</summary>
+        <div class="a">住宅用電沒有額外的加價機制，就是照累進級距算。不過最高級距的單價已經是第 1 級的好幾倍，本身就是很強的抑制效果。</div>
+      </details>
+      <details>
+        <summary>算出來跟帳單對不起來？</summary>
+        <div class="a">最常見的三個原因：一是費率版本不同（台電會調整），二是計費期間選錯，三是帳單含有公共電費分攤或代收費用。先確認前兩項，再看帳單上的明細欄位。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, esc } = window.U;
+
+  /* 表燈非時間電價（住宅用）累進級距。
+     upto 為「每月」度數上限，計費兩個月時會自動加倍。
+     費率預設值來源有爭議，使用者可在頁面上修改，詳見頁面警語。 */
+  const DEFAULT_TIERS = [
+    { upto: 120,      normal: 1.78, summer: 1.78 },
+    { upto: 330,      normal: 2.55, summer: 2.55 },
+    { upto: 500,      normal: 3.13, summer: 3.80 },
+    { upto: 700,      normal: 4.24, summer: 5.14 },
+    { upto: 1000,     normal: 5.27, summer: 6.44 },
+    { upto: Infinity, normal: 7.03, summer: 8.86 }
+  ];
+
+  let tiers = DEFAULT_TIERS.map(t => ({ ...t }));
+
+  const money = n => Math.round(n).toLocaleString('zh-TW');
+  const label = (lo, hi) => hi === Infinity
+    ? `${lo.toLocaleString()} 度以上`
+    : `${lo.toLocaleString()}～${hi.toLocaleString()} 度`;
+
+  function renderRates() {
+    $('#rateGrid').innerHTML = tiers.map((t, i) => {
+      const lo = i === 0 ? 1 : tiers[i - 1].upto + 1;
+      return `<b>第 ${i + 1} 級　<span class="muted" style="font-weight:400">${esc(label(lo, t.upto))}</span></b>
+        <input type="number" step="0.01" min="0" value="${t.normal}" data-i="${i}" data-k="normal">
+        <input type="number" step="0.01" min="0" value="${t.summer}" data-i="${i}" data-k="summer">`;
+    }).join('');
+  }
+
+  function calc() {
+    const kwh = Math.max(0, Number($('#kwh').value) || 0);
+    const months = Number($('#months').value);
+    const isSummer = $('#season').value === 'summer';
+    const key = isSummer ? 'summer' : 'normal';
+
+    let rest = kwh;
+    let lower = 0;
+    let total = 0;
+    let topTier = 0;
+    const rows = [];
+
+    tiers.forEach((t, i) => {
+      /* 級距以每月為單位，計費兩個月就把門檻加倍 */
+      const cap = t.upto === Infinity ? Infinity : t.upto * months;
+      const width = cap - lower;
+      const used = Math.max(0, Math.min(rest, width));
+
+      if (used > 0) topTier = i + 1;
+
+      const rate = t[key];
+      const amount = used * rate;
+      total += amount;
+
+      rows.push({
+        idx: i + 1,
+        range: label(lower + 1, cap),
+        used, rate, amount,
+        active: used > 0
+      });
+
+      rest -= used;
+      lower = cap;
+    });
+
+    $('#total').textContent = money(total) + ' 元';
+    $('#totalSub').textContent =
+      `${kwh.toLocaleString()} 度．${months === 2 ? '兩個月' : '一個月'}．${isSummer ? '夏月' : '非夏月'}費率`;
+
+    $('#breakdown').innerHTML = rows.map(r => `
+      <tr class="${r.active ? '' : 'dim'}">
+        <td>第 ${r.idx} 級</td>
+        <td class="num">${esc(r.range)}</td>
+        <td class="num">${r.used ? r.used.toLocaleString() : '—'}</td>
+        <td class="num">${r.rate.toFixed(2)}</td>
+        <td class="num">${r.used ? money(r.amount) : '—'}</td>
+      </tr>`).join('') +
+      `<tr class="total"><td colspan="2">合計</td>
+        <td class="num">${kwh.toLocaleString()}</td><td class="num">—</td>
+        <td class="num">${money(total)}</td></tr>`;
+
+    $('#avgRate').textContent = kwh > 0 ? (total / kwh).toFixed(2) + ' 元' : '—';
+    $('#perMonth').textContent = money(total / months) + ' 元';
+    $('#topTier').textContent = topTier ? `第 ${topTier} 級` : '—';
+
+    /* 距離下一級距還有幾度 */
+    const nextCap = tiers[topTier - 1] && tiers[topTier - 1].upto !== Infinity
+      ? tiers[topTier - 1].upto * months
+      : null;
+    $('#nextTier').textContent = nextCap ? `${(nextCap - kwh).toLocaleString()} 度` : '已達最高級';
+
+    /* 比例條：各級距金額佔比 */
+    const colors = ['#2f7d4f', '#7aa64a', '#c9a227', '#e07b39', '#d4542c', '#a5281b'];
+    $('#bar').innerHTML = rows.filter(r => r.amount > 0).map(r => {
+      const pct = total > 0 ? r.amount / total * 100 : 0;
+      return `<div style="width:${pct}%;background:${colors[r.idx - 1]}"
+                   title="第 ${r.idx} 級 ${money(r.amount)} 元">${pct > 9 ? '第' + r.idx + '級' : ''}</div>`;
+    }).join('');
+  }
+
+  $('#rateGrid').addEventListener('input', e => {
+    const el = e.target;
+    if (el.dataset.i === undefined) return;
+    tiers[+el.dataset.i][el.dataset.k] = Math.max(0, Number(el.value) || 0);
+    calc();
+  });
+
+  $('#resetRates').addEventListener('click', () => {
+    tiers = DEFAULT_TIERS.map(t => ({ ...t }));
+    renderRates();
+    calc();
+  });
+
+  ['#kwh', '#months', '#season'].forEach(s => $(s).addEventListener('input', calc));
+
+  renderRates();
+  calc();
+})();
+</script>
+</body>
+</html>

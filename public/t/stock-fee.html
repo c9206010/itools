@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>股票手續費計算｜台股買賣成本與損益兩平價 - 順手工具箱</title>
+<meta name="description" content="免費台股交易成本試算，計算買賣手續費、證交稅與實際損益，支援券商折扣與最低手續費，並算出要漲到多少才不賠錢的損益兩平價。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .big-num { font-size: clamp(1.7rem, 1rem + 2.6vw, 2.6rem); font-weight: 800; line-height: 1.2; }
+  .big-num.up { color: var(--ok); }
+  .big-num.down { color: var(--danger); }
+  td.num, th.num { text-align: right; font-family: var(--mono); }
+  tr.total td { font-weight: 800; background: var(--surface-2); }
+  tr.sub td { color: var(--ink-3); font-size: .88rem; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/stock-fee.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="股票, 手續費, 證交稅, 台股, 損益, 折扣">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="股票手續費計算｜台股買賣成本與損益兩平價 - 順手工具箱">
+<meta property="og:description" content="免費台股交易成本試算，計算買賣手續費、證交稅與實際損益，支援券商折扣與最低手續費，並算出要漲到多少才不賠錢的損益兩平價。">
+<meta property="og:url" content="https://tools.luka-life.com/t/stock-fee.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="股票手續費計算｜台股買賣成本與損益兩平價 - 順手工具箱">
+<meta name="twitter:description" content="免費台股交易成本試算，計算買賣手續費、證交稅與實際損益，支援券商折扣與最低手續費，並算出要漲到多少才不賠錢的損益兩平價。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "股票手續費計算",
+  "description": "免費台股交易成本試算，計算買賣手續費、證交稅與實際損益，支援券商折扣與最低手續費，並算出要漲到多少才不賠錢的損益兩平價。",
+  "url": "https://tools.luka-life.com/t/stock-fee.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "台灣生活",
+      "item": "https://tools.luka-life.com/#tw"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "股票手續費計算",
+      "item": "https://tools.luka-life.com/t/stock-fee.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "零股交易的手續費一樣嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "費率一樣，但最低手續費的殺傷力大很多。買 3,000 元的零股，手續費照算只有 4 元多，卻可能被收 20 元，等於成本瞬間多了 0.6%。有些券商針對零股或定期定額有調降最低手續費，下單前值得確認。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "ETF 的稅真的比較低嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "是。股票型 ETF 的證交稅是 0.1%，只有一般股票 0.3% 的三分之一，所以來回交易成本明顯較低。這也是為什麼做價差的人偏好 ETF 的原因之一。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "當沖的稅為什麼比較低？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "現行的當日沖銷證交稅減半優惠，從 0.3% 降到 0.15%。這是有期限的政策措施，會不會延長要看立法，交易前請確認當下的規定。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "算出來跟對帳單有落差？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "通常是手續費的進位方式。券商多半是無條件捨去到元，這個工具採四捨五入，小額交易可能差個一兩塊。另外確認你的折扣是否正確——有些券商是「月退」或「季退」，下單當下先收全額，事後才退還差額。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="stock-fee">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">📈</span>股票手續費計算</h1>
+    <p class="lede">扣掉手續費跟證交稅，這筆到底賺多少？還有最重要的：要漲到幾塊才不賠錢。</p>
+  </div>
+
+  <div class="panel">
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="buyPrice">買進價格</label>
+        <input type="number" id="buyPrice" value="100" min="0" step="0.01">
+      </div>
+      <div class="field mb-0">
+        <label for="sellPrice">賣出價格</label>
+        <input type="number" id="sellPrice" value="105" min="0" step="0.01">
+      </div>
+      <div class="field mb-0">
+        <label for="shares">股數</label>
+        <input type="number" id="shares" value="1000" min="1" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="lots">＝ 幾張</label>
+        <input type="text" id="lots" readonly>
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="discount">手續費折扣</label>
+        <select id="discount">
+          <option value="1">無折扣（0.1425%）</option>
+          <option value="0.6" selected>6 折</option>
+          <option value="0.5">5 折</option>
+          <option value="0.38">3.8 折</option>
+          <option value="0.28">2.8 折</option>
+          <option value="0.2">2 折</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label for="minFee">最低手續費</label>
+        <input type="number" id="minFee" value="20" min="0" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="taxType">證交稅類別</label>
+        <select id="taxType">
+          <option value="0.003" selected>一般股票 0.3%</option>
+          <option value="0.001">ETF 0.1%</option>
+          <option value="0.0015">當日沖銷 0.15%</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="tc mb-2">
+      <div class="big-num" id="netPL">—</div>
+      <div class="small muted">扣除所有費用後的淨損益</div>
+    </div>
+
+    <div class="stat-row mb-2">
+      <div class="stat"><div class="stat__num" id="roi">—</div><div class="stat__label">報酬率</div></div>
+      <div class="stat"><div class="stat__num" id="breakeven">—</div><div class="stat__label">損益兩平價</div></div>
+      <div class="stat"><div class="stat__num" id="totalCost">—</div><div class="stat__label">總費用</div></div>
+      <div class="stat"><div class="stat__num" id="costRatio">—</div><div class="stat__label">費用佔成本比</div></div>
+    </div>
+
+    <div class="table-scroll">
+      <table class="data">
+        <tbody id="breakdown"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="note note--warn">
+    <strong>費率以你的券商實際收費為準。</strong>手續費上限為成交金額的 <strong>0.1425%</strong>（法定上限），
+    折扣與最低手續費各家不同，有些券商電子下單有更低的折扣或不收最低手續費。
+    證交稅率為現行標準，政策如有調整請自行修改。
+    這裡也<strong>沒有計入股利、除權息、融資融券利息與借券費用</strong>。
+  </div>
+
+  <section class="prose">
+    <h2>台股的交易成本有哪些</h2>
+    <ul>
+      <li><strong>手續費</strong>：買進和賣出<strong>各收一次</strong>，上限 0.1425%。券商競爭激烈，多數人都有折扣，電子下單通常 6 折起跳。</li>
+      <li><strong>證交稅</strong>：<strong>只有賣出時收</strong>，一般股票 0.3%。這是繳給政府的，沒有折扣可談。</li>
+      <li><strong>最低手續費</strong>：多數券商單筆最低收 20 元。<strong>小額交易時這一條特別傷</strong>——買 1 萬元的股票，手續費照 0.1425% 算只有 14 元，但會被拉高到 20 元。</li>
+    </ul>
+
+    <h2>損益兩平價是什麼</h2>
+    <p>就是<strong>賣掉之後剛好不賠錢的價格</strong>。因為買賣兩次手續費加上證交稅，股價必須漲超過某個幅度你才真的開始賺。</p>
+    <p>以一般股票、6 折手續費計算，損益兩平大約要漲 <strong>0.47%</strong> 左右。所以那種「賺一點點就賣」的操作，扣完費用常常是白忙一場甚至倒賠。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>零股交易的手續費一樣嗎？</summary>
+        <div class="a">費率一樣，但<strong>最低手續費的殺傷力大很多</strong>。買 3,000 元的零股，手續費照算只有 4 元多，卻可能被收 20 元，等於成本瞬間多了 0.6%。有些券商針對零股或定期定額有調降最低手續費，下單前值得確認。</div>
+      </details>
+      <details>
+        <summary>ETF 的稅真的比較低嗎？</summary>
+        <div class="a">是。股票型 ETF 的證交稅是 0.1%，只有一般股票 0.3% 的三分之一，所以來回交易成本明顯較低。這也是為什麼做價差的人偏好 ETF 的原因之一。</div>
+      </details>
+      <details>
+        <summary>當沖的稅為什麼比較低？</summary>
+        <div class="a">現行的當日沖銷證交稅減半優惠，從 0.3% 降到 0.15%。這是有期限的政策措施，會不會延長要看立法，交易前請確認當下的規定。</div>
+      </details>
+      <details>
+        <summary>算出來跟對帳單有落差？</summary>
+        <div class="a">通常是手續費的<strong>進位方式</strong>。券商多半是無條件捨去到元，這個工具採四捨五入，小額交易可能差個一兩塊。另外確認你的折扣是否正確——有些券商是「月退」或「季退」，下單當下先收全額，事後才退還差額。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$ } = window.U;
+
+  const FEE_RATE = 0.001425;   // 法定手續費上限
+  const money = n => Math.round(n).toLocaleString('zh-TW');
+
+  /** 手續費：成交金額 × 費率 × 折扣，但不低於最低手續費 */
+  function feeOf(amount, discount, minFee) {
+    if (amount <= 0) return 0;
+    return Math.max(minFee, amount * FEE_RATE * discount);
+  }
+
+  function calc() {
+    const buy = Math.max(0, Number($('#buyPrice').value) || 0);
+    const sell = Math.max(0, Number($('#sellPrice').value) || 0);
+    const shares = Math.max(0, Math.floor(Number($('#shares').value) || 0));
+    const discount = Number($('#discount').value);
+    const minFee = Math.max(0, Number($('#minFee').value) || 0);
+    const taxRate = Number($('#taxType').value);
+
+    $('#lots').value = shares ? (shares / 1000).toLocaleString('zh-TW', { maximumFractionDigits: 3 }) + ' 張' : '—';
+
+    const buyAmount = buy * shares;
+    const sellAmount = sell * shares;
+
+    const buyFee = feeOf(buyAmount, discount, minFee);
+    const sellFee = feeOf(sellAmount, discount, minFee);
+    const tax = sellAmount * taxRate;
+
+    const totalCost = buyFee + sellFee + tax;
+    const gross = sellAmount - buyAmount;
+    const net = gross - totalCost;
+
+    /* 總投入成本 = 買進金額 + 買進手續費 */
+    const invested = buyAmount + buyFee;
+    const roi = invested > 0 ? net / invested * 100 : 0;
+
+    /* 損益兩平價：解 x 使得 x*n - feeOf(x*n) - x*n*tax = buyAmount + buyFee
+       手續費有最低值造成非線性，先用公式解再用實際費用校正一次 */
+    let be = 0;
+    if (shares > 0) {
+      const linear = invested / (shares * (1 - FEE_RATE * discount - taxRate));
+      be = linear;
+      for (let i = 0; i < 6; i++) {
+        const amt = be * shares;
+        const need = invested + feeOf(amt, discount, minFee) + amt * taxRate;
+        be = need / shares;
+      }
+    }
+
+    $('#netPL').textContent = (net >= 0 ? '+' : '−') + money(Math.abs(net)) + ' 元';
+    $('#netPL').className = 'big-num ' + (net >= 0 ? 'up' : 'down');
+
+    $('#roi').textContent = (roi >= 0 ? '+' : '') + roi.toFixed(2) + '%';
+    $('#roi').style.color = roi >= 0 ? 'var(--ok)' : 'var(--danger)';
+    /* 無條件進位到分。四捨五入會給出略低於實際需求的價格，
+       賣在那個價位仍然小賠，與「保本價」的用途相違。 */
+    $('#breakeven').textContent = shares ? (Math.ceil(be * 100) / 100).toFixed(2) : '—';
+    $('#totalCost').textContent = money(totalCost) + ' 元';
+    $('#costRatio').textContent = invested > 0 ? (totalCost / invested * 100).toFixed(2) + '%' : '—';
+
+    const taxLabel = $('#taxType').selectedOptions[0].textContent;
+    const feeLabel = $('#discount').selectedOptions[0].textContent;
+
+    $('#breakdown').innerHTML = `
+      <tr><td>買進金額</td><td class="num">${money(buyAmount)}</td>
+          <td class="small muted">${buy} × ${shares.toLocaleString()} 股</td></tr>
+      <tr class="sub"><td>買進手續費</td><td class="num">−${money(buyFee)}</td>
+          <td class="small muted">${feeLabel}${buyFee === minFee && buyAmount > 0 ? '（已套用最低手續費）' : ''}</td></tr>
+      <tr><td>賣出金額</td><td class="num">${money(sellAmount)}</td>
+          <td class="small muted">${sell} × ${shares.toLocaleString()} 股</td></tr>
+      <tr class="sub"><td>賣出手續費</td><td class="num">−${money(sellFee)}</td>
+          <td class="small muted">${feeLabel}${sellFee === minFee && sellAmount > 0 ? '（已套用最低手續費）' : ''}</td></tr>
+      <tr class="sub"><td>證交稅</td><td class="num">−${money(tax)}</td>
+          <td class="small muted">${taxLabel}．僅賣出時課徵</td></tr>
+      <tr><td>價差損益</td><td class="num">${gross >= 0 ? '+' : '−'}${money(Math.abs(gross))}</td>
+          <td class="small muted">未扣費用</td></tr>
+      <tr class="total"><td>淨損益</td><td class="num">${net >= 0 ? '+' : '−'}${money(Math.abs(net))}</td>
+          <td class="small muted">扣除全部費用後</td></tr>`;
+  }
+
+  $$('input, select').forEach(el => el.addEventListener('input', calc));
+  calc();
+})();
+</script>
+</body>
+</html>

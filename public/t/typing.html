@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>打字速度測試｜測每分鐘字數與正確率 - 順手工具箱</title>
+<meta name="description" content="免費線上打字測速，支援中文與英文，即時顯示每分鐘字數、正確率與錯字位置，可選 30 秒到 3 分鐘的測驗長度並記錄最佳成績。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⌨️</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .type-area {
+    background: var(--bg-sunk); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px;
+    font-size: 1.22rem; line-height: 2.1; letter-spacing: .02em;
+    min-height: 140px; user-select: none;
+  }
+  .type-area span { border-radius: 3px; padding: 1px 0; }
+  .type-area .done { color: var(--ok); }
+  .type-area .wrong { color: #fff; background: var(--danger); }
+  .type-area .cur {
+    background: var(--brand); color: #fff;
+    box-shadow: 0 0 0 2px var(--brand);
+  }
+  .type-area .todo { color: var(--ink-3); }
+
+  #input {
+    font-size: 1.1rem; line-height: 1.8; min-height: 96px;
+    font-family: var(--font);
+  }
+  #input:disabled { opacity: .6; }
+
+  .timer-pill {
+    display: inline-grid; place-items: center;
+    min-width: 92px; padding: 8px 18px; border-radius: 999px;
+    background: var(--brand); color: #fff;
+    font-size: 1.3rem; font-weight: 800; font-variant-numeric: tabular-nums;
+  }
+  .timer-pill.low { background: var(--danger); }
+  .timer-pill.idle { background: var(--border-strong); color: var(--ink-2); }
+
+  .result-card {
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 22px; text-align: center;
+  }
+  .result-card .big {
+    font-size: clamp(2.4rem, 1.4rem + 4vw, 3.6rem);
+    font-weight: 800; color: var(--brand); line-height: 1.1;
+  }
+  .grade { font-size: 1.05rem; font-weight: 700; margin-top: 6px; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/typing.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="打字, 速度, 測試, wpm, 中打, 英打, 正確率">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="打字速度測試｜測每分鐘字數與正確率 - 順手工具箱">
+<meta property="og:description" content="免費線上打字測速，支援中文與英文，即時顯示每分鐘字數、正確率與錯字位置，可選 30 秒到 3 分鐘的測驗長度並記錄最佳成績。">
+<meta property="og:url" content="https://tools.luka-life.com/t/typing.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="打字速度測試｜測每分鐘字數與正確率 - 順手工具箱">
+<meta name="twitter:description" content="免費線上打字測速，支援中文與英文，即時顯示每分鐘字數、正確率與錯字位置，可選 30 秒到 3 分鐘的測驗長度並記錄最佳成績。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "打字速度測試",
+  "description": "免費線上打字測速，支援中文與英文，即時顯示每分鐘字數、正確率與錯字位置，可選 30 秒到 3 分鐘的測驗長度並記錄最佳成績。",
+  "url": "https://tools.luka-life.com/t/typing.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "裝置檢測",
+      "item": "https://tools.luka-life.com/#device"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "打字速度測試",
+      "item": "https://tools.luka-life.com/t/typing.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "可以按倒退鍵修改嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以，修正後那個字就會重新判定。不過要注意，回頭修改會吃掉你的時間，對最終速度不利。實務上一邊打一邊確認，比打完再回頭改有效率。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "中文的字數怎麼算？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "一個中文字算一個字，標點符號也算。所以「今天天氣很好。」是 8 個字。英文模式則是照國際慣例，每 5 個字元（含空白）折算成 1 個 word。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "手機可以測嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以，但測出來的是手機打字速度，跟實體鍵盤是兩回事，數字不能互相比較。想測實體鍵盤請用電腦。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "紀錄會保存嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "最佳紀錄存在你自己瀏覽器的本機儲存空間，不會上傳。換裝置或清除瀏覽資料就會消失。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="typing">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">⌨️</span>打字速度測試</h1>
+    <p class="lede">測測看你一分鐘能打幾個字。中文英文都能測，打錯的地方會即時標紅色。</p>
+  </div>
+
+  <div class="panel">
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="lang">測驗語言</label>
+        <select id="lang">
+          <option value="zh" selected>中文</option>
+          <option value="en">英文</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label for="duration">測驗長度</label>
+        <select id="duration">
+          <option value="30">30 秒</option>
+          <option value="60" selected>1 分鐘</option>
+          <option value="120">2 分鐘</option>
+          <option value="180">3 分鐘</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label>&nbsp;</label>
+        <div><span class="timer-pill idle" id="timer">0:60</span></div>
+      </div>
+    </div>
+
+    <div class="type-area mb-2" id="display"></div>
+
+    <div class="field">
+      <label for="input">在這裡打字（開始輸入就會自動計時）</label>
+      <textarea id="input" rows="3" spellcheck="false" autocomplete="off"
+                autocorrect="off" autocapitalize="off"
+                placeholder="直接開始打上面那段文字…"></textarea>
+    </div>
+
+    <div class="stat-row mb-2">
+      <div class="stat"><div class="stat__num" id="sSpeed">0</div><div class="stat__label" id="speedLabel">字／分</div></div>
+      <div class="stat"><div class="stat__num" id="sAcc">100%</div><div class="stat__label">正確率</div></div>
+      <div class="stat"><div class="stat__num" id="sTyped">0</div><div class="stat__label">已輸入</div></div>
+      <div class="stat"><div class="stat__num" id="sWrong">0</div><div class="stat__label">錯字</div></div>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn btn--lg" type="button" id="restartBtn">重新開始</button>
+      <button class="btn btn--ghost btn--lg" type="button" id="newTextBtn">換一段文字</button>
+    </div>
+  </div>
+
+  <div class="panel hidden" id="resultPanel">
+    <div class="result-card">
+      <div class="small muted">測驗結束</div>
+      <div class="big" id="rSpeed">0</div>
+      <div class="small muted" id="rUnit">字／分</div>
+      <div class="grade" id="rGrade"></div>
+
+      <div class="stat-row mt-2">
+        <div class="stat"><div class="stat__num" id="rAcc">—</div><div class="stat__label">正確率</div></div>
+        <div class="stat"><div class="stat__num" id="rTyped">—</div><div class="stat__label">總輸入字數</div></div>
+        <div class="stat"><div class="stat__num" id="rWrong">—</div><div class="stat__label">錯字數</div></div>
+        <div class="stat"><div class="stat__num" id="rBest">—</div><div class="stat__label">你的最佳紀錄</div></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>中文跟英文的速度怎麼比</h2>
+    <p>兩者單位不同，不能直接比較：</p>
+    <ul>
+      <li><strong>中文</strong>算「字／分」。一般人約 20 到 40 字，熟練的文字工作者可以到 60 以上，專業打字員更快。</li>
+      <li><strong>英文</strong>算 <strong>WPM</strong>（words per minute），業界慣例是<strong>每 5 個字元算一個字</strong>，含空白。一般人 30 到 40、熟練 60 到 80、非常快的人能破 100。</li>
+    </ul>
+    <p>中文比較慢是正常的，因為要經過選字。用不同輸入法（注音、倉頡、拼音）差距也很大。</p>
+
+    <h2>正確率比速度重要</h2>
+    <p>打很快但一直要回頭改，實際產出反而慢。<strong>正確率低於 95% 的話，先練準度再練速度</strong>會進步得更快。這個測驗算的是「有效速度」——錯字不計入正確字數，所以硬衝速度不會讓分數變好看。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>可以按倒退鍵修改嗎？</summary>
+        <div class="a">可以，修正後那個字就會重新判定。不過要注意，<strong>回頭修改會吃掉你的時間</strong>，對最終速度不利。實務上一邊打一邊確認，比打完再回頭改有效率。</div>
+      </details>
+      <details>
+        <summary>中文的字數怎麼算？</summary>
+        <div class="a">一個中文字算一個字，標點符號也算。所以「今天天氣很好。」是 8 個字。英文模式則是照國際慣例，每 5 個字元（含空白）折算成 1 個 word。</div>
+      </details>
+      <details>
+        <summary>手機可以測嗎？</summary>
+        <div class="a">可以，但測出來的是<strong>手機打字速度</strong>，跟實體鍵盤是兩回事，數字不能互相比較。想測實體鍵盤請用電腦。</div>
+      </details>
+      <details>
+        <summary>紀錄會保存嗎？</summary>
+        <div class="a">最佳紀錄存在你自己瀏覽器的本機儲存空間，不會上傳。換裝置或清除瀏覽資料就會消失。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, esc, pick } = window.U;
+
+  /* 測驗用文句，全部自行撰寫，內容刻意涵蓋常用字與標點 */
+  const TEXTS = {
+    zh: [
+      '早上出門前記得看一下氣象預報，今天午後可能會下雷陣雨，帶把折傘比較保險。',
+      '這家店的位置有點難找，要從巷口的便利商店轉進去，走大概兩分鐘才會看到招牌。',
+      '週末如果沒有其他安排，我們可以去河濱公園騎腳踏車，順便在那邊野餐吃午飯。',
+      '把資料整理好之後寄給我，記得附上上個月的統計表，開會的時候需要用到。',
+      '學會一件事最快的方法，就是實際動手做一次，光看說明永遠記不牢。',
+      '這台筆電用了五年，電池撐不到兩小時，是時候該換一台新的了。',
+      '他說話的速度很快，但邏輯很清楚，每個重點都交代得很完整。',
+      '煮飯其實沒有想像中困難，掌握火候跟調味的比例，多練幾次就上手了。',
+      '捷運到站之後往三號出口走，出站右轉直走約五百公尺就會抵達目的地。',
+      '存錢最重要的不是金額大小，而是能不能持續下去，每個月固定存一點就好。'
+    ],
+    en: [
+      'The quick brown fox jumps over the lazy dog while the cat sleeps on the warm windowsill.',
+      'Learning to type quickly takes practice, patience, and a willingness to slow down when you make mistakes.',
+      'She opened the window and let the cool evening air fill the room before sitting down to write.',
+      'Good software is not about clever tricks but about being clear enough that someone else can fix it later.',
+      'We walked along the river until the sun went down, talking about nothing in particular.',
+      'If you want to remember something, try explaining it to another person in your own words.',
+      'The train was delayed by twenty minutes, so we bought coffee and waited on the platform.',
+      'Every small habit you keep for a year adds up to something much larger than you expect.'
+    ]
+  };
+
+  const BEST_KEY = 'sst-typing-best';
+
+  let target = '';
+  let started = false;
+  let startAt = 0;
+  let remaining = 60;
+  let timer = null;
+  let finished = false;
+
+  const display = $('#display');
+  const input = $('#input');
+
+  const isEn = () => $('#lang').value === 'en';
+
+  function readBest() {
+    try {
+      return JSON.parse(localStorage.getItem(BEST_KEY) || '{}');
+    } catch (e) { return {}; }
+  }
+  function writeBest(obj) {
+    try { localStorage.setItem(BEST_KEY, JSON.stringify(obj)); } catch (e) { /* 無痕模式忽略 */ }
+  }
+
+  function newText() {
+    const pool = TEXTS[isEn() ? 'en' : 'zh'];
+    let next = pick(pool);
+    if (next === target && pool.length > 1) next = pick(pool.filter(t => t !== target));
+    target = next;
+    render();
+  }
+
+  function render() {
+    const typed = input.value;
+    const chars = Array.from(target);
+    const typedChars = Array.from(typed);
+
+    display.innerHTML = chars.map((ch, i) => {
+      let cls = 'todo';
+      if (i < typedChars.length) {
+        cls = typedChars[i] === ch ? 'done' : 'wrong';
+      } else if (i === typedChars.length) {
+        cls = 'cur';
+      }
+      /* 空白字元要撐出寬度才看得到游標 */
+      const shown = ch === ' ' ? '&nbsp;' : esc(ch);
+      return `<span class="${cls}">${shown}</span>`;
+    }).join('');
+  }
+
+  function stats() {
+    const typedChars = Array.from(input.value);
+    const chars = Array.from(target);
+    let correct = 0, wrong = 0;
+
+    typedChars.forEach((ch, i) => {
+      if (i >= chars.length) { wrong++; return; }
+      ch === chars[i] ? correct++ : wrong++;
+    });
+
+    const elapsedMin = started ? Math.max((Date.now() - startAt) / 60000, 1 / 60) : 0;
+    /* 英文依國際慣例每 5 個字元折算 1 word，中文一字就是一字 */
+    const unit = isEn() ? correct / 5 : correct;
+    const speed = elapsedMin > 0 ? unit / elapsedMin : 0;
+    const acc = typedChars.length > 0 ? correct / typedChars.length * 100 : 100;
+
+    return { correct, wrong, typed: typedChars.length, speed, acc };
+  }
+
+  function updateStats() {
+    const s = stats();
+    $('#sSpeed').textContent = Math.round(s.speed);
+    $('#sAcc').textContent = s.acc.toFixed(0) + '%';
+    $('#sTyped').textContent = s.typed;
+    $('#sWrong').textContent = s.wrong;
+    $('#sWrong').style.color = s.wrong > 0 ? 'var(--danger)' : '';
+    $('#speedLabel').textContent = isEn() ? 'WPM' : '字／分';
+    return s;
+  }
+
+  function tick() {
+    remaining--;
+    paintTimer();
+    updateStats();
+    if (remaining <= 0) finish();
+  }
+
+  function paintTimer() {
+    const m = Math.floor(remaining / 60);
+    const s = remaining % 60;
+    $('#timer').textContent = `${m}:${String(s).padStart(2, '0')}`;
+    $('#timer').className = 'timer-pill' +
+      (!started ? ' idle' : remaining <= 10 ? ' low' : '');
+  }
+
+  function start() {
+    if (started || finished) return;
+    started = true;
+    startAt = Date.now();
+    paintTimer();
+    timer = setInterval(tick, 1000);
+  }
+
+  function finish() {
+    clearInterval(timer);
+    finished = true;
+    started = false;
+    input.disabled = true;
+
+    const s = updateStats();
+    const speed = Math.round(s.speed);
+    const key = isEn() ? 'en' : 'zh';
+
+    const best = readBest();
+    const prevBest = best[key] || 0;
+    if (speed > prevBest) { best[key] = speed; writeBest(best); }
+
+    $('#rSpeed').textContent = speed;
+    $('#rUnit').textContent = isEn() ? 'WPM' : '字／分';
+    $('#rAcc').textContent = s.acc.toFixed(0) + '%';
+    $('#rTyped').textContent = s.typed;
+    $('#rWrong').textContent = s.wrong;
+    $('#rBest').textContent = Math.max(speed, prevBest);
+
+    /* 依語言給不同的評語基準 */
+    const tiers = isEn()
+      ? [[80, '非常快，接近專業水準'], [60, '相當熟練'], [40, '中上，日常使用很順'], [25, '一般水準'], [0, '還有進步空間，先求準再求快']]
+      : [[60, '非常快，接近專業水準'], [40, '相當熟練'], [25, '中上，日常使用很順'], [15, '一般水準'], [0, '還有進步空間，先求準再求快']];
+    let grade = tiers.find(t => speed >= t[0])[1];
+    if (s.acc < 90) grade += '。不過正確率偏低，建議放慢速度先把準度練起來';
+
+    $('#rGrade').textContent = grade;
+    $('#resultPanel').classList.remove('hidden');
+    $('#resultPanel').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function reset(keepText) {
+    clearInterval(timer);
+    started = false;
+    finished = false;
+    remaining = Number($('#duration').value);
+    input.value = '';
+    input.disabled = false;
+    $('#resultPanel').classList.add('hidden');
+    if (!keepText) newText(); else render();
+    paintTimer();
+    updateStats();
+    input.focus();
+  }
+
+  input.addEventListener('input', () => {
+    if (finished) return;
+    start();
+    render();
+    updateStats();
+
+    /* 打完整段就提前結束，不用等時間到 */
+    if (Array.from(input.value).length >= Array.from(target).length) finish();
+  });
+
+  $('#restartBtn').addEventListener('click', () => reset(true));
+  $('#newTextBtn').addEventListener('click', () => reset(false));
+  $('#duration').addEventListener('change', () => reset(true));
+  $('#lang').addEventListener('change', () => reset(false));
+
+  newText();
+  reset(true);
+})();
+</script>
+</body>
+</html>

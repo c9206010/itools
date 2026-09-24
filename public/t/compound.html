@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>複利與定存試算｜單筆與定期定額的本利和 - 順手工具箱</title>
+<meta name="description" content="免費複利計算器，試算單筆存入或每月定期定額的本利和，支援月配季配年配不同複利頻率，並顯示逐年成長明細與本金利息比例。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .big-num { font-size: clamp(1.7rem, 1rem + 2.6vw, 2.6rem); font-weight: 800; color: var(--ok); line-height: 1.2; }
+  td.num, th.num { text-align: right; font-family: var(--mono); }
+  tr.total td { font-weight: 800; background: var(--surface-2); }
+  .ratio-bar { height: 28px; border-radius: 6px; overflow: hidden; display: flex; font-size: .74rem; font-weight: 700; }
+  .ratio-bar div { display: grid; place-items: center; color: #fff; overflow: hidden; white-space: nowrap; }
+  .chart { display: flex; align-items: flex-end; gap: 2px; height: 150px; padding: 10px;
+           background: var(--bg-sunk); border: 1px solid var(--border); border-radius: var(--radius-sm); }
+  .chart div { flex: 1; min-width: 0; border-radius: 3px 3px 0 0; position: relative; }
+  .chart div i { display: block; width: 100%; background: var(--accent); border-radius: 3px 3px 0 0; }
+  .chart div b { display: block; width: 100%; background: var(--brand); }
+  .table-wrap { max-height: 360px; overflow: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); }
+  .table-wrap thead th { position: sticky; top: 0; z-index: 1; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/compound.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="複利, 定存, 利息, 年化, 報酬, 存錢, 試算">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="複利與定存試算｜單筆與定期定額的本利和 - 順手工具箱">
+<meta property="og:description" content="免費複利計算器，試算單筆存入或每月定期定額的本利和，支援月配季配年配不同複利頻率，並顯示逐年成長明細與本金利息比例。">
+<meta property="og:url" content="https://tools.luka-life.com/t/compound.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="複利與定存試算｜單筆與定期定額的本利和 - 順手工具箱">
+<meta name="twitter:description" content="免費複利計算器，試算單筆存入或每月定期定額的本利和，支援月配季配年配不同複利頻率，並顯示逐年成長明細與本金利息比例。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "複利與定存試算",
+  "description": "免費複利計算器，試算單筆存入或每月定期定額的本利和，支援月配季配年配不同複利頻率，並顯示逐年成長明細與本金利息比例。",
+  "url": "https://tools.luka-life.com/t/compound.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "計算換算",
+      "item": "https://tools.luka-life.com/#calc"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "複利與定存試算",
+      "item": "https://tools.luka-life.com/t/compound.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "「扣通膨後購買力」是什麼意思？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "錢會貶值。20 年後的 100 萬，能買到的東西比現在的 100 萬少。這一欄把未來的金額換算成以今天的物價來看相當於多少錢，讓你對實際的購買力有概念。如果年報酬率低於通膨率，這個數字會低於你的總投入，代表實質上是虧的。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "複利頻率有差嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "有，但沒有想像中大。同樣年利率 5%，每月複利比每年複利大約只多 0.1 個百分點的實質年報酬。利率高低跟年期長短的影響遠大於複利頻率，不用為了這個換銀行。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "台灣定存利率大概多少？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "會隨央行政策變動，實際數字請查各銀行的牌告利率。要注意定存的利息收入有稅務規定，達一定金額會被扣繳所得稅與二代健保補充保費，這個工具沒有計入。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "可以算「要存多久才到某個金額」嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "目前沒有反解功能。實務上的做法是調整年期，看哪一年的總額達到你的目標——下面的逐年表格可以直接查。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="compound">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">📊</span>複利與定存試算</h1>
+    <p class="lede">一筆錢放著、或每個月固定存，幾年後會變多少。順便看看利息佔了多少比重。</p>
+  </div>
+
+  <div class="panel">
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="principal">起始本金</label>
+        <input type="number" id="principal" value="100000" min="0" step="1000">
+      </div>
+      <div class="field mb-0">
+        <label for="monthly">每月再投入</label>
+        <input type="number" id="monthly" value="5000" min="0" step="1000">
+      </div>
+      <div class="field mb-0">
+        <label for="rate">年利率（％）</label>
+        <input type="number" id="rate" value="5" min="0" max="50" step="0.01">
+      </div>
+      <div class="field mb-0">
+        <label for="years">年期</label>
+        <input type="number" id="years" value="20" min="1" max="60" step="1">
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="freq">複利頻率</label>
+        <select id="freq">
+          <option value="12" selected>每月</option>
+          <option value="4">每季</option>
+          <option value="2">每半年</option>
+          <option value="1">每年</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label for="timing">每月投入時點</label>
+        <select id="timing">
+          <option value="end" selected>期末投入</option>
+          <option value="begin">期初投入</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label for="inflation">通膨率（％，可留 0）</label>
+        <input type="number" id="inflation" value="2" min="0" max="20" step="0.1">
+      </div>
+    </div>
+
+    <div class="tc mb-2">
+      <div class="big-num" id="finalValue">—</div>
+      <div class="small muted" id="finalSub">到期時的本利和</div>
+    </div>
+
+    <div class="ratio-bar mb-1" id="ratioBar"></div>
+    <p class="hint tc mb-2" id="ratioNote"></p>
+
+    <div class="stat-row mb-2">
+      <div class="stat"><div class="stat__num" id="totalIn">—</div><div class="stat__label">總投入本金</div></div>
+      <div class="stat"><div class="stat__num" id="totalInterest">—</div><div class="stat__label">累積利息</div></div>
+      <div class="stat"><div class="stat__num" id="multiple">—</div><div class="stat__label">總報酬倍數</div></div>
+      <div class="stat"><div class="stat__num" id="realValue">—</div><div class="stat__label">扣通膨後購買力</div></div>
+    </div>
+
+    <div class="panel__title">逐年成長</div>
+    <div class="chart mb-1" id="chart" aria-hidden="true"></div>
+    <p class="hint tc mb-2">
+      <span style="color:var(--accent)">■</span> 本金
+      <span style="color:var(--brand)">■</span> 利息
+    </p>
+
+    <div class="table-wrap">
+      <table class="data">
+        <thead>
+          <tr><th>年度</th><th class="num">累積投入</th><th class="num">累積利息</th>
+              <th class="num">年末總額</th><th class="num">當年利息</th></tr>
+        </thead>
+        <tbody id="yearly"></tbody>
+      </table>
+    </div>
+    <button class="btn btn--ghost btn--sm mt-2" type="button" id="copyBtn">複製表格</button>
+  </div>
+
+  <div class="note note--warn">
+    <strong>這是數學試算，不是投資建議也不是報酬保證。</strong>
+    定存利率是固定的，但股票、基金、ETF 的報酬<strong>逐年波動</strong>，實際結果不會像這裡一樣平滑。
+    另外這裡<strong>沒有扣除</strong>交易手續費、管理費、所得稅與二代健保補充保費，實際到手會更少。
+    填入偏高的年報酬率時，請記得那是歷史平均，不是承諾。
+  </div>
+
+  <section class="prose">
+    <h2>複利為什麼後期才明顯</h2>
+    <p>因為利息本身也開始生利息。前幾年你看到的成長幾乎都來自本金投入，<strong>要到中後期，利息的貢獻才會超過本金</strong>。上面的逐年圖表可以直接看到這個交叉點——橘色（利息）超過青色（本金）的那一年。</p>
+    <p>這也是為什麼「早幾年開始」的效果遠大於「多存一點」。時間是複利唯一無法替代的原料。</p>
+
+    <h2>期初投入跟期末投入差在哪</h2>
+    <p><strong>期初投入</strong>是每個月月初就把錢放進去，那筆錢當月就開始生息；<strong>期末投入</strong>是月底才放。長期下來期初會多出大約一個月的利息，年期越長、利率越高，差距越明顯。</p>
+    <p>實務上多數人的薪轉扣款接近月初，所以選期初會比較貼近現實。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>「扣通膨後購買力」是什麼意思？</summary>
+        <div class="a">錢會貶值。20 年後的 100 萬，能買到的東西比現在的 100 萬少。這一欄把未來的金額換算成<strong>以今天的物價來看相當於多少錢</strong>，讓你對實際的購買力有概念。如果年報酬率低於通膨率，這個數字會低於你的總投入，代表實質上是虧的。</div>
+      </details>
+      <details>
+        <summary>複利頻率有差嗎？</summary>
+        <div class="a">有，但沒有想像中大。同樣年利率 5%，每月複利比每年複利大約只多 0.1 個百分點的實質年報酬。<strong>利率高低跟年期長短的影響遠大於複利頻率</strong>，不用為了這個換銀行。</div>
+      </details>
+      <details>
+        <summary>台灣定存利率大概多少？</summary>
+        <div class="a">會隨央行政策變動，實際數字請查各銀行的牌告利率。要注意定存的利息收入有稅務規定，達一定金額會被扣繳所得稅與二代健保補充保費，這個工具沒有計入。</div>
+      </details>
+      <details>
+        <summary>可以算「要存多久才到某個金額」嗎？</summary>
+        <div class="a">目前沒有反解功能。實務上的做法是調整年期，看哪一年的總額達到你的目標——下面的逐年表格可以直接查。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, esc } = window.U;
+
+  const money = n => Math.round(n).toLocaleString('zh-TW');
+
+  function calc() {
+    const principal = Math.max(0, Number($('#principal').value) || 0);
+    const monthly = Math.max(0, Number($('#monthly').value) || 0);
+    const annualRate = Math.max(0, Number($('#rate').value) || 0) / 100;
+    const years = Math.max(1, Math.floor(Number($('#years').value) || 1));
+    const freq = Number($('#freq').value);
+    const atBegin = $('#timing').value === 'begin';
+    const inflation = Math.max(0, Number($('#inflation').value) || 0) / 100;
+
+    /* 以月為單位模擬，複利只在結算月才計息，
+       這樣「每季複利」等設定才會真的反映在結果上。 */
+    const periodRate = annualRate / freq;
+    const monthsPerPeriod = 12 / freq;
+
+    let balance = principal;
+    let invested = principal;
+    let accruedBase = principal;   // 本期尚未計息的餘額基準
+    const rows = [];
+
+    let prevTotal = principal;
+    let prevInvested = principal;
+
+    for (let y = 1; y <= years; y++) {
+      for (let m = 1; m <= 12; m++) {
+        if (atBegin && monthly > 0) { balance += monthly; invested += monthly; }
+
+        /* 到了複利結算的月份就計息 */
+        const monthIndex = (y - 1) * 12 + m;
+        if (monthIndex % monthsPerPeriod === 0) {
+          balance += balance * periodRate;
+        }
+
+        if (!atBegin && monthly > 0) { balance += monthly; invested += monthly; }
+      }
+
+      const interest = balance - invested;
+      rows.push({
+        year: y,
+        invested,
+        interest,
+        total: balance,
+        yearInterest: (balance - prevTotal) - (invested - prevInvested)
+      });
+      prevTotal = balance;
+      prevInvested = invested;
+    }
+
+    const last = rows[rows.length - 1];
+    const totalInterest = last.total - last.invested;
+
+    $('#finalValue').textContent = money(last.total) + ' 元';
+    $('#finalSub').textContent =
+      `${years} 年後．年利率 ${(annualRate * 100).toFixed(2)}%．${$('#freq').selectedOptions[0].textContent}複利`;
+
+    $('#totalIn').textContent = money(last.invested);
+    $('#totalInterest').textContent = money(totalInterest);
+    $('#multiple').textContent = last.invested > 0
+      ? (last.total / last.invested).toFixed(2) + ' 倍' : '—';
+
+    /* 扣通膨：把未來金額折現回今天的購買力 */
+    const real = last.total / Math.pow(1 + inflation, years);
+    $('#realValue').textContent = money(real) + ' 元';
+    $('#realValue').style.color = real < last.invested ? 'var(--danger)' : '';
+
+    /* 本金利息比例 */
+    const pPct = last.total > 0 ? last.invested / last.total * 100 : 100;
+    $('#ratioBar').innerHTML =
+      `<div style="width:${pPct}%;background:var(--accent)">本金 ${pPct.toFixed(0)}%</div>` +
+      `<div style="width:${100 - pPct}%;background:var(--brand)">利息 ${(100 - pPct).toFixed(0)}%</div>`;
+
+    /* 找出利息首度超過本金的年份 */
+    const crossover = rows.find(r => r.interest > r.invested);
+    $('#ratioNote').textContent = crossover
+      ? `第 ${crossover.year} 年起，累積利息開始超過你投入的本金。`
+      : '在這個年期內，利息還沒有超過投入的本金。';
+
+    /* 長條圖：每年一根，堆疊本金與利息 */
+    const max = last.total || 1;
+    $('#chart').innerHTML = rows.map(r => {
+      const ih = r.interest / max * 100;
+      const ph = r.invested / max * 100;
+      return `<div title="第 ${r.year} 年 ${money(r.total)} 元">
+                <i style="height:${ih}%"></i><b style="height:${ph}%"></b>
+              </div>`;
+    }).join('');
+
+    $('#yearly').innerHTML = rows.map(r => `
+      <tr>
+        <td>第 ${r.year} 年</td>
+        <td class="num">${money(r.invested)}</td>
+        <td class="num">${money(r.interest)}</td>
+        <td class="num"><strong>${money(r.total)}</strong></td>
+        <td class="num">${money(r.yearInterest)}</td>
+      </tr>`).join('');
+
+    calc.rows = rows;
+  }
+
+  $$('input, select').forEach(el => el.addEventListener('input', calc));
+
+  $('#copyBtn').addEventListener('click', () => {
+    if (!calc.rows) return;
+    const text = ['年度\t累積投入\t累積利息\t年末總額\t當年利息'].concat(
+      calc.rows.map(r => `第 ${r.year} 年\t${Math.round(r.invested)}\t${Math.round(r.interest)}\t${Math.round(r.total)}\t${Math.round(r.yearInterest)}`)
+    ).join('\n');
+    window.copyText(text, '已複製逐年明細');
+  });
+
+  calc();
+})();
+</script>
+</body>
+</html>

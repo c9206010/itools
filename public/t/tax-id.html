@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>統一編號驗證｜檢查公司統編格式是否正確 - 順手工具箱</title>
+<meta name="description" content="免費統一編號檢查工具，驗證八位數公司統編的檢查碼是否正確，支援批次貼上多筆一次檢查，並顯示完整的計算過程。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏢</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .verdict {
+    text-align: center; padding: 26px 16px; border-radius: var(--radius-lg);
+    border: 2px solid var(--border); background: var(--surface-2);
+  }
+  .verdict__num {
+    font-family: var(--mono); font-size: clamp(1.8rem, 1rem + 4vw, 2.8rem);
+    font-weight: 800; letter-spacing: .12em;
+  }
+  .verdict__msg { font-size: 1.05rem; font-weight: 700; margin-top: 8px; }
+  .verdict.ok { border-color: var(--ok); background: rgba(47,125,79,.08); }
+  .verdict.ok .verdict__msg { color: var(--ok); }
+  .verdict.bad { border-color: var(--danger); background: rgba(192,57,43,.08); }
+  .verdict.bad .verdict__msg { color: var(--danger); }
+  .steps { display: grid; grid-template-columns: repeat(8, 1fr); gap: 5px; text-align: center; }
+  .steps > div { font-family: var(--mono); font-size: .8rem; padding: 5px 2px; border-radius: 5px; }
+  .steps .hd { background: var(--surface-2); color: var(--ink-3); font-size: .72rem; font-family: var(--font); }
+  .steps .cell { background: var(--bg-sunk); border: 1px solid var(--border); }
+  .steps .cell.hot { border-color: var(--brand); color: var(--brand); font-weight: 700; }
+  .batch-row {
+    display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center;
+    padding: 9px 13px; border: 1px solid var(--border);
+    border-radius: var(--radius-sm); background: var(--surface); margin-bottom: 6px;
+  }
+  .batch-row.ok { border-color: var(--ok); }
+  .batch-row.bad { border-color: var(--danger); }
+  .batch-row span:first-child { font-family: var(--mono); font-weight: 700; letter-spacing: .08em; }
+  .batch-row span:last-child { font-size: .88rem; font-weight: 600; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/tax-id.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="統編, 統一編號, 公司行號, 驗證, 檢查碼">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="統一編號驗證｜檢查公司統編格式是否正確 - 順手工具箱">
+<meta property="og:description" content="免費統一編號檢查工具，驗證八位數公司統編的檢查碼是否正確，支援批次貼上多筆一次檢查，並顯示完整的計算過程。">
+<meta property="og:url" content="https://tools.luka-life.com/t/tax-id.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="統一編號驗證｜檢查公司統編格式是否正確 - 順手工具箱">
+<meta name="twitter:description" content="免費統一編號檢查工具，驗證八位數公司統編的檢查碼是否正確，支援批次貼上多筆一次檢查，並顯示完整的計算過程。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "統一編號驗證",
+  "description": "免費統一編號檢查工具，驗證八位數公司統編的檢查碼是否正確，支援批次貼上多筆一次檢查，並顯示完整的計算過程。",
+  "url": "https://tools.luka-life.com/t/tax-id.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "台灣生活",
+      "item": "https://tools.luka-life.com/#tw"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "統一編號驗證",
+      "item": "https://tools.luka-life.com/t/tax-id.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "為什麼有些真實存在的統編被判定錯誤？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "先確認三件事：號碼是不是剛好 8 位、有沒有多打或少打數字、有沒有把第 7 碼為 7 的例外考慮進去（這個工具有處理）。如果都確認過還是錯誤，那很可能是對方給錯號碼了——這正是這個工具存在的目的。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "2023 年的規則變更會影響舊統編嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會。修正是放寬條件（從被 10 整除改成被 5 整除），原本合法的統編在新規則下仍然合法，只是多了一批新號碼可以發放。所以用新規則檢查舊統編不會出問題。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "個人可以有統編嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "統一編號是給營利事業（公司、行號）用的。個人用的是身分證字號，格式完全不同（1 個英文字母加 9 個數字），不能用這個工具檢查。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "輸入的號碼會被記錄嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會。驗證完全在你的瀏覽器裡計算，號碼沒有送到任何伺服器。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="tax-id">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🏢</span>統一編號驗證</h1>
+    <p class="lede">開發票前先檢查客戶給的統編有沒有打錯。八個數字貼上去，馬上知道格式對不對。</p>
+  </div>
+
+  <div class="panel">
+    <div class="field">
+      <label for="single">輸入統一編號（8 位數字）</label>
+      <input type="text" id="single" inputmode="numeric" maxlength="12" autocomplete="off"
+             placeholder="例如 12345675" style="font-family:var(--mono);letter-spacing:.1em;font-size:1.2rem">
+    </div>
+
+    <div class="verdict mb-2" id="verdict">
+      <div class="verdict__num" id="vNum">– – – – – – – –</div>
+      <div class="verdict__msg" id="vMsg">等待輸入</div>
+    </div>
+
+    <div id="stepsWrap" class="hidden">
+      <div class="panel__title">計算過程</div>
+      <div class="steps mb-1" id="steps"></div>
+      <p class="hint" id="stepsNote"></p>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title">批次檢查</div>
+    <div class="field">
+      <label for="batch">一行一筆，或用逗號分隔</label>
+      <textarea id="batch" rows="6" spellcheck="false"
+                placeholder="12345675&#10;04595257&#10;一次貼很多筆也可以"></textarea>
+    </div>
+    <div class="btn-group mb-2">
+      <button class="btn" type="button" id="batchBtn">全部檢查</button>
+      <button class="btn btn--ghost" type="button" id="clearBtn">清空</button>
+    </div>
+
+    <div class="stat-row mb-2 hidden" id="batchStat">
+      <div class="stat"><div class="stat__num" id="bTotal">0</div><div class="stat__label">檢查筆數</div></div>
+      <div class="stat"><div class="stat__num" id="bOk">0</div><div class="stat__label">格式正確</div></div>
+      <div class="stat"><div class="stat__num" id="bBad">0</div><div class="stat__label">格式錯誤</div></div>
+    </div>
+
+    <div id="batchResult"></div>
+  </div>
+
+  <div class="note note--warn">
+    <strong>這只檢查「格式」，不代表公司真實存在。</strong>
+    檢查碼正確只表示這串數字符合編碼規則，<strong>不保證有這家公司、也不保證公司還在營業</strong>。
+    要查證實際營業狀態，請到
+    <a href="https://findbiz.nat.gov.tw/" target="_blank" rel="noopener">經濟部商工登記公示資料查詢服務</a>
+    或財政部的稅籍登記資料查詢。
+  </div>
+
+  <section class="prose">
+    <h2>檢查碼是怎麼算的</h2>
+    <p>統一編號是八位數字，最後一碼帶有校驗性質。計算方式是把每一位數乘上固定的<strong>邏輯乘數 1、2、1、2、1、2、4、1</strong>，每個乘積如果是兩位數就把十位與個位相加，最後把八個結果加總。</p>
+    <p>總和<strong>能被 5 整除</strong>就是有效的統編。這個規則在 2023 年 4 月修正過——以前是要能被 10 整除，改成 5 之後可用的號碼數量增加了一倍，因為號碼快用完了。</p>
+
+    <h2>第 7 碼是 7 的特殊規則</h2>
+    <p>當第 7 位數字是 <code>7</code> 時，有兩種情況都算有效：總和能被 5 整除，<strong>或者總和加 1 之後能被 5 整除</strong>。</p>
+    <p>這是因為第 7 碼乘以 4 之後拆位相加，在某些情況下會產生兩種合理的結果，所以規則保留了彈性。這個例外常被忽略，很多自己寫的驗證程式會把合法的統編誤判成錯誤。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>為什麼有些真實存在的統編被判定錯誤？</summary>
+        <div class="a">先確認三件事：號碼是不是剛好 8 位、有沒有多打或少打數字、有沒有把第 7 碼為 7 的例外考慮進去（這個工具有處理）。如果都確認過還是錯誤，那很可能是對方給錯號碼了——這正是這個工具存在的目的。</div>
+      </details>
+      <details>
+        <summary>2023 年的規則變更會影響舊統編嗎？</summary>
+        <div class="a">不會。修正是<strong>放寬</strong>條件（從被 10 整除改成被 5 整除），原本合法的統編在新規則下仍然合法，只是多了一批新號碼可以發放。所以用新規則檢查舊統編不會出問題。</div>
+      </details>
+      <details>
+        <summary>個人可以有統編嗎？</summary>
+        <div class="a">統一編號是給營利事業（公司、行號）用的。個人用的是身分證字號，格式完全不同（1 個英文字母加 9 個數字），不能用這個工具檢查。</div>
+      </details>
+      <details>
+        <summary>輸入的號碼會被記錄嗎？</summary>
+        <div class="a">不會。驗證完全在你的瀏覽器裡計算，號碼沒有送到任何伺服器。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc } = window.U;
+
+  /* 財政部公告的邏輯乘數 */
+  const WEIGHTS = [1, 2, 1, 2, 1, 2, 4, 1];
+
+  /** 驗證統一編號，回傳計算細節 */
+  function validate(raw) {
+    const digits = String(raw).replace(/\D/g, '');
+
+    if (digits.length !== 8) {
+      return { ok: false, digits, reason: digits.length < 8 ? '不足 8 位數' : '超過 8 位數' };
+    }
+
+    const products = [];
+    let sum = 0;
+
+    for (let i = 0; i < 8; i++) {
+      const d = Number(digits[i]);
+      const raw = d * WEIGHTS[i];
+      /* 乘積若為兩位數，十位與個位相加 */
+      const folded = Math.floor(raw / 10) + (raw % 10);
+      products.push({ digit: d, weight: WEIGHTS[i], raw, folded });
+      sum += folded;
+    }
+
+    const divisible = sum % 5 === 0;
+    /* 第 7 碼為 7 時，總和加 1 能被 5 整除也算有效 */
+    const seventhIsSeven = digits[6] === '7';
+    const altDivisible = seventhIsSeven && (sum + 1) % 5 === 0;
+
+    return {
+      ok: divisible || altDivisible,
+      digits, products, sum, divisible, altDivisible, seventhIsSeven,
+      reason: divisible || altDivisible ? null : `總和 ${sum} 無法被 5 整除`
+    };
+  }
+
+  /* ---------- 單筆 ---------- */
+  function checkSingle() {
+    const input = $('#single').value;
+    const r = validate(input);
+    const box = $('#verdict');
+
+    if (!input.replace(/\D/g, '')) {
+      box.className = 'verdict';
+      $('#vNum').textContent = '– – – – – – – –';
+      $('#vMsg').textContent = '等待輸入';
+      $('#stepsWrap').classList.add('hidden');
+      return;
+    }
+
+    $('#vNum').textContent = r.digits || '–';
+
+    if (r.digits.length !== 8) {
+      box.className = 'verdict bad';
+      $('#vMsg').textContent = `❌ ${r.reason}（目前 ${r.digits.length} 位）`;
+      $('#stepsWrap').classList.add('hidden');
+      return;
+    }
+
+    box.className = 'verdict ' + (r.ok ? 'ok' : 'bad');
+    $('#vMsg').textContent = r.ok ? '✅ 格式正確' : `❌ 格式錯誤．${r.reason}`;
+
+    /* 計算過程表格：四列八欄，由上而下是位置、數字、乘數、拆位相加 */
+    const grid = [];
+    grid.push(...r.products.map((p, i) =>
+      `<div class="hd">第 ${i + 1} 位</div>`));
+    grid.push(...r.products.map(p => `<div class="cell">${p.digit}</div>`));
+    grid.push(...r.products.map((p, i) =>
+      `<div class="cell ${i === 6 ? 'hot' : ''}">× ${p.weight}</div>`));
+    grid.push(...r.products.map(p => `<div class="cell">${p.folded}</div>`));
+    $('#steps').innerHTML = grid.join('');
+
+    let note = `八位相加總和 = <strong>${r.sum}</strong>，`;
+    if (r.divisible) {
+      note += `可被 5 整除（${r.sum} ÷ 5 = ${r.sum / 5}），驗證通過。`;
+    } else if (r.altDivisible) {
+      note += `無法被 5 整除，但<strong>第 7 碼為 7</strong>，套用特殊規則：` +
+              `${r.sum} + 1 = ${r.sum + 1}，可被 5 整除，驗證通過。`;
+    } else {
+      note += `餘數為 ${r.sum % 5}，無法被 5 整除`;
+      note += r.seventhIsSeven
+        ? `；第 7 碼雖為 7，但加 1 之後餘數仍為 ${(r.sum + 1) % 5}，驗證不通過。`
+        : `，驗證不通過。`;
+    }
+    note += '<br><span class="muted">表格由上而下：位置、數字、邏輯乘數、乘積拆位相加。</span>';
+    $('#stepsNote').innerHTML = note;
+    $('#stepsWrap').classList.remove('hidden');
+  }
+
+  /* ---------- 批次 ---------- */
+  function checkBatch() {
+    const items = $('#batch').value.split(/[\s,，、]+/).filter(Boolean);
+    if (!items.length) {
+      $('#batchResult').innerHTML = '';
+      $('#batchStat').classList.add('hidden');
+      window.toast('請先輸入要檢查的統編');
+      return;
+    }
+
+    let ok = 0, bad = 0;
+    $('#batchResult').innerHTML = items.map(item => {
+      const r = validate(item);
+      r.ok ? ok++ : bad++;
+      return `<div class="batch-row ${r.ok ? 'ok' : 'bad'}">
+        <span>${esc(r.digits || item)}</span>
+        <span style="color:${r.ok ? 'var(--ok)' : 'var(--danger)'}">
+          ${r.ok ? '✅ 正確' : '❌ ' + esc(r.reason)}
+        </span>
+      </div>`;
+    }).join('');
+
+    $('#batchStat').classList.remove('hidden');
+    $('#bTotal').textContent = items.length;
+    $('#bOk').textContent = ok;
+    $('#bBad').textContent = bad;
+  }
+
+  $('#single').addEventListener('input', checkSingle);
+  $('#batchBtn').addEventListener('click', checkBatch);
+  $('#clearBtn').addEventListener('click', () => {
+    $('#batch').value = '';
+    $('#batchResult').innerHTML = '';
+    $('#batchStat').classList.add('hidden');
+  });
+
+  checkSingle();
+})();
+</script>
+</body>
+</html>
