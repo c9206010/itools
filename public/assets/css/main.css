@@ -373,11 +373,17 @@ p { margin: 0 0 1em; }
 }
 .hint { font-size: .8rem; color: var(--ink-3); margin-top: 5px; }
 
+/* 新增輸入類型時記得加進這串，漏掉的那一種會完全沒有樣式——
+   datetime-local 就曾經漏掉，在手機上變成只有 23px 高的一條線。 */
 input[type="text"], input[type="number"], input[type="password"],
-input[type="url"], input[type="date"], input[type="time"], input[type="search"],
+input[type="url"], input[type="email"], input[type="tel"],
+input[type="date"], input[type="time"], input[type="datetime-local"],
+input[type="month"], input[type="week"], input[type="search"],
 textarea, select {
   width: 100%;
   padding: 9px 12px;
+  /* 手指按得到的最小高度。iOS 的日期欄位預設只有十幾像素，一定要撐開 */
+  min-height: 42px;
   font: inherit; font-size: .95rem;
   color: var(--ink);
   background: var(--bg);
@@ -391,6 +397,17 @@ input:focus, textarea:focus, select:focus {
 input[type="range"] { width: 100%; accent-color: var(--brand); }
 input[type="color"] { width: 54px; height: 38px; padding: 3px; cursor: pointer; }
 input[type="checkbox"], input[type="radio"] { accent-color: var(--brand); width: 16px; height: 16px; }
+
+/* 手指操作的裝置才放大，滑鼠不受影響。
+   coarse 指的是「不精確的指標」，也就是觸控。 */
+@media (pointer: coarse) {
+  input[type="checkbox"], input[type="radio"] { width: 20px; height: 20px; }
+  /* 包著核取方塊的標籤整塊都可以點，把它撐到手指按得到的高度 */
+  label:has(> input[type="checkbox"]),
+  label:has(> input[type="radio"]) { min-height: 36px; align-items: center; }
+  .chip { min-height: 38px; }
+  .btn--sm { padding-top: 9px; padding-bottom: 9px; }
+}
 
 .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
 .row > * { flex: 1 1 160px; min-width: 0; }
