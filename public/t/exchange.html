@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>匯率換算｜即時參考匯率，可估算銀行價差 - 順手工具箱</title>
+<meta name="description" content="免費即時匯率換算，支援日圓、美金、歐元等上百種貨幣，可自行加上銀行價差估算實際換到的金額，出國前抓旅費預算很方便。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💱</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css?v=0b9e51d6">
+<style>
+  .big-num { font-size: clamp(1.7rem, 1rem + 3vw, 2.7rem); font-weight: 800; color: var(--brand); line-height: 1.2; word-break: break-all; }
+  .swap-btn {
+    width: 42px; height: 42px; flex: 0 0 auto; align-self: flex-end;
+    border: 1px solid var(--border-strong); border-radius: 50%;
+    background: var(--surface); cursor: pointer; font-size: 1.1rem; line-height: 1;
+  }
+  .swap-btn:hover { border-color: var(--brand); color: var(--brand); }
+  td.num, th.num { text-align: right; font-family: var(--mono); }
+  .quick { display: flex; gap: 6px; flex-wrap: wrap; }
+  .quick button {
+    padding: 5px 12px; border-radius: 999px; font-size: .84rem; cursor: pointer;
+    border: 1px solid var(--border-strong); background: var(--surface); color: var(--ink-2);
+    font-family: inherit;
+  }
+  .quick button:hover { border-color: var(--brand); color: var(--brand); }
+  .status { font-size: .84rem; }
+  .status.err { color: var(--danger); }
+  .status.ok { color: var(--ink-3); }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/exchange.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="匯率, 換匯, 日圓, 美金, 兌換, 旅費, 外幣">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="匯率換算｜即時參考匯率，可估算銀行價差 - 順手工具箱">
+<meta property="og:description" content="免費即時匯率換算，支援日圓、美金、歐元等上百種貨幣，可自行加上銀行價差估算實際換到的金額，出國前抓旅費預算很方便。">
+<meta property="og:url" content="https://tools.luka-life.com/t/exchange.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="匯率換算｜即時參考匯率，可估算銀行價差 - 順手工具箱">
+<meta name="twitter:description" content="免費即時匯率換算，支援日圓、美金、歐元等上百種貨幣，可自行加上銀行價差估算實際換到的金額，出國前抓旅費預算很方便。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "匯率換算",
+  "description": "免費即時匯率換算，支援日圓、美金、歐元等上百種貨幣，可自行加上銀行價差估算實際換到的金額，出國前抓旅費預算很方便。",
+  "url": "https://tools.luka-life.com/t/exchange.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "旅遊出行",
+      "item": "https://tools.luka-life.com/#travel"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "匯率換算",
+      "item": "https://tools.luka-life.com/t/exchange.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "匯率多久更新一次？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "資料來源每天更新，頁面每次開啟都會重新取得。外匯市場本身是即時波動的，這裡的數字適合抓預算，不適合用來判斷該不該進場。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "「價差」要設多少才準？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "沒有標準答案，因為每家銀行、每種貨幣、臨櫃或線上都不一樣。實務上的抓法：美金日圓等熱門貨幣約 1%，歐元英鎊約 1.5% 到 2%，冷門貨幣或機場櫃檯可能到 3% 以上。要精確就直接查你往來銀行的牌告。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "載入失敗怎麼辦？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "工具會先嘗試取得最新匯率，失敗時會改用你上次成功載入時存在瀏覽器裡的資料，並在畫面上標示是哪一天的。如果連舊資料都沒有，請確認網路連線後重新整理。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "資料會上傳嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "你輸入的金額只在瀏覽器裡計算，不會送出。工具只會向匯率服務請求「今天的匯率表」，那個請求不包含你的任何輸入內容。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="exchange">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">💱</span>匯率換算</h1>
+    <p class="lede">出國前抓旅費預算用。除了參考匯率，還能加上銀行價差，估算你到櫃檯實際換得到多少。</p>
+  </div>
+
+  <div class="panel">
+    <div class="row mb-2">
+      <div class="field mb-0" style="flex:2 1 160px">
+        <label for="amount">金額</label>
+        <input type="number" id="amount" value="10000" min="0" step="any">
+      </div>
+      <div class="field mb-0">
+        <label for="from">從</label>
+        <select id="from"></select>
+      </div>
+      <button class="swap-btn" type="button" id="swapBtn" title="對調貨幣" aria-label="對調貨幣">⇄</button>
+      <div class="field mb-0">
+        <label for="to">換成</label>
+        <select id="to"></select>
+      </div>
+    </div>
+
+    <div class="tc mb-2">
+      <div class="big-num" id="result">—</div>
+      <div class="small muted" id="rateLine"></div>
+    </div>
+
+    <div class="quick mb-2" id="quickAmounts"></div>
+
+    <p class="status ok mb-2" id="status">載入匯率中…</p>
+
+    <div class="panel__title">加上銀行價差（估算實際換到的金額）</div>
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="spread">價差：<strong id="spreadLabel">1.5</strong>％</label>
+        <input type="range" id="spread" min="0" max="5" step="0.1" value="1.5">
+      </div>
+      <div class="field mb-0">
+        <label>實際可能換到</label>
+        <div class="out" id="realOut" style="min-height:auto;padding:9px 12px">—</div>
+      </div>
+    </div>
+    <p class="hint">
+      銀行的現金賣出價會比參考匯率高一些，那個差額就是他們的利潤。
+      現鈔換匯常見的價差大約 <strong>1% 到 3%</strong>，刷卡通常較低、機場櫃檯則較高。
+      拖動滑桿可以抓不同情境的預估。
+    </p>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title">常用貨幣對台幣</div>
+    <div class="table-scroll">
+      <table class="data">
+        <thead><tr><th>貨幣</th><th class="num">1 單位 = 台幣</th><th class="num">100 台幣可換</th></tr></thead>
+        <tbody id="commonTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="note note--warn">
+    <strong>這是參考匯率，不是銀行牌告價。</strong>
+    資料來自公開的匯率服務，反映的是國際市場的中間價。
+    你到銀行換現鈔時<strong>實際付的錢會比這個數字多</strong>，因為銀行會收取價差。
+    臨櫃或線上換匯前，請以
+    <a href="https://rate.bot.com.tw/xrt?Lang=zh-TW" target="_blank" rel="noopener">臺灣銀行牌告匯率</a>
+    或你往來銀行的公告為準。
+  </div>
+
+  <section class="prose">
+    <h2>為什麼網路上查到的匯率跟銀行不一樣</h2>
+    <p>你查到的通常是<strong>中間價</strong>，也就是買價與賣價的中點，實際上沒有人用這個價格成交。銀行的報價分兩邊：</p>
+    <ul>
+      <li><strong>買入</strong>：銀行向你買外幣的價格，比中間價低。</li>
+      <li><strong>賣出</strong>：銀行賣外幣給你的價格，比中間價高。</li>
+    </ul>
+    <p>兩者的差距就是銀行的利潤。所以「換去再換回來」一定會虧，虧的就是兩次價差。</p>
+
+    <h2>換匯省錢的幾個實務做法</h2>
+    <ul>
+      <li><strong>線上換匯通常比臨櫃便宜</strong>：多數銀行的網銀換匯有優惠匯率，約好時間到分行領現鈔即可。</li>
+      <li><strong>機場最貴</strong>：便利性的代價很高，只換夠搭車進市區的金額就好。</li>
+      <li><strong>刷卡的匯率通常不錯</strong>，但要注意國外交易手續費（常見 1.5%）。有些卡有現金回饋可以抵掉。</li>
+      <li><strong>別在當地換台幣</strong>：台幣在國外是冷門貨幣，價差會很難看。</li>
+    </ul>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>匯率多久更新一次？</summary>
+        <div class="a">資料來源每天更新，頁面每次開啟都會重新取得。外匯市場本身是即時波動的，這裡的數字適合抓預算，不適合用來判斷該不該進場。</div>
+      </details>
+      <details>
+        <summary>「價差」要設多少才準？</summary>
+        <div class="a">沒有標準答案，因為每家銀行、每種貨幣、臨櫃或線上都不一樣。實務上的抓法：美金日圓等熱門貨幣約 1%，歐元英鎊約 1.5% 到 2%，冷門貨幣或機場櫃檯可能到 3% 以上。要精確就直接查你往來銀行的牌告。</div>
+      </details>
+      <details>
+        <summary>載入失敗怎麼辦？</summary>
+        <div class="a">工具會先嘗試取得最新匯率，失敗時會改用你上次成功載入時存在瀏覽器裡的資料，並在畫面上標示是哪一天的。如果連舊資料都沒有，請確認網路連線後重新整理。</div>
+      </details>
+      <details>
+        <summary>資料會上傳嗎？</summary>
+        <div class="a">你輸入的金額只在瀏覽器裡計算，不會送出。工具只會向匯率服務請求「今天的匯率表」，那個請求不包含你的任何輸入內容。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js?v=aac7f832"></script>
+<script src="../assets/js/layout.js?v=483231ca"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, esc } = window.U;
+
+  const API = 'https://open.er-api.com/v6/latest/TWD';
+  const CACHE_KEY = 'sst-rates';
+
+  /* 台灣人最常用的貨幣，排在選單前面 */
+  const COMMON = [
+    ['TWD', '新台幣'], ['JPY', '日圓'], ['USD', '美金'], ['KRW', '韓元'],
+    ['EUR', '歐元'], ['CNY', '人民幣'], ['HKD', '港幣'], ['GBP', '英鎊'],
+    ['AUD', '澳幣'], ['SGD', '新加坡幣'], ['THB', '泰銖'], ['VND', '越南盾'],
+    ['MYR', '馬來西亞令吉'], ['PHP', '菲律賓披索'], ['IDR', '印尼盾'],
+    ['CAD', '加幣'], ['CHF', '瑞士法郎'], ['NZD', '紐幣'], ['MOP', '澳門幣'],
+    ['TRY', '土耳其里拉'], ['INR', '印度盧比']
+  ];
+  const NAMES = Object.fromEntries(COMMON);
+
+  /* rates 以 TWD 為基準：rates[X] 代表 1 TWD 等於多少 X */
+  let rates = null;
+  let updatedAt = '';
+
+  function saveCache(data) {
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify(data)); } catch (e) { /* 無痕模式忽略 */ }
+  }
+  function loadCache() {
+    try { return JSON.parse(localStorage.getItem(CACHE_KEY) || 'null'); } catch (e) { return null; }
+  }
+
+  async function fetchRates() {
+    try {
+      const res = await fetch(API, { cache: 'no-cache' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const json = await res.json();
+      if (!json.rates || !json.rates.JPY) throw new Error('資料格式不符');
+
+      rates = json.rates;
+      updatedAt = (json.time_last_update_utc || '').slice(0, 16);
+      saveCache({ rates, updatedAt, at: Date.now() });
+
+      $('#status').className = 'status ok mb-2';
+      $('#status').textContent = `匯率更新於 ${updatedAt || '今日'}．資料為國際市場參考價`;
+      return true;
+    } catch (e) {
+      /* 抓不到就退回上次成功的資料，並明確告知使用者 */
+      const cached = loadCache();
+      if (cached && cached.rates) {
+        rates = cached.rates;
+        updatedAt = cached.updatedAt;
+        $('#status').className = 'status err mb-2';
+        $('#status').textContent =
+          `無法取得最新匯率，目前顯示的是上次載入的資料（${updatedAt || '時間不明'}），僅供參考。`;
+        return true;
+      }
+      $('#status').className = 'status err mb-2';
+      $('#status').textContent = '無法取得匯率資料，請確認網路連線後重新整理。';
+      return false;
+    }
+  }
+
+  function buildSelects() {
+    /* 先放常用貨幣，其餘依代碼排序附在後面 */
+    const all = Object.keys(rates).sort();
+    const rest = all.filter(c => !NAMES[c]);
+
+    const opts =
+      COMMON.filter(([c]) => rates[c] !== undefined)
+        .map(([c, n]) => `<option value="${c}">${c}　${esc(n)}</option>`).join('') +
+      `<optgroup label="其他貨幣">` +
+      rest.map(c => `<option value="${c}">${c}</option>`).join('') +
+      `</optgroup>`;
+
+    $('#from').innerHTML = opts;
+    $('#to').innerHTML = opts;
+    $('#from').value = 'JPY';
+    $('#to').value = 'TWD';
+  }
+
+  /** 任意兩種貨幣互轉：先換回台幣再換過去 */
+  function convert(amount, from, to) {
+    if (!rates || !rates[from] || !rates[to]) return NaN;
+    const inTwd = amount / rates[from];
+    return inTwd * rates[to];
+  }
+
+  const fmt = (n, digits = 2) => {
+    if (!isFinite(n)) return '—';
+    return n.toLocaleString('zh-TW', { maximumFractionDigits: digits });
+  };
+
+  function calc() {
+    if (!rates) return;
+    const amount = Number($('#amount').value) || 0;
+    const from = $('#from').value;
+    const to = $('#to').value;
+
+    const out = convert(amount, from, to);
+    /* 金額小的時候多顯示幾位小數，不然會變成 0 */
+    const digits = Math.abs(out) < 10 ? 4 : 2;
+
+    $('#result').textContent = `${fmt(out, digits)} ${to}`;
+
+    const one = convert(1, from, to);
+    const inverse = convert(1, to, from);
+    $('#rateLine').textContent =
+      `1 ${from} = ${fmt(one, 4)} ${to}　｜　1 ${to} = ${fmt(inverse, 4)} ${from}`;
+
+    /* 加上價差：換外幣時你要多付，所以拿到的外幣變少 */
+    const spread = Number($('#spread').value) / 100;
+    const real = out * (1 - spread);
+    $('#realOut').innerHTML =
+      `<strong>${fmt(real, digits)} ${esc(to)}</strong>` +
+      `<span class="small muted">　少了 ${fmt(out - real, digits)}</span>`;
+  }
+
+  function renderCommon() {
+    if (!rates) return;
+    const list = COMMON.filter(([c]) => c !== 'TWD' && rates[c] !== undefined).slice(0, 12);
+    $('#commonTable').innerHTML = list.map(([code, name]) => {
+      const toTwd = convert(1, code, 'TWD');
+      const per100 = convert(100, 'TWD', code);
+      return `<tr>
+        <td><strong>${code}</strong>　<span class="small muted">${esc(name)}</span></td>
+        <td class="num">${fmt(toTwd, 4)}</td>
+        <td class="num">${fmt(per100, 2)}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  function renderQuick() {
+    const amounts = [100, 1000, 5000, 10000, 50000];
+    $('#quickAmounts').innerHTML = amounts.map(a =>
+      `<button type="button" data-a="${a}">${a.toLocaleString()}</button>`).join('');
+  }
+
+  $('#quickAmounts').addEventListener('click', e => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    $('#amount').value = btn.dataset.a;
+    calc();
+  });
+
+  $('#swapBtn').addEventListener('click', () => {
+    const f = $('#from').value;
+    $('#from').value = $('#to').value;
+    $('#to').value = f;
+    calc();
+  });
+
+  ['#amount', '#from', '#to', '#spread'].forEach(s =>
+    $(s).addEventListener('input', calc));
+
+  $('#spread').addEventListener('input', e => {
+    $('#spreadLabel').textContent = Number(e.target.value).toFixed(1);
+  });
+
+  (async function init() {
+    renderQuick();
+    const ok = await fetchRates();
+    if (!ok) return;
+    buildSelects();
+    calc();
+    renderCommon();
+  })();
+})();
+</script>
+</body>
+</html>

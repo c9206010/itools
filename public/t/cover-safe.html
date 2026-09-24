@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>封面安全區預覽｜FB、YouTube 封面被裁掉哪裡先看清楚 - 順手工具箱</title>
+<meta name="description" content="免費封面安全區預覽工具，上傳圖片就能看到 Facebook 粉專、YouTube 頻道橫幅、X 標題在電腦與手機上各會被裁掉哪裡，可拖曳調整位置並輸出正確尺寸。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css?v=0b9e51d6">
+<style>
+  .drop {
+    border: 2px dashed var(--border-strong); border-radius: var(--radius-lg);
+    padding: 32px 20px; text-align: center; cursor: pointer;
+    background: var(--surface-2); transition: all .15s ease;
+  }
+  .drop:hover, .drop.is-over { border-color: var(--brand); background: var(--brand-wash); }
+  .drop strong { display: block; font-size: 1.03rem; margin-bottom: 4px; }
+
+  .stage { background: var(--bg-sunk); border: 1px solid var(--border);
+           border-radius: var(--radius); padding: 16px; display: grid; place-items: center; }
+  .frame { position: relative; overflow: hidden; border-radius: 6px;
+           box-shadow: var(--shadow-2); line-height: 0; max-width: 100%; touch-action: none; }
+  .frame canvas { display: block; width: 100%; height: auto; cursor: grab; }
+  .frame.is-drag canvas { cursor: grabbing; }
+
+  .mask { position: absolute; pointer-events: none;
+          box-shadow: 0 0 0 9999px rgba(0, 0, 0, .55);
+          outline: 2px solid rgba(255, 255, 255, .9); }
+  .vbox { position: absolute; pointer-events: none; border: 2px dashed; }
+  .vbox b { position: absolute; top: 2px; left: 2px; font-size: 11px; font-weight: 700;
+            line-height: 1.5; padding: 1px 5px; border-radius: 4px; color: #fff; white-space: nowrap; }
+  .obst { position: absolute; pointer-events: none; border-radius: 50%;
+          border: 2px solid rgba(255, 255, 255, .85);
+          background: repeating-linear-gradient(45deg, rgba(0,0,0,.45) 0 6px, rgba(0,0,0,.15) 6px 12px); }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 10px 18px; font-size: .84rem; color: var(--ink-2); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend i { width: 15px; height: 15px; border-radius: 3px; border: 2px dashed; display: inline-block; }
+  .legend i.solid { border-style: solid; background: rgba(255,255,255,.9); border-color: var(--ink-3); }
+
+  .specs { font-size: .88rem; }
+  .specs td:first-child { white-space: nowrap; color: var(--ink-2); }
+  .specs td:last-child { font-variant-numeric: tabular-nums; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/cover-safe.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="封面, 安全區, fb, youtube, 橫幅, 被裁切, 尺寸">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="封面安全區預覽｜FB、YouTube 封面被裁掉哪裡先看清楚 - 順手工具箱">
+<meta property="og:description" content="免費封面安全區預覽工具，上傳圖片就能看到 Facebook 粉專、YouTube 頻道橫幅、X 標題在電腦與手機上各會被裁掉哪裡，可拖曳調整位置並輸出正確尺寸。">
+<meta property="og:url" content="https://tools.luka-life.com/t/cover-safe.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="封面安全區預覽｜FB、YouTube 封面被裁掉哪裡先看清楚 - 順手工具箱">
+<meta name="twitter:description" content="免費封面安全區預覽工具，上傳圖片就能看到 Facebook 粉專、YouTube 頻道橫幅、X 標題在電腦與手機上各會被裁掉哪裡，可拖曳調整位置並輸出正確尺寸。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "封面安全區預覽",
+  "description": "免費封面安全區預覽工具，上傳圖片就能看到 Facebook 粉專、YouTube 頻道橫幅、X 標題在電腦與手機上各會被裁掉哪裡，可拖曳調整位置並輸出正確尺寸。",
+  "url": "https://tools.luka-life.com/t/cover-safe.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "社群小幫手",
+      "item": "https://tools.luka-life.com/#social"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "封面安全區預覽",
+      "item": "https://tools.luka-life.com/t/cover-safe.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "這些尺寸是哪裡來的？會不會過時？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "是依照各平台公開的建議尺寸整理的。平台改版時尺寸可能會變動，工具無法即時反映。實際上傳之後，建議用手機跟電腦各看一次確認；如果發現跟這裡標示的差很多，以你實際看到的為準。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "下載的圖會有那些框線嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會。框線跟遮罩都是疊在畫面上的預覽效果，沒有畫進圖片裡。下載的是乾淨的封面圖，尺寸就是該版位建議的上傳尺寸。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "圖片比版位小怎麼辦？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "工具會把圖片放大到填滿版位，但放大後會變模糊。如果原圖解析度明顯不足，建議換一張大一點的圖，不然上傳後在大螢幕上會看起來很糊。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "可以把整張圖縮進去、不要被裁嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不行，也不建議。平台一定會把圖放大填滿版位，就算你自己先加了留白，上傳後留白一樣會被裁掉。正確做法是接受它會被裁，然後把重點放進安全區。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="cover-safe">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🛡️</span>封面安全區預覽</h1>
+    <p class="lede">封面圖最討厭的就是「電腦上看好好的，手機上字被切掉一半」。先在這裡看清楚哪裡會被裁，調好再上傳。</p>
+  </div>
+
+  <div class="panel">
+    <div class="field">
+      <label for="preset">版位</label>
+      <select id="preset"></select>
+      <p class="hint" id="presetNote"></p>
+    </div>
+
+    <div class="drop mb-2" id="drop" role="button" tabindex="0">
+      <strong>把圖片拖進來，或點這裡選檔案</strong>
+      <span class="muted small">選好之後可以直接拖曳畫面調整位置</span>
+      <input type="file" id="fileInput" accept="image/*" hidden>
+    </div>
+
+    <div id="editor" class="hidden">
+      <div class="stage mb-2">
+        <div class="frame" id="frame">
+          <canvas id="canvas"></canvas>
+        </div>
+      </div>
+
+      <div class="legend mb-2" id="legend"></div>
+
+      <div class="row mb-2">
+        <div class="field mb-0">
+          <label for="zoom">縮放：<strong id="zoomLabel">100</strong>％</label>
+          <input type="range" id="zoom" min="100" max="300" value="100">
+        </div>
+        <div class="field mb-0" style="flex:0 1 150px">
+          <label for="bg">留白底色</label>
+          <input type="color" id="bg" value="#ffffff">
+        </div>
+      </div>
+
+      <div class="chips mb-2" id="toggles">
+        <label class="chip is-on"><input type="checkbox" id="showMask" hidden checked> 安全區以外調暗</label>
+        <label class="chip is-on"><input type="checkbox" id="showBoxes" hidden checked> 顯示各裝置框線</label>
+        <label class="chip is-on"><input type="checkbox" id="showObst" hidden checked> 顯示大頭貼位置</label>
+      </div>
+
+      <div class="btn-group mb-2">
+        <button class="btn btn--lg" type="button" id="downloadBtn">下載封面</button>
+        <button class="btn btn--ghost" type="button" id="resetBtn">回到置中</button>
+        <button class="btn btn--ghost" type="button" id="clearBtn">換一張</button>
+      </div>
+
+      <div class="panel__title">這個版位的尺寸</div>
+      <table class="table specs" id="specs"></table>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>圖片不會上傳。</strong>所有處理都在你的瀏覽器裡完成，下載的檔案是乾淨的封面圖，不會帶到框線或遮罩。
+  </div>
+
+  <section class="prose">
+    <h2>為什麼同一張封面在手機上會被切掉</h2>
+    <p>因為各平台在不同裝置上給封面的<strong>顯示比例不一樣</strong>，但你只能上傳一張圖。平台的做法是把圖片放大到填滿版位，再從中間裁掉多出來的部分——寬的裝置裁上下，窄的裝置裁左右。</p>
+    <p>所以「安全區」就是所有裝置都看得到的那塊交集。重要的字、logo、人臉放進安全區裡，不管誰用什麼裝置看都不會少一塊。</p>
+
+    <h2>YouTube 橫幅是最容易踩雷的一個</h2>
+    <p>YouTube 要求上傳 2560 × 1440 的大圖，但那個尺寸只有在<strong>電視 App</strong> 上才會完整顯示。電腦版只看得到中間那條 2560 × 423，手機版更窄，只剩中央 1546 × 423。</p>
+    <p>換算下來，手機看得到的範圍大約只有你上傳面積的<strong>十八分之一</strong>。所以頻道名稱、更新時間這類真正要給人看的資訊，一定要擠在正中央那一小塊。</p>
+
+    <h2>大頭貼會蓋住封面</h2>
+    <p>Facebook 粉絲專頁、X、LinkedIn 的大頭貼都是疊在封面上的，而且電腦版與手機版的位置還不一樣。工具裡的斜線圓圈標出了電腦版的大致位置，設計時把那一塊留空，或者乾脆讓大頭貼跟封面在視覺上連成一體。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>這些尺寸是哪裡來的？會不會過時？</summary>
+        <div class="a">是依照各平台公開的建議尺寸整理的。<strong>平台改版時尺寸可能會變動</strong>，工具無法即時反映。實際上傳之後，建議用手機跟電腦各看一次確認；如果發現跟這裡標示的差很多，以你實際看到的為準。</div>
+      </details>
+      <details>
+        <summary>下載的圖會有那些框線嗎？</summary>
+        <div class="a">不會。框線跟遮罩都是疊在畫面上的預覽效果，沒有畫進圖片裡。下載的是乾淨的封面圖，尺寸就是該版位建議的上傳尺寸。</div>
+      </details>
+      <details>
+        <summary>圖片比版位小怎麼辦？</summary>
+        <div class="a">工具會把圖片放大到填滿版位，但放大後會變模糊。如果原圖解析度明顯不足，建議換一張大一點的圖，不然上傳後在大螢幕上會看起來很糊。</div>
+      </details>
+      <details>
+        <summary>可以把整張圖縮進去、不要被裁嗎？</summary>
+        <div class="a">不行，也不建議。平台一定會把圖放大填滿版位，就算你自己先加了留白，上傳後留白一樣會被裁掉。正確做法是接受它會被裁，然後把重點放進安全區。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js?v=aac7f832"></script>
+<script src="../assets/js/layout.js?v=483231ca"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc, download } = window.U;
+
+  /* 依照各平台公開的建議尺寸整理。views 裡的 display 是「該裝置實際顯示的像素」，
+     crop 則是平台自己公布的安全範圍（例如 YouTube），兩者擇一。 */
+  const PRESETS = [
+    {
+      key: 'fb-page', name: 'Facebook 粉絲專頁封面', w: 1640, h: 856,
+      note: '上傳建議 1640 × 856，電腦版與手機版的裁切方向剛好相反。',
+      views: [
+        { name: '電腦版', display: [820, 312], color: '#3b82f6' },
+        { name: '手機版', display: [640, 360], color: '#f59e0b' }
+      ],
+      obstruct: { name: '大頭貼', cx: 0.115, cy: 0.80, r: 0.135 }
+    },
+    {
+      key: 'fb-profile', name: 'Facebook 個人封面', w: 1640, h: 924,
+      note: '上傳建議 1640 × 924，這個比例在手機上幾乎不會被裁。',
+      views: [
+        { name: '電腦版', display: [851, 315], color: '#3b82f6' },
+        { name: '手機版', display: [640, 360], color: '#f59e0b' }
+      ],
+      obstruct: { name: '大頭貼', cx: 0.16, cy: 0.86, r: 0.13 }
+    },
+    {
+      key: 'yt-banner', name: 'YouTube 頻道橫幅', w: 2560, h: 1440,
+      note: '必須上傳 2560 × 1440，但手機上只看得到中央 1546 × 423。',
+      views: [
+        { name: '電視 App', crop: [0, 0, 1, 1], color: '#a855f7' },
+        { name: '電腦版', crop: [0, (1 - 423 / 1440) / 2, 1, 423 / 1440], color: '#3b82f6' },
+        { name: '手機版', crop: [(1 - 1546 / 2560) / 2, (1 - 423 / 1440) / 2, 1546 / 2560, 423 / 1440], color: '#f59e0b' }
+      ]
+    },
+    {
+      key: 'x-header', name: 'X（Twitter）標題', w: 1500, h: 500,
+      note: '上傳建議 1500 × 500，左下角會被大頭貼蓋住。',
+      views: [
+        { name: '顯示範圍', display: [1500, 500], color: '#3b82f6' }
+      ],
+      obstruct: { name: '大頭貼', cx: 0.085, cy: 0.94, r: 0.15 }
+    },
+    {
+      key: 'li-cover', name: 'LinkedIn 個人背景', w: 1584, h: 396,
+      note: '上傳建議 1584 × 396，手機版的左側會被大頭貼壓住。',
+      views: [
+        { name: '顯示範圍', display: [1584, 396], color: '#3b82f6' }
+      ],
+      obstruct: { name: '大頭貼', cx: 0.13, cy: 1.0, r: 0.20 }
+    },
+    {
+      key: 'line-oa', name: 'LINE 官方帳號封面', w: 1080, h: 640,
+      note: '上傳建議 1080 × 640，聊天列表的縮圖只會取中間的正方形。',
+      views: [
+        { name: '完整顯示', display: [1080, 640], color: '#3b82f6' },
+        { name: '方形縮圖', display: [640, 640], color: '#f59e0b' }
+      ]
+    },
+    {
+      key: 'yt-thumb', name: 'YouTube 影片縮圖', w: 1280, h: 720,
+      note: '上傳建議 1280 × 720，右下角的時間長度會蓋住一小塊。',
+      views: [
+        { name: '顯示範圍', display: [1280, 720], color: '#3b82f6' }
+      ]
+    }
+  ];
+
+  let preset = PRESETS[0];
+  let img = null;
+  let zoom = 1, offX = 0, offY = 0;     // offX/offY 是相對畫布寬高的位移比例
+
+  /* ---------- 版位選單 ---------- */
+  $('#preset').innerHTML = PRESETS.map((p, i) =>
+    `<option value="${i}">${esc(p.name)}（${p.w} × ${p.h}）</option>`).join('');
+
+  $('#preset').addEventListener('change', e => {
+    preset = PRESETS[+e.target.value];
+    resetView();
+    renderMeta();
+    draw();
+  });
+
+  /**
+   * 由上傳尺寸與實際顯示尺寸，推算平台會裁出哪一塊（填滿後置中裁切）。
+   * 顯示比例比上傳寬 → 裁上下；比較窄 → 裁左右。
+   */
+  function cropRect(view) {
+    if (view.crop) return view.crop;
+    const ua = preset.w / preset.h;
+    const da = view.display[0] / view.display[1];
+    if (da > ua) { const h = ua / da; return [0, (1 - h) / 2, 1, h]; }
+    const w = da / ua;
+    return [(1 - w) / 2, 0, w, 1];
+  }
+
+  /** 所有裝置都看得到的交集 */
+  function safeRect() {
+    let x0 = 0, y0 = 0, x1 = 1, y1 = 1;
+    preset.views.forEach(v => {
+      const [x, y, w, h] = cropRect(v);
+      x0 = Math.max(x0, x); y0 = Math.max(y0, y);
+      x1 = Math.min(x1, x + w); y1 = Math.min(y1, y + h);
+    });
+    return [x0, y0, Math.max(0, x1 - x0), Math.max(0, y1 - y0)];
+  }
+
+  /* ---------- 中繼資訊 ---------- */
+  function renderMeta() {
+    $('#presetNote').textContent = preset.note;
+
+    const pct = r => `${Math.round(r[2] * 100)}% × ${Math.round(r[3] * 100)}%`;
+    const rows = preset.views.map(v => {
+      const r = cropRect(v);
+      const px = v.display
+        ? `${v.display[0]} × ${v.display[1]}`
+        : `${Math.round(r[2] * preset.w)} × ${Math.round(r[3] * preset.h)}`;
+      return `<tr><td>${esc(v.name)}</td><td>${px}</td><td class="muted">佔原圖 ${pct(r)}</td></tr>`;
+    });
+
+    const s = safeRect();
+    rows.push(`<tr><td><strong>安全區</strong></td>
+      <td><strong>${Math.round(s[2] * preset.w)} × ${Math.round(s[3] * preset.h)}</strong></td>
+      <td class="muted">所有裝置都看得到</td></tr>`);
+
+    $('#specs').innerHTML =
+      `<thead><tr><th>裝置</th><th>顯示尺寸</th><th>範圍</th></tr></thead><tbody>${rows.join('')}</tbody>`;
+
+    /* 沒有大頭貼遮擋的版位就不要留一個按不動的開關 */
+    $('#showObst').parentElement.style.display = preset.obstruct ? '' : 'none';
+
+    $('#legend').innerHTML =
+      preset.views.map(v =>
+        `<span><i style="border-color:${v.color}"></i>${esc(v.name)}</span>`).join('') +
+      `<span><i class="solid"></i>安全區</span>` +
+      (preset.obstruct ? `<span><i class="solid" style="border-radius:50%;background:none"></i>${esc(preset.obstruct.name)}</span>` : '');
+  }
+
+  /* ---------- 疊圖層 ---------- */
+  function renderOverlay() {
+    const frame = $('#frame');
+    frame.querySelectorAll('.mask,.vbox,.obst').forEach(n => n.remove());
+    if (!img) return;
+
+    const at = r => `left:${r[0] * 100}%;top:${r[1] * 100}%;width:${r[2] * 100}%;height:${r[3] * 100}%`;
+
+    if ($('#showBoxes').checked) {
+      preset.views.forEach(v => {
+        const box = document.createElement('div');
+        box.className = 'vbox';
+        box.style.cssText = at(cropRect(v)) + `;border-color:${v.color}`;
+        box.innerHTML = `<b style="background:${v.color}">${esc(v.name)}</b>`;
+        frame.appendChild(box);
+      });
+    }
+
+    if ($('#showObst').checked && preset.obstruct) {
+      const o = preset.obstruct;
+      /* 圓形要用同一個半徑換算長寬，不然在細長版位上會變橢圓 */
+      const rx = o.r, ry = o.r * (preset.w / preset.h);
+      const el = document.createElement('div');
+      el.className = 'obst';
+      el.style.cssText = at([o.cx - rx, o.cy - ry, rx * 2, ry * 2]);
+      frame.appendChild(el);
+    }
+
+    if ($('#showMask').checked) {
+      const m = document.createElement('div');
+      m.className = 'mask';
+      m.style.cssText = at(safeRect());
+      frame.appendChild(m);
+    }
+  }
+
+  /* ---------- 繪圖 ---------- */
+  function placement(W, H) {
+    const base = Math.max(W / img.naturalWidth, H / img.naturalHeight);
+    const s = base * zoom;
+    const dw = img.naturalWidth * s;
+    const dh = img.naturalHeight * s;
+    /* 夾住位移，避免拖出空白邊 */
+    const maxX = Math.max(0, (dw - W) / 2);
+    const maxY = Math.max(0, (dh - H) / 2);
+    const ox = Math.max(-maxX, Math.min(maxX, offX * W));
+    const oy = Math.max(-maxY, Math.min(maxY, offY * H));
+    return { x: (W - dw) / 2 + ox, y: (H - dh) / 2 + oy, dw, dh };
+  }
+
+  function paint(canvas) {
+    canvas.width = preset.w;
+    canvas.height = preset.h;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = $('#bg').value;
+    ctx.fillRect(0, 0, preset.w, preset.h);
+    if (!img) return;
+    const p = placement(preset.w, preset.h);
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(img, p.x, p.y, p.dw, p.dh);
+  }
+
+  function draw() {
+    paint($('#canvas'));
+    renderOverlay();
+  }
+
+  function resetView() { zoom = 1; offX = 0; offY = 0; $('#zoom').value = 100; $('#zoomLabel').textContent = '100'; }
+
+  /* ---------- 拖曳 ---------- */
+  const frame = $('#frame');
+  let drag = null;
+
+  frame.addEventListener('pointerdown', e => {
+    if (!img) return;
+    drag = { x: e.clientX, y: e.clientY, ox: offX, oy: offY, w: frame.clientWidth, h: frame.clientHeight };
+    frame.classList.add('is-drag');
+    frame.setPointerCapture(e.pointerId);
+  });
+
+  frame.addEventListener('pointermove', e => {
+    if (!drag) return;
+    /* 畫面上的位移換算成比例，跟實際輸出尺寸無關 */
+    offX = drag.ox + (e.clientX - drag.x) / drag.w;
+    offY = drag.oy + (e.clientY - drag.y) / drag.h;
+    draw();
+  });
+
+  ['pointerup', 'pointercancel'].forEach(ev =>
+    frame.addEventListener(ev, () => { drag = null; frame.classList.remove('is-drag'); }));
+
+  /* ---------- 選檔 ---------- */
+  const drop = $('#drop');
+  const input = $('#fileInput');
+
+  drop.addEventListener('click', () => input.click());
+  drop.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
+  });
+  ['dragenter', 'dragover'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('is-over'); }));
+  ['dragleave', 'drop'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('is-over'); }));
+
+  drop.addEventListener('drop', e => loadFile(e.dataTransfer.files[0]));
+  input.addEventListener('change', e => loadFile(e.target.files[0]));
+
+  function loadFile(file) {
+    if (!file || !file.type.startsWith('image/')) { window.toast('請選擇圖片檔'); return; }
+    const im = new Image();
+    im.onload = () => {
+      img = im;
+      resetView();
+      $('#editor').classList.remove('hidden');
+      draw();
+      if (im.naturalWidth < preset.w * 0.6) {
+        window.toast('原圖偏小，放大後可能會模糊');
+      }
+    };
+    im.onerror = () => window.toast('讀不到這張圖片');
+    im.src = URL.createObjectURL(file);
+  }
+
+  /* ---------- 其他操作 ---------- */
+  $('#zoom').addEventListener('input', e => {
+    zoom = Number(e.target.value) / 100;
+    $('#zoomLabel').textContent = e.target.value;
+    draw();
+  });
+
+  $('#bg').addEventListener('input', draw);
+  ['#showMask', '#showBoxes', '#showObst'].forEach(s => {
+    const cb = $(s);
+    cb.addEventListener('change', () => {
+      cb.parentElement.classList.toggle('is-on', cb.checked);
+      renderOverlay();
+    });
+  });
+
+  $('#resetBtn').addEventListener('click', () => { resetView(); draw(); });
+
+  $('#clearBtn').addEventListener('click', () => {
+    img = null;
+    input.value = '';
+    $('#editor').classList.add('hidden');
+  });
+
+  $('#downloadBtn').addEventListener('click', () => {
+    if (!img) { window.toast('請先選一張圖片'); return; }
+    const cv = document.createElement('canvas');
+    paint(cv);                                     // 乾淨版，不含框線與遮罩
+    cv.toBlob(blob => {
+      if (!blob) { window.toast('輸出失敗'); return; }
+      download(blob, `${preset.name}_${preset.w}x${preset.h}.jpg`);
+    }, 'image/jpeg', 0.92);
+  });
+
+  renderMeta();
+})();
+</script>
+</body>
+</html>

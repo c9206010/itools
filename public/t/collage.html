@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>多圖拼貼｜2 到 6 張合成一張，可調邊框 - 順手工具箱</title>
+<meta name="description" content="免費多圖拼貼工具，把 2 到 6 張照片合成一張，內建多種版面配置，可調整邊框寬度與顏色、輸出比例，全程在瀏覽器完成圖片不上傳。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧩</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css?v=0b9e51d6">
+<style>
+  .drop {
+    border: 2px dashed var(--border-strong); border-radius: var(--radius-lg);
+    padding: 32px 20px; text-align: center; cursor: pointer;
+    background: var(--surface-2); transition: all .15s ease;
+  }
+  .drop:hover, .drop.is-over { border-color: var(--brand); background: var(--brand-wash); }
+  .drop strong { display: block; font-size: 1.03rem; margin-bottom: 4px; }
+
+  .stage { background: var(--bg-sunk); border: 1px solid var(--border);
+           border-radius: var(--radius); padding: 16px; display: grid; place-items: center; }
+  #canvas { max-width: 100%; max-height: 430px; border-radius: 6px; box-shadow: var(--shadow-2); }
+
+  .layout-grid { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); }
+  .layout-btn {
+    padding: 9px 7px; cursor: pointer; font: inherit;
+    border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+    background: var(--surface); color: var(--ink);
+  }
+  .layout-btn:hover { border-color: var(--brand); }
+  .layout-btn.is-on { border-color: var(--brand); box-shadow: 0 0 0 2px var(--brand-wash); }
+  .layout-btn.is-off { opacity: .35; cursor: not-allowed; }
+  .layout-btn small { display: block; font-size: .72rem; color: var(--ink-3); margin-top: 4px; }
+  .layout-btn.is-on small { color: var(--brand); font-weight: 700; }
+  .mini { display: grid; gap: 2px; aspect-ratio: 1; }
+  .mini i { background: var(--ink-3); border-radius: 2px; display: block; }
+  .layout-btn.is-on .mini i { background: var(--brand); }
+
+  .thumbs { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); }
+  .thumb { border: 1px solid var(--border); border-radius: var(--radius-sm);
+           background: var(--surface); padding: 6px; }
+  .thumb img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 4px; background: var(--bg-sunk); }
+  .thumb__no { font-size: .74rem; color: var(--ink-3); text-align: center; margin: 4px 0; }
+  .thumb__acts { display: flex; gap: 3px; justify-content: center; }
+  .mini-btn { width: 26px; height: 26px; border-radius: 5px; padding: 0; line-height: 1; font-size: .72rem;
+              border: 1px solid var(--border-strong); background: var(--surface); color: var(--ink-2); cursor: pointer; }
+  .mini-btn:hover:not(:disabled) { border-color: var(--brand); color: var(--brand); }
+  .mini-btn:disabled { opacity: .3; cursor: default; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/collage.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="拼貼, 拼圖, 多圖, 合成, 併圖, collage, 照片">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="多圖拼貼｜2 到 6 張合成一張，可調邊框 - 順手工具箱">
+<meta property="og:description" content="免費多圖拼貼工具，把 2 到 6 張照片合成一張，內建多種版面配置，可調整邊框寬度與顏色、輸出比例，全程在瀏覽器完成圖片不上傳。">
+<meta property="og:url" content="https://tools.luka-life.com/t/collage.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="多圖拼貼｜2 到 6 張合成一張，可調邊框 - 順手工具箱">
+<meta name="twitter:description" content="免費多圖拼貼工具，把 2 到 6 張照片合成一張，內建多種版面配置，可調整邊框寬度與顏色、輸出比例，全程在瀏覽器完成圖片不上傳。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "多圖拼貼",
+  "description": "免費多圖拼貼工具，把 2 到 6 張照片合成一張，內建多種版面配置，可調整邊框寬度與顏色、輸出比例，全程在瀏覽器完成圖片不上傳。",
+  "url": "https://tools.luka-life.com/t/collage.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "社群小幫手",
+      "item": "https://tools.luka-life.com/#social"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "多圖拼貼",
+      "item": "https://tools.luka-life.com/t/collage.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "照片會被裁切嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "會。每一格都是把照片裁切填滿，才不會出現空白。工具取的是照片中央，所以主體偏邊緣的照片可能會被切到。遇到這種情況，可以先用「圖片轉正方形」把主體置中之後再來拼貼。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "可以放幾張？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "2 到 6 張。超過六張每一格就太小了，不如改用輪播。版面選項會依照你目前的張數自動調整，張數不符的配置會顯示成灰色。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "順序怎麼調？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "每張縮圖下面的左右箭頭可以移動位置，畫面會即時更新。縮圖上的數字對應版面裡的格子順序，通常是由左至右、由上至下。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "圓角會有白邊嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "圓角的轉角處會露出你設定的邊框顏色。如果邊框顏色跟你之後要貼的背景不同，看起來會有點突兀，建議搭配白色或與版面一致的顏色使用。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="collage">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🧩</span>多圖拼貼</h1>
+    <p class="lede">幾張照片合成一張再發，省下貼文版位也省讀者滑動的力氣。邊框顏色調一下就有統一的風格。</p>
+  </div>
+
+  <div class="panel">
+    <div class="drop mb-2" id="drop" role="button" tabindex="0">
+      <strong>把照片拖進來，或點這裡選檔案</strong>
+      <span class="muted small">2 到 6 張，之後可以調順序</span>
+      <input type="file" id="fileInput" accept="image/*" multiple hidden>
+    </div>
+
+    <div id="editor" class="hidden">
+      <div class="panel__title">照片（左右箭頭可調順序）</div>
+      <div class="thumbs mb-2" id="thumbs"></div>
+
+      <div class="panel__title">版面配置</div>
+      <div class="layout-grid mb-2" id="layouts"></div>
+      <p class="hint mb-2" id="layoutHint"></p>
+
+      <div class="stage mb-2"><canvas id="canvas"></canvas></div>
+
+      <div class="row mb-2">
+        <div class="field mb-0">
+          <label for="ratio">輸出比例</label>
+          <select id="ratio">
+            <option value="1:1" selected>1:1 正方形</option>
+            <option value="4:5">4:5 直式</option>
+            <option value="9:16">9:16 限時動態</option>
+            <option value="16:9">16:9 橫式</option>
+          </select>
+        </div>
+        <div class="field mb-0">
+          <label for="size">輸出尺寸</label>
+          <select id="size">
+            <option value="1080" selected>1080 px</option>
+            <option value="1440">1440 px</option>
+            <option value="2048">2048 px</option>
+          </select>
+        </div>
+        <div class="field mb-0">
+          <label for="gap">邊框寬度：<strong id="gapLabel">2</strong>％</label>
+          <input type="range" id="gap" min="0" max="8" step="0.5" value="2">
+        </div>
+        <div class="field mb-0" style="flex:0 1 120px">
+          <label for="gapColor">邊框顏色</label>
+          <input type="color" id="gapColor" value="#ffffff">
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="field mb-0">
+          <label for="radius">圓角：<strong id="radiusLabel">0</strong>％</label>
+          <input type="range" id="radius" min="0" max="12" value="0">
+        </div>
+        <div class="field mb-0">
+          <label for="format">輸出格式</label>
+          <select id="format">
+            <option value="image/jpeg" selected>JPG</option>
+            <option value="image/png">PNG</option>
+            <option value="image/webp">WebP</option>
+          </select>
+        </div>
+        <div class="field mb-0">
+          <label for="quality">畫質：<strong id="qLabel">92</strong>％</label>
+          <input type="range" id="quality" min="60" max="100" value="92">
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn--lg" type="button" id="downloadBtn">下載拼貼</button>
+        <button class="btn btn--ghost btn--lg" type="button" id="clearBtn">清空重來</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>圖片不會上傳。</strong>拼貼是用瀏覽器的 Canvas 在你自己的裝置上完成的，檔案沒有經過網路。
+  </div>
+
+  <section class="prose">
+    <h2>拼貼還是多圖輪播</h2>
+    <p>IG 一則貼文最多可以放十張輪播圖，所以拼貼不是唯一選擇。兩者的取捨：</p>
+    <ul>
+      <li><strong>拼貼</strong>：一眼看完全部，適合「同一件事的不同角度」——例如一道菜的四個細節、一間房的各個角落。缺點是每張都變小。</li>
+      <li><strong>輪播</strong>：每張都是完整尺寸，而且使用者滑動的動作本身會增加互動數據。適合有敘事順序的內容。</li>
+    </ul>
+    <p>實務上常見的做法是：<strong>第一張用拼貼當作預告</strong>，後面幾張再放完整大圖。</p>
+
+    <h2>邊框要不要留</h2>
+    <p>留白框會讓每張照片的邊界清楚，整體看起來比較整齊，也容易形成個人風格——固定用同一個顏色跟寬度，你的版面就有一致性。</p>
+    <p>不留框則是照片直接相接，視覺上更滿更有張力，但相鄰照片的色調如果太接近，會分不出邊界。這種情況調一點點邊框就能解決。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>照片會被裁切嗎？</summary>
+        <div class="a">會。每一格都是把照片<strong>裁切填滿</strong>，才不會出現空白。工具取的是照片中央，所以主體偏邊緣的照片可能會被切到。遇到這種情況，可以先用「圖片轉正方形」把主體置中之後再來拼貼。</div>
+      </details>
+      <details>
+        <summary>可以放幾張？</summary>
+        <div class="a">2 到 6 張。超過六張每一格就太小了，不如改用輪播。版面選項會依照你目前的張數自動調整，張數不符的配置會顯示成灰色。</div>
+      </details>
+      <details>
+        <summary>順序怎麼調？</summary>
+        <div class="a">每張縮圖下面的左右箭頭可以移動位置，畫面會即時更新。縮圖上的數字對應版面裡的格子順序，通常是由左至右、由上至下。</div>
+      </details>
+      <details>
+        <summary>圓角會有白邊嗎？</summary>
+        <div class="a">圓角的轉角處會露出你設定的邊框顏色。如果邊框顏色跟你之後要貼的背景不同，看起來會有點突兀，建議搭配白色或與版面一致的顏色使用。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js?v=aac7f832"></script>
+<script src="../assets/js/layout.js?v=483231ca"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc, download } = window.U;
+
+  /* 每個版面以 0~1 的相對座標描述每一格的位置與大小，
+     這樣不管輸出多大或什麼比例都能直接套用。 */
+  const LAYOUTS = [
+    { key: '2h', n: 2, name: '左右', cells: [[0,0,.5,1],[.5,0,.5,1]] },
+    { key: '2v', n: 2, name: '上下', cells: [[0,0,1,.5],[0,.5,1,.5]] },
+    { key: '3h', n: 3, name: '三直欄', cells: [[0,0,1/3,1],[1/3,0,1/3,1],[2/3,0,1/3,1]] },
+    { key: '3v', n: 3, name: '三橫列', cells: [[0,0,1,1/3],[0,1/3,1,1/3],[0,2/3,1,1/3]] },
+    { key: '1+2', n: 3, name: '一大兩小', cells: [[0,0,1,.6],[0,.6,.5,.4],[.5,.6,.5,.4]] },
+    { key: '2+1', n: 3, name: '兩小一大', cells: [[0,0,.5,.4],[.5,0,.5,.4],[0,.4,1,.6]] },
+    { key: '4g', n: 4, name: '田字', cells: [[0,0,.5,.5],[.5,0,.5,.5],[0,.5,.5,.5],[.5,.5,.5,.5]] },
+    { key: '1+3', n: 4, name: '一大三小', cells: [[0,0,1,.55],[0,.55,1/3,.45],[1/3,.55,1/3,.45],[2/3,.55,1/3,.45]] },
+    { key: '5a', n: 5, name: '兩上三下', cells: [[0,0,.5,.5],[.5,0,.5,.5],[0,.5,1/3,.5],[1/3,.5,1/3,.5],[2/3,.5,1/3,.5]] },
+    { key: '6g', n: 6, name: '三乘二', cells: [[0,0,1/3,.5],[1/3,0,1/3,.5],[2/3,0,1/3,.5],[0,.5,1/3,.5],[1/3,.5,1/3,.5],[2/3,.5,1/3,.5]] }
+  ];
+
+  let files = [];
+  let layout = null;
+
+  /* ---------- 選檔 ---------- */
+  const drop = $('#drop');
+  const input = $('#fileInput');
+
+  drop.addEventListener('click', () => input.click());
+  drop.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
+  });
+  ['dragenter', 'dragover'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('is-over'); }));
+  ['dragleave', 'drop'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('is-over'); }));
+
+  drop.addEventListener('drop', e => addFiles(e.dataTransfer.files));
+  input.addEventListener('change', e => addFiles(e.target.files));
+
+  function addFiles(list) {
+    const incoming = Array.from(list).filter(f => f.type.startsWith('image/'));
+    if (!incoming.length) { window.toast('請選擇圖片檔'); return; }
+    if (files.length + incoming.length > 6) {
+      window.toast('最多 6 張，超過的部分已略過');
+    }
+
+    const room = 6 - files.length;
+    const take = incoming.slice(0, Math.max(0, room));
+    if (!take.length) return;
+
+    let loaded = 0;
+    take.forEach(file => {
+      const im = new Image();
+      im.onload = () => {
+        files.push({ name: file.name, img: im });
+        if (++loaded === take.length) afterLoad();
+      };
+      im.onerror = () => { if (++loaded === take.length) afterLoad(); };
+      im.src = URL.createObjectURL(file);
+    });
+  }
+
+  function afterLoad() {
+    $('#editor').classList.remove('hidden');
+    /* 自動挑一個符合目前張數的版面 */
+    if (!layout || layout.n !== files.length) {
+      layout = LAYOUTS.find(l => l.n === files.length) || null;
+    }
+    renderThumbs();
+    renderLayouts();
+    draw();
+  }
+
+  /* ---------- 縮圖 ---------- */
+  function renderThumbs() {
+    $('#thumbs').innerHTML = files.map((f, i) => `
+      <div class="thumb">
+        <img src="${f.img.src}" alt="第 ${i + 1} 張">
+        <div class="thumb__no">第 ${i + 1} 格</div>
+        <div class="thumb__acts">
+          <button class="mini-btn" type="button" data-mu="${i}" ${i === 0 ? 'disabled' : ''}
+                  title="往前" aria-label="往前">←</button>
+          <button class="mini-btn" type="button" data-md="${i}" ${i === files.length - 1 ? 'disabled' : ''}
+                  title="往後" aria-label="往後">→</button>
+          <button class="mini-btn" type="button" data-rm="${i}" title="移除" aria-label="移除">✕</button>
+        </div>
+      </div>`).join('');
+  }
+
+  $('#thumbs').addEventListener('click', e => {
+    const btn = e.target.closest('button[data-mu],button[data-md],button[data-rm]');
+    if (!btn) return;
+    const d = btn.dataset;
+
+    if (d.mu !== undefined) {
+      const i = +d.mu; [files[i - 1], files[i]] = [files[i], files[i - 1]];
+    } else if (d.md !== undefined) {
+      const i = +d.md; [files[i + 1], files[i]] = [files[i], files[i + 1]];
+    } else {
+      files.splice(+d.rm, 1);
+      if (files.length < 2) {
+        $('#editor').classList.add('hidden');
+        layout = null;
+        renderThumbs();
+        return;
+      }
+      if (!layout || layout.n !== files.length) {
+        layout = LAYOUTS.find(l => l.n === files.length) || null;
+      }
+    }
+    renderThumbs();
+    renderLayouts();
+    draw();
+  });
+
+  /* ---------- 版面選擇 ---------- */
+  function miniPreview(l) {
+    /* 用絕對定位把每一格畫成縮小示意圖 */
+    return `<div class="mini" style="position:relative">` +
+      l.cells.map(([x, y, w, h]) =>
+        `<i style="position:absolute;left:${x * 100}%;top:${y * 100}%;width:${w * 100}%;height:${h * 100}%"></i>`
+      ).join('') + `</div>`;
+  }
+
+  function renderLayouts() {
+    $('#layouts').innerHTML = LAYOUTS.map((l, i) => {
+      const usable = l.n === files.length;
+      const on = layout && l.key === layout.key;
+      return `<button class="layout-btn ${on ? 'is-on' : ''} ${usable ? '' : 'is-off'}"
+                      type="button" data-i="${i}" ${usable ? '' : 'disabled'}>
+        ${miniPreview(l)}<small>${esc(l.name)}</small>
+      </button>`;
+    }).join('');
+
+    $('#layoutHint').textContent = layout
+      ? `目前 ${files.length} 張照片，可用的版面已標示；灰色的是張數不符。`
+      : `目前 ${files.length} 張照片，沒有對應的版面配置，請增減照片數量。`;
+  }
+
+  $('#layouts').addEventListener('click', e => {
+    const btn = e.target.closest('.layout-btn');
+    if (!btn || btn.disabled) return;
+    layout = LAYOUTS[+btn.dataset.i];
+    renderLayouts();
+    draw();
+  });
+
+  /* ---------- 繪製 ---------- */
+  function outputSize() {
+    const base = Number($('#size').value);
+    const [rw, rh] = $('#ratio').value.split(':').map(Number);
+    return rw >= rh
+      ? { w: base, h: Math.round(base * rh / rw) }
+      : { w: Math.round(base * rw / rh), h: base };
+  }
+
+  function roundRect(ctx, x, y, w, h, r) {
+    const rr = Math.min(r, w / 2, h / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + rr, y);
+    ctx.arcTo(x + w, y, x + w, y + h, rr);
+    ctx.arcTo(x + w, y + h, x, y + h, rr);
+    ctx.arcTo(x, y + h, x, y, rr);
+    ctx.arcTo(x, y, x + w, y, rr);
+    ctx.closePath();
+  }
+
+  function compose(canvas) {
+    if (!layout || files.length !== layout.n) return false;
+
+    const { w, h } = outputSize();
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+
+    /* 邊框其實是底色，每一格再往內縮，縮出來的空隙就是框 */
+    ctx.fillStyle = $('#gapColor').value;
+    ctx.fillRect(0, 0, w, h);
+
+    const gap = Math.min(w, h) * (Number($('#gap').value) / 100) / 2;
+    const radius = Math.min(w, h) * (Number($('#radius').value) / 100);
+
+    layout.cells.forEach(([cx, cy, cw, ch], i) => {
+      const item = files[i];
+      if (!item) return;
+
+      const x = cx * w + gap;
+      const y = cy * h + gap;
+      const cellW = cw * w - gap * 2;
+      const cellH = ch * h - gap * 2;
+      if (cellW <= 0 || cellH <= 0) return;
+
+      ctx.save();
+      if (radius > 0) { roundRect(ctx, x, y, cellW, cellH, radius); ctx.clip(); }
+      else { ctx.beginPath(); ctx.rect(x, y, cellW, cellH); ctx.clip(); }
+
+      /* 裁切填滿：取中央，不留空白 */
+      const img = item.img;
+      const scale = Math.max(cellW / img.naturalWidth, cellH / img.naturalHeight);
+      const dw = img.naturalWidth * scale;
+      const dh = img.naturalHeight * scale;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(img, x + (cellW - dw) / 2, y + (cellH - dh) / 2, dw, dh);
+      ctx.restore();
+    });
+
+    return true;
+  }
+
+  function draw() { compose($('#canvas')); }
+
+  /* ---------- 輸出 ---------- */
+  $('#downloadBtn').addEventListener('click', () => {
+    const cv = document.createElement('canvas');
+    if (!compose(cv)) { window.toast('請先選好版面配置'); return; }
+
+    const type = $('#format').value;
+    const q = Number($('#quality').value) / 100;
+    const ext = type === 'image/png' ? '.png' : type === 'image/webp' ? '.webp' : '.jpg';
+    const { w, h } = outputSize();
+
+    cv.toBlob(blob => {
+      if (!blob) { window.toast('輸出失敗'); return; }
+      download(blob, `拼貼_${w}x${h}${ext}`);
+    }, type, type === 'image/png' ? undefined : q);
+  });
+
+  $('#clearBtn').addEventListener('click', () => {
+    files = [];
+    layout = null;
+    input.value = '';
+    $('#editor').classList.add('hidden');
+  });
+
+  ['#ratio', '#size', '#gap', '#gapColor', '#radius'].forEach(s =>
+    $(s).addEventListener('input', draw));
+
+  $('#gap').addEventListener('input', e => { $('#gapLabel').textContent = e.target.value; });
+  $('#radius').addEventListener('input', e => { $('#radiusLabel').textContent = e.target.value; });
+  $('#quality').addEventListener('input', e => { $('#qLabel').textContent = e.target.value; });
+  $('#format').addEventListener('change', () => {
+    $('#quality').disabled = $('#format').value === 'image/png';
+  });
+})();
+</script>
+</body>
+</html>

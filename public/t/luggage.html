@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>行李重量尺寸檢查｜算線性尺寸比對手提託運上限 - 順手工具箱</title>
+<meta name="description" content="免費行李尺寸檢查工具，輸入長寬高即可算出線性尺寸與換算吋數，比對隨身行李與託運行李的常見上限，出國前先確認不用在櫃檯補錢。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧳</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css?v=0b9e51d6">
+<style>
+  .verdict { padding: 20px 16px; border-radius: var(--radius-lg); border: 2px solid var(--border);
+             background: var(--surface-2); text-align: center; margin-bottom: 16px; }
+  .verdict__title { font-size: clamp(1.2rem, 1rem + 1.4vw, 1.6rem); font-weight: 800; }
+  .verdict__sub { font-size: .9rem; color: var(--ink-2); margin-top: 6px; }
+  .verdict.pass { border-color: var(--ok); background: rgba(47,125,79,.08); }
+  .verdict.pass .verdict__title { color: var(--ok); }
+  .verdict.warn { border-color: var(--warn); background: rgba(184,134,11,.1); }
+  .verdict.warn .verdict__title { color: var(--warn); }
+  .verdict.fail { border-color: var(--danger); background: rgba(192,57,43,.08); }
+  .verdict.fail .verdict__title { color: var(--danger); }
+
+  .check-row { display: grid; grid-template-columns: 1fr auto auto; gap: 10px; align-items: center;
+               padding: 10px 13px; border-bottom: 1px solid var(--border); font-size: .92rem; }
+  .check-row:last-child { border-bottom: 0; }
+  .check-row b { font-family: var(--mono); }
+  .check-row .mark { font-weight: 700; }
+  .check-row .mark.ok { color: var(--ok); }
+  .check-row .mark.no { color: var(--danger); }
+
+  td.num, th.num { text-align: right; font-family: var(--mono); }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/luggage.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="行李, 尺寸, 重量, 手提, 託運, 登機箱, 幾吋, 限制">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="行李重量尺寸檢查｜算線性尺寸比對手提託運上限 - 順手工具箱">
+<meta property="og:description" content="免費行李尺寸檢查工具，輸入長寬高即可算出線性尺寸與換算吋數，比對隨身行李與託運行李的常見上限，出國前先確認不用在櫃檯補錢。">
+<meta property="og:url" content="https://tools.luka-life.com/t/luggage.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="行李重量尺寸檢查｜算線性尺寸比對手提託運上限 - 順手工具箱">
+<meta name="twitter:description" content="免費行李尺寸檢查工具，輸入長寬高即可算出線性尺寸與換算吋數，比對隨身行李與託運行李的常見上限，出國前先確認不用在櫃檯補錢。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "行李重量尺寸檢查",
+  "description": "免費行李尺寸檢查工具，輸入長寬高即可算出線性尺寸與換算吋數，比對隨身行李與託運行李的常見上限，出國前先確認不用在櫃檯補錢。",
+  "url": "https://tools.luka-life.com/t/luggage.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "旅遊出行",
+      "item": "https://tools.luka-life.com/#travel"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "行李重量尺寸檢查",
+      "item": "https://tools.luka-life.com/t/luggage.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "超重多少會被收錢？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "多數航空公司是超過就算，沒有寬容值，但實務上地勤對一兩公斤的誤差常會通融——這是人情不是規定，不能當作計畫的一部分。超重費通常按公斤計價且相當貴，有時甚至比多買一件託運額度還高。快超重的話，先把重的東西移到隨身行李是最快的解法。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "隨身行李真的會量嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "傳統航空多半只在看起來明顯過大時才攔，廉價航空則常常在登機口設卡尺跟磅秤逐一檢查，抓到就收費而且不便宜。搭廉航建議嚴格按照規定準備。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "個人物品另外算嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "多數航空公司除了隨身行李，還允許一件放在前座下方的個人物品（包包、電腦包）。但有些超低價的票種會把這一件也取消，購票時要看清楚票價包含什麼。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "行李箱的公升數有什麼用？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "容積比吋數更能反映「裝得下多少東西」，選購時可以用來比較不同品牌。不過航空公司只看尺寸與重量，不看容積，所以那是給你自己參考的。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="luggage">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🧳</span>行李重量尺寸檢查</h1>
+    <p class="lede">出發前量一下，免得在櫃檯被攔下來補運費。輪子跟把手都要算進去，這是最多人漏掉的地方。</p>
+  </div>
+
+  <div class="panel">
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="len">長（公分）</label>
+        <input type="number" id="len" value="56" min="0" step="0.5">
+      </div>
+      <div class="field mb-0">
+        <label for="wid">寬（公分）</label>
+        <input type="number" id="wid" value="36" min="0" step="0.5">
+      </div>
+      <div class="field mb-0">
+        <label for="hei">高（公分）</label>
+        <input type="number" id="hei" value="23" min="0" step="0.5">
+      </div>
+      <div class="field mb-0">
+        <label for="weight">重量（公斤）</label>
+        <input type="number" id="weight" value="7" min="0" step="0.1">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="preset">要當作什麼行李</label>
+      <select id="preset">
+        <option value="carry" selected>隨身行李（帶上飛機）</option>
+        <option value="checked">託運行李</option>
+        <option value="oversize">大型託運（運動器材等）</option>
+        <option value="custom">自訂上限</option>
+      </select>
+    </div>
+
+    <div class="row mb-2" id="customRow">
+      <div class="field mb-0">
+        <label for="maxLinear">尺寸上限（三邊相加，公分）</label>
+        <input type="number" id="maxLinear" value="115" min="0" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="maxWeight">重量上限（公斤）</label>
+        <input type="number" id="maxWeight" value="7" min="0" step="0.5">
+      </div>
+    </div>
+
+    <div class="verdict" id="verdict">
+      <div class="verdict__title" id="vTitle">—</div>
+      <div class="verdict__sub" id="vSub"></div>
+    </div>
+
+    <div class="panel__title">檢查明細</div>
+    <div id="checks"></div>
+
+    <div class="stat-row mt-2">
+      <div class="stat"><div class="stat__num" id="linear">—</div><div class="stat__label">線性尺寸（長＋寬＋高）</div></div>
+      <div class="stat"><div class="stat__num" id="inches">—</div><div class="stat__label">約等於幾吋行李箱</div></div>
+      <div class="stat"><div class="stat__num" id="volume">—</div><div class="stat__label">容積（公升）</div></div>
+      <div class="stat"><div class="stat__num" id="margin">—</div><div class="stat__label">距離上限</div></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title">常見的行李規定</div>
+    <div class="table-scroll">
+      <table class="data">
+        <thead>
+          <tr><th>類別</th><th class="num">三邊相加</th><th class="num">常見重量</th><th>說明</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>隨身行李</strong></td>
+            <td class="num">115 cm</td>
+            <td class="num">7 kg</td>
+            <td class="small muted">約 56×36×23，廉價航空常更嚴格</td>
+          </tr>
+          <tr>
+            <td><strong>託運行李</strong></td>
+            <td class="num">158 cm</td>
+            <td class="num">23 kg</td>
+            <td class="small muted">國際線最通行的標準</td>
+          </tr>
+          <tr>
+            <td><strong>大型託運</strong></td>
+            <td class="num">203 cm</td>
+            <td class="num">32 kg</td>
+            <td class="small muted">多半要加價，且需事先申請</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="hint mt-1">
+      這是業界最常見的通用標準，<strong>不是任何一家航空公司的正式規定</strong>。
+      廉價航空的隨身行李常常只給 7 kg 甚至更少，部分航線的託運也可能是 20 kg。
+      訂票前請務必查該航空公司的公告。
+    </p>
+  </div>
+
+  <section class="prose">
+    <h2>量行李的三個地雷</h2>
+    <ul>
+      <li><strong>輪子跟拉桿要算進去。</strong>行李箱標示的「幾吋」通常是箱體本身，不含外凸的輪子與把手。實際量的時候要<strong>從最外緣量到最外緣</strong>，那才是登機口卡尺會量到的尺寸。</li>
+      <li><strong>塞滿之後會變胖。</strong>軟殼箱裝滿會鼓起來，量空箱過關不代表裝好過關。建議裝好再量一次。</li>
+      <li><strong>「幾吋」是高度不是對角線。</strong>行李箱的吋數指的是箱體高度（含或不含輪子各家標示不一），不是像電視那樣量對角線。買箱子時特別容易誤會。</li>
+    </ul>
+
+    <h2>線性尺寸是什麼</h2>
+    <p>就是<strong>長＋寬＋高三個數字直接相加</strong>，航空業用這個單一數字來規範行李大小。好處是不管你的箱子是細長還是扁平，只要總和沒超標就算合格，比逐邊限制有彈性。</p>
+    <p>所以如果你的箱子某一邊超過一點點，只要其他邊夠小、總和在標準內，多半還是過得了。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>超重多少會被收錢？</summary>
+        <div class="a">多數航空公司是超過就算，沒有寬容值，但實務上地勤對一兩公斤的誤差常會通融——這是人情不是規定，不能當作計畫的一部分。超重費通常按公斤計價且相當貴，有時甚至比多買一件託運額度還高。快超重的話，先把重的東西移到隨身行李是最快的解法。</div>
+      </details>
+      <details>
+        <summary>隨身行李真的會量嗎？</summary>
+        <div class="a">傳統航空多半只在看起來明顯過大時才攔，廉價航空則常常在登機口設卡尺跟磅秤逐一檢查，抓到就收費而且不便宜。搭廉航建議嚴格按照規定準備。</div>
+      </details>
+      <details>
+        <summary>個人物品另外算嗎？</summary>
+        <div class="a">多數航空公司除了隨身行李，還允許一件放在前座下方的個人物品（包包、電腦包）。但有些超低價的票種會把這一件也取消，購票時要看清楚票價包含什麼。</div>
+      </details>
+      <details>
+        <summary>行李箱的公升數有什麼用？</summary>
+        <div class="a">容積比吋數更能反映「裝得下多少東西」，選購時可以用來比較不同品牌。不過航空公司只看尺寸與重量，不看容積，所以那是給你自己參考的。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js?v=aac7f832"></script>
+<script src="../assets/js/layout.js?v=483231ca"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$ } = window.U;
+
+  /* 業界最常見的通用標準，非特定航空公司規定 */
+  const PRESETS = {
+    carry:    { linear: 115, weight: 7,  name: '隨身行李' },
+    checked:  { linear: 158, weight: 23, name: '託運行李' },
+    oversize: { linear: 203, weight: 32, name: '大型託運' }
+  };
+
+  function applyPreset() {
+    const key = $('#preset').value;
+    const isCustom = key === 'custom';
+    $('#maxLinear').disabled = !isCustom;
+    $('#maxWeight').disabled = !isCustom;
+
+    if (!isCustom) {
+      $('#maxLinear').value = PRESETS[key].linear;
+      $('#maxWeight').value = PRESETS[key].weight;
+    }
+    calc();
+  }
+
+  /* 整數就不要硬掛一個 .0，看起來像量到小數點才有的精度 */
+  const dec = n => String(Math.round(n * 10) / 10);
+
+  function calc() {
+    const l = Math.max(0, Number($('#len').value) || 0);
+    const w = Math.max(0, Number($('#wid').value) || 0);
+    const h = Math.max(0, Number($('#hei').value) || 0);
+    const kg = Math.max(0, Number($('#weight').value) || 0);
+
+    const maxLinear = Math.max(0, Number($('#maxLinear').value) || 0);
+    const maxWeight = Math.max(0, Number($('#maxWeight').value) || 0);
+
+    const linear = l + w + h;
+    const volume = (l * w * h) / 1000;          // 立方公分 → 公升
+    const longest = Math.max(l, w, h);
+    const inch = longest / 2.54;
+
+    $('#linear').textContent = linear ? dec(linear) + ' cm' : '—';
+    $('#inches').textContent = longest ? Math.round(inch) + ' 吋' : '—';
+    $('#volume').textContent = volume ? Math.round(volume) + ' L' : '—';
+
+    /* 逐項檢查 */
+    const sizeOk = maxLinear === 0 || linear <= maxLinear;
+    const weightOk = maxWeight === 0 || kg <= maxWeight;
+
+    const sizeDiff = maxLinear - linear;
+    const weightDiff = maxWeight - kg;
+
+    $('#margin').textContent = sizeOk
+      ? `尺寸還有 ${dec(sizeDiff)} cm`
+      : `尺寸超出 ${dec(Math.abs(sizeDiff))} cm`;
+    $('#margin').style.color = sizeOk ? 'var(--ok)' : 'var(--danger)';
+
+    const rows = [
+      {
+        label: '三邊相加',
+        value: `${dec(linear)} / ${maxLinear} cm`,
+        ok: sizeOk
+      },
+      {
+        label: '重量',
+        value: `${dec(kg)} / ${maxWeight} kg`,
+        ok: weightOk
+      }
+    ];
+
+    $('#checks').innerHTML = rows.map(r => `
+      <div class="check-row">
+        <span>${r.label}</span>
+        <b>${r.value}</b>
+        <span class="mark ${r.ok ? 'ok' : 'no'}">${r.ok ? '✅ 通過' : '❌ 超標'}</span>
+      </div>`).join('');
+
+    /* 總結：接近上限時給黃燈提醒 */
+    const box = $('#verdict');
+    const presetName = $('#preset').value === 'custom'
+      ? '自訂標準' : PRESETS[$('#preset').value].name;
+
+    if (!sizeOk || !weightOk) {
+      box.className = 'verdict fail';
+      const issues = [];
+      if (!sizeOk) issues.push(`尺寸超出 ${dec(Math.abs(sizeDiff))} 公分`);
+      if (!weightOk) issues.push(`超重 ${dec(Math.abs(weightDiff))} 公斤`);
+      $('#vTitle').textContent = '❌ 不符合' + presetName + '標準';
+      $('#vSub').textContent = issues.join('、') + '，可能會被要求改託運或加收費用。';
+    } else if (sizeDiff < 5 || weightDiff < 1) {
+      box.className = 'verdict warn';
+      $('#vTitle').textContent = '⚠️ 剛好壓線';
+      $('#vSub').textContent =
+        '目前符合標準，但餘裕很小。行李裝滿後可能會鼓起來或變重，建議留一點空間。';
+    } else {
+      box.className = 'verdict pass';
+      $('#vTitle').textContent = '✅ 符合' + presetName + '標準';
+      $('#vSub').textContent =
+        `尺寸還有 ${dec(sizeDiff)} 公分、重量還有 ${dec(weightDiff)} 公斤的空間。`;
+    }
+  }
+
+  $('#preset').addEventListener('change', applyPreset);
+  ['#len', '#wid', '#hei', '#weight', '#maxLinear', '#maxWeight'].forEach(s =>
+    $(s).addEventListener('input', calc));
+
+  applyPreset();
+})();
+</script>
+</body>
+</html>

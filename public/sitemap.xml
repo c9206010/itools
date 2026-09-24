@@ -331,6 +331,30 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://tools.luka-life.com/t/collage.html</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tools.luka-life.com/t/cover-safe.html</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tools.luka-life.com/t/exchange.html</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://tools.luka-life.com/t/luggage.html</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://tools.luka-life.com/t/mortgage.html</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>

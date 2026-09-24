@@ -39,6 +39,7 @@ const CATEGORIES = [
   { id: 'image',  name: '圖片處理', icon: '🖼️', desc: '壓縮、縮放、轉檔，不上傳' },
   { id: 'pdf',    name: 'PDF 文件', icon: '📄', desc: '合併、分割、轉檔，檔案不上傳' },
   { id: 'social', name: '社群小幫手', icon: '💬', desc: 'IG、FB、Threads 貼文排版' },
+  { id: 'travel', name: '旅遊出行', icon: '✈️', desc: '匯率、行李、時差，出國前先查' },
   { id: 'tw',     name: '台灣生活', icon: '🇹🇼', desc: '房貸、薪資、勞基法、發票對獎' },
   { id: 'device', name: '裝置檢測', icon: '🖥️', desc: '鍵盤、麥克風、螢幕快速測試' }
 ];
@@ -75,7 +76,7 @@ const TOOLS = [
     desc: '算兩天相差幾天，或推算日期', kw: '天數 日期計算 相差 幾天 date' },
   { slug: 'age', cat: 'time', icon: '🎂', name: '年齡計算器',
     desc: '精確到天，附生肖與星座', kw: '年齡 歲數 虛歲 生日 age' },
-  { slug: 'timezone', cat: 'time', icon: '🌏', name: '世界時區換算',
+  { slug: 'timezone', cat: 'travel', icon: '🌏', name: '世界時區換算',
     desc: '主要城市當地時間對照', kw: '時差 時區 世界時間 timezone utc' },
 
   /* ---------- 文字處理 ---------- */
@@ -169,6 +170,16 @@ const TOOLS = [
     desc: '不裁切放進正方形，可模糊補邊', kw: '正方形 ig 不裁切 補白邊 模糊背景 直式' },
   { slug: 'watermark', cat: 'social', icon: '💧', name: '圖片浮水印',
     desc: '批次加上帳號名稱或標誌', kw: '浮水印 watermark 版權 logo 批次 加字' },
+  { slug: 'collage', cat: 'social', icon: '🧩', name: '多圖拼貼',
+    desc: '2 到 6 張合成一張，可調邊框', kw: '拼貼 拼圖 多圖 合成 併圖 collage 照片' },
+  { slug: 'cover-safe', cat: 'social', icon: '🛡️', name: '封面安全區預覽',
+    desc: 'FB、YT 封面被裁掉哪裡先看清楚', kw: '封面 安全區 fb youtube 橫幅 被裁切 尺寸' },
+
+  /* ---------- 旅遊出行 ---------- */
+  { slug: 'exchange', cat: 'travel', icon: '💱', name: '匯率換算',
+    desc: '即時參考匯率，可估算銀行價差', kw: '匯率 換匯 日圓 美金 兌換 旅費 外幣' },
+  { slug: 'luggage', cat: 'travel', icon: '🧳', name: '行李重量尺寸檢查',
+    desc: '算線性尺寸，比對手提託運上限', kw: '行李 尺寸 重量 手提 託運 登機箱 幾吋 限制' },
 
   /* ---------- 台灣生活 ---------- */
   { slug: 'mortgage', cat: 'tw', icon: '🏠', name: '房貸試算',
