@@ -85,7 +85,7 @@
     <div class="site-footer__cols">${cols}</div>
     <div class="site-footer__base">
       <span>© ${new Date().getFullYear()} ${esc(SITE.name)}．${esc(SITE.tagline)}</span>
-      <span>所有運算都在你的瀏覽器完成，不會上傳任何資料</span>
+      <span>所有運算都在你的瀏覽器完成，輸入的內容不會上傳</span>
       <span><a href="${ROOT}privacy.html">隱私權政策</a></span>
     </div>
   </div>
@@ -272,6 +272,21 @@
     gtag('config', cfg.id);
   }
 
+  /* ---------- 瀏覽計數 ----------
+     打給自家的 /api/hit，用來算首頁顯示的瀏覽數與線上人數。
+     送出的只有這個請求本身，不含頁面內容，也不含你在工具裡填的任何東西。
+     後端沒接好或請求失敗都無所謂，這裡完全不影響頁面功能。 */
+  function initHitCount() {
+    const url = ROOT + 'api/hit';
+    try {
+      /* sendBeacon 不會拖慢頁面，瀏覽器會在閒置時送出 */
+      if (navigator.sendBeacon && navigator.sendBeacon(url, new Blob())) return;
+      fetch(url, { method: 'POST', keepalive: true }).catch(() => {});
+    } catch (e) {
+      /* 被擋掉就算了，統計不重要到要讓使用者知道 */
+    }
+  }
+
   /* ---------- 複製與提示 ---------- */
   let toastEl, toastTimer;
   window.toast = function (msg) {
@@ -401,6 +416,7 @@
     initRelated();
     initAd();
     initAnalytics();
+    initHitCount();
 
     /* canonical、OG 與結構化資料改由 build-seo.mjs 靜態寫進 HTML，
        這裡不再動態插入，避免正式網域設定後出現兩組 canonical。 */

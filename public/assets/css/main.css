@@ -262,6 +262,45 @@ p { margin: 0 0 1em; }
   font-size: .82rem; font-weight: 600;
 }
 
+/* ---------- 首頁瀏覽統計 ---------- */
+.stats {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  align-items: center; gap: 10px 22px; margin-top: 20px;
+}
+.stats__live {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 999px; padding: 6px 15px;
+  font-size: .87rem; color: var(--ink-2);
+}
+.stats__live b { font-family: var(--mono); color: var(--ink); font-size: 1rem; }
+.stats__dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--ok); flex: none;
+  animation: stats-pulse 2.2s ease-in-out infinite;
+}
+@keyframes stats-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: .45; transform: scale(.82); }
+}
+.stats__list {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 4px 20px; margin: 0;
+}
+.stats__list div { text-align: center; }
+.stats__list dt { font-size: .76rem; color: var(--ink-3); }
+.stats__list dd {
+  margin: 1px 0 0; font-family: var(--mono);
+  font-size: 1rem; font-weight: 700; color: var(--ink);
+}
+@media (prefers-reduced-motion: reduce) {
+  .stats__dot { animation: none; }
+}
+@media (max-width: 520px) {
+  .stats { gap: 9px 14px; }
+  .stats__list { gap: 4px 14px; }
+}
+
 /* ---------- tool grid ---------- */
 .group { margin-bottom: 44px; scroll-margin-top: calc(var(--header-h) + 60px); }
 .group__head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; }

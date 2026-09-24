@@ -10,7 +10,7 @@
 <meta property="og:title" content="順手工具箱｜86 種免費線上小工具">
 <meta property="og:description" content="抽籤、計時、文字處理、符號表情、編碼轉換、圖片壓縮，打開就能用，資料不離開你的瀏覽器。">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
-<link rel="stylesheet" href="assets/css/main.css?v=35ffc45a">
+<link rel="stylesheet" href="assets/css/main.css?v=08f32a1b">
 <!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
 <link rel="canonical" href="https://tools.luka-life.com/">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
@@ -671,6 +671,20 @@
     <h1>打開就能用的線上小工具</h1>
     <p>抽籤、計時、算數、轉檔、複製符號——不用安裝、不用註冊，所有運算都在你自己的瀏覽器裡跑完。</p>
     <p class="hero__count" id="toolCount"></p>
+
+    <!-- 數字由 /api/stats 填入。拿不到就整塊不顯示，不會留下一排 0 -->
+    <div class="stats" id="siteStats" hidden>
+      <div class="stats__live">
+        <span class="stats__dot" aria-hidden="true"></span>
+        <b id="statOnline">—</b> 人正在線上
+      </div>
+      <dl class="stats__list">
+        <div><dt>今日</dt><dd id="statToday">—</dd></div>
+        <div><dt>本週</dt><dd id="statWeek">—</dd></div>
+        <div><dt>本月</dt><dd id="statMonth">—</dd></div>
+        <div><dt>總瀏覽</dt><dd id="statTotal">—</dd></div>
+      </dl>
+    </div>
   </section>
 
   <div class="wrap">
@@ -683,7 +697,7 @@
 </main>
 
 <script src="assets/js/catalog.js?v=c7e53526"></script>
-<script src="assets/js/layout.js?v=e764485e"></script>
+<script src="assets/js/layout.js?v=fd660671"></script>
 <script>
 (function () {
   'use strict';
@@ -692,6 +706,38 @@
   const noResult = $('#noResult');
 
   $('#toolCount').textContent = `目前收錄 ${TOOLS.length} 種工具．${CATEGORIES.length} 個分類`;
+
+  /* ---------- 瀏覽統計 ----------
+     數字來自自家的 /api/stats。拿不到就讓整塊維持隱藏，
+     寧可不顯示也不要擺一排 0 讓人以為站上沒人。 */
+  (async function loadStats() {
+    const box = $('#siteStats');
+    const n = v => Number(v || 0).toLocaleString('zh-TW');
+
+    async function refresh() {
+      try {
+        const res = await fetch('api/stats', { cache: 'no-store' });
+        if (!res.ok) return false;
+        const d = await res.json();
+        if (!d.ok) return false;
+
+        $('#statOnline').textContent = n(d.online);
+        $('#statToday').textContent = n(d.today);
+        $('#statWeek').textContent = n(d.week);
+        $('#statMonth').textContent = n(d.month);
+        $('#statTotal').textContent = n(d.total);
+        box.hidden = false;
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    if (await refresh()) {
+      /* 開著首頁不動的人，讓線上人數會自己跳 */
+      setInterval(refresh, 60000);
+    }
+  })();
 
   function cardHTML(t) {
     return `<a class="card" href="t/${t.slug}.html">

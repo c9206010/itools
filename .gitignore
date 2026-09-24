@@ -15,3 +15,5 @@ npm-debug.log*
 # 本機測試產物
 *.local
 /tmp/
+.wrangler/
+node_modules/

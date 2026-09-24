@@ -144,6 +144,53 @@ node build-seo.mjs          # 字典換了，版本號也要跟著換
 
 ---
 
+## 首頁瀏覽統計
+
+首頁那排「線上人數／今日／本週／本月／總瀏覽」是**自己做的計數器**，
+不是讀 GA。原因是 GA 的數據沒辦法從前端讀取，要讀就得開 Google Cloud
+專案、建服務帳戶、在 Worker 裡做 JWT 簽章，設定成本高很多。
+
+| 檔案 | 做什麼 |
+|---|---|
+| `functions/api/hit.js` | `POST /api/hit`，記錄一次瀏覽，一律回 204 |
+| `functions/api/stats.js` | `GET /api/stats`，回傳數字，邊緣快取 30 秒 |
+| `functions/api/_shared.js` | 台北日期、訪客雜湊、爬蟲判斷 |
+| `schema.sql` | 資料表定義 |
+
+`functions/` 要放在 **repo 根目錄**，不是 `public/` 裡面。
+Cloudflare Pages 會自動把它變成 API，不用改建置設定。
+
+### 第一次設定（只要做一次）
+
+1. Cloudflare 後台 → **Storage & Databases → D1** → 建立資料庫，命名 `luka-tools-stats`
+2. 建表：
+   ```bash
+   npx wrangler d1 execute luka-tools-stats --remote --file=schema.sql
+   ```
+3. Pages 專案 → **Settings → Bindings** → 新增 **D1 database binding**
+   - Variable name 一定要填 **`DB`**（程式裡寫死的）
+   - Database 選剛才建的 `luka-tools-stats`
+4. 重新部署一次讓綁定生效
+
+### 沒設定會怎樣
+
+**什麼都不會壞**。`env.DB` 不存在時 `hit` 直接跳過、`stats` 回 `ok:false`，
+首頁的數據區塊會維持隱藏，不會顯示一排 0。網站其他功能完全不受影響。
+
+### 設計上的取捨
+
+- **只存彙總數字，不存瀏覽明細**，所以資料庫幾乎不會長大
+- 訪客識別碼是 `IP + UA + 當天日期` 的 SHA-256 前 16 字元。
+  不可逆，而且**摻了日期所以隔天就換一組**，無法長期追蹤
+- `recent` 表 15 分鐘後清掉，清理是 2% 機率順手做，不是每次請求都做
+- 有擋常見爬蟲（`_shared.js` 的 `BOT_RE`），否則 Googlebot 會把數字灌爆
+- 每次瀏覽 3 筆寫入。D1 免費額度是每天 10 萬筆寫入，
+  換算大約可以撐到每天 3 萬次瀏覽
+
+**動到這裡記得同步改 `privacy.html` 的第五節**，那是對使用者的承諾。
+
+---
+
 ## 測試
 
 測試腳本不在 repo 裡（它們是開發用的臨時檔）。要重新產生的話，

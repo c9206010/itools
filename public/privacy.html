@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>隱私權政策 - 順手工具箱</title>
-<meta name="description" content="順手工具箱的隱私權政策：工具運算全在瀏覽器完成不上傳資料，說明瀏覽器本機儲存、Google AdSense 廣告 Cookie、Google Analytics 流量統計與第三方服務的使用方式。">
+<meta name="description" content="順手工具箱的隱私權政策：工具運算全在瀏覽器完成不上傳資料，說明瀏覽器本機儲存、Google AdSense 廣告 Cookie、Google Analytics 流量統計、首頁瀏覽計數器與第三方服務的使用方式。">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
-<link rel="stylesheet" href="assets/css/main.css?v=35ffc45a">
+<link rel="stylesheet" href="assets/css/main.css?v=08f32a1b">
 <style>
   .policy { max-width: 72ch; }
   .policy h2 { margin-top: 1.9em; }
@@ -26,7 +26,7 @@
 <meta property="og:site_name" content="順手工具箱">
 <meta property="og:locale" content="zh_TW">
 <meta property="og:title" content="隱私權政策 - 順手工具箱">
-<meta property="og:description" content="順手工具箱的隱私權政策：工具運算全在瀏覽器完成不上傳資料，說明瀏覽器本機儲存、Google AdSense 廣告 Cookie、Google Analytics 流量統計與第三方服務的使用方式。">
+<meta property="og:description" content="順手工具箱的隱私權政策：工具運算全在瀏覽器完成不上傳資料，說明瀏覽器本機儲存、Google AdSense 廣告 Cookie、Google Analytics 流量統計、首頁瀏覽計數器與第三方服務的使用方式。">
 <meta property="og:url" content="https://tools.luka-life.com/privacy.html">
 
 <script type="application/ld+json">
@@ -34,7 +34,7 @@
   "@context": "https://schema.org",
   "@type": "WebPage",
   "name": "隱私權政策 - 順手工具箱",
-  "description": "順手工具箱的隱私權政策：工具運算全在瀏覽器完成不上傳資料，說明瀏覽器本機儲存、Google AdSense 廣告 Cookie、Google Analytics 流量統計與第三方服務的使用方式。",
+  "description": "順手工具箱的隱私權政策：工具運算全在瀏覽器完成不上傳資料，說明瀏覽器本機儲存、Google AdSense 廣告 Cookie、Google Analytics 流量統計、首頁瀏覽計數器與第三方服務的使用方式。",
   "url": "https://tools.luka-life.com/privacy.html",
   "inLanguage": "zh-Hant",
   "isPartOf": {
@@ -59,13 +59,13 @@
       <strong>一句話版本：</strong>這個站的工具全部在你的瀏覽器裡運算，
       你輸入的文字、上傳的圖片與 PDF、填寫的薪資與健康數字，
       <strong>都沒有送到我們這裡，我們也沒有能力看到</strong>。
-      站上會收集資料的只有 Google 的廣告與流量統計服務，
+      站上會收集資料的是 Google 的廣告與流量統計服務，以及首頁那個只數數字的瀏覽計數器，
       而且它們拿到的是「有人看了哪一頁」，<strong>不是你在工具裡填了什麼</strong>。
       細節寫在下面。
     </div>
 
     <h2>一、我們不收集什麼</h2>
-    <p>這個網站是純靜態網頁，<strong>沒有會員系統、沒有資料庫、沒有後端伺服器</strong>。
+    <p>這個網站<strong>沒有會員系統，不需要也無法註冊，我們不知道你是誰</strong>。
     所有工具的運算都是用你裝置上的瀏覽器完成的，包括：</p>
     <ul>
       <li>文字工具裡貼上的內容（比對、統計、取代等）</li>
@@ -133,7 +133,45 @@
     <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google Analytics 停用外掛</a>，
     或直接用廣告攔截器擋掉。<strong>這些做法都不會影響任何工具的功能。</strong></p>
 
-    <h2>五、第三方服務</h2>
+    <h2>五、首頁的瀏覽計數</h2>
+    <p>首頁會顯示「目前線上人數」與今日、本週、本月、累計的瀏覽數。
+    這是我們自己做的計數器，<strong>資料存在我們自己的資料庫</strong>，
+    是站上唯一由我們直接經手的資料，所以說明得詳細一點。</p>
+
+    <h3>每次瀏覽會記下什麼</h3>
+    <p>你打開任何一頁時，瀏覽器會送出一個不含內容的通知，我們把它加進計數。
+    資料庫裡<strong>只存彙總數字，不存每一次瀏覽的明細</strong>：</p>
+    <div class="table-scroll">
+      <table class="data">
+        <thead><tr><th>存了什麼</th><th>長什麼樣子</th><th>用途</th></tr></thead>
+        <tbody>
+          <tr><td>累計瀏覽數</td><td>一個數字</td><td>顯示總瀏覽</td></tr>
+          <tr><td>每日瀏覽數</td><td>日期與一個數字</td><td>算今日、本週、本月</td></tr>
+          <tr><td>近期訪客足跡</td><td>一串代碼與時間</td><td>算線上人數，十五分鐘後刪除</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>那串代碼是什麼</h3>
+    <p>為了知道「線上五個人」是五個不同的人還是同一個人開了五個分頁，
+    需要一個能區分訪客的東西。我們的做法是：</p>
+    <ul>
+      <li>把你的 IP、瀏覽器資訊與<strong>當天日期</strong>混在一起做 SHA-256 雜湊，只留前 16 個字元</li>
+      <li>雜湊是<strong>不可逆</strong>的，資料庫裡永遠不會出現你真正的 IP</li>
+      <li>因為摻了日期，<strong>同一個人隔天就是完全不同的代碼</strong>，無法用來長期追蹤</li>
+      <li>這串代碼<strong>十五分鐘後就會被刪掉</strong></li>
+    </ul>
+    <p>我們沒有存你看了哪一頁、從哪裡來、待了多久——那些是上一節 Google Analytics 在做的事，
+    這個計數器<strong>只負責數數字</strong>。</p>
+
+    <h3>不會記錄的東西</h3>
+    <p>跟前面幾節一樣，而且這點特別重要：
+    <strong>你在工具裡輸入的任何內容，完全不會經過這個計數器</strong>。
+    它送出的請求裡沒有夾帶頁面內容，也沒有夾帶你填的數字或文字。</p>
+    <p>不想被計數的話，用廣告攔截器或瀏覽器的追蹤保護擋掉即可，
+    <strong>所有工具仍然完全正常運作</strong>。</p>
+
+    <h2>六、第三方服務</h2>
     <div class="table-scroll">
       <table class="data">
         <thead><tr><th>服務</th><th>用途</th><th>可能取得的資料</th></tr></thead>
@@ -163,20 +201,21 @@
     </div>
     <p class="small muted">QR Code 與 PDF 工具會從 cdnjs 載入開源程式庫，但<strong>你的檔案與內容仍然只在本機處理</strong>，不會傳送給這些服務。</p>
 
-    <h2>六、外部連結</h2>
+    <h2>七、外部連結</h2>
     <p>站上部分工具會連到外部網站（例如財政部稅務入口網、經濟部商工登記查詢）。
     這些網站有各自的隱私權政策，本站不負責其內容與資料處理方式。</p>
 
-    <h2>七、兒童隱私</h2>
+    <h2>八、兒童隱私</h2>
     <p>本站不針對未滿十三歲的兒童提供服務，也不會刻意收集兒童的個人資料。
-    本站自己沒有會員系統也沒有資料庫，不會要求或儲存任何身分資料；
-    上述第三、四節提到的廣告與流量統計由 Google 提供，適用其各自的政策。</p>
+    本站沒有會員系統，不會要求或儲存任何身分資料。
+    第五節的瀏覽計數只存彙總數字與不可逆的短期代碼，無法識別到個人；
+    第三、四節的廣告與流量統計由 Google 提供，適用其各自的政策。</p>
 
-    <h2>八、政策變更</h2>
+    <h2>九、政策變更</h2>
     <p>本政策如有修改，會直接更新這個頁面並調整上方的最後更新日期。
     若未來新增會影響隱私的功能，我們會在此明確說明。</p>
 
-    <h2>九、聯絡方式</h2>
+    <h2>十、聯絡方式</h2>
     <p>對本政策或網站有任何疑問，歡迎透過
     <a href="https://luka-life.com/" target="_blank" rel="noopener">luka-life.com</a> 的聯絡方式與我們聯繫。</p>
 
@@ -185,6 +224,6 @@
 </main>
 
 <script src="assets/js/catalog.js?v=c7e53526"></script>
-<script src="assets/js/layout.js?v=e764485e"></script>
+<script src="assets/js/layout.js?v=fd660671"></script>
 </body>
 </html>
