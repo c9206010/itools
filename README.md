@@ -1,6 +1,51 @@
 # 順手工具箱
 
-58 種免費線上小工具的靜態網站。純 HTML / CSS / JavaScript，沒有框架、沒有建置流程、沒有後端，所有運算都在使用者的瀏覽器裡完成。
+61 種免費線上小工具的靜態網站。純 HTML / CSS / JavaScript，沒有框架、沒有建置流程、沒有後端，所有運算都在使用者的瀏覽器裡完成。
+
+**線上網址**：https://tools.luka-life.com
+
+---
+
+## 🔧 日常修改流程（最常用，放最前面）
+
+### 檔案在哪
+
+| 路徑 | 說明 |
+|---|---|
+| `C:\Users\aaron\luka-tools` | **工作副本，所有修改改這裡** |
+| `G:\我的雲端硬碟\...\tools-site` | 只是備份，改了不會生效 |
+
+### 三步驟
+
+```powershell
+# 1. 改完檔案後，在本機預覽確認
+cd C:\Users\aaron\luka-tools\public
+python -m http.server 8766
+#   → 瀏覽器開 http://localhost:8766
+
+# 2. 如果改了標題、描述或 FAQ，重跑 SEO
+cd C:\Users\aaron\luka-tools
+node build-seo.mjs
+
+# 3. 推上去，Cloudflare 會自動部署（約 1 分鐘）
+git add -A
+git commit -m "改了什麼"
+git push
+```
+
+推送後到 Cloudflare 的 itools 專案可以看部署進度，或直接重新整理網站確認。
+
+### 常見的小修改
+
+| 想做什麼 | 改哪裡 | 要重跑 build-seo 嗎 |
+|---|---|---|
+| 改某個工具的功能 | `public/t/<slug>.html` 裡的 `<script>` | 不用 |
+| 改工具的標題或說明 | 同上的 `<title>`、`<meta>`、`<h1>` | **要** |
+| 改工具的 FAQ | 同上的 `.faq` 區塊 | **要** |
+| 改配色 | `public/assets/css/main.css` 開頭的 CSS 變數 | 不用 |
+| 改站名、標語 | `public/assets/js/catalog.js` 的 `SITE` | 要 |
+| 開關廣告 | `public/assets/js/catalog.js` 的 `adsense.enabled` | 不用 |
+| 換網域 | `node build-seo.mjs --origin=https://新網域` | 指令本身就是 |
 
 ---
 
@@ -34,27 +79,36 @@
 node build-seo.mjs --origin=https://你的網域
 ```
 
-這會一併更新 `assets/js/catalog.js` 裡的 `SITE.origin`，之後直接跑 `node build-seo.mjs` 就好。
+這會一併更新 `public/assets/js/catalog.js` 裡的 `SITE.origin`，之後直接跑 `node build-seo.mjs` 就好。
 
 ---
 
 ## 目錄結構
 
 ```
-tools-site/
-├── index.html              首頁（分類卡片、搜尋、篩選）
-├── t/                      40 個工具頁，一個工具一個檔
-│   ├── wheel.html
-│   └── …
-├── assets/
-│   ├── css/main.css        全站設計系統（含深色模式）
-│   ├── js/catalog.js       工具總目錄 ← 新增工具改這裡
-│   ├── js/layout.js        頁首頁尾、搜尋、複製、共用函式
-│   └── og.svg              社群分享圖
-├── build-seo.mjs           SEO 注入腳本（可重複執行）
-├── sitemap.xml             自動產生
-└── robots.txt              自動產生
+luka-tools/
+├── public/                     ← 只有這個資料夾會被部署上線
+│   ├── index.html              首頁（分類卡片、搜尋、篩選）
+│   ├── 404.html                找不到頁面（避免軟性 404）
+│   ├── t/                      61 個工具頁，一個工具一個檔
+│   │   ├── wheel.html
+│   │   └── …
+│   ├── assets/
+│   │   ├── css/main.css        全站設計系統（含深色模式）
+│   │   ├── js/catalog.js       工具總目錄 ← 新增工具改這裡
+│   │   ├── js/layout.js        頁首頁尾、搜尋、廣告、共用函式
+│   │   ├── data/invoice.json   發票中獎號碼（Actions 自動更新）
+│   │   └── og.svg              社群分享圖
+│   ├── sitemap.xml             自動產生
+│   └── robots.txt              自動產生
+├── .github/
+│   ├── workflows/invoice.yml   發票自動更新排程
+│   └── scripts/fetch-invoice.mjs
+├── build-seo.mjs               SEO 注入腳本（可重複執行）
+└── README.md                   這份文件
 ```
+
+`public/` 以外的檔案不會被公開，所以 `build-seo.mjs` 與 `README.md` 不會出現在網站上。
 
 ---
 
@@ -62,10 +116,10 @@ tools-site/
 
 不能直接用檔案總管雙擊開啟（`file://` 下部分功能會被瀏覽器擋住）。起一個本機伺服器：
 
-```bash
-cd tools-site
-npx serve .
-# 或 python -m http.server 8000
+```powershell
+cd C:\Users\aaron\luka-tools\public
+python -m http.server 8766
+#   → 瀏覽器開 http://localhost:8766
 ```
 
 ---
@@ -77,7 +131,7 @@ npx serve .
 **不會放在你原本的網站主機上。** 流程是這樣：
 
 ```
-你的電腦 tools-site/
+你的電腦 luka-tools/
         │ git push
         ▼
 GitHub repo（免費）
@@ -102,17 +156,22 @@ tools.你的網域.com
 
 ### 實際步驟
 
-1. 把 `tools-site` 推到 GitHub（public 或 private 都可以）
-2. Cloudflare Pages → Create project → 連結該 repo
-   - 建置指令：**留空**
-   - 輸出目錄：**`/`**
-3. 部署完成會得到 `xxxx.pages.dev`，先用它確認站台正常
-4. Pages → Custom domains → 加入 `tools.你的網域.com`，照指示在 DNS 加一筆 CNAME
-5. 最後跑一次：`node build-seo.mjs --origin=https://tools.你的網域.com`，commit 推上去
+**目前的部署設定**（已完成，記錄下來備查）：
 
-**為什麼要走 GitHub**：發票自動更新的 Action 跑在 GitHub 上。直接拖資料夾上傳 Cloudflare 也能用，但那樣發票就要手動維護。
+| 項目 | 值 |
+|---|---|
+| GitHub 版本庫 | `c9206010/itools` |
+| Cloudflare 專案 | `itools` |
+| 生產分支 | `main` |
+| Framework preset | None |
+| Build command | 留空 |
+| **Build output directory** | **`public`** |
+| 正式網域 | `tools.luka-life.com` |
+| 臨時網域 | `itools-1yo.pages.dev` |
 
-其他平台（Vercel、Netlify、GitHub Pages）同樣可行，設定大同小異。部署本身不需要 Node，Node 只在跑 `build-seo.mjs` 時用到。
+推送到 `main` 就會自動部署，不需要任何手動操作。
+
+**為什麼走 GitHub 而非拖放上傳**：發票自動更新的 Action 跑在 GitHub 上。拖放上傳也能用，但那樣發票號碼就要每兩個月手動更新一次。
 
 ---
 
@@ -125,7 +184,7 @@ tools.你的網域.com
 - Open Graph 與 Twitter Card
 - 語意化的 H1 / H2 / H3 結構，每頁都有原創說明內文
 - JSON-LD 結構化資料：
-  - 首頁 — `WebSite` + `CollectionPage`（含 40 筆 `ItemList`）
+  - 首頁 — `WebSite` + `CollectionPage`（含 61 筆 `ItemList`）
   - 工具頁 — `WebApplication` + `BreadcrumbList` + `FAQPage`
 - 內部連結：麵包屑、同分類相關工具、頁尾全站連結
 - `sitemap.xml` + `robots.txt`
@@ -144,7 +203,7 @@ node build-seo.mjs
 
 ### og.svg 的注意事項
 
-分享圖是 SVG。Google 與多數平台沒問題，但 **Facebook 與 LINE 對 SVG 的支援不穩定**。如果很在意社群分享的縮圖，把 `assets/og.svg` 用任何工具轉成 1200×630 的 PNG 存成 `assets/og.png`，再把 `build-seo.mjs` 裡的這一行改掉：
+分享圖是 SVG。Google 與多數平台沒問題，但 **Facebook 與 LINE 對 SVG 的支援不穩定**。如果很在意社群分享的縮圖，把 `public/assets/og.svg` 用任何工具轉成 1200×630 的 PNG 存成 `public/assets/og.png`，再把 `build-seo.mjs` 裡的這一行改掉：
 
 ```js
 const OG_IMAGE = `${ORIGIN}/assets/og.png`;
@@ -156,14 +215,14 @@ const OG_IMAGE = `${ORIGIN}/assets/og.png`;
 
 ## 新增一個工具
 
-1. 在 `assets/js/catalog.js` 的 `TOOLS` 陣列加一筆：
+1. 在 `public/assets/js/catalog.js` 的 `TOOLS` 陣列加一筆：
 
 ```js
 { slug: 'my-tool', cat: 'text', icon: '🔧', name: '工具名稱',
   desc: '一句話說明', kw: '搜尋關鍵字 空格分隔' },
 ```
 
-2. 複製一個現有的 `t/*.html` 當範本，改掉這幾個地方：
+2. 複製一個現有的 `public/t/*.html` 當範本，改掉這幾個地方：
    - `<title>`、`<meta name="description">`、favicon 的 emoji
    - `<body data-tool="my-tool">` ← 要跟 slug 一致
    - `<h1>`、`.lede`、工具本體、說明內文與 FAQ
@@ -176,7 +235,7 @@ const OG_IMAGE = `${ORIGIN}/assets/og.png`;
 
 ## 改成自己的品牌
 
-改 `assets/js/catalog.js` 最上面的 `SITE`：
+改 `public/assets/js/catalog.js` 最上面的 `SITE`：
 
 ```js
 const SITE = {
@@ -188,26 +247,25 @@ const SITE = {
 };
 ```
 
-配色改 `assets/css/main.css` 開頭的 CSS 變數，`--brand` 與 `--accent` 兩個改掉就會換一整套色系（深色模式的對應值在下面的 `@media` 與 `[data-theme="dark"]` 區塊，記得一起改）。
+配色改 `public/assets/css/main.css` 開頭的 CSS 變數，`--brand` 與 `--accent` 兩個改掉就會換一整套色系（深色模式的對應值在下面的 `@media` 與 `[data-theme="dark"]` 區塊，記得一起改）。
 
 ---
 
 ## 需要你處理的兩件事
 
-### 1. 統一發票中獎號碼（如果要用發票對獎工具）
+### 1. 統一發票中獎號碼（已設定完成，不需要動作）
 
-`assets/data/invoice.json` 目前是**空的佔位檔**，所以那一頁會顯示「本期中獎號碼尚未載入」，不會顯示任何號碼。這是刻意的——對獎牽涉真實金錢，寧可沒有也不能給錯的數字。
+資料來源是財政部稅務入口網的**公開中獎號碼單**，伺服器直出 HTML，直接解析即可。**不需要申請 API、不需要金鑰、不需要 GitHub Secret。**
 
-接上自動更新的步驟：
+[.github/workflows/invoice.yml](.github/workflows/invoice.yml) 會在每期開獎後自動抓取、寫入 `public/assets/data/invoice.json` 並 commit，Cloudflare 隨即重新部署。
 
-1. 到[財政部電子發票整合服務平台](https://www.einvoice.nat.gov.tw/)申請 API 帳號，取得 AppID
-2. 把這個專案推到 GitHub
-3. Settings → Secrets and variables → Actions，新增 secret `EINVOICE_APP_ID`
-4. 到 Actions 頁面手動觸發一次「更新發票中獎號碼」確認可以跑
+官方頁面一次只提供本期與上期，所以腳本採**累積式**：每次執行把新期別併進舊資料，保留最近 6 期（約一年）。
 
-之後 [.github/workflows/invoice.yml](.github/workflows/invoice.yml) 會在每期開獎後自動抓號碼、commit 回 repo，靜態網站重新部署就更新了。前端只讀自己網域的 JSON，**沒有跨網域限制，AppID 也不會出現在瀏覽器裡**。
+**安全設計**：[fetch-invoice.mjs](.github/scripts/fetch-invoice.mjs) 寧可失敗也不寫錯——任何一組號碼格式不符就中止並保留舊資料。對獎牽涉真實金錢，錯誤的號碼比沒有號碼更糟。
 
-抓取腳本 [.github/scripts/fetch-invoice.mjs](.github/scripts/fetch-invoice.mjs) 設計成寧可失敗也不寫錯：任何一組號碼格式不符就整支中止並保留舊資料。如果財政部調整了欄位名稱，改腳本裡的 `pick(...)` 對照即可。
+如果財政部改版導致解析失敗，Actions 會顯示紅色失敗並附上錯誤訊息，調整 `parsePage()` 的選取規則即可。網站在那之前仍會顯示上次成功抓到的資料。
+
+使用者也可以用對獎頁的「自己輸入中獎號碼」分頁手動對獎，所以即使自動更新中斷，功能也不會完全失效。
 
 ### 2. 郵遞區號查詢（尚未製作）
 
@@ -222,7 +280,7 @@ const SITE = {
 - [qrcodejs](https://github.com/davidshimjs/qrcodejs) — QR Code 產生器使用
 - [pdf-lib](https://pdf-lib.js.org/) — 四個 PDF 工具使用
 
-其餘 52 個工具都是原生 JavaScript，沒有任何外部相依。
+其餘 56 個工具都是原生 JavaScript，沒有任何外部相依。
 
 ---
 
