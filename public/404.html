@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>找不到這個頁面 - 順手工具箱</title>
+<meta name="description" content="這個網址不存在，可能是連結過期或輸入錯誤。從這裡搜尋或瀏覽全部工具。">
+<!-- 錯誤頁不該被索引 -->
+<meta name="robots" content="noindex, follow">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+<link rel="stylesheet" href="assets/css/main.css">
+<style>
+  .err {
+    text-align: center;
+    padding: 56px 20px 32px;
+  }
+  .err__code {
+    font-size: clamp(3.4rem, 2rem + 7vw, 6rem);
+    font-weight: 800; line-height: 1;
+    color: var(--brand); letter-spacing: -.04em;
+  }
+  .err h1 { margin: 14px 0 10px; }
+  .err p { color: var(--ink-2); max-width: 46ch; margin-inline: auto; }
+  .err__actions { margin-top: 22px; }
+  .suggest { margin-top: 40px; }
+  .suggest h2 { font-size: 1.05rem; margin-bottom: 12px; }
+</style>
+</head>
+<body data-root="">
+
+<main id="main" class="wrap">
+  <section class="err">
+    <div class="err__code" aria-hidden="true">404</div>
+    <h1>找不到這個頁面</h1>
+    <p>
+      這個網址不存在，可能是連結過期、拼錯了，或是那個工具已經改名。
+      用上面的搜尋框找找看，或從下面挑一個。
+    </p>
+    <div class="err__actions btn-group" style="justify-content:center">
+      <a class="btn btn--lg" href="index.html">回到全部工具</a>
+      <button class="btn btn--ghost btn--lg" type="button" id="focusSearch">搜尋工具</button>
+    </div>
+  </section>
+
+  <section class="suggest">
+    <h2>依分類瀏覽</h2>
+    <div class="grid" id="catGrid"></div>
+  </section>
+
+  <section class="suggest">
+    <h2>最多人用的幾個</h2>
+    <div class="grid" id="popular"></div>
+  </section>
+</main>
+
+<script src="assets/js/catalog.js"></script>
+<script src="assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc } = window.U;
+
+  /* 分類卡片 */
+  $('#catGrid').innerHTML = CATEGORIES.map(c => {
+    const n = byCat(c.id).length;
+    return `<a class="card" href="index.html#${c.id}">
+      <span class="card__top">
+        <span class="card__icon" aria-hidden="true">${c.icon}</span>
+        <span class="card__title">${esc(c.name)}</span>
+      </span>
+      <span class="card__desc">${esc(c.desc)}．${n} 種</span>
+    </a>`;
+  }).join('');
+
+  /* 常用工具：手挑幾個最泛用的，找不到頁面的人多半想找這類 */
+  const PICKS = ['wheel', 'countdown', 'image-compress', 'pdf-merge', 'symbols', 'qrcode'];
+  $('#popular').innerHTML = PICKS
+    .map(getTool)
+    .filter(Boolean)
+    .map(t => `<a class="card" href="t/${t.slug}.html">
+      <span class="card__top">
+        <span class="card__icon" aria-hidden="true">${t.icon}</span>
+        <span class="card__title">${esc(t.name)}</span>
+      </span>
+      <span class="card__desc">${esc(t.desc)}</span>
+    </a>`).join('');
+
+  $('#focusSearch').addEventListener('click', () => {
+    const input = $('#siteSearch');
+    if (input) { input.focus(); input.scrollIntoView({ block: 'center' }); }
+  });
+})();
+</script>
+</body>
+</html>
