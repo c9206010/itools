@@ -249,6 +249,29 @@
     }
   }
 
+  /* ---------- 流量統計 ----------
+     GA4。只有預設的瀏覽事件，沒有送出任何使用者在工具裡輸入的內容。
+     沒設定或未啟用時完全不執行，連 gtag 的 script 都不會載入。 */
+  function initAnalytics() {
+    const cfg = SITE.analytics;
+    if (!cfg || !cfg.enabled || !cfg.id) return;
+
+    /* 尊重瀏覽器的「不要追蹤」設定。擋掉統計不影響任何工具的功能。 */
+    const dnt = navigator.doNotTrack || window.doNotTrack;
+    if (dnt === '1' || dnt === 'yes') return;
+
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(cfg.id);
+    document.head.appendChild(s);
+
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { window.dataLayer.push(arguments); }
+    window.gtag = gtag;
+    gtag('js', new Date());
+    gtag('config', cfg.id);
+  }
+
   /* ---------- 複製與提示 ---------- */
   let toastEl, toastTimer;
   window.toast = function (msg) {
@@ -377,6 +400,7 @@
     initCrumb();
     initRelated();
     initAd();
+    initAnalytics();
 
     /* canonical、OG 與結構化資料改由 build-seo.mjs 靜態寫進 HTML，
        這裡不再動態插入，避免正式網域設定後出現兩組 canonical。 */

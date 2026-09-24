@@ -26,6 +26,17 @@ const SITE = {
     enabled: true,
     client: 'ca-pub-1396679738965903',
     slot: '6383693441'          // 廣告單元「itools」
+  },
+
+  /* Google Analytics (GA4)
+     只看流量與哪些工具真的有人用，沒有自訂事件，
+     也不會把使用者在工具裡輸入的任何內容送出去。
+
+     enabled 為 false 時完全不載入，連 gtag 的 script 都不會出現在原始碼裡。
+     改動這裡記得同步更新 privacy.html 的第三方服務那一節。 */
+  analytics: {
+    enabled: true,
+    id: 'G-P6F2324FNV'          // 資源「順手工具箱」
   }
 };
 

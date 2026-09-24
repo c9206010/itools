@@ -166,6 +166,15 @@ node build-seo.mjs          # 字典換了，版本號也要跟著換
 | `geocoding-api.open-meteo.com` | 天氣工具的城市搜尋 | 不用 |
 | `cdnjs.cloudflare.com` | pdf-lib、qrcode 函式庫 | 不用 |
 | Google AdSense | 每個工具頁一個版位 | 設定在 `catalog.js` 的 `SITE.adsense` |
+| Google Analytics (GA4) | 全站流量統計 | 設定在 `catalog.js` 的 `SITE.analytics` |
+
+GA4 的資源是「順手工具箱」，評估 ID `G-P6F2324FNV`，掛在既有的 GA 帳戶底下。
+程式碼寫在 `layout.js` 的 `initAnalytics()`，**只有預設的瀏覽事件，沒有自訂事件**，
+工具裡輸入的任何內容都不會送出去。瀏覽器開啟 Do Not Track 時完全不載入。
+
+把 `SITE.analytics.enabled` 改成 `false` 就能整個關掉。
+**動到這裡記得同步改 `privacy.html` 的第四節與第三方服務表格**，
+那是對使用者的承諾，不能只改程式碼。
 
 繁簡轉換用的 OpenCC 字典（Apache-2.0）是**打包成靜態檔**的，
 只有跑 `build-zh-dict.mjs` 時才會連網，使用者端不會對外連線。
