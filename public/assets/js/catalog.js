@@ -153,6 +153,8 @@ const TOOLS = [
     desc: '調畫質縮檔案，不上傳伺服器', kw: '圖片壓縮 縮小 檔案大小 compress' },
   { slug: 'image-resize', cat: 'image', icon: '📐', name: '圖片尺寸調整',
     desc: '指定寬高縮放，可鎖定比例', kw: '圖片尺寸 縮放 resize 改大小 解析度' },
+  { slug: 'exif', cat: 'image', icon: '📍', name: '照片 EXIF 檢視與移除',
+    desc: '看有沒有藏 GPS，無損清除不減畫質', kw: 'exif 去除 移除 照片 gps 定位 位置 隱私 中繼資料 metadata 相機資訊' },
   { slug: 'image-convert', cat: 'image', icon: '🔄', name: '圖片格式轉換',
     desc: 'PNG / JPG / WebP 互轉', kw: '圖片轉檔 png jpg webp 格式轉換' },
 

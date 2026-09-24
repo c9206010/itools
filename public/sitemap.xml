@@ -259,6 +259,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://tools.luka-life.com/t/exif.html</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://tools.luka-life.com/t/image-convert.html</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
