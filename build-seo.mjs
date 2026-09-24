@@ -19,6 +19,7 @@
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
+import { createHash } from 'node:crypto';
 
 /* 網站檔案全部放在 public/，開發用的腳本與說明留在專案根目錄，
    這樣部署時只會發布 public/ 的內容，不會把 .mjs 與 README 一起公開。 */
@@ -34,6 +35,31 @@ function loadCatalog() {
   // catalog.js 是給瀏覽器用的普通腳本，這裡直接求值取出三個常數
   const fn = new Function(code + '\nreturn { SITE, CATEGORIES, TOOLS };');
   return fn();
+}
+
+/* ---------- 靜態資源版本號 ----------
+   這個網域的邊緣快取不受 Cloudflare Cache Rules 控制，實測即使 age
+   超過 max-age 仍持續回傳舊檔，導致推送後首頁還是看到舊的工具清單。
+   與其跟平台設定搏鬥，不如讓網址自己帶內容雜湊：檔案一改網址就變，
+   舊快取自然命中不到。這也是前端界處理快取的標準做法。 */
+function hashOf(...segments) {
+  const buf = readFileSync(join(ROOT, ...segments));
+  return createHash('sha1').update(buf).digest('hex').slice(0, 8);
+}
+
+const V = {
+  catalog: hashOf('assets', 'js', 'catalog.js'),
+  layout: hashOf('assets', 'js', 'layout.js'),
+  css: hashOf('assets', 'css', 'main.css')
+};
+
+/** 幫共用資源的網址加上版本查詢字串，既有的版本號會被覆蓋。
+ *  取代一律用函式形式，字串形式會把 $ 當成特殊符號。 */
+function versionAssets(html) {
+  return html
+    .replace(/((?:\.\.\/)?assets\/js\/catalog\.js)(\?v=[0-9a-f]+)?/g, (m, p) => `${p}?v=${V.catalog}`)
+    .replace(/((?:\.\.\/)?assets\/js\/layout\.js)(\?v=[0-9a-f]+)?/g, (m, p) => `${p}?v=${V.layout}`)
+    .replace(/((?:\.\.\/)?assets\/css\/main\.css)(\?v=[0-9a-f]+)?/g, (m, p) => `${p}?v=${V.css}`);
 }
 
 /* ---------- 小工具 ---------- */
@@ -188,7 +214,7 @@ const sitemapEntries = [];
     })
   ].join('\n');
 
-  writeFileSync(file, inject(html, block), 'utf8');
+  writeFileSync(file, versionAssets(inject(html, block)), 'utf8');
   sitemapEntries.push({ loc: url, priority: '1.0', changefreq: 'weekly' });
   count++;
 }
@@ -266,11 +292,22 @@ for (const tool of TOOLS) {
     }));
   }
 
-  writeFileSync(file, inject(html, blocks.join('\n')), 'utf8');
+  writeFileSync(file, versionAssets(inject(html, blocks.join('\n'))), 'utf8');
   sitemapEntries.push({ loc: url, priority: '0.8', changefreq: 'monthly' });
   count++;
 
   console.log(`✓ ${tool.slug.padEnd(16)} FAQ ${String(faq.length).padStart(2)} 題`);
+}
+
+/* ---------- 404 頁 ----------
+   它不進 sitemap、也不需要 SEO 注入（本身帶 noindex），
+   但共用資源一樣要加版本號，否則會載到舊的 catalog.js。 */
+{
+  const file = join(ROOT, '404.html');
+  if (existsSync(file)) {
+    writeFileSync(file, versionAssets(readFileSync(file, 'utf8')), 'utf8');
+    console.log('✓ 404.html        已套用資源版本號');
+  }
 }
 
 /* ---------- sitemap.xml ---------- */
