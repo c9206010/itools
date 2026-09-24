@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>社群貼文字數計算｜各平台上限即時檢查 - 順手工具箱</title>
+<meta name="description" content="免費社群貼文字數計算器，一邊打字一邊檢查 Instagram、Threads、Facebook、X、LinkedIn、YouTube 等平台的字數上限，超過會即時提示。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔢</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .plat {
+    display: grid; grid-template-columns: 1fr 96px 74px; gap: 10px;
+    align-items: center; padding: 10px 13px;
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    background: var(--surface); margin-bottom: 7px;
+  }
+  .plat b { font-size: .88rem; }
+  .plat b small { display: block; font-weight: 400; color: var(--ink-3); font-size: .76rem; margin-top: 1px; }
+  .plat__bar { height: 7px; border-radius: 999px; background: var(--border); overflow: hidden; }
+  .plat__bar i { display: block; height: 100%; background: var(--ok); transition: width .2s ease, background .2s ease; }
+  .plat__num { text-align: right; font-family: var(--mono); font-size: .85rem; font-weight: 700; }
+  .plat.over { border-color: var(--danger); background: var(--brand-wash); }
+  .plat.over .plat__num { color: var(--danger); }
+  .plat.near .plat__num { color: var(--warn); }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/social-count.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="ig, threads, 字數, 上限, 推特, 貼文長度">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="社群貼文字數計算｜各平台上限即時檢查 - 順手工具箱">
+<meta property="og:description" content="免費社群貼文字數計算器，一邊打字一邊檢查 Instagram、Threads、Facebook、X、LinkedIn、YouTube 等平台的字數上限，超過會即時提示。">
+<meta property="og:url" content="https://tools.luka-life.com/t/social-count.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="社群貼文字數計算｜各平台上限即時檢查 - 順手工具箱">
+<meta name="twitter:description" content="免費社群貼文字數計算器，一邊打字一邊檢查 Instagram、Threads、Facebook、X、LinkedIn、YouTube 等平台的字數上限，超過會即時提示。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "社群貼文字數計算",
+  "description": "免費社群貼文字數計算器，一邊打字一邊檢查 Instagram、Threads、Facebook、X、LinkedIn、YouTube 等平台的字數上限，超過會即時提示。",
+  "url": "https://tools.luka-life.com/t/social-count.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "社群小幫手",
+      "item": "https://tools.luka-life.com/#social"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "社群貼文字數計算",
+      "item": "https://tools.luka-life.com/t/social-count.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "這些上限數字準確嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "依各平台公開的規則整理，但平台政策偶爾會調整，而且部分平台對付費帳號有不同的上限。這裡的數字適合用來抓大概，真的很貼近上限時，建議實際在平台上測一次。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "網址會佔很多字嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "在 X（原 Twitter）上，不管網址多長都統一以固定長度計算。其他平台則是有幾個字元就算幾個，所以長網址會吃掉不少額度，可以先縮短網址再貼。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "IG 的 hashtag 有數量限制嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "單篇貼文最多 30 個，超過的部分不會生效。留言區的 hashtag 也算在同一個額度裡。這個工具會幫你數，超過 30 個會標紅色。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="social-count">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🔢</span>社群貼文字數計算</h1>
+    <p class="lede">同一篇文想發好幾個平台，但每家的字數上限都不一樣。打在這裡，哪個平台會超過一眼就看到。</p>
+  </div>
+
+  <div class="panel">
+    <div class="field">
+      <label for="src">貼文內容</label>
+      <textarea id="src" rows="9" spellcheck="false" placeholder="在這裡打字或貼上你的貼文，下面會即時檢查各平台的字數上限"></textarea>
+    </div>
+
+    <div class="stat-row mb-2">
+      <div class="stat"><div class="stat__num" id="sChars">0</div><div class="stat__label">總字元</div></div>
+      <div class="stat"><div class="stat__num" id="sNoSpace">0</div><div class="stat__label">不含空白</div></div>
+      <div class="stat"><div class="stat__num" id="sLines">0</div><div class="stat__label">行數</div></div>
+      <div class="stat"><div class="stat__num" id="sTags">0</div><div class="stat__label">Hashtag 數</div></div>
+    </div>
+
+    <div class="panel__title">各平台檢查</div>
+    <div id="plats"></div>
+
+    <div class="btn-group mt-2">
+      <button class="btn btn--ghost btn--sm" type="button" id="copyBtn">複製內容</button>
+      <button class="btn btn--ghost btn--sm" type="button" id="clearBtn">清空</button>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>字數是怎麼算的</h2>
+    <p>社群平台算的是<strong>字元數</strong>，不是「字數」——中文一個字算一個字元，英文一個字母也算一個字元，空白、標點、換行通通要算。所以同樣的字元上限，中文能寫的內容量比英文多得多。</p>
+    <p>Emoji 比較特別，多數算一個字元，但有膚色、家庭組合這類由多個部分拼起來的 Emoji，在底層可能佔到兩個以上。這個工具算的是實際字元數，跟平台通常一致，不過<strong>快到上限時建議留一點餘裕</strong>，各家的計算細節偶有差異。</p>
+
+    <h2>超過上限會怎樣</h2>
+    <p>多數平台會直接擋住不讓你發，少數會自動截斷。比較痛的是<strong>截斷</strong>——你以為發出去了，結果最後一段和 hashtag 全部不見。所以發長文之前先確認一下比較保險。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>這些上限數字準確嗎？</summary>
+        <div class="a">依各平台公開的規則整理，但平台政策偶爾會調整，而且部分平台對付費帳號有不同的上限。這裡的數字適合用來抓大概，真的很貼近上限時，建議實際在平台上測一次。</div>
+      </details>
+      <details>
+        <summary>網址會佔很多字嗎？</summary>
+        <div class="a">在 X（原 Twitter）上，不管網址多長都統一以固定長度計算。其他平台則是有幾個字元就算幾個，所以長網址會吃掉不少額度，可以先縮短網址再貼。</div>
+      </details>
+      <details>
+        <summary>IG 的 hashtag 有數量限制嗎？</summary>
+        <div class="a">單篇貼文最多 30 個，超過的部分不會生效。留言區的 hashtag 也算在同一個額度裡。這個工具會幫你數，超過 30 個會標紅色。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc } = window.U;
+
+  /* 各平台的字元上限，依公開規則整理 */
+  const PLATFORMS = [
+    { name: 'Instagram 貼文', limit: 2200, note: '含 hashtag' },
+    { name: 'Instagram 個人簡介', limit: 150, note: 'bio 欄位' },
+    { name: 'Threads', limit: 500, note: '單則貼文' },
+    { name: 'X（Twitter）', limit: 280, note: '一般帳號' },
+    { name: 'Facebook 貼文', limit: 63206, note: '實際上很難寫到' },
+    { name: 'LinkedIn 貼文', limit: 3000, note: '超過會被摺疊' },
+    { name: 'YouTube 影片說明', limit: 5000, note: '前 150 字最重要' },
+    { name: 'YouTube 影片標題', limit: 100, note: '搜尋結果約顯示 70' },
+    { name: 'Google 商家貼文', limit: 1500, note: '' },
+    { name: 'Pinterest 說明', limit: 500, note: '' }
+  ];
+
+  const src = $('#src');
+
+  function render() {
+    const text = src.value;
+    const len = Array.from(text).length;
+
+    $('#sChars').textContent = len.toLocaleString();
+    $('#sNoSpace').textContent = Array.from(text.replace(/\s/g, '')).length.toLocaleString();
+    $('#sLines').textContent = (text === '' ? 0 : text.split(/\r?\n/).length).toLocaleString();
+
+    /* hashtag：# 後面接非空白且非 # 的字元 */
+    const tags = text.match(/#[^\s#][^\s#]*/g) || [];
+    const tagCount = tags.length;
+    $('#sTags').textContent = tagCount;
+    $('#sTags').style.color = tagCount > 30 ? 'var(--danger)' : '';
+
+    $('#plats').innerHTML = PLATFORMS.map(p => {
+      const pct = Math.min(100, len / p.limit * 100);
+      const over = len > p.limit;
+      const near = !over && pct >= 85;
+
+      const color = over ? 'var(--danger)' : near ? 'var(--warn)' : 'var(--ok)';
+      const cls = over ? 'over' : near ? 'near' : '';
+      const remain = p.limit - len;
+
+      return `<div class="plat ${cls}">
+        <b>${esc(p.name)}${p.note ? `<small>${esc(p.note)}</small>` : ''}</b>
+        <div class="plat__bar"><i style="width:${pct}%;background:${color}"></i></div>
+        <div class="plat__num">${
+          over ? `超出 ${(-remain).toLocaleString()}` : remain.toLocaleString()
+        }</div>
+      </div>`;
+    }).join('');
+  }
+
+  src.addEventListener('input', render);
+
+  $('#copyBtn').addEventListener('click', () => {
+    if (!src.value) { window.toast('還沒有內容'); return; }
+    window.copyText(src.value, '已複製貼文內容');
+  });
+
+  $('#clearBtn').addEventListener('click', () => {
+    src.value = '';
+    render();
+    src.focus();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

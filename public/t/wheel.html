@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>幸運輪盤｜自訂選項線上轉盤抽獎 - 順手工具箱</title>
+<meta name="description" content="免費線上轉盤，自己輸入選項就能轉。吃什麼、誰請客、抽獎順序交給輪盤決定，支援抽中後移除選項，結果只存在你的瀏覽器。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .wheel-layout { display: grid; gap: 24px; grid-template-columns: minmax(0, 1fr) 300px; align-items: start; }
+  @media (max-width: 780px) { .wheel-layout { grid-template-columns: 1fr; } }
+  .wheel-stage { position: relative; display: grid; place-items: center; }
+  #wheelCanvas { width: 100%; max-width: 420px; height: auto; touch-action: manipulation; cursor: pointer; }
+  .wheel-pointer {
+    position: absolute; top: -2px; left: 50%; transform: translateX(-50%);
+    width: 0; height: 0; z-index: 2;
+    border-left: 13px solid transparent; border-right: 13px solid transparent;
+    border-top: 26px solid var(--brand);
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,.25));
+  }
+  .wheel-hub {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 68px; height: 68px; border-radius: 50%;
+    background: var(--surface); border: 3px solid var(--brand);
+    display: grid; place-items: center; cursor: pointer;
+    font-weight: 800; color: var(--brand); font-size: .95rem; z-index: 2;
+    box-shadow: var(--shadow-2);
+  }
+  .wheel-hub:disabled { opacity: .6; cursor: default; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/wheel.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="轉盤, 抽獎, 輪盤, 決定, wheel, spin">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="幸運輪盤｜自訂選項線上轉盤抽獎 - 順手工具箱">
+<meta property="og:description" content="免費線上轉盤，自己輸入選項就能轉。吃什麼、誰請客、抽獎順序交給輪盤決定，支援抽中後移除選項，結果只存在你的瀏覽器。">
+<meta property="og:url" content="https://tools.luka-life.com/t/wheel.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="幸運輪盤｜自訂選項線上轉盤抽獎 - 順手工具箱">
+<meta name="twitter:description" content="免費線上轉盤，自己輸入選項就能轉。吃什麼、誰請客、抽獎順序交給輪盤決定，支援抽中後移除選項，結果只存在你的瀏覽器。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "幸運輪盤",
+  "description": "免費線上轉盤，自己輸入選項就能轉。吃什麼、誰請客、抽獎順序交給輪盤決定，支援抽中後移除選項，結果只存在你的瀏覽器。",
+  "url": "https://tools.luka-life.com/t/wheel.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "隨機抽籤",
+      "item": "https://tools.luka-life.com/#random"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "幸運輪盤",
+      "item": "https://tools.luka-life.com/t/wheel.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "轉盤是真的隨機嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "是。結果用瀏覽器內建的 crypto.getRandomValues 產生，並且做了取餘數偏差的修正，每個選項的中獎機率完全相同。轉動動畫只是把已經決定好的結果演出來而已。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "選項可以放多少個？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "最多 60 個。超過的話扇形會太細看不清楚，建議改用「隨機抽籤點名」那個工具，它專門處理長名單。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "我的選項會被存起來嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會。整個工具都在你的瀏覽器裡執行，選項跟結果都沒有送到任何伺服器，關掉分頁就沒了。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="wheel">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🎯</span>幸運輪盤</h1>
+    <p class="lede">把選項一行一個貼進去就能轉。午餐吃什麼、誰去買飲料、上台順序，交給轉盤比猜拳快。</p>
+  </div>
+
+  <div class="panel">
+    <div class="wheel-layout">
+      <div class="wheel-stage">
+        <div class="wheel-pointer" aria-hidden="true"></div>
+        <canvas id="wheelCanvas" width="840" height="840" role="img" aria-label="選項轉盤"></canvas>
+        <button class="wheel-hub" id="spinBtn" type="button">轉！</button>
+      </div>
+
+      <div>
+        <div class="field">
+          <label for="optInput">選項清單（一行一個）</label>
+          <textarea id="optInput" rows="9" spellcheck="false">牛肉麵
+壽司
+便當
+火鍋
+咖哩飯
+義大利麵</textarea>
+          <p class="hint"><span id="optCount">6</span> 個選項．最多 60 個</p>
+        </div>
+
+        <label class="small" style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+          <input type="checkbox" id="removeWinner"> 抽中後從清單移除
+        </label>
+
+        <div class="btn-group">
+          <button class="btn btn--ghost btn--sm" type="button" id="shuffleBtn">打散順序</button>
+          <button class="btn btn--ghost btn--sm" type="button" id="clearBtn">清空</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="out out--big mt-2" id="result" aria-live="polite">按下中間的「轉！」開始</div>
+
+    <div class="mt-2 hidden" id="historyWrap">
+      <div class="panel__title">抽出紀錄</div>
+      <p class="out small" id="history" style="min-height:auto"></p>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>怎麼用</h2>
+    <ol>
+      <li>在右邊的框裡輸入選項，<strong>一行一個</strong>，轉盤會即時跟著變。</li>
+      <li>按中間的「轉！」或直接點轉盤，等它停下來就是結果。</li>
+      <li>要做不重複抽籤（例如排上台順序），勾選「抽中後從清單移除」，抽完一個就少一個。</li>
+    </ol>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>轉盤是真的隨機嗎？</summary>
+        <div class="a">是。結果用瀏覽器內建的 <code>crypto.getRandomValues</code> 產生，並且做了取餘數偏差的修正，每個選項的中獎機率完全相同。轉動動畫只是把已經決定好的結果演出來而已。</div>
+      </details>
+      <details>
+        <summary>選項可以放多少個？</summary>
+        <div class="a">最多 60 個。超過的話扇形會太細看不清楚，建議改用「隨機抽籤點名」那個工具，它專門處理長名單。</div>
+      </details>
+      <details>
+        <summary>我的選項會被存起來嗎？</summary>
+        <div class="a">不會。整個工具都在你的瀏覽器裡執行，選項跟結果都沒有送到任何伺服器，關掉分頁就沒了。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc, randInt, shuffle, lines } = window.U;
+
+  const MAX = 60;
+  const canvas = $('#wheelCanvas');
+  const ctx = canvas.getContext('2d');
+  const input = $('#optInput');
+  const spinBtn = $('#spinBtn');
+  const resultEl = $('#result');
+
+  /* 轉盤配色：同色系輪替，避免相鄰扇形撞色 */
+  const PALETTE = ['#e8562a', '#f3a03c', '#2e8b74', '#1e4d5c', '#a8503f',
+                   '#c9822b', '#4a7c7e', '#7b4b6b', '#5f7a3f', '#b5563f'];
+
+  let options = [];
+  let angle = 0;          // 目前轉盤角度（弧度）
+  let spinning = false;
+  let history = [];
+
+  function readOptions() {
+    options = lines(input.value).slice(0, MAX);
+    $('#optCount').textContent = options.length;
+    draw();
+  }
+
+  function draw() {
+    const size = canvas.width;
+    const r = size / 2;
+    ctx.clearRect(0, 0, size, size);
+
+    if (!options.length) {
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(r, r, r - 8, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(128,128,128,.15)';
+      ctx.fill();
+      ctx.fillStyle = '#888';
+      ctx.font = '600 34px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('請先輸入選項', r, r);
+      ctx.restore();
+      return;
+    }
+
+    const n = options.length;
+    const slice = (Math.PI * 2) / n;
+
+    ctx.save();
+    ctx.translate(r, r);
+    ctx.rotate(angle);
+
+    for (let i = 0; i < n; i++) {
+      const start = i * slice - Math.PI / 2;
+
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.arc(0, 0, r - 8, start, start + slice);
+      ctx.closePath();
+      // 相鄰同色時跳一格，選項數為調色盤長度倍數時特別容易發生
+      let ci = i % PALETTE.length;
+      if (n > 1 && i === n - 1 && ci === 0) ci = 1;
+      ctx.fillStyle = PALETTE[ci];
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,.55)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      /* 文字沿半徑排，過長截斷 */
+      ctx.save();
+      ctx.rotate(start + slice / 2);
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#fff';
+      const fs = Math.max(15, Math.min(34, 400 / n + 14));
+      ctx.font = `600 ${fs}px "Noto Sans TC", sans-serif`;
+      let label = options[i];
+      const maxChars = Math.max(4, Math.floor(60 / Math.max(1, n / 6)));
+      if (label.length > maxChars) label = label.slice(0, maxChars - 1) + '…';
+      ctx.shadowColor = 'rgba(0,0,0,.35)';
+      ctx.shadowBlur = 4;
+      ctx.fillText(label, r - 30, 0);
+      ctx.restore();
+    }
+
+    ctx.restore();
+  }
+
+  function spin() {
+    if (spinning) return;
+    if (!options.length) { window.toast('請先輸入至少一個選項'); return; }
+    if (options.length === 1) { finish(0); return; }
+
+    spinning = true;
+    spinBtn.disabled = true;
+    resultEl.textContent = '轉動中…';
+
+    const n = options.length;
+    const slice = (Math.PI * 2) / n;
+    const winner = randInt(0, n - 1);
+
+    /* 先決定贏家，再反推需要轉到的角度（指標在正上方 = -90°） */
+    const targetCenter = winner * slice + slice / 2;
+    const jitter = (Math.random() - 0.5) * slice * 0.7; // 不要每次都停正中間
+    const turns = 5 + randInt(0, 3);
+    const finalAngle = Math.PI * 2 * turns - targetCenter - jitter;
+
+    const startAngle = angle % (Math.PI * 2);
+    const delta = finalAngle - startAngle;
+    const duration = 4200;
+    const t0 = performance.now();
+
+    function frame(now) {
+      const p = Math.min(1, (now - t0) / duration);
+      // ease-out quint：一開始很快，最後慢慢停
+      const eased = 1 - Math.pow(1 - p, 5);
+      angle = startAngle + delta * eased;
+      draw();
+      if (p < 1) {
+        requestAnimationFrame(frame);
+      } else {
+        finish(winner);
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function finish(winner) {
+    spinning = false;
+    spinBtn.disabled = false;
+    const name = options[winner];
+    resultEl.textContent = '🎉 ' + name;
+
+    history.unshift(name);
+    history = history.slice(0, 20);
+    $('#historyWrap').classList.remove('hidden');
+    $('#history').textContent = history.join('  →  ');
+
+    if ($('#removeWinner').checked) {
+      const arr = options.slice();
+      arr.splice(winner, 1);
+      input.value = arr.join('\n');
+      angle = 0;
+      readOptions();
+    }
+  }
+
+  spinBtn.addEventListener('click', spin);
+  canvas.addEventListener('click', spin);
+  input.addEventListener('input', readOptions);
+
+  $('#shuffleBtn').addEventListener('click', () => {
+    input.value = shuffle(lines(input.value)).join('\n');
+    readOptions();
+  });
+
+  $('#clearBtn').addEventListener('click', () => {
+    input.value = '';
+    history = [];
+    $('#historyWrap').classList.add('hidden');
+    resultEl.textContent = '按下中間的「轉！」開始';
+    readOptions();
+    input.focus();
+  });
+
+  readOptions();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BMI 計算器｜身高體重算身體質量指數與標準體重 - 順手工具箱</title>
+<meta name="description" content="免費線上 BMI 計算機，輸入身高體重即可算出身體質量指數，對照國民健康署的體位標準，並顯示理想體重範圍與需增減的公斤數。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .bmi-scale { display: flex; height: 34px; border-radius: 999px; overflow: hidden; font-size: .7rem; }
+  .bmi-scale div { display: grid; place-items: center; color: #fff; font-weight: 600; }
+  .bmi-marker { position: relative; height: 22px; margin-top: 4px; }
+  .bmi-marker i {
+    position: absolute; transform: translateX(-50%);
+    font-size: .78rem; font-weight: 700; color: var(--brand);
+    white-space: nowrap; transition: left .3s ease;
+  }
+  .bmi-marker i::before { content: "▲"; display: block; text-align: center; font-size: .7rem; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/bmi.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="bmi, 身體質量指數, 體重, 標準體重">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="BMI 計算器｜身高體重算身體質量指數與標準體重 - 順手工具箱">
+<meta property="og:description" content="免費線上 BMI 計算機，輸入身高體重即可算出身體質量指數，對照國民健康署的體位標準，並顯示理想體重範圍與需增減的公斤數。">
+<meta property="og:url" content="https://tools.luka-life.com/t/bmi.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="BMI 計算器｜身高體重算身體質量指數與標準體重 - 順手工具箱">
+<meta name="twitter:description" content="免費線上 BMI 計算機，輸入身高體重即可算出身體質量指數，對照國民健康署的體位標準，並顯示理想體重範圍與需增減的公斤數。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "BMI 計算器",
+  "description": "免費線上 BMI 計算機，輸入身高體重即可算出身體質量指數，對照國民健康署的體位標準，並顯示理想體重範圍與需增減的公斤數。",
+  "url": "https://tools.luka-life.com/t/bmi.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "計算換算",
+      "item": "https://tools.luka-life.com/#calc"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "BMI 計算器",
+      "item": "https://tools.luka-life.com/t/bmi.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "為什麼健身的人 BMI 很高卻不胖？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "因為肌肉比脂肪重。BMI 只看體重跟身高，完全不管這些重量來自哪裡，所以肌肉量大的人很容易被歸類成過重甚至肥胖。這類情況要看體脂率跟腰圍才準。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "小孩可以用這個嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不行。兒童與青少年的體位標準會隨年齡與性別變動，必須對照專門的生長曲線百分位表，不能套用成人的固定數字。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "腰圍要怎麼看？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "國民健康署的建議是男性腰圍不超過 90 公分（35 吋）、女性不超過 80 公分（31 吋）。腰圍反映的是內臟脂肪，跟代謝疾病的關聯性比 BMI 更直接，兩個一起看比較完整。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="bmi">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">⚖️</span>BMI 計算器</h1>
+    <p class="lede">填身高體重就算好了，對照的是國民健康署的成人體位標準，順便告訴你理想體重是幾公斤。</p>
+  </div>
+
+  <div class="panel">
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="height">身高（公分）</label>
+        <input type="number" id="height" value="170" min="50" max="250" step="0.1">
+      </div>
+      <div class="field mb-0">
+        <label for="weight">體重（公斤）</label>
+        <input type="number" id="weight" value="65" min="10" max="300" step="0.1">
+      </div>
+    </div>
+
+    <div class="out out--big" id="bmiOut">—</div>
+    <p class="tc mb-2" id="category" style="font-weight:700;font-size:1.1rem"></p>
+
+    <div class="bmi-scale" aria-hidden="true">
+      <div style="flex:18.5;background:#5b8dd6">過輕</div>
+      <div style="flex:5.5;background:#2f7d4f">正常</div>
+      <div style="flex:3;background:#c9a227">過重</div>
+      <div style="flex:3;background:#e07b39">輕度肥胖</div>
+      <div style="flex:5;background:#c0392b">中重度肥胖</div>
+    </div>
+    <div class="bmi-marker" aria-hidden="true"><i id="marker" style="left:0">—</i></div>
+
+    <div class="stat-row mt-2">
+      <div class="stat"><div class="stat__num" id="idealRange">—</div><div class="stat__label">理想體重範圍</div></div>
+      <div class="stat"><div class="stat__num" id="diff">—</div><div class="stat__label">距離理想範圍</div></div>
+      <div class="stat"><div class="stat__num" id="idealBmi">—</div><div class="stat__label">BMI 22 對應體重</div></div>
+    </div>
+
+    <div class="note note--warn mt-2">
+      <strong>這只是一個參考指標。</strong>BMI 沒有區分脂肪與肌肉，所以健身族群常常被算成「過重」，但體脂率其實很低。孕婦、發育中的兒童青少年、長者與運動員都不適用這套標準。真正要評估健康狀況，請以醫師或營養師的判斷為準。
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>BMI 怎麼算</h2>
+    <p>公式是<strong>體重（公斤）除以身高（公尺）的平方</strong>。例如身高 170 公分、體重 65 公斤，算法是 65 ÷ 1.7² ＝ 22.5。</p>
+
+    <h2>台灣的成人體位標準</h2>
+    <div class="table-scroll">
+      <table class="data">
+        <thead><tr><th>分類</th><th>BMI 範圍</th></tr></thead>
+        <tbody>
+          <tr><td>體重過輕</td><td>BMI &lt; 18.5</td></tr>
+          <tr><td>健康體位</td><td>18.5 ≤ BMI &lt; 24</td></tr>
+          <tr><td>體重過重</td><td>24 ≤ BMI &lt; 27</td></tr>
+          <tr><td>輕度肥胖</td><td>27 ≤ BMI &lt; 30</td></tr>
+          <tr><td>中度肥胖</td><td>30 ≤ BMI &lt; 35</td></tr>
+          <tr><td>重度肥胖</td><td>BMI ≥ 35</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small muted">資料依衛生福利部國民健康署公布的成人肥胖定義。國際上世界衛生組織的分界略有不同（過重從 25 起算），亞洲人因體脂分布差異而採用較嚴格的標準。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>為什麼健身的人 BMI 很高卻不胖？</summary>
+        <div class="a">因為肌肉比脂肪重。BMI 只看體重跟身高，完全不管這些重量來自哪裡，所以肌肉量大的人很容易被歸類成過重甚至肥胖。這類情況要看<strong>體脂率</strong>跟<strong>腰圍</strong>才準。</div>
+      </details>
+      <details>
+        <summary>小孩可以用這個嗎？</summary>
+        <div class="a">不行。兒童與青少年的體位標準會隨年齡與性別變動，必須對照專門的生長曲線百分位表，不能套用成人的固定數字。</div>
+      </details>
+      <details>
+        <summary>腰圍要怎麼看？</summary>
+        <div class="a">國民健康署的建議是男性腰圍不超過 90 公分（35 吋）、女性不超過 80 公分（31 吋）。腰圍反映的是內臟脂肪，跟代謝疾病的關聯性比 BMI 更直接，兩個一起看比較完整。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $ } = window.U;
+
+  /* 依國民健康署成人體位定義 */
+  const LEVELS = [
+    [18.5, '體重過輕', '#5b8dd6'],
+    [24,   '健康體位', '#2f7d4f'],
+    [27,   '體重過重', '#c9a227'],
+    [30,   '輕度肥胖', '#e07b39'],
+    [35,   '中度肥胖', '#c0392b'],
+    [Infinity, '重度肥胖', '#a5281b']
+  ];
+
+  function calc() {
+    const h = Number($('#height').value);
+    const w = Number($('#weight').value);
+
+    if (!h || !w || h < 50 || w < 10) {
+      $('#bmiOut').textContent = '請輸入身高體重';
+      $('#category').textContent = '';
+      ['#idealRange', '#diff', '#idealBmi'].forEach(s => $(s).textContent = '—');
+      return;
+    }
+
+    const m = h / 100;
+    const bmi = w / (m * m);
+
+    $('#bmiOut').textContent = bmi.toFixed(1);
+
+    const level = LEVELS.find(([limit]) => bmi < limit);
+    $('#category').textContent = level[1];
+    $('#category').style.color = level[2];
+
+    /* 標記位置：把 15 到 40 這段映射到 0-100% */
+    const pct = Math.max(0, Math.min(100, (bmi - 15) / 25 * 100));
+    $('#marker').style.left = pct + '%';
+    $('#marker').textContent = bmi.toFixed(1);
+
+    /* 健康體位對應的體重範圍 */
+    const lowW = 18.5 * m * m;
+    const highW = 23.9 * m * m;
+    $('#idealRange').textContent = `${lowW.toFixed(1)} – ${highW.toFixed(1)} kg`;
+    $('#idealBmi').textContent = (22 * m * m).toFixed(1) + ' kg';
+
+    if (w < lowW) {
+      $('#diff').textContent = '需增 ' + (lowW - w).toFixed(1) + ' kg';
+      $('#diff').style.color = 'var(--warn)';
+    } else if (w > highW) {
+      $('#diff').textContent = '需減 ' + (w - highW).toFixed(1) + ' kg';
+      $('#diff').style.color = 'var(--danger)';
+    } else {
+      $('#diff').textContent = '已在範圍內';
+      $('#diff').style.color = 'var(--ok)';
+    }
+  }
+
+  $('#height').addEventListener('input', calc);
+  $('#weight').addEventListener('input', calc);
+  calc();
+})();
+</script>
+</body>
+</html>

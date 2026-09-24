@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>色碼轉換器｜HEX、RGB、HSL 互轉與配色建議 - 順手工具箱</title>
+<meta name="description" content="免費線上色碼轉換工具，HEX、RGB、HSL、CMYK 格式互相轉換，附取色器、明暗階梯與互補色配色建議，並檢查文字對比度是否符合無障礙標準。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .color-layout { display: grid; gap: 22px; grid-template-columns: 240px minmax(0, 1fr); align-items: start; }
+  @media (max-width: 720px) { .color-layout { grid-template-columns: 1fr; } }
+  .swatch-big {
+    width: 100%; aspect-ratio: 1; border-radius: var(--radius-lg);
+    border: 1px solid var(--border); box-shadow: var(--shadow-2);
+  }
+  .fmt-row {
+    display: grid; grid-template-columns: 62px 1fr auto; gap: 9px; align-items: center;
+    padding: 9px 12px; border: 1px solid var(--border);
+    border-radius: var(--radius-sm); background: var(--surface); margin-bottom: 7px;
+  }
+  .fmt-row b { font-size: .78rem; color: var(--ink-3); }
+  .fmt-row span { font-family: var(--mono); font-size: .88rem; word-break: break-all; }
+  .ramp { display: grid; grid-template-columns: repeat(11, 1fr); gap: 3px; }
+  .ramp div { aspect-ratio: .7; border-radius: 4px; cursor: pointer; position: relative; }
+  .ramp div:hover { outline: 2px solid var(--ink); outline-offset: 1px; }
+  .harmony { display: grid; grid-template-columns: repeat(auto-fit, minmax(72px, 1fr)); gap: 8px; }
+  .harmony div { border-radius: var(--radius-sm); padding: 34px 4px 8px; text-align: center;
+                 font-size: .72rem; font-family: var(--mono); cursor: pointer; }
+  .contrast-card { display: grid; gap: 8px; grid-template-columns: 1fr 1fr; }
+  .contrast-demo { padding: 16px; border-radius: var(--radius-sm); text-align: center; font-weight: 600; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/color.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="色碼, 顏色, hex, rgb, hsl, 調色">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="色碼轉換器｜HEX、RGB、HSL 互轉與配色建議 - 順手工具箱">
+<meta property="og:description" content="免費線上色碼轉換工具，HEX、RGB、HSL、CMYK 格式互相轉換，附取色器、明暗階梯與互補色配色建議，並檢查文字對比度是否符合無障礙標準。">
+<meta property="og:url" content="https://tools.luka-life.com/t/color.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="色碼轉換器｜HEX、RGB、HSL 互轉與配色建議 - 順手工具箱">
+<meta name="twitter:description" content="免費線上色碼轉換工具，HEX、RGB、HSL、CMYK 格式互相轉換，附取色器、明暗階梯與互補色配色建議，並檢查文字對比度是否符合無障礙標準。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "色碼轉換器",
+  "description": "免費線上色碼轉換工具，HEX、RGB、HSL、CMYK 格式互相轉換，附取色器、明暗階梯與互補色配色建議，並檢查文字對比度是否符合無障礙標準。",
+  "url": "https://tools.luka-life.com/t/color.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "開發編碼",
+      "item": "https://tools.luka-life.com/#dev"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "色碼轉換器",
+      "item": "https://tools.luka-life.com/t/color.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "CMYK 的數值可以直接拿去印刷嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不建議。這裡的 CMYK 是用最簡單的數學公式換算的，而實際印刷的色彩轉換要考慮紙張、油墨與色彩描述檔，同一組 CMYK 在不同印刷條件下差很多。要送印的話請以印刷廠指定的色彩設定為準，這裡的數值只能當參考。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "支援哪些輸入格式？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "三碼與六碼的 HEX（含帶不帶 # 都行）、八碼帶透明度的 HEX、rgb()、rgba()、hsl()、hsla()，還有 CSS 的標準顏色名稱例如 tomato、steelblue。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "明暗階梯怎麼產生的？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "把顏色轉成 HSL 之後，固定色相與飽和度，只改變亮度，從很亮到很暗均勻取 11 個階。這是設計系統裡建立色階最常見的做法，同一排顏色會自然屬於同一個色系。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="color">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🎨</span>色碼轉換器</h1>
+    <p class="lede">HEX 轉 RGB、RGB 轉 HSL，隨便丟一種格式進來都認得。順便給你明暗階梯跟配色建議。</p>
+  </div>
+
+  <div class="panel">
+    <div class="color-layout">
+      <div>
+        <div class="swatch-big mb-1" id="swatch"></div>
+        <input type="color" id="picker" value="#e8562a" style="width:100%;height:42px">
+      </div>
+
+      <div>
+        <div class="field">
+          <label for="input">輸入色碼（HEX、RGB、HSL 或顏色名稱都可以）</label>
+          <input type="text" id="input" value="#e8562a" spellcheck="false" autocomplete="off"
+                 placeholder="#e8562a 或 rgb(232,86,42) 或 hsl(14,81%,54%) 或 tomato">
+          <p class="hint" id="parseInfo"></p>
+        </div>
+        <div id="formats"></div>
+      </div>
+    </div>
+
+    <div class="panel__title mt-2">明暗階梯（點一下複製）</div>
+    <div class="ramp mb-2" id="ramp"></div>
+
+    <div class="panel__title">配色建議（點一下複製）</div>
+    <div class="harmony mb-2" id="harmony"></div>
+
+    <div class="panel__title">文字對比度檢查</div>
+    <div class="contrast-card mb-1">
+      <div class="contrast-demo" id="demoWhite">白色文字</div>
+      <div class="contrast-demo" id="demoBlack">黑色文字</div>
+    </div>
+    <p class="small" id="contrastInfo"></p>
+  </div>
+
+  <section class="prose">
+    <h2>HEX、RGB、HSL 什麼時候用哪個</h2>
+    <ul>
+      <li><strong>HEX</strong>（<code>#e8562a</code>）：最通用，設計軟體與 CSS 都認，適合存下來或跟別人溝通。</li>
+      <li><strong>RGB</strong>（<code>rgb(232, 86, 42)</code>）：跟螢幕的紅綠藍三原色直接對應，要做透明度（rgba）時很方便。</li>
+      <li><strong>HSL</strong>（<code>hsl(14, 81%, 54%)</code>）：色相、飽和度、亮度分開表示，<strong>要調出同色系的深淺變化時最好用</strong>——只要改亮度那個數字就好，不必重新配色。</li>
+    </ul>
+
+    <h2>對比度為什麼要檢查</h2>
+    <p>文字跟背景的亮度差太小就看不清楚。無障礙設計的通用標準是：一般內文需要 <strong>4.5:1</strong> 以上，大字（18pt 以上或粗體 14pt 以上）需要 <strong>3:1</strong> 以上。上面的檢查會直接告訴你這個顏色配白字或黑字有沒有過關，做按鈕或標題底色時可以先確認一下。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>CMYK 的數值可以直接拿去印刷嗎？</summary>
+        <div class="a">不建議。這裡的 CMYK 是用最簡單的數學公式換算的，而實際印刷的色彩轉換要考慮紙張、油墨與色彩描述檔，同一組 CMYK 在不同印刷條件下差很多。要送印的話請以印刷廠指定的色彩設定為準，這裡的數值只能當參考。</div>
+      </details>
+      <details>
+        <summary>支援哪些輸入格式？</summary>
+        <div class="a">三碼與六碼的 HEX（含帶不帶 # 都行）、八碼帶透明度的 HEX、<code>rgb()</code>、<code>rgba()</code>、<code>hsl()</code>、<code>hsla()</code>，還有 CSS 的標準顏色名稱例如 <code>tomato</code>、<code>steelblue</code>。</div>
+      </details>
+      <details>
+        <summary>明暗階梯怎麼產生的？</summary>
+        <div class="a">把顏色轉成 HSL 之後，固定色相與飽和度，只改變亮度，從很亮到很暗均勻取 11 個階。這是設計系統裡建立色階最常見的做法，同一排顏色會自然屬於同一個色系。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc } = window.U;
+
+  /* ---------- 色彩空間轉換 ---------- */
+  function rgbToHex(r, g, b) {
+    return '#' + [r, g, b].map(v =>
+      Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2, '0')).join('');
+  }
+
+  function rgbToHsl(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    const l = (max + min) / 2;
+    let h = 0, s = 0;
+
+    if (max !== min) {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+      else if (max === g) h = ((b - r) / d + 2) / 6;
+      else h = ((r - g) / d + 4) / 6;
+    }
+    return { h: h * 360, s: s * 100, l: l * 100 };
+  }
+
+  function hslToRgb(h, s, l) {
+    h = ((h % 360) + 360) % 360 / 360;
+    s /= 100; l /= 100;
+
+    if (s === 0) {
+      const v = Math.round(l * 255);
+      return { r: v, g: v, b: v };
+    }
+
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+
+    const hue2rgb = t => {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1 / 6) return p + (q - p) * 6 * t;
+      if (t < 1 / 2) return q;
+      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+      return p;
+    };
+
+    return {
+      r: Math.round(hue2rgb(h + 1 / 3) * 255),
+      g: Math.round(hue2rgb(h) * 255),
+      b: Math.round(hue2rgb(h - 1 / 3) * 255)
+    };
+  }
+
+  function rgbToCmyk(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    const k = 1 - Math.max(r, g, b);
+    if (k === 1) return { c: 0, m: 0, y: 0, k: 100 };
+    return {
+      c: Math.round((1 - r - k) / (1 - k) * 100),
+      m: Math.round((1 - g - k) / (1 - k) * 100),
+      y: Math.round((1 - b - k) / (1 - k) * 100),
+      k: Math.round(k * 100)
+    };
+  }
+
+  /* 相對亮度，用於對比度計算（WCAG 定義） */
+  function luminance(r, g, b) {
+    const a = [r, g, b].map(v => {
+      v /= 255;
+      return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * a[0] + 0.7152 * a[1] + 0.0722 * a[2];
+  }
+
+  function contrast(rgb1, rgb2) {
+    const l1 = luminance(rgb1.r, rgb1.g, rgb1.b);
+    const l2 = luminance(rgb2.r, rgb2.g, rgb2.b);
+    const hi = Math.max(l1, l2), lo = Math.min(l1, l2);
+    return (hi + 0.05) / (lo + 0.05);
+  }
+
+  /* 交給瀏覽器解析任意 CSS 顏色字串，省下自己寫顏色名稱表 */
+  function parseColor(str) {
+    const s = str.trim();
+    if (!s) return null;
+
+    /* 純十六進位但沒寫 # 的情況先補上 */
+    const bare = /^[0-9a-f]{3}$|^[0-9a-f]{6}$|^[0-9a-f]{8}$/i;
+    const test = bare.test(s) ? '#' + s : s;
+
+    const probe = document.createElement('div');
+    probe.style.color = '';
+    probe.style.color = test;
+    if (!probe.style.color) return null;
+
+    document.body.appendChild(probe);
+    const computed = getComputedStyle(probe).color;
+    probe.remove();
+
+    const m = computed.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+    if (!m) return null;
+
+    return {
+      r: +m[1], g: +m[2], b: +m[3],
+      a: m[4] !== undefined ? parseFloat(m[4]) : 1
+    };
+  }
+
+  /* ---------- 畫面更新 ---------- */
+  let current = { r: 232, g: 86, b: 42, a: 1 };
+
+  function render() {
+    const { r, g, b, a } = current;
+    const hex = rgbToHex(r, g, b);
+    const hsl = rgbToHsl(r, g, b);
+    const cmyk = rgbToCmyk(r, g, b);
+
+    $('#swatch').style.background = `rgba(${r},${g},${b},${a})`;
+    $('#picker').value = hex;
+
+    const rows = [
+      ['HEX', hex.toUpperCase()],
+      ['RGB', `rgb(${r}, ${g}, ${b})`],
+      ['RGBA', `rgba(${r}, ${g}, ${b}, ${a})`],
+      ['HSL', `hsl(${Math.round(hsl.h)}, ${Math.round(hsl.s)}%, ${Math.round(hsl.l)}%)`],
+      ['CMYK', `cmyk(${cmyk.c}%, ${cmyk.m}%, ${cmyk.y}%, ${cmyk.k}%)`]
+    ];
+
+    $('#formats').innerHTML = rows.map(([k, v]) =>
+      `<div class="fmt-row"><b>${k}</b><span>${esc(v)}</span>
+        <button class="btn btn--ghost btn--sm" type="button" data-copy="${esc(v)}">複製</button></div>`
+    ).join('');
+
+    /* 明暗階梯：固定色相飽和度，只動亮度 */
+    $('#ramp').innerHTML = Array.from({ length: 11 }, (_, i) => {
+      const l = 95 - i * 8.5;
+      const c = hslToRgb(hsl.h, hsl.s, l);
+      const h = rgbToHex(c.r, c.g, c.b);
+      return `<div style="background:${h}" data-copy="${h}" title="${h}"></div>`;
+    }).join('');
+
+    /* 配色：互補、分裂互補、三等分、類比 */
+    const harmonies = [
+      ['互補', hsl.h + 180],
+      ['分裂 A', hsl.h + 150],
+      ['分裂 B', hsl.h + 210],
+      ['三等分 A', hsl.h + 120],
+      ['三等分 B', hsl.h + 240],
+      ['類比 A', hsl.h - 30],
+      ['類比 B', hsl.h + 30]
+    ];
+
+    $('#harmony').innerHTML = harmonies.map(([name, hh]) => {
+      const c = hslToRgb(hh, hsl.s, hsl.l);
+      const h = rgbToHex(c.r, c.g, c.b);
+      const textColor = luminance(c.r, c.g, c.b) > 0.5 ? '#000' : '#fff';
+      return `<div style="background:${h};color:${textColor}" data-copy="${h}" title="${name} ${h}">
+        ${esc(name)}<br>${h.toUpperCase()}</div>`;
+    }).join('');
+
+    /* 對比度 */
+    const cw = contrast(current, { r: 255, g: 255, b: 255 });
+    const cb = contrast(current, { r: 0, g: 0, b: 0 });
+
+    $('#demoWhite').style.cssText = `background:${hex};color:#fff`;
+    $('#demoWhite').textContent = `白字 ${cw.toFixed(2)}:1`;
+    $('#demoBlack').style.cssText = `background:${hex};color:#000`;
+    $('#demoBlack').textContent = `黑字 ${cb.toFixed(2)}:1`;
+
+    const judge = v => v >= 7 ? 'AAA 全部通過'
+      : v >= 4.5 ? 'AA 內文通過'
+      : v >= 3 ? '僅大字通過'
+      : '未達標準';
+
+    $('#contrastInfo').innerHTML =
+      `白色文字：<strong>${judge(cw)}</strong>　｜　黑色文字：<strong>${judge(cb)}</strong>　` +
+      `<span class="muted">（內文需 4.5:1、大字需 3:1）</span>`;
+  }
+
+  function setFrom(str) {
+    const c = parseColor(str);
+    if (!c) {
+      $('#input').style.borderColor = 'var(--danger)';
+      $('#parseInfo').textContent = '無法辨識這個色碼，請檢查格式';
+      return false;
+    }
+    $('#input').style.borderColor = '';
+    $('#parseInfo').textContent = '';
+    current = c;
+    render();
+    return true;
+  }
+
+  $('#input').addEventListener('input', e => setFrom(e.target.value));
+  $('#picker').addEventListener('input', e => {
+    $('#input').value = e.target.value;
+    setFrom(e.target.value);
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

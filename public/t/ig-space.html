@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IG 空白字元產生器｜讓貼文與簡介正常換行 - 順手工具箱</title>
+<meta name="description" content="免費 IG 空白字元產生器，解決 Instagram 貼文與個人簡介空行被自動吃掉的問題，一鍵產生可換行的排版，也提供純空白字元直接複製。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.8em' font-size='70'>␣</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .io-grid { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; align-items: start; }
+  @media (max-width: 720px) { .io-grid { grid-template-columns: 1fr; } }
+  .blank-card {
+    display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center;
+    padding: 12px 14px; border: 1px solid var(--border);
+    border-radius: var(--radius-sm); background: var(--surface); margin-bottom: 8px;
+  }
+  .blank-card b { display: block; font-size: .88rem; }
+  .blank-card small { display: block; color: var(--ink-3); font-size: .78rem; margin-top: 2px; }
+  .preview-phone {
+    max-width: 330px; margin-inline: auto;
+    border: 1px solid var(--border-strong); border-radius: 18px;
+    background: var(--surface); padding: 16px; box-shadow: var(--shadow-2);
+  }
+  .preview-phone__head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .preview-phone__dot { width: 28px; height: 28px; border-radius: 50%; background: var(--brand); flex: none; }
+  .preview-phone__name { font-size: .84rem; font-weight: 700; }
+  .preview-phone__body { font-size: .88rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/ig-space.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="ig, 空白, 換行, 斷行, 限動, 簡介, bio">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="IG 空白字元產生器｜讓貼文與簡介正常換行 - 順手工具箱">
+<meta property="og:description" content="免費 IG 空白字元產生器，解決 Instagram 貼文與個人簡介空行被自動吃掉的問題，一鍵產生可換行的排版，也提供純空白字元直接複製。">
+<meta property="og:url" content="https://tools.luka-life.com/t/ig-space.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="IG 空白字元產生器｜讓貼文與簡介正常換行 - 順手工具箱">
+<meta name="twitter:description" content="免費 IG 空白字元產生器，解決 Instagram 貼文與個人簡介空行被自動吃掉的問題，一鍵產生可換行的排版，也提供純空白字元直接複製。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "IG 空白字元產生器",
+  "description": "免費 IG 空白字元產生器，解決 Instagram 貼文與個人簡介空行被自動吃掉的問題，一鍵產生可換行的排版，也提供純空白字元直接複製。",
+  "url": "https://tools.luka-life.com/t/ig-space.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "社群小幫手",
+      "item": "https://tools.luka-life.com/#social"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "IG 空白字元產生器",
+      "item": "https://tools.luka-life.com/t/ig-space.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Threads、Facebook 也可以用嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以，原理相同。不過 Facebook 跟 Threads 本身對空行比較寬容，多數情況直接打空行就會保留，不一定需要這個工具。IG 的貼文與簡介欄位才是最需要的地方。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "貼上去之後還是黏在一起？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "最常見的原因是用了 IG 內建的「編輯」再次修改，那會重新觸發一次過濾。建議在外面排版好、複製、貼上、直接發佈，中間不要再進去改。另外，用網頁版 IG 發文的保留率通常比 App 好一些。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "會被判定成違規或洗版嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "正常排版用不會。這只是讓段落分明的一種做法，很多品牌帳號都在用。但如果你塞了幾十行空白把版面拉得很長，那就可能觸發洗版判定了，適量就好。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "空白字元會算進字數上限嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "會。每一個都算一個字元，IG 貼文上限是 2200 字元。排版用掉的空白字元也要算進去，想確認還剩多少可以用「社群貼文字數計算」那個工具。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="ig-space">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">␣</span>IG 空白字元產生器</h1>
+    <p class="lede">IG 貼文打好的空行一送出就被吃掉、全部黏成一大塊？把文字貼進來轉一次就解決了。</p>
+  </div>
+
+  <div class="panel">
+    <div class="io-grid mb-2">
+      <div class="field mb-0">
+        <label for="src">你的文字（照平常那樣空行）</label>
+        <textarea id="src" rows="10" spellcheck="false">今天終於去了那間咖啡廳
+
+拿鐵真的很順口
+店裡的位子也很好坐
+
+下次想帶家人一起來
+
+#咖啡廳 #台北美食</textarea>
+      </div>
+      <div class="field mb-0">
+        <label for="out">轉換結果（複製這個去貼）</label>
+        <textarea id="out" rows="10" spellcheck="false" readonly></textarea>
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="charType">用哪一種空白字元</label>
+        <select id="charType">
+          <option value="braille">點字空格（最穩定，推薦）</option>
+          <option value="hangul">韓文填充字元</option>
+          <option value="zwsp">零寬空格</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label for="lineMode">空行處理</label>
+        <select id="lineMode">
+          <option value="keep">維持我原本的空行數</option>
+          <option value="one">每段之間固定一行空白</option>
+          <option value="two">每段之間固定兩行空白</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="btn-group mb-2">
+      <button class="btn btn--lg" type="button" id="copyBtn">複製結果</button>
+      <button class="btn btn--ghost btn--lg" type="button" id="clearBtn">清空</button>
+    </div>
+
+    <div class="panel__title">手機上看起來會像這樣</div>
+    <div class="preview-phone mb-2">
+      <div class="preview-phone__head">
+        <div class="preview-phone__dot"></div>
+        <div>
+          <div class="preview-phone__name">your_account</div>
+          <div class="small muted" style="font-size:.72rem">剛剛</div>
+        </div>
+      </div>
+      <div class="preview-phone__body" id="preview"></div>
+    </div>
+
+    <div class="panel__title">只要一個空白字元（貼在簡介或留言用）</div>
+    <div id="blankList"></div>
+    <p class="hint">點「複製」之後直接貼到 IG 的簡介欄位裡，看起來是空的但實際上有一個字元，那一行就不會被系統消掉。</p>
+  </div>
+
+  <section class="prose">
+    <h2>為什麼 IG 的空行會不見</h2>
+    <p>因為 Instagram 在送出時會<strong>自動把「只有空白的行」清掉</strong>，這是為了防止有人用一堆空行洗版。所以你在輸入框裡排得好好的段落，發出去就全部擠在一起了。</p>
+    <p>解法是在那些空行裡放一個<strong>看起來是空的、但實際上是一個真實字元</strong>的東西。系統看到那行有內容就不會刪，而讀者看到的還是空白。這個工具做的就是這件事。</p>
+
+    <h2>三種空白字元怎麼選</h2>
+    <ul>
+      <li><strong>點字空格</strong>（推薦）：本來是點字系統裡的「全空」符號，在所有平台上都能正常顯示成空白，也最不容易被過濾掉。不確定就用這個。</li>
+      <li><strong>韓文填充字元</strong>：另一個常見選擇，效果類似，少數老舊裝置可能顯示成方框。</li>
+      <li><strong>零寬空格</strong>：完全沒有寬度，最「乾淨」，但<strong>很容易被平台當成空白直接過濾掉</strong>，成功率最低，只建議在前兩種都失敗時嘗試。</li>
+    </ul>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>Threads、Facebook 也可以用嗎？</summary>
+        <div class="a">可以，原理相同。不過 Facebook 跟 Threads 本身對空行比較寬容，多數情況直接打空行就會保留，不一定需要這個工具。IG 的貼文與簡介欄位才是最需要的地方。</div>
+      </details>
+      <details>
+        <summary>貼上去之後還是黏在一起？</summary>
+        <div class="a">最常見的原因是用了 IG 內建的「編輯」再次修改，那會重新觸發一次過濾。建議在外面排版好、複製、貼上、直接發佈，中間不要再進去改。另外，用網頁版 IG 發文的保留率通常比 App 好一些。</div>
+      </details>
+      <details>
+        <summary>會被判定成違規或洗版嗎？</summary>
+        <div class="a">正常排版用不會。這只是讓段落分明的一種做法，很多品牌帳號都在用。但如果你塞了幾十行空白把版面拉得很長，那就可能觸發洗版判定了，適量就好。</div>
+      </details>
+      <details>
+        <summary>空白字元會算進字數上限嗎？</summary>
+        <div class="a">會。每一個都算一個字元，IG 貼文上限是 2200 字元。排版用掉的空白字元也要算進去，想確認還剩多少可以用「社群貼文字數計算」那個工具。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc } = window.U;
+
+  /* 看起來是空白、但實際上是真實字元的幾個選擇 */
+  const CHARS = {
+    braille: { ch: '⠀', name: '點字空格', note: 'U+2800．相容性最好，優先用這個' },
+    hangul:  { ch: 'ㅤ', name: '韓文填充字元', note: 'U+3164．備用方案' },
+    zwsp:    { ch: '​', name: '零寬空格', note: 'U+200B．完全無寬度，但容易被過濾' }
+  };
+
+  const src = $('#src');
+  const out = $('#out');
+
+  function convert() {
+    const filler = CHARS[$('#charType').value].ch;
+    const mode = $('#lineMode').value;
+    const lines = src.value.split(/\r?\n/);
+
+    let result;
+
+    if (mode === 'keep') {
+      /* 原本是空的行就換成填充字元，其餘不動 */
+      result = lines.map(l => (l.trim() === '' ? filler : l));
+    } else {
+      /* 先把連續空行壓成段落，再用固定行數重新接起來 */
+      const gap = mode === 'two' ? 2 : 1;
+      const paras = src.value
+        .split(/(?:\r?\n\s*){2,}/)
+        .map(p => p.trim())
+        .filter(Boolean);
+
+      const spacer = Array(gap).fill(filler);
+      result = [];
+      paras.forEach((p, i) => {
+        if (i > 0) result.push(...spacer);
+        result.push(...p.split(/\r?\n/));
+      });
+    }
+
+    out.value = result.join('\n');
+
+    /* 預覽時把填充字元換成視覺上的空白，才看得出排版效果 */
+    $('#preview').textContent = out.value || '（還沒有內容）';
+  }
+
+  function renderBlankList() {
+    $('#blankList').innerHTML = Object.entries(CHARS).map(([key, c]) => `
+      <div class="blank-card">
+        <div>
+          <b>${esc(c.name)}</b>
+          <small>${esc(c.note)}</small>
+        </div>
+        <button class="btn btn--ghost btn--sm" type="button" data-copy="${c.ch}">複製一個</button>
+      </div>`).join('');
+  }
+
+  src.addEventListener('input', convert);
+  $('#charType').addEventListener('change', convert);
+  $('#lineMode').addEventListener('change', convert);
+
+  $('#copyBtn').addEventListener('click', () => {
+    if (!out.value.trim()) { window.toast('還沒有內容'); return; }
+    window.copyText(out.value, '已複製，直接貼到 IG 就可以');
+  });
+
+  $('#clearBtn').addEventListener('click', () => {
+    src.value = '';
+    convert();
+    src.focus();
+  });
+
+  renderBlankList();
+  convert();
+})();
+</script>
+</body>
+</html>

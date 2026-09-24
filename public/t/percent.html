@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>百分比計算機｜折扣、成長率、佔比一次算 - 順手工具箱</title>
+<meta name="description" content="免費百分比計算工具，一頁解決折扣後多少錢、佔比是幾 %、成長率多少、加減幾成、含稅未稅換算等常見計算，輸入即時顯示結果。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.85em' font-size='80'>％</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .calc-card {
+    border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 16px; margin-bottom: 12px; background: var(--surface);
+  }
+  .calc-card h3 { font-size: .95rem; margin-bottom: 10px; color: var(--ink-2); }
+  .calc-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: .95rem; }
+  .calc-line input { width: 100px; flex: 0 0 auto; }
+  .calc-line .eq { font-weight: 700; color: var(--brand); font-size: 1.15rem; margin-left: 4px; }
+  .calc-line .res {
+    font-weight: 800; font-size: 1.2rem; color: var(--brand);
+    font-family: var(--mono); cursor: pointer;
+  }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/percent.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="百分比, 折扣, 打折, 成長率, percent">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="百分比計算機｜折扣、成長率、佔比一次算 - 順手工具箱">
+<meta property="og:description" content="免費百分比計算工具，一頁解決折扣後多少錢、佔比是幾 %、成長率多少、加減幾成、含稅未稅換算等常見計算，輸入即時顯示結果。">
+<meta property="og:url" content="https://tools.luka-life.com/t/percent.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="百分比計算機｜折扣、成長率、佔比一次算 - 順手工具箱">
+<meta name="twitter:description" content="免費百分比計算工具，一頁解決折扣後多少錢、佔比是幾 %、成長率多少、加減幾成、含稅未稅換算等常見計算，輸入即時顯示結果。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "百分比計算",
+  "description": "免費百分比計算工具，一頁解決折扣後多少錢、佔比是幾 %、成長率多少、加減幾成、含稅未稅換算等常見計算，輸入即時顯示結果。",
+  "url": "https://tools.luka-life.com/t/percent.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "計算換算",
+      "item": "https://tools.luka-life.com/#calc"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "百分比計算",
+      "item": "https://tools.luka-life.com/t/percent.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "先漲 10% 再跌 10% 會回到原點嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會，會變少。100 漲 10% 是 110，110 再跌 10% 是 99，比原本少了 1。因為兩次計算的基數不一樣，這也是股票跌深之後要漲更多才能回本的原因。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "含稅價怎麼反推未稅？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不是直接乘 0.95，而是除以 1.05。例如含稅 1050 元，未稅是 1050 ÷ 1.05 ＝ 1000 元，稅額 50 元。直接乘 0.95 會算成 997.5，是錯的。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "結果可以複製嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以，點任何一個藍橘色的結果數字就會複製到剪貼簿。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="percent">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">％</span>百分比計算</h1>
+    <p class="lede">打折剩多少、漲了幾成、佔總數百分之幾，這幾種最常遇到的算法都放在同一頁，直接填數字就好。</p>
+  </div>
+
+  <div class="panel">
+    <div class="calc-card">
+      <h3>① 某數的百分之幾是多少</h3>
+      <div class="calc-line">
+        <input type="number" id="a1" value="1200" step="any"> 的
+        <input type="number" id="a2" value="15" step="any"> ％
+        <span class="eq">=</span><span class="res" id="ra">—</span>
+      </div>
+      <p class="hint">例：1200 元的 15% 服務費是多少</p>
+    </div>
+
+    <div class="calc-card">
+      <h3>② 甲是乙的百分之幾</h3>
+      <div class="calc-line">
+        <input type="number" id="b1" value="45" step="any"> 是
+        <input type="number" id="b2" value="180" step="any"> 的
+        <span class="eq">=</span><span class="res" id="rb">—</span>
+      </div>
+      <p class="hint">例：45 人佔 180 人的多少比例</p>
+    </div>
+
+    <div class="calc-card">
+      <h3>③ 打折後是多少錢</h3>
+      <div class="calc-line">
+        原價 <input type="number" id="c1" value="2000" step="any"> 打
+        <input type="number" id="c2" value="79" step="any"> 折
+        <span class="eq">=</span><span class="res" id="rc">—</span>
+      </div>
+      <p class="hint" id="cHint">台灣的「79 折」是付原價的 79%，跟歐美的「21% off」是同一件事</p>
+    </div>
+
+    <div class="calc-card">
+      <h3>④ 增減百分之幾後是多少</h3>
+      <div class="calc-line">
+        <input type="number" id="d1" value="5000" step="any">
+        <select id="dOp" style="width:auto;flex:0 0 auto"><option value="1">增加</option><option value="-1">減少</option></select>
+        <input type="number" id="d2" value="8" step="any"> ％
+        <span class="eq">=</span><span class="res" id="rd">—</span>
+      </div>
+      <p class="hint">例：薪水 5000 調漲 8% 之後是多少</p>
+    </div>
+
+    <div class="calc-card">
+      <h3>⑤ 從甲變成乙，變化了百分之幾</h3>
+      <div class="calc-line">
+        從 <input type="number" id="e1" value="120" step="any"> 變成
+        <input type="number" id="e2" value="150" step="any">
+        <span class="eq">=</span><span class="res" id="re">—</span>
+      </div>
+      <p class="hint">例：業績從 120 萬成長到 150 萬，成長率多少</p>
+    </div>
+
+    <div class="calc-card">
+      <h3>⑥ 含稅與未稅換算（台灣營業稅 5%）</h3>
+      <div class="calc-line">
+        <input type="number" id="f1" value="1050" step="any">
+        <select id="fOp" style="width:auto;flex:0 0 auto">
+          <option value="toNet">是含稅價，未稅是</option>
+          <option value="toGross">是未稅價，含稅是</option>
+        </select>
+        <span class="eq">=</span><span class="res" id="rf">—</span>
+      </div>
+      <p class="hint" id="fHint"></p>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>「折」跟「% off」不要搞混</h2>
+    <p>這是最容易算錯的地方。台灣說的<strong>「打 8 折」是付原價的 80%</strong>，也就是便宜了 20%；歐美標的 <strong>「20% off」是折掉 20%</strong>，付的是 80%。兩者結果一樣，但數字剛好相反，看到英文標價時要換個腦袋。</p>
+
+    <h2>百分點跟百分比不一樣</h2>
+    <p>利率「從 2% 升到 3%」，正確的說法是<strong>上升 1 個百分點</strong>，不是上升 1%。如果說上升 1%，那是 2% × 1.01 ＝ 2.02%，完全是另一回事。新聞報導常混用，看到時留意一下。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>先漲 10% 再跌 10% 會回到原點嗎？</summary>
+        <div class="a">不會，會變少。100 漲 10% 是 110，110 再跌 10% 是 99，比原本少了 1。因為兩次計算的基數不一樣，這也是股票跌深之後要漲更多才能回本的原因。</div>
+      </details>
+      <details>
+        <summary>含稅價怎麼反推未稅？</summary>
+        <div class="a">不是直接乘 0.95，而是<strong>除以 1.05</strong>。例如含稅 1050 元，未稅是 1050 ÷ 1.05 ＝ 1000 元，稅額 50 元。直接乘 0.95 會算成 997.5，是錯的。</div>
+      </details>
+      <details>
+        <summary>結果可以複製嗎？</summary>
+        <div class="a">可以，點任何一個藍橘色的結果數字就會複製到剪貼簿。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$ } = window.U;
+
+  const num = sel => Number($(sel).value);
+
+  /* 數字太長時收斂小數，並去掉無意義的尾端 0 */
+  function fmt(n, suffix = '') {
+    if (!isFinite(n)) return '—';
+    const v = Math.abs(n) >= 1000
+      ? n.toLocaleString('en-US', { maximumFractionDigits: 2 })
+      : String(parseFloat(n.toFixed(4)));
+    return v + suffix;
+  }
+
+  function setRes(sel, text) {
+    const el = $(sel);
+    el.textContent = text;
+    el.dataset.copy = text.replace(/[^\d.\-]/g, '');
+  }
+
+  function calcAll() {
+    /* ① 某數的百分之幾 */
+    setRes('#ra', fmt(num('#a1') * num('#a2') / 100));
+
+    /* ② 佔比 */
+    const b2 = num('#b2');
+    setRes('#rb', b2 === 0 ? '不能除以 0' : fmt(num('#b1') / b2 * 100, ' ％'));
+
+    /* ③ 打折：台灣習慣 79 折 = 付 79% */
+    const c2 = num('#c2');
+    const paid = num('#c1') * c2 / 100;
+    setRes('#rc', fmt(paid, ' 元'));
+    $('#cHint').textContent =
+      `付 ${fmt(paid, ' 元')}，省下 ${fmt(num('#c1') - paid, ' 元')}（相當於 ${fmt(100 - c2)}% off）`;
+
+    /* ④ 增減百分比 */
+    const dir = Number($('#dOp').value);
+    setRes('#rd', fmt(num('#d1') * (1 + dir * num('#d2') / 100)));
+
+    /* ⑤ 變化率 */
+    const e1 = num('#e1');
+    if (e1 === 0) {
+      setRes('#re', '起始值不能為 0');
+    } else {
+      const change = (num('#e2') - e1) / Math.abs(e1) * 100;
+      const word = change > 0 ? '成長 ' : change < 0 ? '減少 ' : '持平 ';
+      setRes('#re', word + fmt(Math.abs(change), ' ％'));
+    }
+
+    /* ⑥ 含稅未稅（營業稅 5%） */
+    const f1 = num('#f1');
+    if ($('#fOp').value === 'toNet') {
+      const net = f1 / 1.05;
+      setRes('#rf', fmt(net, ' 元'));
+      $('#fHint').textContent = `未稅 ${fmt(net, ' 元')}，稅額 ${fmt(f1 - net, ' 元')}`;
+    } else {
+      const gross = f1 * 1.05;
+      setRes('#rf', fmt(gross, ' 元'));
+      $('#fHint').textContent = `含稅 ${fmt(gross, ' 元')}，稅額 ${fmt(gross - f1, ' 元')}`;
+    }
+  }
+
+  $$('input, select').forEach(el => el.addEventListener('input', calcAll));
+  calcAll();
+})();
+</script>
+</body>
+</html>

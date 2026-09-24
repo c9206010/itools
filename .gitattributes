@@ -1,0 +1,14 @@
+# 統一以 LF 存進版本庫，避免在 Windows 編輯後產生大量假的換行差異。
+# 網頁伺服器與瀏覽器對兩種換行都沒差，但統一比較乾淨。
+* text=auto eol=lf
+
+# 二進位檔不要做換行轉換
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>單位換算｜長度重量溫度面積容量一次搞定 - 順手工具箱</title>
+<meta name="description" content="免費線上單位換算工具，支援長度、重量、溫度、面積、容量、速度、資料量與時間換算，含台制坪與台斤，輸入即時顯示所有單位對照。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📏</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .unit-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    align-items: center; padding: 9px 12px;
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    background: var(--surface); margin-bottom: 6px;
+  }
+  .unit-row b { font-size: .86rem; font-weight: 600; }
+  .unit-row b small { display: block; color: var(--ink-3); font-weight: 400; font-size: .76rem; }
+  .unit-row span { font-family: var(--mono); font-size: .95rem; text-align: right; word-break: break-all; cursor: pointer; }
+  .unit-row span:hover { color: var(--brand); }
+  .unit-row.is-source { border-color: var(--brand); background: var(--brand-wash); }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/unit.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="單位換算, 公分, 英吋, 公斤, 磅, 坪">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="單位換算｜長度重量溫度面積容量一次搞定 - 順手工具箱">
+<meta property="og:description" content="免費線上單位換算工具，支援長度、重量、溫度、面積、容量、速度、資料量與時間換算，含台制坪與台斤，輸入即時顯示所有單位對照。">
+<meta property="og:url" content="https://tools.luka-life.com/t/unit.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="單位換算｜長度重量溫度面積容量一次搞定 - 順手工具箱">
+<meta name="twitter:description" content="免費線上單位換算工具，支援長度、重量、溫度、面積、容量、速度、資料量與時間換算，含台制坪與台斤，輸入即時顯示所有單位對照。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "單位換算",
+  "description": "免費線上單位換算工具，支援長度、重量、溫度、面積、容量、速度、資料量與時間換算，含台制坪與台斤，輸入即時顯示所有單位對照。",
+  "url": "https://tools.luka-life.com/t/unit.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "計算換算",
+      "item": "https://tools.luka-life.com/#calc"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "單位換算",
+      "item": "https://tools.luka-life.com/t/unit.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "為什麼有些數字後面一大串小數？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "因為多數單位之間的換算比例本來就不是整數。工具會顯示到有意義的位數，太長的會自動改用科學記號。要精確值的話直接點該列複製，複製的是完整數字。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "溫度換算跟其他的不一樣嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "是的。長度、重量這些是單純的比例換算，但溫度有起算點的差異（攝氏 0 度不等於華氏 0 度），所以要先加減再乘除。工具已經處理好了，直接輸入就行。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "資料量的 KB 是 1000 還是 1024？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "這是長年的混亂點。硬碟廠商用 1000，作業系統多半用 1024，這就是為什麼買 1TB 硬碟插上電腦只看到 931GB。這個工具的 KB／MB／GB 採用 1024 進位（也就是嚴格來說的 KiB／MiB／GiB），符合多數人實際看到的檔案大小。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="unit">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">📏</span>單位換算</h1>
+    <p class="lede">輸入一個數字，同類的所有單位一次全部換算出來，不用一個一個選。點任何一個結果就複製。</p>
+  </div>
+
+  <div class="panel">
+    <div class="field">
+      <label for="cat">換算類別</label>
+      <select id="cat"></select>
+    </div>
+
+    <div class="row mb-2">
+      <div class="field mb-0" style="flex:2 1 180px">
+        <label for="val">數值</label>
+        <input type="number" id="val" value="1" step="any">
+      </div>
+      <div class="field mb-0" style="flex:2 1 180px">
+        <label for="from">單位</label>
+        <select id="from"></select>
+      </div>
+    </div>
+
+    <div class="panel__title">換算結果（點一下複製）</div>
+    <div id="results" aria-live="polite"></div>
+  </div>
+
+  <section class="prose">
+    <h2>台灣常用的幾個單位</h2>
+    <ul>
+      <li><strong>坪</strong>：房屋面積單位，1 坪等於 3.3058 平方公尺。看房時「權狀 30 坪」約等於 99 平方公尺。</li>
+      <li><strong>台斤</strong>：傳統市場用的重量單位，<strong>1 台斤等於 600 公克</strong>，跟中國大陸的市斤（500 公克）不一樣，買東西時要注意。</li>
+      <li><strong>台尺</strong>：木工與裝潢常用，1 台尺約 30.3 公分。</li>
+      <li><strong>甲</strong>：農地面積單位，1 甲約 0.9699 公頃。</li>
+    </ul>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>為什麼有些數字後面一大串小數？</summary>
+        <div class="a">因為多數單位之間的換算比例本來就不是整數。工具會顯示到有意義的位數，太長的會自動改用科學記號。要精確值的話直接點該列複製，複製的是完整數字。</div>
+      </details>
+      <details>
+        <summary>溫度換算跟其他的不一樣嗎？</summary>
+        <div class="a">是的。長度、重量這些是單純的比例換算，但溫度有起算點的差異（攝氏 0 度不等於華氏 0 度），所以要先加減再乘除。工具已經處理好了，直接輸入就行。</div>
+      </details>
+      <details>
+        <summary>資料量的 KB 是 1000 還是 1024？</summary>
+        <div class="a">這是長年的混亂點。硬碟廠商用 1000，作業系統多半用 1024，這就是為什麼買 1TB 硬碟插上電腦只看到 931GB。這個工具的 KB／MB／GB 採用 <strong>1024 進位</strong>（也就是嚴格來說的 KiB／MiB／GiB），符合多數人實際看到的檔案大小。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc } = window.U;
+
+  /* 每一類都以一個基準單位為中心，factor 代表「1 個此單位 = 幾個基準單位」 */
+  const CATS = {
+    length: {
+      name: '長度', base: '公尺',
+      units: [
+        ['毫米 mm', 0.001, '公釐'], ['公分 cm', 0.01, ''], ['公寸 dm', 0.1, ''],
+        ['公尺 m', 1, '基準'], ['公里 km', 1000, ''],
+        ['英吋 in', 0.0254, ''], ['英呎 ft', 0.3048, ''], ['碼 yd', 0.9144, ''],
+        ['英里 mi', 1609.344, ''], ['海里 nmi', 1852, ''],
+        ['台尺', 0.303030, '台制'], ['台寸', 0.0303030, '台制']
+      ]
+    },
+    weight: {
+      name: '重量', base: '公克',
+      units: [
+        ['毫克 mg', 0.001, ''], ['公克 g', 1, '基準'], ['公斤 kg', 1000, ''],
+        ['公噸 t', 1000000, ''],
+        ['盎司 oz', 28.349523, ''], ['磅 lb', 453.59237, ''],
+        ['台兩', 37.5, '台制'], ['台斤', 600, '台制＝16 兩'],
+        ['市斤', 500, '中國大陸'], ['克拉 ct', 0.2, '寶石用']
+      ]
+    },
+    temp: { name: '溫度', base: '攝氏', special: true,
+      units: [['攝氏 °C', 1, ''], ['華氏 °F', 1, ''], ['克耳文 K', 1, '絕對溫標']] },
+    area: {
+      name: '面積', base: '平方公尺',
+      units: [
+        ['平方公分 cm²', 0.0001, ''], ['平方公尺 m²', 1, '基準'],
+        ['平方公里 km²', 1000000, ''], ['公頃 ha', 10000, ''],
+        ['坪', 3.305785, '台灣房屋'], ['甲', 9699.17, '台灣農地'],
+        ['平方英呎 ft²', 0.092903, ''], ['英畝 acre', 4046.8564, '']
+      ]
+    },
+    volume: {
+      name: '容量', base: '公升',
+      units: [
+        ['毫升 mL', 0.001, '＝立方公分'], ['公升 L', 1, '基準'],
+        ['立方公尺 m³', 1000, ''],
+        ['茶匙 tsp', 0.0049289, '約 5 mL'], ['湯匙 tbsp', 0.0147868, '約 15 mL'],
+        ['杯 cup', 0.236588, '美制'],
+        ['美制品脫 pt', 0.473176, ''], ['美制加侖 gal', 3.785412, ''],
+        ['英制加侖', 4.546092, '']
+      ]
+    },
+    speed: {
+      name: '速度', base: '公尺每秒',
+      units: [
+        ['公尺每秒 m/s', 1, '基準'], ['公里每小時 km/h', 0.277778, ''],
+        ['英里每小時 mph', 0.44704, ''], ['節 knot', 0.514444, '航海與航空'],
+        ['馬赫 Mach', 340.29, '海平面標準']
+      ]
+    },
+    data: {
+      name: '資料量', base: '位元組',
+      units: [
+        ['位元 bit', 0.125, ''], ['位元組 Byte', 1, '基準'],
+        ['KB', 1024, ''], ['MB', 1048576, ''],
+        ['GB', 1073741824, ''], ['TB', 1099511627776, ''],
+        ['PB', 1125899906842624, '']
+      ]
+    },
+    time: {
+      name: '時間', base: '秒',
+      units: [
+        ['毫秒 ms', 0.001, ''], ['秒 s', 1, '基準'], ['分鐘 min', 60, ''],
+        ['小時 hr', 3600, ''], ['天 day', 86400, ''], ['週 week', 604800, ''],
+        ['月（30 天）', 2592000, '概略'], ['年（365 天）', 31536000, '概略']
+      ]
+    }
+  };
+
+  /* 溫度要先轉成攝氏當基準，再轉出去 */
+  function toCelsius(value, unit) {
+    if (unit.startsWith('華氏')) return (value - 32) * 5 / 9;
+    if (unit.startsWith('克耳文')) return value - 273.15;
+    return value;
+  }
+  function fromCelsius(c, unit) {
+    if (unit.startsWith('華氏')) return c * 9 / 5 + 32;
+    if (unit.startsWith('克耳文')) return c + 273.15;
+    return c;
+  }
+
+  /* 依數值大小挑合適的顯示方式，避免出現一長串沒意義的小數 */
+  function fmt(n) {
+    if (!isFinite(n)) return '—';
+    if (n === 0) return '0';
+    const abs = Math.abs(n);
+    if (abs >= 1e15 || abs < 1e-6) return n.toExponential(4);
+    if (abs >= 1000) return n.toLocaleString('en-US', { maximumFractionDigits: 4 });
+    // 小數點後保留到有效數字，再把尾端的 0 去掉
+    return parseFloat(n.toPrecision(8)).toString();
+  }
+
+  function buildCatOptions() {
+    $('#cat').innerHTML = Object.entries(CATS).map(([k, c]) =>
+      `<option value="${k}">${esc(c.name)}</option>`).join('');
+  }
+
+  function buildUnitOptions() {
+    const cat = CATS[$('#cat').value];
+    $('#from').innerHTML = cat.units.map(([name]) =>
+      `<option value="${esc(name)}">${esc(name)}</option>`).join('');
+    /* 預設選基準單位，比較符合直覺 */
+    const baseIdx = cat.units.findIndex(u => u[2] === '基準');
+    $('#from').selectedIndex = baseIdx >= 0 ? baseIdx : 0;
+  }
+
+  function convert() {
+    const key = $('#cat').value;
+    const cat = CATS[key];
+    const value = Number($('#val').value);
+    const fromName = $('#from').value;
+
+    if (!isFinite(value)) {
+      $('#results').innerHTML = '<p class="muted">請輸入有效的數值</p>';
+      return;
+    }
+
+    $('#results').innerHTML = cat.units.map(([name, factor, note]) => {
+      let result;
+
+      if (cat.special) {
+        result = fromCelsius(toCelsius(value, fromName), name);
+      } else {
+        const fromFactor = cat.units.find(u => u[0] === fromName)[1];
+        result = value * fromFactor / factor;
+      }
+
+      const isSource = name === fromName;
+      const text = fmt(result);
+
+      return `<div class="unit-row ${isSource ? 'is-source' : ''}">
+        <b>${esc(name)}${note ? `<small>${esc(note)}</small>` : ''}</b>
+        <span data-copy="${esc(text)}" title="點一下複製">${esc(text)}</span>
+      </div>`;
+    }).join('');
+  }
+
+  $('#cat').addEventListener('change', () => { buildUnitOptions(); convert(); });
+  $('#from').addEventListener('change', convert);
+  $('#val').addEventListener('input', convert);
+
+  buildCatOptions();
+  buildUnitOptions();
+  convert();
+})();
+</script>
+</body>
+</html>

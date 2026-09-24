@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>分帳計算機｜聚餐 AA 均分、含服務費與小費 - 順手工具箱</title>
+<meta name="description" content="免費分帳計算工具，聚餐帳單一鍵均分，可加上服務費與小費、指定無條件進位到整數，也支援不同人吃不同金額的明細分帳。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧾</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .tabs { display: flex; gap: 6px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  .tab {
+    padding: 9px 18px; border: 0; background: none; cursor: pointer;
+    font: inherit; font-size: .93rem; font-weight: 600; color: var(--ink-3);
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+  }
+  .tab.is-on { color: var(--brand); border-bottom-color: var(--brand); }
+  .person-row { display: grid; grid-template-columns: 1fr 120px auto; gap: 8px; align-items: center; margin-bottom: 7px; }
+  .del-p {
+    width: 34px; height: 34px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border-strong); background: var(--surface);
+    color: var(--ink-3); cursor: pointer; line-height: 1;
+  }
+  .del-p:hover { border-color: var(--danger); color: var(--danger); }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/split.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="分帳, AA, 均分, 帳單, 服務費">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="分帳計算機｜聚餐 AA 均分、含服務費與小費 - 順手工具箱">
+<meta property="og:description" content="免費分帳計算工具，聚餐帳單一鍵均分，可加上服務費與小費、指定無條件進位到整數，也支援不同人吃不同金額的明細分帳。">
+<meta property="og:url" content="https://tools.luka-life.com/t/split.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="分帳計算機｜聚餐 AA 均分、含服務費與小費 - 順手工具箱">
+<meta name="twitter:description" content="免費分帳計算工具，聚餐帳單一鍵均分，可加上服務費與小費、指定無條件進位到整數，也支援不同人吃不同金額的明細分帳。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "分帳計算機",
+  "description": "免費分帳計算工具，聚餐帳單一鍵均分，可加上服務費與小費、指定無條件進位到整數，也支援不同人吃不同金額的明細分帳。",
+  "url": "https://tools.luka-life.com/t/split.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "計算換算",
+      "item": "https://tools.luka-life.com/#calc"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "分帳計算機",
+      "item": "https://tools.luka-life.com/t/split.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "「各付各的」模式下服務費怎麼分？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "照每個人餐點金額的比例分攤，吃得多的人付比較多服務費，這是最公平也最常見的算法。如果你們習慣服務費平均分，可以先把服務費設成 0，算完再自己均分。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "可以算小費嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以，把「服務費」欄位當成小費比例填就好。美國餐廳一般是 15% 到 20%，日本與台灣則沒有給小費的習慣。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "最多幾個人？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "平均分攤模式最多 200 人，各付各的模式可以自己一直加，沒有硬性上限。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="split">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🧾</span>分帳計算機</h1>
+    <p class="lede">吃完飯結帳時最需要的那個計算。可以單純均分，也可以照每個人實際吃多少分開算。</p>
+  </div>
+
+  <div class="panel">
+    <div class="tabs" role="tablist">
+      <button class="tab is-on" type="button" data-tab="even" role="tab">平均分攤</button>
+      <button class="tab" type="button" data-tab="item" role="tab">各付各的</button>
+    </div>
+
+    <!-- 平均分攤 -->
+    <div id="panel-even">
+      <div class="row mb-2">
+        <div class="field mb-0">
+          <label for="total">帳單金額</label>
+          <input type="number" id="total" value="3600" step="any" min="0">
+        </div>
+        <div class="field mb-0">
+          <label for="people">人數</label>
+          <input type="number" id="people" value="5" min="1" max="200" step="1">
+        </div>
+        <div class="field mb-0">
+          <label for="service">服務費 ％</label>
+          <input type="number" id="service" value="10" step="any" min="0">
+        </div>
+      </div>
+
+      <div class="chips mb-2">
+        <label class="chip"><input type="checkbox" id="roundUp" hidden> 進位到整數（零頭有人吸收）</label>
+        <label class="chip"><input type="checkbox" id="round10" hidden> 進位到 10 元</label>
+      </div>
+
+      <div class="out out--big" id="perPerson">—</div>
+
+      <div class="stat-row mt-2">
+        <div class="stat"><div class="stat__num" id="grandTotal">—</div><div class="stat__label">含服務費總額</div></div>
+        <div class="stat"><div class="stat__num" id="serviceFee">—</div><div class="stat__label">服務費</div></div>
+        <div class="stat"><div class="stat__num" id="collected">—</div><div class="stat__label">實收總額</div></div>
+        <div class="stat"><div class="stat__num" id="leftover">—</div><div class="stat__label">多收／不足</div></div>
+      </div>
+
+      <p class="hint mt-1" id="evenNote"></p>
+    </div>
+
+    <!-- 各付各的 -->
+    <div id="panel-item" class="hidden">
+      <p class="hint mb-2">填每個人自己點的金額，服務費會照比例分攤。</p>
+      <div id="persons"></div>
+      <button class="btn btn--ghost btn--sm mb-2" type="button" id="addPerson">＋ 加一個人</button>
+
+      <div class="field">
+        <label for="service2">服務費 ％</label>
+        <input type="number" id="service2" value="10" step="any" min="0" style="max-width:160px">
+      </div>
+
+      <div class="table-scroll">
+        <table class="data">
+          <thead><tr><th>姓名</th><th>餐點金額</th><th>分攤服務費</th><th>應付</th></tr></thead>
+          <tbody id="itemBody"></tbody>
+          <tfoot id="itemFoot"></tfoot>
+        </table>
+      </div>
+
+      <button class="btn btn--ghost btn--sm mt-2" type="button" id="copyItem">複製明細</button>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>除不盡的零頭怎麼辦</h2>
+    <p>3600 元五個人分剛好，但如果是 3617 元分三個人，每個人 1205.67 元根本付不出來。常見的處理方式有兩種：<strong>進位到整數或 10 元</strong>，多收的零頭當小費或由發起人收著；或是幾個人多付一元把零頭吃掉。這個工具的「進位」選項算的是前者，並且會告訴你總共多收了多少。</p>
+
+    <h2>台灣的服務費怎麼算</h2>
+    <p>多數餐廳的服務費是<strong>以餐點金額另計 10%</strong>，帳單上會單獨列一行。要注意有些店的標價已經含服務費（菜單上會寫「價格已含服務費」），那就不要再加一次。另外，營業稅是內含在標價裡的，不需要另外計算。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>「各付各的」模式下服務費怎麼分？</summary>
+        <div class="a">照每個人餐點金額的比例分攤，吃得多的人付比較多服務費，這是最公平也最常見的算法。如果你們習慣服務費平均分，可以先把服務費設成 0，算完再自己均分。</div>
+      </details>
+      <details>
+        <summary>可以算小費嗎？</summary>
+        <div class="a">可以，把「服務費」欄位當成小費比例填就好。美國餐廳一般是 15% 到 20%，日本與台灣則沒有給小費的習慣。</div>
+      </details>
+      <details>
+        <summary>最多幾個人？</summary>
+        <div class="a">平均分攤模式最多 200 人，各付各的模式可以自己一直加，沒有硬性上限。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, esc } = window.U;
+
+  const money = n => isFinite(n)
+    ? n.toLocaleString('zh-TW', { maximumFractionDigits: 2 }) + ' 元'
+    : '—';
+
+  document.querySelectorAll('.chip input').forEach(cb => {
+    cb.addEventListener('change', () => {
+      cb.parentElement.classList.toggle('is-on', cb.checked);
+      /* 兩種進位只能擇一，避免互相打架 */
+      if (cb.checked) {
+        const other = cb.id === 'roundUp' ? $('#round10') : $('#roundUp');
+        other.checked = false;
+        other.parentElement.classList.remove('is-on');
+      }
+      calcEven();
+    });
+  });
+
+  /* ---------- 平均分攤 ---------- */
+  function calcEven() {
+    const total = Number($('#total').value) || 0;
+    const people = Math.max(1, Math.floor(Number($('#people').value) || 1));
+    const svc = Number($('#service').value) || 0;
+
+    const fee = total * svc / 100;
+    const grand = total + fee;
+    let per = grand / people;
+
+    if ($('#round10').checked) per = Math.ceil(per / 10) * 10;
+    else if ($('#roundUp').checked) per = Math.ceil(per);
+
+    const collected = per * people;
+    const diff = collected - grand;
+
+    $('#perPerson').textContent = '每人 ' + money(per);
+    $('#grandTotal').textContent = money(grand);
+    $('#serviceFee').textContent = money(fee);
+    $('#collected').textContent = money(collected);
+    $('#leftover').textContent = money(diff);
+    $('#leftover').style.color = diff > 0.005 ? 'var(--ok)' : 'var(--ink-3)';
+
+    $('#evenNote').textContent = diff > 0.005
+      ? `進位之後總共多收 ${money(diff)}，可以當小費或由收錢的人留著。`
+      : '金額剛好整除，沒有零頭。';
+  }
+
+  /* ---------- 各付各的 ---------- */
+  function addPerson(name = '', amount = '') {
+    const i = $$('.person-row').length + 1;
+    const div = document.createElement('div');
+    div.className = 'person-row';
+    div.innerHTML = `
+      <input type="text" class="p-name" placeholder="第 ${i} 位" value="${esc(name)}">
+      <input type="number" class="p-amt" placeholder="金額" step="any" min="0" value="${esc(amount)}">
+      <button class="del-p" type="button" title="刪除" aria-label="刪除這個人">✕</button>`;
+    $('#persons').appendChild(div);
+  }
+
+  function calcItem() {
+    const rows = $$('.person-row').map((row, i) => ({
+      name: row.querySelector('.p-name').value.trim() || `第 ${i + 1} 位`,
+      amount: Number(row.querySelector('.p-amt').value) || 0
+    }));
+
+    const svc = Number($('#service2').value) || 0;
+    const subtotal = rows.reduce((s, r) => s + r.amount, 0);
+    const totalFee = subtotal * svc / 100;
+
+    const out = rows.map(r => {
+      /* 服務費照餐點金額比例分攤 */
+      const share = subtotal > 0 ? totalFee * (r.amount / subtotal) : 0;
+      return { ...r, share, pay: r.amount + share };
+    });
+
+    $('#itemBody').innerHTML = out.map(r => `
+      <tr>
+        <td>${esc(r.name)}</td>
+        <td>${money(r.amount)}</td>
+        <td>${money(r.share)}</td>
+        <td><strong>${money(r.pay)}</strong></td>
+      </tr>`).join('');
+
+    $('#itemFoot').innerHTML = `
+      <tr style="background:var(--surface-2);font-weight:700">
+        <td>合計</td>
+        <td>${money(subtotal)}</td>
+        <td>${money(totalFee)}</td>
+        <td>${money(subtotal + totalFee)}</td>
+      </tr>`;
+
+    calcItem.text = out.map(r => `${r.name}：${money(r.pay)}`).join('\n') +
+      `\n———\n合計：${money(subtotal + totalFee)}`;
+  }
+
+  /* ---------- 事件 ---------- */
+  $$('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      $$('.tab').forEach(t => t.classList.toggle('is-on', t === tab));
+      $('#panel-even').classList.toggle('hidden', tab.dataset.tab !== 'even');
+      $('#panel-item').classList.toggle('hidden', tab.dataset.tab !== 'item');
+    });
+  });
+
+  ['#total', '#people', '#service'].forEach(s =>
+    $(s).addEventListener('input', calcEven));
+
+  $('#persons').addEventListener('input', calcItem);
+  $('#persons').addEventListener('click', e => {
+    if (e.target.closest('.del-p')) {
+      e.target.closest('.person-row').remove();
+      if (!$$('.person-row').length) addPerson();
+      calcItem();
+    }
+  });
+
+  $('#service2').addEventListener('input', calcItem);
+  $('#addPerson').addEventListener('click', () => { addPerson(); calcItem(); });
+
+  $('#copyItem').addEventListener('click', () => {
+    if (!calcItem.text) return;
+    window.copyText(calcItem.text, '已複製分帳明細');
+  });
+
+  addPerson('阿明', 420);
+  addPerson('小美', 380);
+  addPerson('大華', 650);
+  calcEven();
+  calcItem();
+})();
+</script>
+</body>
+</html>

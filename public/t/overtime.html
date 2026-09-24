@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>加班費計算｜平日、休息日、國定假日費率一次算 - 順手工具箱</title>
+<meta name="description" content="免費加班費計算器，依勞基法費率計算平日延長工時、休息日、例假日與國定假日的加班費，自動換算時薪並顯示每一段的加成倍率。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕗</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .big-num { font-size: clamp(1.8rem, 1rem + 3vw, 2.8rem); font-weight: 800; color: var(--brand); line-height: 1.2; }
+  td.num, th.num { text-align: right; font-family: var(--mono); }
+  tr.total td { font-weight: 800; background: var(--surface-2); }
+  .day-type {
+    display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  .day-btn {
+    padding: 12px 10px; text-align: left; font: inherit; cursor: pointer;
+    border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+    background: var(--surface); color: var(--ink);
+  }
+  .day-btn:hover { border-color: var(--brand); background: var(--brand-wash); }
+  .day-btn.is-on { border-color: var(--brand); background: var(--brand); color: #fff; }
+  .day-btn b { display: block; font-size: .9rem; }
+  .day-btn small { display: block; font-size: .76rem; opacity: .8; margin-top: 2px; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/overtime.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="加班費, 延長工時, 休息日, 加班, 時薪, 勞基法">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="加班費計算｜平日、休息日、國定假日費率一次算 - 順手工具箱">
+<meta property="og:description" content="免費加班費計算器，依勞基法費率計算平日延長工時、休息日、例假日與國定假日的加班費，自動換算時薪並顯示每一段的加成倍率。">
+<meta property="og:url" content="https://tools.luka-life.com/t/overtime.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="加班費計算｜平日、休息日、國定假日費率一次算 - 順手工具箱">
+<meta name="twitter:description" content="免費加班費計算器，依勞基法費率計算平日延長工時、休息日、例假日與國定假日的加班費，自動換算時薪並顯示每一段的加成倍率。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "加班費計算",
+  "description": "免費加班費計算器，依勞基法費率計算平日延長工時、休息日、例假日與國定假日的加班費，自動換算時薪並顯示每一段的加成倍率。",
+  "url": "https://tools.luka-life.com/t/overtime.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "台灣生活",
+      "item": "https://tools.luka-life.com/#tw"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "加班費計算",
+      "item": "https://tools.luka-life.com/t/overtime.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "加班費可以改成補休嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以，但必須是勞工自己選擇，而且補休時數要跟加班時數一比一換算。補休期限屆滿或契約終止時還沒休完的，雇主仍應依加班費標準折算工資發給。公司單方面規定「一律補休不給錢」是違法的。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "加班有時數上限嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "有。原則上每日正常工時加延長工時不得超過 12 小時，每月延長工時總時數不得超過 46 小時（經工會或勞資會議同意可調整為每月 54 小時、每三個月 138 小時）。超過就是違法，不是加錢就可以。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "不足一小時怎麼算？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "應該按實際時間比例計算，例如加班 30 分鐘就是半小時的加班費。有些公司規定「未滿一小時不計」，這在法律上站不住腳。這個工具支援 0.5 小時為單位輸入。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "國定假日加班為什麼算法不一樣？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "因為國定假日本來就是有薪假，你休假照樣有薪水。如果出勤，法律規定要「加倍發給」，也就是在原本那天的工資之外，再加發一日工資。所以八小時內的部分是以「日」為單位計算，不是用時薪乘倍率。超過八小時的部分才另外按延長工時的費率算。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="overtime">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🕗</span>加班費計算</h1>
+    <p class="lede">同樣加兩小時，平日跟休息日領到的錢差很多。選對日子類型，馬上知道公司給的對不對。</p>
+  </div>
+
+  <div class="panel">
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="salary">月薪（元）</label>
+        <input type="number" id="salary" value="36000" min="0" step="100">
+      </div>
+      <div class="field mb-0">
+        <label for="hourly">時薪（自動換算，可自行覆寫）</label>
+        <input type="number" id="hourly" value="150" min="0" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="hours">加班時數</label>
+        <input type="number" id="hours" value="3" min="0" max="16" step="0.5">
+      </div>
+    </div>
+    <p class="hint mb-2">時薪換算方式：月薪 ÷ 30 ÷ 8。這是勞基法常用的推算方式，若你的契約另有約定，直接改時薪欄位。</p>
+
+    <div class="panel__title">這天是什麼性質</div>
+    <div class="day-type mb-2" id="dayType"></div>
+
+    <div class="tc mb-2">
+      <div class="big-num" id="payOut">—</div>
+      <div class="small muted">這次加班應領金額</div>
+    </div>
+
+    <div class="table-scroll mb-2">
+      <table class="data">
+        <thead><tr><th>時段</th><th class="num">時數</th><th>倍率</th><th class="num">金額</th></tr></thead>
+        <tbody id="breakdown"></tbody>
+      </table>
+    </div>
+
+    <p class="hint" id="warnText"></p>
+  </div>
+
+  <div class="note note--warn">
+    <strong>這是依勞基法最低標準試算。</strong>公司給得比法定高就以公司規定為準。
+    另外有幾種情況這裡沒有涵蓋：<strong>變形工時</strong>、輪班制、責任制（勞基法第 84-1 條核備者）、
+    以及以補休取代加班費的情形。月薪制與時薪制的時薪認定也可能有差異。
+    有爭議請洽當地勞工局或勞動部。
+  </div>
+
+  <section class="prose">
+    <h2>勞基法的加班費費率</h2>
+    <div class="table-scroll">
+      <table class="data">
+        <thead><tr><th>日子性質</th><th>時段</th><th>倍率</th></tr></thead>
+        <tbody>
+          <tr><td rowspan="2">平日延長工時</td><td>前 2 小時</td><td>1⅓ 倍</td></tr>
+          <tr><td>第 3 小時起</td><td>1⅔ 倍</td></tr>
+          <tr><td rowspan="3">休息日</td><td>前 2 小時</td><td>1⅓ 倍</td></tr>
+          <tr><td>第 3 至 8 小時</td><td>1⅔ 倍</td></tr>
+          <tr><td>第 9 小時起</td><td>2⅓ 倍</td></tr>
+          <tr><td>國定假日</td><td>8 小時內</td><td>加發 1 日工資</td></tr>
+          <tr><td>例假日</td><td>原則不得出勤</td><td>加發 1 日工資</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>「休息日」跟「例假日」不一樣</h2>
+    <p>一例一休制度下，每七天要有兩天休息，但這兩天的性質完全不同：</p>
+    <ul>
+      <li><strong>休息日</strong>：可以加班，加班費費率最高，就是上表那三段。</li>
+      <li><strong>例假日</strong>：<strong>原則上不能要求出勤</strong>，只有天災、事變或突發事件才可以。真的出勤了，除了加發一日工資，事後還要補假一天。</li>
+    </ul>
+    <p>很多人以為週末兩天都是「休息日」，其實通常一天是例假、一天是休息日，公司的出勤規定不一樣。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>加班費可以改成補休嗎？</summary>
+        <div class="a">可以，但必須是<strong>勞工自己選擇</strong>，而且補休時數要跟加班時數一比一換算。補休期限屆滿或契約終止時還沒休完的，雇主仍應依加班費標準折算工資發給。公司單方面規定「一律補休不給錢」是違法的。</div>
+      </details>
+      <details>
+        <summary>加班有時數上限嗎？</summary>
+        <div class="a">有。原則上每日正常工時加延長工時不得超過 12 小時，每月延長工時總時數不得超過 46 小時（經工會或勞資會議同意可調整為每月 54 小時、每三個月 138 小時）。超過就是違法，不是加錢就可以。</div>
+      </details>
+      <details>
+        <summary>不足一小時怎麼算？</summary>
+        <div class="a">應該按實際時間比例計算，例如加班 30 分鐘就是半小時的加班費。有些公司規定「未滿一小時不計」，這在法律上站不住腳。這個工具支援 0.5 小時為單位輸入。</div>
+      </details>
+      <details>
+        <summary>國定假日加班為什麼算法不一樣？</summary>
+        <div class="a">因為國定假日本來就是有薪假，你休假照樣有薪水。如果出勤，法律規定要「<strong>加倍發給</strong>」，也就是在原本那天的工資之外，再加發一日工資。所以八小時內的部分是以「日」為單位計算，不是用時薪乘倍率。超過八小時的部分才另外按延長工時的費率算。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, esc } = window.U;
+
+  /* 各種日子的加班費分段。rate 為時薪倍率，to 為該段結束於第幾小時 */
+  const DAY_TYPES = {
+    normal: {
+      name: '平日延長工時',
+      note: '正常工時之後繼續上班',
+      tiers: [
+        { to: 2, rate: 4 / 3, label: '前 2 小時' },
+        { to: Infinity, rate: 5 / 3, label: '第 3 小時起' }
+      ]
+    },
+    restday: {
+      name: '休息日',
+      note: '一例一休的「休」',
+      tiers: [
+        { to: 2, rate: 4 / 3, label: '前 2 小時' },
+        { to: 8, rate: 5 / 3, label: '第 3 至 8 小時' },
+        { to: Infinity, rate: 7 / 3, label: '第 9 小時起' }
+      ]
+    },
+    holiday: {
+      name: '國定假日',
+      note: '8 小時內加發一日工資',
+      dayBased: true,
+      tiers: [
+        { to: 2, rate: 4 / 3, label: '超過 8 小時後的前 2 小時' },
+        { to: Infinity, rate: 5 / 3, label: '再往後' }
+      ]
+    },
+    offday: {
+      name: '例假日',
+      note: '原則不得出勤',
+      dayBased: true,
+      warn: '例假日原則上不得要求出勤，僅限天災、事變或突發事件。出勤後雇主還應另給補假一日。',
+      tiers: [
+        { to: 2, rate: 4 / 3, label: '超過 8 小時後的前 2 小時' },
+        { to: Infinity, rate: 5 / 3, label: '再往後' }
+      ]
+    }
+  };
+
+  let active = 'normal';
+
+  const money = n => Math.round(n).toLocaleString('zh-TW');
+  /* 把 4/3 這種倍率寫成好讀的分數 */
+  function rateText(r) {
+    if (Math.abs(r - 4 / 3) < 1e-9) return '1⅓ 倍';
+    if (Math.abs(r - 5 / 3) < 1e-9) return '1⅔ 倍';
+    if (Math.abs(r - 7 / 3) < 1e-9) return '2⅓ 倍';
+    return r.toFixed(2) + ' 倍';
+  }
+
+  function renderTypes() {
+    $('#dayType').innerHTML = Object.entries(DAY_TYPES).map(([k, d]) =>
+      `<button class="day-btn ${k === active ? 'is-on' : ''}" type="button" data-k="${k}">
+         <b>${esc(d.name)}</b><small>${esc(d.note)}</small>
+       </button>`).join('');
+  }
+
+  function calc() {
+    const hourly = Math.max(0, Number($('#hourly').value) || 0);
+    const hours = Math.max(0, Number($('#hours').value) || 0);
+    const cfg = DAY_TYPES[active];
+
+    const rows = [];
+    let total = 0;
+
+    if (cfg.dayBased) {
+      /* 國定假日與例假日：8 小時內加發一日工資（以 8 小時計） */
+      const within = Math.min(hours, 8);
+      if (within > 0) {
+        const amount = hourly * 8;      // 加發一日工資，不隨時數遞減
+        total += amount;
+        rows.push({
+          label: '8 小時內（加發一日工資）',
+          hours: within,
+          rate: '加發 1 日',
+          amount
+        });
+      }
+
+      /* 超過 8 小時的部分，依延長工時費率另計 */
+      let rest = Math.max(0, hours - 8);
+      let consumed = 0;
+      for (const tier of cfg.tiers) {
+        if (rest <= 0) break;
+        const cap = tier.to === Infinity ? rest : Math.max(0, tier.to - consumed);
+        const take = Math.min(rest, cap);
+        if (take <= 0) continue;
+
+        const amount = hourly * tier.rate * take;
+        total += amount;
+        rows.push({ label: tier.label, hours: take, rate: rateText(tier.rate), amount });
+
+        rest -= take;
+        consumed += take;
+      }
+    } else {
+      let rest = hours;
+      let consumed = 0;
+      for (const tier of cfg.tiers) {
+        if (rest <= 0) break;
+        const cap = tier.to === Infinity ? rest : Math.max(0, tier.to - consumed);
+        const take = Math.min(rest, cap);
+        if (take <= 0) continue;
+
+        const amount = hourly * tier.rate * take;
+        total += amount;
+        rows.push({ label: tier.label, hours: take, rate: rateText(tier.rate), amount });
+
+        rest -= take;
+        consumed += take;
+      }
+    }
+
+    $('#payOut').textContent = money(total) + ' 元';
+
+    $('#breakdown').innerHTML = rows.length
+      ? rows.map(r => `<tr>
+          <td>${esc(r.label)}</td>
+          <td class="num">${r.hours} 小時</td>
+          <td>${esc(r.rate)}</td>
+          <td class="num">${money(r.amount)}</td>
+        </tr>`).join('') +
+        `<tr class="total"><td>合計</td><td class="num">${hours} 小時</td><td>—</td>
+         <td class="num">${money(total)}</td></tr>`
+      : '<tr><td colspan="4" class="muted">請輸入加班時數</td></tr>';
+
+    /* 提醒：法定時數上限與特殊日子的限制 */
+    const warns = [];
+    if (cfg.warn) warns.push(cfg.warn);
+    if (active === 'normal' && hours > 4) {
+      warns.push('正常工時 8 小時加上延長工時，每日合計不得超過 12 小時。');
+    }
+    if (hours > 12) {
+      warns.push('單日出勤超過 12 小時，已超出勞基法上限。');
+    }
+    $('#warnText').innerHTML = warns.length
+      ? '⚠️ ' + warns.map(esc).join('<br>⚠️ ')
+      : '';
+  }
+
+  /* 月薪改動時自動換算時薪：月薪 ÷ 30 ÷ 8 */
+  let hourlyTouched = false;
+  $('#salary').addEventListener('input', () => {
+    if (hourlyTouched) return;
+    const s = Math.max(0, Number($('#salary').value) || 0);
+    $('#hourly').value = Math.round(s / 30 / 8);
+    calc();
+  });
+  $('#hourly').addEventListener('input', () => { hourlyTouched = true; calc(); });
+  $('#hours').addEventListener('input', calc);
+
+  $('#dayType').addEventListener('click', e => {
+    const btn = e.target.closest('.day-btn');
+    if (!btn) return;
+    active = btn.dataset.k;
+    renderTypes();
+    calc();
+  });
+
+  renderTypes();
+  calc();
+})();
+</script>
+</body>
+</html>

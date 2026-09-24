@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>圖片壓縮｜調畫質縮檔案，不上傳伺服器 - 順手工具箱</title>
+<meta name="description" content="免費線上圖片壓縮工具，拖曳圖片即可調整畫質縮小檔案大小，支援批次處理與前後對照，全程在瀏覽器完成，照片不會上傳到任何伺服器。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗜️</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .drop {
+    border: 2px dashed var(--border-strong); border-radius: var(--radius-lg);
+    padding: 40px 20px; text-align: center; cursor: pointer;
+    background: var(--surface-2); transition: all .15s ease;
+  }
+  .drop:hover, .drop.is-over { border-color: var(--brand); background: var(--brand-wash); }
+  .drop strong { display: block; font-size: 1.05rem; margin-bottom: 4px; }
+  .item {
+    display: grid; grid-template-columns: 74px 1fr auto; gap: 12px;
+    align-items: center; padding: 11px;
+    border: 1px solid var(--border); border-radius: var(--radius);
+    background: var(--surface); margin-bottom: 9px;
+  }
+  @media (max-width: 560px) { .item { grid-template-columns: 56px 1fr; } .item .item-act { grid-column: 2; justify-self: end; } }
+  .item img { width: 74px; height: 74px; object-fit: cover; border-radius: var(--radius-sm); background: var(--bg-sunk); }
+  .item-name { font-size: .88rem; font-weight: 600; word-break: break-all; line-height: 1.4; }
+  .item-meta { font-size: .8rem; color: var(--ink-3); margin-top: 3px; }
+  .item-meta .save { color: var(--ok); font-weight: 700; }
+  .item-meta .grow { color: var(--danger); font-weight: 700; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/image-compress.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="圖片壓縮, 縮小, 檔案大小, compress">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="圖片壓縮｜調畫質縮檔案，不上傳伺服器 - 順手工具箱">
+<meta property="og:description" content="免費線上圖片壓縮工具，拖曳圖片即可調整畫質縮小檔案大小，支援批次處理與前後對照，全程在瀏覽器完成，照片不會上傳到任何伺服器。">
+<meta property="og:url" content="https://tools.luka-life.com/t/image-compress.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="圖片壓縮｜調畫質縮檔案，不上傳伺服器 - 順手工具箱">
+<meta name="twitter:description" content="免費線上圖片壓縮工具，拖曳圖片即可調整畫質縮小檔案大小，支援批次處理與前後對照，全程在瀏覽器完成，照片不會上傳到任何伺服器。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "圖片壓縮",
+  "description": "免費線上圖片壓縮工具，拖曳圖片即可調整畫質縮小檔案大小，支援批次處理與前後對照，全程在瀏覽器完成，照片不會上傳到任何伺服器。",
+  "url": "https://tools.luka-life.com/t/image-compress.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "圖片處理",
+      "item": "https://tools.luka-life.com/#image"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "圖片壓縮",
+      "item": "https://tools.luka-life.com/t/image-compress.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "圖片真的不會被上傳嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "真的不會。整個過程是用瀏覽器的 Canvas 在你自己的裝置上完成的，這個網站也沒有可以接收檔案的後端。你可以壓縮前先把網路斷線，功能一樣正常，這是最直接的驗證方式。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "為什麼 PNG 壓縮後反而變大？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "因為 PNG 是無損格式，畫質滑桿對它沒有作用，而重新輸出的過程可能不如原本的編碼器有效率。PNG 想變小，正確做法是縮尺寸，或直接改存成 JPG／WebP。工具在檔案變大時會用紅字標示提醒你。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "透明背景會不見嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "會，如果你輸出成 JPG。JPG 格式不支援透明，透明的部分會被填成白色。要保留透明請選 PNG 或 WebP。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "一次可以處理幾張？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "沒有硬性限制，但張數太多會吃記憶體，建議一次 20 張以內。處理期間畫面可能短暫沒有回應，是正常的。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="image-compress">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🗜️</span>圖片壓縮</h1>
+    <p class="lede">照片太大寄不出去、上傳被擋，拉一張進來調一下畫質就縮好了。圖片完全不會離開你的電腦。</p>
+  </div>
+
+  <div class="panel">
+    <div class="drop mb-2" id="drop" role="button" tabindex="0">
+      <strong>把圖片拖進來，或點這裡選檔案</strong>
+      <span class="muted small">支援 JPG、PNG、WebP，可一次選多張</span>
+      <input type="file" id="fileInput" accept="image/*" multiple hidden>
+    </div>
+
+    <div class="field">
+      <label for="quality">畫質：<strong id="qLabel">80</strong>％</label>
+      <input type="range" id="quality" min="10" max="100" value="80">
+      <p class="hint">數字越低檔案越小，但畫面細節會流失。一般照片建議 70 到 85 之間，肉眼幾乎看不出差別。</p>
+    </div>
+
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="format">輸出格式</label>
+        <select id="format">
+          <option value="image/jpeg">JPG（照片最省空間）</option>
+          <option value="image/webp">WebP（更小，現代瀏覽器都支援）</option>
+          <option value="image/png">PNG（無損，適合圖表與去背圖）</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label for="maxW">最大寬度（0 表示不縮）</label>
+        <input type="number" id="maxW" value="0" min="0" max="10000" step="1">
+      </div>
+    </div>
+
+    <div class="btn-group mb-2">
+      <button class="btn" type="button" id="processBtn" disabled>開始壓縮</button>
+      <button class="btn btn--ghost" type="button" id="downloadAll" disabled>全部下載</button>
+      <button class="btn btn--ghost" type="button" id="clearBtn">清空</button>
+    </div>
+
+    <div class="stat-row mb-2 hidden" id="summary">
+      <div class="stat"><div class="stat__num" id="sCount">0</div><div class="stat__label">張數</div></div>
+      <div class="stat"><div class="stat__num" id="sBefore">—</div><div class="stat__label">原始總大小</div></div>
+      <div class="stat"><div class="stat__num" id="sAfter">—</div><div class="stat__label">壓縮後</div></div>
+      <div class="stat"><div class="stat__num" id="sSaved">—</div><div class="stat__label">總共省下</div></div>
+    </div>
+
+    <div id="list"></div>
+  </div>
+
+  <section class="prose">
+    <h2>選 JPG、WebP 還是 PNG</h2>
+    <ul>
+      <li><strong>JPG</strong>：照片的標準選擇。用的是破壞性壓縮，檔案小但每存一次就損失一點畫質，<strong>不要反覆用 JPG 存同一張圖</strong>。</li>
+      <li><strong>WebP</strong>：同樣畫質下通常比 JPG 再小 25% 到 35%，現在所有主流瀏覽器都支援，網頁用圖首選。缺點是某些舊軟體開不了。</li>
+      <li><strong>PNG</strong>：無損壓縮，支援透明背景。適合螢幕截圖、圖表、去背素材。照片存成 PNG 檔案會非常大，不建議。</li>
+    </ul>
+
+    <h2>調畫質之外，縮尺寸更有效</h2>
+    <p>如果原圖是手機拍的四千多像素寬，但你只是要放在網頁或傳給朋友看，<strong>把寬度縮到 1600 或 1920 就夠了</strong>，檔案大小往往能直接砍掉八成以上，效果比一味壓畫質好得多。上面的「最大寬度」欄位就是做這件事，填 0 則維持原尺寸。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>圖片真的不會被上傳嗎？</summary>
+        <div class="a">真的不會。整個過程是用瀏覽器的 Canvas 在你自己的裝置上完成的，這個網站也沒有可以接收檔案的後端。你可以壓縮前先把網路斷線，功能一樣正常，這是最直接的驗證方式。</div>
+      </details>
+      <details>
+        <summary>為什麼 PNG 壓縮後反而變大？</summary>
+        <div class="a">因為 PNG 是無損格式，畫質滑桿對它沒有作用，而重新輸出的過程可能不如原本的編碼器有效率。PNG 想變小，正確做法是縮尺寸，或直接改存成 JPG／WebP。工具在檔案變大時會用紅字標示提醒你。</div>
+      </details>
+      <details>
+        <summary>透明背景會不見嗎？</summary>
+        <div class="a">會，如果你輸出成 JPG。JPG 格式不支援透明，透明的部分會被填成白色。要保留透明請選 PNG 或 WebP。</div>
+      </details>
+      <details>
+        <summary>一次可以處理幾張？</summary>
+        <div class="a">沒有硬性限制，但張數太多會吃記憶體，建議一次 20 張以內。處理期間畫面可能短暫沒有回應，是正常的。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc, bytes, download } = window.U;
+
+  let files = [];     // { file, name, blob, url, before, after, w, h }
+
+  /* ---------- 選檔與拖放 ---------- */
+  const drop = $('#drop');
+  const input = $('#fileInput');
+
+  drop.addEventListener('click', () => input.click());
+  drop.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
+  });
+
+  ['dragenter', 'dragover'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('is-over'); }));
+  ['dragleave', 'drop'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('is-over'); }));
+
+  drop.addEventListener('drop', e => addFiles(e.dataTransfer.files));
+  input.addEventListener('change', e => addFiles(e.target.files));
+
+  function addFiles(fileList) {
+    const incoming = Array.from(fileList).filter(f => f.type.startsWith('image/'));
+    if (!incoming.length) { window.toast('請選擇圖片檔'); return; }
+
+    incoming.forEach(f => {
+      files.push({ file: f, name: f.name, before: f.size, url: URL.createObjectURL(f) });
+    });
+
+    $('#processBtn').disabled = false;
+    render();
+  }
+
+  /* ---------- 壓縮 ---------- */
+  function loadImage(url) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error('圖片載入失敗'));
+      img.src = url;
+    });
+  }
+
+  async function compressOne(item) {
+    const img = await loadImage(item.url);
+
+    let w = img.naturalWidth;
+    let h = img.naturalHeight;
+    const maxW = Number($('#maxW').value) || 0;
+
+    if (maxW > 0 && w > maxW) {
+      h = Math.round(h * (maxW / w));
+      w = maxW;
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+
+    const type = $('#format').value;
+    /* JPG 不支援透明，先鋪白底避免透明區變黑 */
+    if (type === 'image/jpeg') {
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, w, h);
+    }
+
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(img, 0, 0, w, h);
+
+    const quality = Number($('#quality').value) / 100;
+
+    const blob = await new Promise(res =>
+      canvas.toBlob(res, type, type === 'image/png' ? undefined : quality));
+
+    if (!blob) throw new Error('這個瀏覽器不支援該輸出格式');
+
+    item.blob = blob;
+    item.after = blob.size;
+    item.w = w;
+    item.h = h;
+    item.outName = item.name.replace(/\.[^.]+$/, '') +
+      (type === 'image/png' ? '.png' : type === 'image/webp' ? '.webp' : '.jpg');
+  }
+
+  async function processAll() {
+    if (!files.length) return;
+    $('#processBtn').disabled = true;
+    $('#processBtn').textContent = '處理中…';
+
+    for (const item of files) {
+      try { await compressOne(item); }
+      catch (e) { item.error = e.message; }
+      render();
+      /* 讓出主執行緒，畫面才不會整個卡住 */
+      await new Promise(r => setTimeout(r, 0));
+    }
+
+    $('#processBtn').disabled = false;
+    $('#processBtn').textContent = '重新壓縮';
+    $('#downloadAll').disabled = false;
+    window.toast('壓縮完成');
+  }
+
+  /* ---------- 畫面 ---------- */
+  function render() {
+    $('#list').innerHTML = files.map((it, i) => {
+      let meta;
+      if (it.error) {
+        meta = `<span style="color:var(--danger)">${esc(it.error)}</span>`;
+      } else if (it.after) {
+        const ratio = (1 - it.after / it.before) * 100;
+        const cls = ratio >= 0 ? 'save' : 'grow';
+        const word = ratio >= 0 ? '省下' : '增加';
+        meta = `${bytes(it.before)} → ${bytes(it.after)}　` +
+               `<span class="${cls}">${word} ${Math.abs(ratio).toFixed(0)}%</span>　` +
+               `<span class="muted">${it.w}×${it.h}</span>`;
+      } else {
+        meta = `${bytes(it.before)}　<span class="muted">等待處理</span>`;
+      }
+
+      return `<div class="item">
+        <img src="${it.url}" alt="${esc(it.name)} 的預覽縮圖">
+        <div>
+          <div class="item-name">${esc(it.name)}</div>
+          <div class="item-meta">${meta}</div>
+        </div>
+        <div class="item-act">
+          ${it.blob
+            ? `<button class="btn btn--sm" type="button" data-dl="${i}">下載</button>`
+            : ''}
+          <button class="btn btn--ghost btn--sm" type="button" data-rm="${i}">移除</button>
+        </div>
+      </div>`;
+    }).join('');
+
+    const done = files.filter(f => f.after);
+    if (done.length) {
+      const before = done.reduce((s, f) => s + f.before, 0);
+      const after = done.reduce((s, f) => s + f.after, 0);
+      $('#summary').classList.remove('hidden');
+      $('#sCount').textContent = done.length;
+      $('#sBefore').textContent = bytes(before);
+      $('#sAfter').textContent = bytes(after);
+      $('#sSaved').textContent = bytes(Math.max(0, before - after));
+    } else {
+      $('#summary').classList.add('hidden');
+    }
+  }
+
+  $('#list').addEventListener('click', e => {
+    const dl = e.target.closest('[data-dl]');
+    if (dl) {
+      const it = files[+dl.dataset.dl];
+      if (it.blob) download(it.blob, it.outName);
+      return;
+    }
+    const rm = e.target.closest('[data-rm]');
+    if (rm) {
+      const i = +rm.dataset.rm;
+      URL.revokeObjectURL(files[i].url);
+      files.splice(i, 1);
+      if (!files.length) {
+        $('#processBtn').disabled = true;
+        $('#downloadAll').disabled = true;
+      }
+      render();
+    }
+  });
+
+  $('#processBtn').addEventListener('click', processAll);
+
+  $('#downloadAll').addEventListener('click', () => {
+    const done = files.filter(f => f.blob);
+    if (!done.length) return window.toast('還沒有壓縮結果');
+    /* 沒有打包功能，逐一觸發下載，間隔一點避免被瀏覽器擋掉 */
+    done.forEach((it, i) => setTimeout(() => download(it.blob, it.outName), i * 300));
+    window.toast(`開始下載 ${done.length} 個檔案`);
+  });
+
+  $('#clearBtn').addEventListener('click', () => {
+    files.forEach(f => URL.revokeObjectURL(f.url));
+    files = [];
+    input.value = '';
+    $('#processBtn').disabled = true;
+    $('#processBtn').textContent = '開始壓縮';
+    $('#downloadAll').disabled = true;
+    render();
+  });
+
+  $('#quality').addEventListener('input', e => {
+    $('#qLabel').textContent = e.target.value;
+  });
+
+  /* PNG 是無損格式，畫質滑桿對它沒有意義，直接停用比較不會誤解 */
+  $('#format').addEventListener('change', () => {
+    const isPng = $('#format').value === 'image/png';
+    $('#quality').disabled = isPng;
+    $('#qLabel').textContent = isPng ? '無損（PNG 不使用畫質設定）' : $('#quality').value;
+  });
+})();
+</script>
+</body>
+</html>

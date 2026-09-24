@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# 所有運算都在瀏覽器端完成，沒有需要擋的後端路徑
+Sitemap: https://tools.luka-life.com/sitemap.xml

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>文字排序工具｜依筆畫、字母、數字或長度排列 - 順手工具箱</title>
+<meta name="description" content="免費線上文字排序，可依中文筆畫、英文字母、數字大小、文字長度排序，支援反轉與隨機打亂，並可加上編號，整理名單與清單很方便。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>↕️</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .io-grid { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 720px) { .io-grid { grid-template-columns: 1fr; } }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/sort.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="排序, sort, 字母, 順序, 亂序">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="文字排序工具｜依筆畫、字母、數字或長度排列 - 順手工具箱">
+<meta property="og:description" content="免費線上文字排序，可依中文筆畫、英文字母、數字大小、文字長度排序，支援反轉與隨機打亂，並可加上編號，整理名單與清單很方便。">
+<meta property="og:url" content="https://tools.luka-life.com/t/sort.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="文字排序工具｜依筆畫、字母、數字或長度排列 - 順手工具箱">
+<meta name="twitter:description" content="免費線上文字排序，可依中文筆畫、英文字母、數字大小、文字長度排序，支援反轉與隨機打亂，並可加上編號，整理名單與清單很方便。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "文字排序",
+  "description": "免費線上文字排序，可依中文筆畫、英文字母、數字大小、文字長度排序，支援反轉與隨機打亂，並可加上編號，整理名單與清單很方便。",
+  "url": "https://tools.luka-life.com/t/sort.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "文字處理",
+      "item": "https://tools.luka-life.com/#text"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "文字排序",
+      "item": "https://tools.luka-life.com/t/sort.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "「隨機打亂」每次結果都不一樣嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "是。每按一次「再排一次」就重新洗一次牌，用的是密碼學等級亂數，每種排列出現的機率相同。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "依數字排序，但我的資料前面有文字怎麼辦？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "「依數字大小」會抓出每一行裡出現的第一個數字來比較，像「第 3 名 王小明」也認得出 3。完全沒有數字的行會被排到最後。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "加編號之後還能再排一次嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以，但編號會被當成文字的一部分參與排序，結果通常不是你要的。建議先排好順序，最後再加編號。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="sort">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">↕️</span>文字排序</h1>
+    <p class="lede">一行一筆貼進來就能排。中文照筆畫、英文照字母、數字照大小，還能隨機打亂當抽籤順序。</p>
+  </div>
+
+  <div class="panel">
+    <div class="io-grid mb-2">
+      <div class="field mb-0">
+        <label for="src">原始清單（一行一筆）</label>
+        <textarea id="src" rows="12" spellcheck="false">林大華
+陳美美
+王小明
+張志豪
+李佩珊</textarea>
+      </div>
+      <div class="field mb-0">
+        <label for="out">排序結果</label>
+        <textarea id="out" rows="12" spellcheck="false" readonly></textarea>
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="mode">排序方式</label>
+        <select id="mode">
+          <option value="text">中文筆畫／英文字母</option>
+          <option value="number">依數字大小</option>
+          <option value="length">依文字長度</option>
+          <option value="natural">自然排序（檔名帶數字用）</option>
+          <option value="random">隨機打亂</option>
+          <option value="reverse">單純上下反轉</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label for="dir">順序</label>
+        <select id="dir">
+          <option value="asc">由小到大／A 到 Z</option>
+          <option value="desc">由大到小／Z 到 A</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label for="numbering">加編號</label>
+        <select id="numbering">
+          <option value="">不加</option>
+          <option value="dot">1. 2. 3.</option>
+          <option value="paren">(1) (2) (3)</option>
+          <option value="zh">一、二、三、</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="chips mb-2">
+      <label class="chip is-on"><input type="checkbox" id="trim" hidden checked> 去除頭尾空白</label>
+      <label class="chip is-on"><input type="checkbox" id="dropEmpty" hidden checked> 刪除空行</label>
+      <label class="chip"><input type="checkbox" id="ignoreCase" hidden> 忽略大小寫</label>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn" type="button" id="copyBtn">複製結果</button>
+      <button class="btn btn--ghost" type="button" id="reRunBtn">再排一次</button>
+      <button class="btn btn--ghost" type="button" id="applyBtn">結果貼回左邊</button>
+      <button class="btn btn--ghost" type="button" id="clearBtn">清空</button>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>中文是照什麼順序排</h2>
+    <p>用的是瀏覽器內建的繁體中文排序規則，實務上接近<strong>筆畫順序</strong>。要注意這跟「注音順序」不一樣——如果你需要的是照注音 ㄅㄆㄇ 排（例如電話簿），這個工具做不到，那需要額外的字典資料。</p>
+
+    <h2>什麼是自然排序</h2>
+    <p>一般的文字排序會把 <code>檔案10</code> 排在 <code>檔案2</code> 前面，因為它是一個字元一個字元比，「1」小於「2」。自然排序會<strong>把連續的數字當成一個數值來比</strong>，所以順序會是 檔案2、檔案10，跟人的直覺一致。整理照片檔名、章節編號時特別好用。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>「隨機打亂」每次結果都不一樣嗎？</summary>
+        <div class="a">是。每按一次「再排一次」就重新洗一次牌，用的是密碼學等級亂數，每種排列出現的機率相同。</div>
+      </details>
+      <details>
+        <summary>依數字排序，但我的資料前面有文字怎麼辦？</summary>
+        <div class="a">「依數字大小」會抓出每一行裡出現的第一個數字來比較，像「第 3 名 王小明」也認得出 3。完全沒有數字的行會被排到最後。</div>
+      </details>
+      <details>
+        <summary>加編號之後還能再排一次嗎？</summary>
+        <div class="a">可以，但編號會被當成文字的一部分參與排序，結果通常不是你要的。建議先排好順序，最後再加編號。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, shuffle } = window.U;
+
+  const src = $('#src');
+  const out = $('#out');
+
+  const ZH_NUM = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十'];
+
+  document.querySelectorAll('.chip input').forEach(cb => {
+    cb.addEventListener('change', () => {
+      cb.parentElement.classList.toggle('is-on', cb.checked);
+      run();
+    });
+  });
+
+  /* 抓出一行裡的第一個數字，找不到回傳 null */
+  function firstNumber(s) {
+    const m = s.match(/-?\d+(?:\.\d+)?/);
+    return m ? parseFloat(m[0]) : null;
+  }
+
+  /* 自然排序：把字串拆成「文字段」與「數字段」交錯比較 */
+  function naturalCompare(a, b) {
+    const re = /(\d+)|(\D+)/g;
+    const ax = a.match(re) || [];
+    const bx = b.match(re) || [];
+    const len = Math.min(ax.length, bx.length);
+
+    for (let i = 0; i < len; i++) {
+      const an = /^\d/.test(ax[i]);
+      const bn = /^\d/.test(bx[i]);
+      if (an && bn) {
+        const d = parseInt(ax[i], 10) - parseInt(bx[i], 10);
+        if (d) return d;
+      } else {
+        const d = ax[i].localeCompare(bx[i], 'zh-Hant');
+        if (d) return d;
+      }
+    }
+    return ax.length - bx.length;
+  }
+
+  function zhNumber(n) {
+    if (n <= 10) return ZH_NUM[n - 1];
+    if (n < 20) return '十' + ZH_NUM[n - 11];
+    const tens = Math.floor(n / 10);
+    const ones = n % 10;
+    if (n < 100) return ZH_NUM[tens - 1] + '十' + (ones ? ZH_NUM[ones - 1] : '');
+    return String(n);   // 超過 99 就不硬轉了
+  }
+
+  function addNumbering(arr) {
+    const style = $('#numbering').value;
+    if (!style) return arr;
+    return arr.map((line, i) => {
+      const n = i + 1;
+      if (style === 'dot') return `${n}. ${line}`;
+      if (style === 'paren') return `(${n}) ${line}`;
+      return `${zhNumber(n)}、${line}`;
+    });
+  }
+
+  function run() {
+    let lines = src.value.split(/\r?\n/);
+    if ($('#trim').checked) lines = lines.map(s => s.trim());
+    if ($('#dropEmpty').checked) lines = lines.filter(s => s !== '');
+
+    const mode = $('#mode').value;
+    const desc = $('#dir').value === 'desc';
+    const ic = $('#ignoreCase').checked;
+    const key = s => ic ? s.toLowerCase() : s;
+
+    let result = lines.slice();
+
+    if (mode === 'random') {
+      result = shuffle(result);
+    } else if (mode === 'reverse') {
+      result.reverse();
+    } else if (mode === 'number') {
+      /* 沒有數字的行固定沉到最後，不隨升降序翻面 */
+      const withNum = [], without = [];
+      result.forEach(s => (firstNumber(s) === null ? without : withNum).push(s));
+      withNum.sort((a, b) => firstNumber(a) - firstNumber(b));
+      if (desc) withNum.reverse();
+      result = withNum.concat(without);
+    } else if (mode === 'length') {
+      result.sort((a, b) => a.length - b.length || key(a).localeCompare(key(b), 'zh-Hant'));
+      if (desc) result.reverse();
+    } else if (mode === 'natural') {
+      result.sort((a, b) => naturalCompare(key(a), key(b)));
+      if (desc) result.reverse();
+    } else {
+      result.sort((a, b) => key(a).localeCompare(key(b), 'zh-Hant'));
+      if (desc) result.reverse();
+    }
+
+    out.value = addNumbering(result).join('\n');
+  }
+
+  src.addEventListener('input', run);
+  ['#mode', '#dir', '#numbering'].forEach(s => $(s).addEventListener('change', run));
+  $('#reRunBtn').addEventListener('click', run);
+
+  $('#copyBtn').addEventListener('click', () => {
+    if (!out.value) { window.toast('還沒有結果'); return; }
+    window.copyText(out.value, '已複製結果');
+  });
+
+  $('#applyBtn').addEventListener('click', () => {
+    if (!out.value) return;
+    src.value = out.value;
+    run();
+  });
+
+  $('#clearBtn').addEventListener('click', () => {
+    src.value = out.value = '';
+    src.focus();
+  });
+
+  run();
+})();
+</script>
+</body>
+</html>

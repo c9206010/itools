@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>房貸試算｜本息本金攤還、寬限期與提前還款 - 順手工具箱</title>
+<meta name="description" content="免費房貸試算工具，計算每月應繳金額與總利息，支援本息平均攤還、本金平均攤還、寬限期設定，並顯示完整的逐月攤還表與提前還款省息試算。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏠</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .big-num { font-size: clamp(1.6rem, 1rem + 2.4vw, 2.4rem); font-weight: 800; color: var(--brand); line-height: 1.2; }
+  .amort-wrap { max-height: 460px; overflow: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); }
+  .amort-wrap table { margin: 0; }
+  .amort-wrap thead th { position: sticky; top: 0; z-index: 1; }
+  td.num, th.num { text-align: right; font-family: var(--mono); font-size: .85rem; }
+  tr.grace td { background: var(--accent-wash); }
+  .ratio-bar { height: 26px; border-radius: 6px; overflow: hidden; display: flex; font-size: .74rem; font-weight: 700; }
+  .ratio-bar div { display: grid; place-items: center; color: #fff; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/mortgage.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="房貸, 貸款, 試算, 利息, 攤還, 寬限期">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="房貸試算｜本息本金攤還、寬限期與提前還款 - 順手工具箱">
+<meta property="og:description" content="免費房貸試算工具，計算每月應繳金額與總利息，支援本息平均攤還、本金平均攤還、寬限期設定，並顯示完整的逐月攤還表與提前還款省息試算。">
+<meta property="og:url" content="https://tools.luka-life.com/t/mortgage.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="房貸試算｜本息本金攤還、寬限期與提前還款 - 順手工具箱">
+<meta name="twitter:description" content="免費房貸試算工具，計算每月應繳金額與總利息，支援本息平均攤還、本金平均攤還、寬限期設定，並顯示完整的逐月攤還表與提前還款省息試算。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "房貸試算",
+  "description": "免費房貸試算工具，計算每月應繳金額與總利息，支援本息平均攤還、本金平均攤還、寬限期設定，並顯示完整的逐月攤還表與提前還款省息試算。",
+  "url": "https://tools.luka-life.com/t/mortgage.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "台灣生活",
+      "item": "https://tools.luka-life.com/#tw"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "房貸試算",
+      "item": "https://tools.luka-life.com/t/mortgage.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "提前還款真的划算嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "以數學來說，提前還款省下的是「未來的利息」，效果等同於得到一筆跟房貸利率相同的無風險報酬。房貸利率高的時候很划算；利率低（例如 2% 出頭）時，那筆錢若有其他更高報酬的用途，未必要急著還。另外要注意綁約期內提前清償可能有違約金，通常是前 1 到 3 年，簽約前要看清楚。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "為什麼前幾年繳的幾乎都是利息？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "因為利息是按「剩餘本金」計算的。一開始欠最多，所以利息最多。以 1200 萬、2.2%、30 年為例，第一期的月付金裡大約有四成多是利息。這不是銀行動手腳，是複利計算的必然結果，隨著本金減少，利息占比會逐月下降。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "房貸能貸幾成？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "一般首購的自住房多半可貸七到八成，但會受到房屋地段、屋齡、你的收入與信用狀況影響，第二戶以上或特定地區還有政策限制。試算時建議保守一點抓，並且預留裝潢、家具與各項規費的現金。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "月付金佔收入多少才安全？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "常見的參考是不超過家庭月收入的三分之一，銀行審核時也會看這個比例。要注意除了房貸還有管理費、房屋稅、地價稅、保險與維修費用，這些加起來不是小數字。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="mortgage">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🏠</span>房貸試算</h1>
+    <p class="lede">看房前先算清楚每個月要繳多少、總共要付多少利息。寬限期跟提前還款也一起算給你看。</p>
+  </div>
+
+  <div class="panel">
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="total">房屋總價（萬元）</label>
+        <input type="number" id="total" value="1500" min="0" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="downPct">頭期款比例（％）</label>
+        <input type="number" id="downPct" value="20" min="0" max="100" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="loan">貸款金額（萬元）</label>
+        <input type="number" id="loan" value="1200" min="0" step="1">
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="rate">年利率（％）</label>
+        <input type="number" id="rate" value="2.2" min="0" max="20" step="0.01">
+      </div>
+      <div class="field mb-0">
+        <label for="years">貸款年期</label>
+        <input type="number" id="years" value="30" min="1" max="40" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="grace">寬限期（年）</label>
+        <input type="number" id="grace" value="0" min="0" max="10" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="method">還款方式</label>
+        <select id="method">
+          <option value="annuity">本息平均攤還</option>
+          <option value="linear">本金平均攤還</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="stat-row mb-2">
+      <div class="stat">
+        <div class="big-num" id="monthly">—</div>
+        <div class="stat__label" id="monthlyLabel">每月應繳</div>
+      </div>
+      <div class="stat"><div class="stat__num" id="totalInterest">—</div><div class="stat__label">總利息</div></div>
+      <div class="stat"><div class="stat__num" id="totalPay">—</div><div class="stat__label">本息總支出</div></div>
+      <div class="stat"><div class="stat__num" id="downPay">—</div><div class="stat__label">頭期款</div></div>
+    </div>
+
+    <div class="panel__title">本金與利息的比例</div>
+    <div class="ratio-bar mb-2" id="ratioBar"></div>
+
+    <div class="note mb-2" id="graceNote"></div>
+
+    <div class="panel__title">提前還款試算</div>
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="prepayYear">第幾年一次還一筆</label>
+        <input type="number" id="prepayYear" value="5" min="1" max="40" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="prepayAmount">還款金額（萬元）</label>
+        <input type="number" id="prepayAmount" value="100" min="0" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="prepayMode">還完之後</label>
+        <select id="prepayMode">
+          <option value="term">月付金不變，提前還完</option>
+          <option value="payment">年期不變，月付金降低</option>
+        </select>
+      </div>
+    </div>
+    <p class="out small" id="prepayOut" style="min-height:auto"></p>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title">逐月攤還表</div>
+    <div class="btn-group mb-2">
+      <button class="btn btn--ghost btn--sm" type="button" id="viewYear">看年度彙總</button>
+      <button class="btn btn--ghost btn--sm" type="button" id="viewMonth">看每月明細</button>
+      <button class="btn btn--ghost btn--sm" type="button" id="copyTable">複製表格</button>
+    </div>
+    <div class="amort-wrap">
+      <table class="data">
+        <thead id="amortHead"></thead>
+        <tbody id="amortBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="note note--warn">
+    <strong>這是試算，不是報價。</strong>實際核貸的利率、成數與年期由銀行依你的信用條件、房屋條件與當時政策決定，還可能有開辦費、地政規費、火險與地震險等費用沒有算在裡面。多數房貸採<strong>機動利率</strong>，會隨央行政策調整，這裡是用固定利率估算的。請以銀行正式核貸的條件為準。
+  </div>
+
+  <section class="prose">
+    <h2>本息攤還跟本金攤還差在哪</h2>
+    <ul>
+      <li><strong>本息平均攤還</strong>：每個月繳一樣的錢，前期大部分在繳利息，後期才主要還本金。好處是負擔穩定好規劃，絕大多數人選這個。</li>
+      <li><strong>本金平均攤還</strong>：每個月還一樣多的本金，利息隨著剩餘本金減少而遞減，所以<strong>第一期最重、之後越繳越輕</strong>。總利息比本息攤還少，但初期壓力大。</li>
+    </ul>
+    <p>同樣條件下，本金平均攤還的總利息一定比較少，代價是前幾年的月付金高出一截。手頭寬裕的人可以考慮。</p>
+
+    <h2>寬限期是好事嗎</h2>
+    <p>寬限期是<strong>只繳利息、不還本金</strong>的期間，通常 2 到 3 年。月付金會降很多，但要清楚兩件事：第一，<strong>本金一毛都沒有減少</strong>；第二，寬限期結束後要用剩下的年數還完全部本金，<strong>月付金會跳一大階</strong>，而且總利息比不用寬限期更高。</p>
+    <p>它適合的是「現在現金流吃緊、但可預期幾年後收入會明顯提升」的人，不適合拿來硬買超出能力的房子。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>提前還款真的划算嗎？</summary>
+        <div class="a">以數學來說，提前還款省下的是「未來的利息」，效果等同於得到一筆跟房貸利率相同的無風險報酬。房貸利率高的時候很划算；利率低（例如 2% 出頭）時，那筆錢若有其他更高報酬的用途，未必要急著還。另外要注意<strong>綁約期內提前清償可能有違約金</strong>，通常是前 1 到 3 年，簽約前要看清楚。</div>
+      </details>
+      <details>
+        <summary>為什麼前幾年繳的幾乎都是利息？</summary>
+        <div class="a">因為利息是按「剩餘本金」計算的。一開始欠最多，所以利息最多。以 1200 萬、2.2%、30 年為例，第一期的月付金裡大約有四成多是利息。這不是銀行動手腳，是複利計算的必然結果，隨著本金減少，利息占比會逐月下降。</div>
+      </details>
+      <details>
+        <summary>房貸能貸幾成？</summary>
+        <div class="a">一般首購的自住房多半可貸七到八成，但會受到房屋地段、屋齡、你的收入與信用狀況影響，第二戶以上或特定地區還有政策限制。試算時建議保守一點抓，並且預留裝潢、家具與各項規費的現金。</div>
+      </details>
+      <details>
+        <summary>月付金佔收入多少才安全？</summary>
+        <div class="a">常見的參考是不超過家庭月收入的三分之一，銀行審核時也會看這個比例。要注意除了房貸還有管理費、房屋稅、地價稅、保險與維修費用，這些加起來不是小數字。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, esc } = window.U;
+
+  const WAN = 10000;
+  let schedule = [];     // 逐月明細
+  let viewMode = 'year';
+
+  const money = n => Math.round(n).toLocaleString('zh-TW');
+  const wan = n => (n / WAN).toLocaleString('zh-TW', { maximumFractionDigits: 1 }) + ' 萬';
+
+  /* 本息平均攤還的每期金額（年金公式） */
+  function annuityPayment(principal, monthlyRate, periods) {
+    if (periods <= 0) return 0;
+    if (monthlyRate === 0) return principal / periods;
+    const f = Math.pow(1 + monthlyRate, periods);
+    return principal * monthlyRate * f / (f - 1);
+  }
+
+  /* 產生完整攤還表；prepay 可選，用來做提前還款試算 */
+  function buildSchedule(opts) {
+    const { principal, annualRate, years, graceYears, method, prepay } = opts;
+    const r = annualRate / 100 / 12;
+    const totalMonths = years * 12;
+    const graceMonths = Math.min(graceYears * 12, totalMonths - 1);
+    const payMonths = totalMonths - graceMonths;
+
+    let balance = principal;
+    const rows = [];
+
+    /* 本息攤還的固定月付金，寬限期結束後才開始攤本金 */
+    let fixedPayment = method === 'annuity'
+      ? annuityPayment(principal, r, payMonths)
+      : 0;
+    const linearPrincipal = principal / payMonths;
+
+    for (let m = 1; m <= totalMonths; m++) {
+      if (balance <= 0.004) break;
+
+      const interest = balance * r;
+      let principalPaid;
+      let payment;
+      const inGrace = m <= graceMonths;
+
+      if (inGrace) {
+        principalPaid = 0;
+        payment = interest;
+      } else if (method === 'annuity') {
+        payment = fixedPayment;
+        principalPaid = payment - interest;
+      } else {
+        principalPaid = linearPrincipal;
+        payment = principalPaid + interest;
+      }
+
+      /* 最後一期用剩餘本金結清，避免累積誤差留下幾塊錢尾數 */
+      if (principalPaid > balance) {
+        principalPaid = balance;
+        payment = principalPaid + interest;
+      }
+
+      balance -= principalPaid;
+
+      let extra = 0;
+      if (prepay && m === prepay.month && balance > 0) {
+        extra = Math.min(prepay.amount, balance);
+        balance -= extra;
+
+        if (prepay.mode === 'payment' && balance > 0) {
+          /* 年期不變：用剩下的期數重算月付金 */
+          const left = totalMonths - m;
+          if (left > 0) fixedPayment = annuityPayment(balance, r, left);
+        }
+        /* mode === 'term' 時月付金不動，自然會提早還完 */
+      }
+
+      rows.push({ m, payment, interest, principalPaid, extra, balance: Math.max(0, balance), inGrace });
+    }
+
+    return rows;
+  }
+
+  function summarize(rows) {
+    return {
+      interest: rows.reduce((s, x) => s + x.interest, 0),
+      principal: rows.reduce((s, x) => s + x.principalPaid + x.extra, 0),
+      months: rows.length
+    };
+  }
+
+  function readInputs() {
+    return {
+      principal: (Number($('#loan').value) || 0) * WAN,
+      annualRate: Number($('#rate').value) || 0,
+      years: Math.max(1, Math.floor(Number($('#years').value) || 1)),
+      graceYears: Math.max(0, Math.floor(Number($('#grace').value) || 0)),
+      method: $('#method').value
+    };
+  }
+
+  function calc() {
+    const opts = readInputs();
+    if (opts.principal <= 0) return;
+
+    schedule = buildSchedule(opts);
+    const sum = summarize(schedule);
+
+    const firstPay = schedule.find(x => !x.inGrace);
+    const graceMonths = opts.graceYears * 12;
+
+    if (graceMonths > 0) {
+      $('#monthlyLabel').textContent = '寬限期月付／期滿後';
+      $('#monthly').innerHTML =
+        `${money(schedule[0].payment)}<span style="font-size:.5em"> → </span>${money(firstPay ? firstPay.payment : 0)}`;
+      $('#graceNote').innerHTML =
+        `<strong>寬限期 ${opts.graceYears} 年：</strong>這段期間每月只繳利息約 ${money(schedule[0].payment)} 元，` +
+        `本金完全沒有減少。期滿後月付金會跳到約 <strong>${money(firstPay ? firstPay.payment : 0)} 元</strong>，` +
+        `等於要用剩下的 ${opts.years - opts.graceYears} 年還完全部本金。`;
+      $('#graceNote').classList.remove('hidden');
+    } else {
+      $('#monthlyLabel').textContent = opts.method === 'linear' ? '首期／末期月付' : '每月應繳';
+      if (opts.method === 'linear') {
+        const last = schedule[schedule.length - 1];
+        $('#monthly').innerHTML =
+          `${money(schedule[0].payment)}<span style="font-size:.5em"> → </span>${money(last.payment)}`;
+      } else {
+        $('#monthly').textContent = money(schedule[0].payment);
+      }
+      $('#graceNote').classList.add('hidden');
+    }
+
+    $('#totalInterest').textContent = wan(sum.interest);
+    $('#totalPay').textContent = wan(sum.interest + sum.principal);
+
+    const totalPrice = (Number($('#total').value) || 0) * WAN;
+    $('#downPay').textContent = wan(Math.max(0, totalPrice - opts.principal));
+
+    /* 本金利息比例條 */
+    const pi = sum.principal + sum.interest;
+    const pPct = pi > 0 ? sum.principal / pi * 100 : 100;
+    $('#ratioBar').innerHTML =
+      `<div style="width:${pPct}%;background:var(--accent)">本金 ${pPct.toFixed(0)}%</div>` +
+      `<div style="width:${100 - pPct}%;background:var(--brand)">利息 ${(100 - pPct).toFixed(0)}%</div>`;
+
+    renderTable();
+    calcPrepay();
+  }
+
+  function calcPrepay() {
+    const opts = readInputs();
+    const amount = (Number($('#prepayAmount').value) || 0) * WAN;
+    if (opts.principal <= 0 || amount <= 0) {
+      $('#prepayOut').textContent = '填入提前還款的年度與金額就會試算。';
+      return;
+    }
+
+    const month = Math.max(1, Math.floor(Number($('#prepayYear').value) || 1)) * 12;
+    const mode = $('#prepayMode').value;
+
+    const base = summarize(buildSchedule(opts));
+    const after = summarize(buildSchedule({ ...opts, prepay: { month, amount, mode } }));
+
+    const saved = base.interest - after.interest;
+    const monthsSaved = base.months - after.months;
+
+    let text = `在第 ${Math.floor(month / 12)} 年一次還 ${wan(amount)}，` +
+               `可以省下利息約 <strong>${money(saved)} 元</strong>`;
+
+    if (mode === 'term' && monthsSaved > 0) {
+      text += `，並且提早 <strong>${Math.floor(monthsSaved / 12)} 年 ${monthsSaved % 12} 個月</strong>還清。`;
+    } else {
+      const rows = buildSchedule({ ...opts, prepay: { month, amount, mode } });
+      const next = rows[month];   // 提前還款後的下一期
+      if (next) text += `，之後的月付金降到約 <strong>${money(next.payment)} 元</strong>。`;
+      else text += '。';
+    }
+
+    text += '<br><span class="muted">提醒：綁約期內提前清償可能有違約金，簽約前請確認。</span>';
+    $('#prepayOut').innerHTML = text;
+  }
+
+  function renderTable() {
+    if (viewMode === 'month') {
+      $('#amortHead').innerHTML =
+        `<tr><th>期數</th><th class="num">月付金</th><th class="num">利息</th>
+         <th class="num">本金</th><th class="num">剩餘本金</th></tr>`;
+      $('#amortBody').innerHTML = schedule.map(r => `
+        <tr class="${r.inGrace ? 'grace' : ''}">
+          <td>${r.m}${r.inGrace ? ' <span class="small muted">寬限</span>' : ''}</td>
+          <td class="num">${money(r.payment)}</td>
+          <td class="num">${money(r.interest)}</td>
+          <td class="num">${money(r.principalPaid)}</td>
+          <td class="num">${money(r.balance)}</td>
+        </tr>`).join('');
+      return;
+    }
+
+    /* 年度彙總：把每 12 期加總 */
+    const years = [];
+    schedule.forEach(r => {
+      const y = Math.ceil(r.m / 12);
+      if (!years[y]) years[y] = { y, payment: 0, interest: 0, principal: 0, balance: 0, grace: false };
+      years[y].payment += r.payment;
+      years[y].interest += r.interest;
+      years[y].principal += r.principalPaid + r.extra;
+      years[y].balance = r.balance;
+      if (r.inGrace) years[y].grace = true;
+    });
+
+    $('#amortHead').innerHTML =
+      `<tr><th>年度</th><th class="num">當年繳款</th><th class="num">當年利息</th>
+       <th class="num">當年本金</th><th class="num">年末剩餘</th></tr>`;
+    $('#amortBody').innerHTML = years.filter(Boolean).map(r => `
+      <tr class="${r.grace ? 'grace' : ''}">
+        <td>第 ${r.y} 年${r.grace ? ' <span class="small muted">寬限</span>' : ''}</td>
+        <td class="num">${money(r.payment)}</td>
+        <td class="num">${money(r.interest)}</td>
+        <td class="num">${money(r.principal)}</td>
+        <td class="num">${money(r.balance)}</td>
+      </tr>`).join('');
+  }
+
+  /* 房價與頭期款連動貸款金額 */
+  let syncing = false;
+  function syncFromPrice() {
+    if (syncing) return;
+    syncing = true;
+    const total = Number($('#total').value) || 0;
+    const pct = Number($('#downPct').value) || 0;
+    $('#loan').value = Math.round(total * (100 - pct) / 100);
+    syncing = false;
+    calc();
+  }
+
+  $('#total').addEventListener('input', syncFromPrice);
+  $('#downPct').addEventListener('input', syncFromPrice);
+
+  $('#loan').addEventListener('input', () => {
+    if (syncing) return;
+    syncing = true;
+    const total = Number($('#total').value) || 0;
+    const loan = Number($('#loan').value) || 0;
+    if (total > 0) $('#downPct').value = Math.round((1 - loan / total) * 100);
+    syncing = false;
+    calc();
+  });
+
+  ['#rate', '#years', '#grace', '#method'].forEach(s =>
+    $(s).addEventListener('input', calc));
+  ['#prepayYear', '#prepayAmount', '#prepayMode'].forEach(s =>
+    $(s).addEventListener('input', calcPrepay));
+
+  $('#viewYear').addEventListener('click', () => { viewMode = 'year'; renderTable(); });
+  $('#viewMonth').addEventListener('click', () => { viewMode = 'month'; renderTable(); });
+
+  $('#copyTable').addEventListener('click', () => {
+    const rows = $$('#amortBody tr').map(tr =>
+      $$('td', tr).map(td => td.textContent.trim()).join('\t'));
+    const head = $$('#amortHead th').map(th => th.textContent.trim()).join('\t');
+    window.copyText([head, ...rows].join('\n'), '已複製攤還表');
+  });
+
+  calc();
+})();
+</script>
+</body>
+</html>

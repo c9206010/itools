@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>隨機分組工具｜名單貼上自動平均分隊 - 順手工具箱</title>
+<meta name="description" content="免費線上隨機分組，把名單貼進去就能自動平均分成指定組數或指定每組人數，可自訂組名並一鍵複製結果，分班、分隊、報告分組都適用。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👥</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .teams { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); }
+  .team { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--surface); }
+  .team h3 {
+    margin: 0; padding: 9px 13px; font-size: .92rem;
+    background: var(--brand); color: #fff;
+    display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  }
+  .team h3 small { font-weight: 500; opacity: .85; }
+  .team ol { margin: 0; padding: 10px 13px 12px 30px; font-size: .92rem; }
+  .team li { margin-bottom: 3px; }
+  .team:nth-child(even) h3 { background: var(--accent); }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/group.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="分組, 分隊, team, 分班, 隨機">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="隨機分組工具｜名單貼上自動平均分隊 - 順手工具箱">
+<meta property="og:description" content="免費線上隨機分組，把名單貼進去就能自動平均分成指定組數或指定每組人數，可自訂組名並一鍵複製結果，分班、分隊、報告分組都適用。">
+<meta property="og:url" content="https://tools.luka-life.com/t/group.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="隨機分組工具｜名單貼上自動平均分隊 - 順手工具箱">
+<meta name="twitter:description" content="免費線上隨機分組，把名單貼進去就能自動平均分成指定組數或指定每組人數，可自訂組名並一鍵複製結果，分班、分隊、報告分組都適用。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "隨機分組",
+  "description": "免費線上隨機分組，把名單貼進去就能自動平均分成指定組數或指定每組人數，可自訂組名並一鍵複製結果，分班、分隊、報告分組都適用。",
+  "url": "https://tools.luka-life.com/t/group.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "隨機抽籤",
+      "item": "https://tools.luka-life.com/#random"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "隨機分組",
+      "item": "https://tools.luka-life.com/t/group.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "可以指定某兩個人不要同一組嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "目前不支援條件限制，分組完全隨機。遇到這種需求，實務上比較快的做法是先分一次，看到不合適就按「重新分一次」再抽，或是分完之後手動對調兩個人。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "名單可以從 Excel 貼過來嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以。從 Excel 或 Google 試算表選一整欄複製貼上，會自動變成一行一個名字。用逗號或頓號分隔的名單也認得。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "名單會被記錄下來嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會。所有處理都在你的瀏覽器完成，名單沒有上傳到任何地方，關掉分頁就消失。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="group">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">👥</span>隨機分組</h1>
+    <p class="lede">名單貼上、選好要分幾組，按一下就分完。人數除不盡的時候會自動把餘數平均攤到前面幾組。</p>
+  </div>
+
+  <div class="panel">
+    <div class="field">
+      <label for="names">名單（一行一個，也可以用逗號或頓號分隔）</label>
+      <textarea id="names" rows="8" spellcheck="false" placeholder="王小明&#10;陳美美&#10;林大華">王小明
+陳美美
+林大華
+張志豪
+李佩珊
+黃建國
+吳雅婷
+劉承翰
+蔡明哲
+周思妤</textarea>
+      <p class="hint">目前 <strong id="nameCount">0</strong> 人</p>
+    </div>
+
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="mode">分組方式</label>
+        <select id="mode">
+          <option value="groups">指定組數</option>
+          <option value="size">指定每組人數</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label for="num" id="numLabel">分成幾組</label>
+        <input type="number" id="num" value="3" min="1" max="100" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="prefix">組名前綴</label>
+        <input type="text" id="prefix" value="第" maxlength="10">
+      </div>
+    </div>
+
+    <button class="btn btn--lg btn--block mb-2" type="button" id="goBtn">開始分組</button>
+
+    <div id="output" aria-live="polite"></div>
+
+    <div class="btn-group mt-2 hidden" id="actions">
+      <button class="btn btn--ghost btn--sm" type="button" id="copyBtn">複製結果</button>
+      <button class="btn btn--ghost btn--sm" type="button" id="againBtn">重新分一次</button>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>人數除不盡怎麼辦</h2>
+    <p>假設 10 個人分 3 組，工具會分成 <strong>4、3、3</strong>，把多出來的人平均攤到前面的組別，不會出現某一組特別多人的情況。如果你希望每組人數完全一樣，把分組方式改成「指定每組人數」，剩下不足一組的人會自己成為最後一組。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>可以指定某兩個人不要同一組嗎？</summary>
+        <div class="a">目前不支援條件限制，分組完全隨機。遇到這種需求，實務上比較快的做法是先分一次，看到不合適就按「重新分一次」再抽，或是分完之後手動對調兩個人。</div>
+      </details>
+      <details>
+        <summary>名單可以從 Excel 貼過來嗎？</summary>
+        <div class="a">可以。從 Excel 或 Google 試算表選一整欄複製貼上，會自動變成一行一個名字。用逗號或頓號分隔的名單也認得。</div>
+      </details>
+      <details>
+        <summary>名單會被記錄下來嗎？</summary>
+        <div class="a">不會。所有處理都在你的瀏覽器完成，名單沒有上傳到任何地方，關掉分頁就消失。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc, shuffle, lines } = window.U;
+
+  const namesEl = $('#names');
+  const modeEl = $('#mode');
+  let result = [];
+
+  function count() {
+    const n = lines(namesEl.value).length;
+    $('#nameCount').textContent = n;
+    return n;
+  }
+
+  function run() {
+    const people = shuffle(lines(namesEl.value));
+    if (!people.length) { window.toast('請先輸入名單'); return; }
+
+    const num = Math.max(1, Math.floor(Number($('#num').value) || 1));
+    const mode = modeEl.value;
+
+    /* 統一換算成「組數」，再用餘數攤平的方式切 */
+    const groupCount = mode === 'groups'
+      ? Math.min(num, people.length)
+      : Math.ceil(people.length / num);
+
+    const base = Math.floor(people.length / groupCount);
+    const extra = people.length % groupCount;
+
+    result = [];
+    let cursor = 0;
+    for (let i = 0; i < groupCount; i++) {
+      const size = base + (i < extra ? 1 : 0);
+      result.push(people.slice(cursor, cursor + size));
+      cursor += size;
+    }
+
+    const prefix = $('#prefix').value;
+    $('#output').innerHTML = `<div class="teams">` + result.map((team, i) => `
+      <div class="team">
+        <h3><span>${esc(prefix)}${i + 1}${prefix === '第' ? '組' : ''}</span><small>${team.length} 人</small></h3>
+        <ol>${team.map(n => `<li>${esc(n)}</li>`).join('')}</ol>
+      </div>`).join('') + `</div>`;
+
+    $('#actions').classList.remove('hidden');
+  }
+
+  function asText() {
+    const prefix = $('#prefix').value;
+    return result.map((team, i) =>
+      `${prefix}${i + 1}${prefix === '第' ? '組' : ''}（${team.length} 人）\n` +
+      team.map((n, j) => `  ${j + 1}. ${n}`).join('\n')
+    ).join('\n\n');
+  }
+
+  modeEl.addEventListener('change', () => {
+    $('#numLabel').textContent = modeEl.value === 'groups' ? '分成幾組' : '每組幾人';
+  });
+
+  namesEl.addEventListener('input', count);
+  $('#goBtn').addEventListener('click', run);
+  $('#againBtn').addEventListener('click', run);
+  $('#copyBtn').addEventListener('click', () => {
+    if (!result.length) return;
+    window.copyText(asText(), '已複製分組結果');
+  });
+
+  count();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>綜合所得稅試算｜免稅額扣除額算應繳稅額 - 順手工具箱</title>
+<meta name="description" content="免費綜合所得稅試算工具，輸入年所得與扶養人數即可估算應繳稅額，自動比較標準扣除額與列舉扣除額，並顯示適用稅率與有效稅率。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📋</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .big-num { font-size: clamp(1.7rem, 1rem + 2.6vw, 2.6rem); font-weight: 800; color: var(--brand); line-height: 1.2; }
+  td.num, th.num { text-align: right; font-family: var(--mono); }
+  tr.total td { font-weight: 800; background: var(--surface-2); }
+  tr.sub td { color: var(--ink-3); font-size: .88rem; }
+  .bracket-now { background: var(--brand-wash); font-weight: 700; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/income-tax.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="所得稅, 報稅, 綜所稅, 稅率, 扣除額">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="綜合所得稅試算｜免稅額扣除額算應繳稅額 - 順手工具箱">
+<meta property="og:description" content="免費綜合所得稅試算工具，輸入年所得與扶養人數即可估算應繳稅額，自動比較標準扣除額與列舉扣除額，並顯示適用稅率與有效稅率。">
+<meta property="og:url" content="https://tools.luka-life.com/t/income-tax.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="綜合所得稅試算｜免稅額扣除額算應繳稅額 - 順手工具箱">
+<meta name="twitter:description" content="免費綜合所得稅試算工具，輸入年所得與扶養人數即可估算應繳稅額，自動比較標準扣除額與列舉扣除額，並顯示適用稅率與有效稅率。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "綜合所得稅試算",
+  "description": "免費綜合所得稅試算工具，輸入年所得與扶養人數即可估算應繳稅額，自動比較標準扣除額與列舉扣除額，並顯示適用稅率與有效稅率。",
+  "url": "https://tools.luka-life.com/t/income-tax.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "台灣生活",
+      "item": "https://tools.luka-life.com/#tw"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "綜合所得稅試算",
+      "item": "https://tools.luka-life.com/t/income-tax.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "年收入多少以下不用繳稅？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "以單身上班族來說，免稅額加上標準扣除額與薪資所得特別扣除額，門檻大約在四十幾萬。低於這個數字，綜合所得淨額會是零，不用繳稅——但還是要申報，因為公司可能已經預扣了稅款，申報才能退回來。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "夫妻一定要合併申報嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "夫妻原則上要合併申報，但可以選擇把其中一方的「薪資所得」或「各類所得」分開計稅。哪一種划算要實際算過才知道，通常雙薪且收入差距大的家庭，分開計稅比較有利。這個工具只做合併計算，實際報稅時財政部的系統會自動幫你選最有利的方式。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "扶養父母有什麼條件？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "要符合年齡或無謀生能力等條件，而且該親屬不能同時被別人申報扶養。滿 70 歲的直系尊親屬免稅額較高，這個工具有分開欄位。實際認定條件請查國稅局的規定。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "算出來跟財政部的系統不一樣？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "正常，因為這裡只納入最基本的項目。財政部的線上報稅系統會自動帶入你的所得資料、已扣繳稅額與各項特別扣除額，算出來一定比這裡精確。這個工具的用途是讓你在報稅前先有個概念。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="income-tax">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">📋</span>綜合所得稅試算</h1>
+    <p class="lede">報稅季想先知道大概要繳多少。填年所得跟家裡幾個人，馬上估給你看。</p>
+  </div>
+
+  <div class="panel">
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="income">全年薪資所得（元）</label>
+        <input type="number" id="income" value="900000" min="0" step="1000">
+      </div>
+      <div class="field mb-0">
+        <label for="otherIncome">其他所得（利息、租金等）</label>
+        <input type="number" id="otherIncome" value="0" min="0" step="1000">
+      </div>
+      <div class="field mb-0">
+        <label for="status">申報狀態</label>
+        <select id="status">
+          <option value="single">單身</option>
+          <option value="married">夫妻合併申報</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="adults">扶養親屬（未滿 70 歲）</label>
+        <input type="number" id="adults" value="0" min="0" max="10" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="elders">扶養親屬（70 歲以上）</label>
+        <input type="number" id="elders" value="0" min="0" max="10" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="earners">有薪資所得的人數</label>
+        <input type="number" id="earners" value="1" min="1" max="2" step="1">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="deductMode">扣除額方式</label>
+      <select id="deductMode">
+        <option value="standard">標準扣除額</option>
+        <option value="itemized">列舉扣除額（自行輸入金額）</option>
+      </select>
+    </div>
+
+    <div class="field hidden" id="itemizedField">
+      <label for="itemized">列舉扣除額總額（元）</label>
+      <input type="number" id="itemized" value="0" min="0" step="1000">
+      <p class="hint">保險費、醫藥費、捐贈、房貸利息、房租支出等加總。工具會自動幫你跟標準扣除額比較，取對你有利的那一個。</p>
+    </div>
+
+    <div class="tc mb-2 mt-2">
+      <div class="big-num" id="taxOut">—</div>
+      <div class="small muted">估算應納稅額</div>
+    </div>
+
+    <div class="stat-row mb-2">
+      <div class="stat"><div class="stat__num" id="netIncome">—</div><div class="stat__label">綜合所得淨額</div></div>
+      <div class="stat"><div class="stat__num" id="marginal">—</div><div class="stat__label">適用稅率</div></div>
+      <div class="stat"><div class="stat__num" id="effective">—</div><div class="stat__label">有效稅率</div></div>
+      <div class="stat"><div class="stat__num" id="afterTax">—</div><div class="stat__label">稅後所得</div></div>
+    </div>
+
+    <div class="panel__title">計算過程</div>
+    <div class="table-scroll mb-2">
+      <table class="data">
+        <tbody id="steps"></tbody>
+      </table>
+    </div>
+
+    <div class="panel__title">稅率級距</div>
+    <div class="table-scroll">
+      <table class="data">
+        <thead><tr><th>綜合所得淨額</th><th>稅率</th><th class="num">這一段的稅</th></tr></thead>
+        <tbody id="brackets"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="note note--warn">
+    <strong>這是粗估，不能當成報稅依據。</strong>實際申報還牽涉很多這裡沒有納入的項目：分開計稅、各項特別扣除額（身心障礙、教育學費、幼兒學前、長期照顧、儲蓄投資）、基本生活費差額、已扣繳稅額與股利抵減等等。免稅額與級距數字為 <strong>2026 年度（民國 115 年）申報適用</strong>，之後會調整。請以財政部的正式試算與稅務人員的說明為準。
+  </div>
+
+  <section class="prose">
+    <h2>稅是怎麼算出來的</h2>
+    <p>流程分三步，很多人誤解的地方在第三步：</p>
+    <ol>
+      <li><strong>算總所得</strong>：薪資、利息、租金等全部加起來。</li>
+      <li><strong>減掉免稅額與扣除額</strong>，得到「綜合所得淨額」。這一步減掉的金額往往比想像中多。</li>
+      <li><strong>用淨額套級距算稅</strong>。</li>
+    </ol>
+
+    <h2>「我在 12% 級距」不代表要繳 12% 的稅</h2>
+    <p>這是最常見的誤會。台灣採<strong>累進稅率</strong>，是一段一段分開算的：淨額的前一段用 5%、超過的部分才用 12%，以此類推。所以一個落在 12% 級距的人，實際繳的稅佔所得的比例（有效稅率）通常只有百分之幾。</p>
+    <p>上面的「稅率級距」表格會把每一段各繳多少列出來，一看就懂。</p>
+
+    <h2>標準扣除額跟列舉扣除額怎麼選</h2>
+    <p><strong>兩者只能擇一</strong>。標準扣除額不用任何單據，直接給你一個固定金額；列舉扣除額要逐項附證明，但如果你有高額的醫藥費、保險費、房貸利息或捐贈，加起來可能超過標準扣除額。</p>
+    <p>做法很簡單：把列舉的項目加總，跟標準扣除額比大小，哪個高就用哪個。這個工具會自動幫你比。多數上班族用標準扣除額就好，除非當年有大筆醫療支出或剛買房。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>年收入多少以下不用繳稅？</summary>
+        <div class="a">以單身上班族來說，免稅額加上標準扣除額與薪資所得特別扣除額，門檻大約在四十幾萬。低於這個數字，綜合所得淨額會是零，不用繳稅——但<strong>還是要申報</strong>，因為公司可能已經預扣了稅款，申報才能退回來。</div>
+      </details>
+      <details>
+        <summary>夫妻一定要合併申報嗎？</summary>
+        <div class="a">夫妻原則上要合併申報，但可以選擇把其中一方的「薪資所得」或「各類所得」分開計稅。哪一種划算要實際算過才知道，通常雙薪且收入差距大的家庭，分開計稅比較有利。這個工具只做合併計算，實際報稅時財政部的系統會自動幫你選最有利的方式。</div>
+      </details>
+      <details>
+        <summary>扶養父母有什麼條件？</summary>
+        <div class="a">要符合年齡或無謀生能力等條件，而且該親屬不能同時被別人申報扶養。滿 70 歲的直系尊親屬免稅額較高，這個工具有分開欄位。實際認定條件請查國稅局的規定。</div>
+      </details>
+      <details>
+        <summary>算出來跟財政部的系統不一樣？</summary>
+        <div class="a">正常，因為這裡只納入最基本的項目。財政部的線上報稅系統會自動帶入你的所得資料、已扣繳稅額與各項特別扣除額，算出來一定比這裡精確。這個工具的用途是讓你在報稅前先有個概念。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, esc } = window.U;
+
+  /* 2026 年度（民國 115 年）申報適用數字 */
+  const P = {
+    exemption: 101000,          // 一般免稅額
+    exemptionElder: 151500,     // 70 歲以上免稅額
+    standardSingle: 136000,     // 標準扣除額．單身
+    standardMarried: 272000,    // 標準扣除額．有配偶
+    salaryDeduction: 227000     // 薪資所得特別扣除額（每人上限）
+  };
+
+  /* 累進級距：上限與稅率。用逐段累加計算，不用累進差額常數 */
+  const BRACKETS = [
+    { upto: 610000,   rate: 0.05 },
+    { upto: 1380000,  rate: 0.12 },
+    { upto: 2770000,  rate: 0.20 },
+    { upto: 5190000,  rate: 0.30 },
+    { upto: Infinity, rate: 0.40 }
+  ];
+
+  const money = n => Math.round(n).toLocaleString('zh-TW');
+
+  function calc() {
+    const salary = Math.max(0, Number($('#income').value) || 0);
+    const other = Math.max(0, Number($('#otherIncome').value) || 0);
+    const married = $('#status').value === 'married';
+    const adults = Math.max(0, Math.floor(Number($('#adults').value) || 0));
+    const elders = Math.max(0, Math.floor(Number($('#elders').value) || 0));
+    const earners = Math.max(1, Math.min(2, Math.floor(Number($('#earners').value) || 1)));
+
+    const gross = salary + other;
+
+    /* 免稅額：本人（＋配偶）＋扶養親屬，70 歲以上額度較高 */
+    const selfCount = married ? 2 : 1;
+    const exemption = (selfCount + adults) * P.exemption + elders * P.exemptionElder;
+
+    /* 一般扣除額：標準與列舉擇優 */
+    const standard = married ? P.standardMarried : P.standardSingle;
+    const itemized = $('#deductMode').value === 'itemized'
+      ? Math.max(0, Number($('#itemized').value) || 0)
+      : 0;
+    const generalDeduction = Math.max(standard, itemized);
+    const usedItemized = itemized > standard;
+
+    /* 薪資所得特別扣除額：每人有上限，且不能超過實際薪資所得 */
+    const salaryDeduction = Math.min(salary, P.salaryDeduction * earners);
+
+    const netIncome = Math.max(0, gross - exemption - generalDeduction - salaryDeduction);
+
+    /* 逐段累進計算 */
+    let tax = 0;
+    let lower = 0;
+    let marginalRate = 0;
+    const segments = [];
+
+    for (const b of BRACKETS) {
+      if (netIncome > lower) {
+        const taxableHere = Math.min(netIncome, b.upto) - lower;
+        const taxHere = taxableHere * b.rate;
+        tax += taxHere;
+        marginalRate = b.rate;
+        segments.push({ ...b, lower, taxableHere, taxHere, active: true });
+      } else {
+        segments.push({ ...b, lower, taxableHere: 0, taxHere: 0, active: false });
+      }
+      lower = b.upto;
+    }
+
+    $('#taxOut').textContent = money(tax) + ' 元';
+    $('#netIncome').textContent = money(netIncome);
+    $('#marginal').textContent = netIncome > 0 ? (marginalRate * 100) + '%' : '0%';
+    $('#effective').textContent = gross > 0 ? (tax / gross * 100).toFixed(2) + '%' : '—';
+    $('#afterTax').textContent = money(gross - tax);
+
+    /* 計算過程 */
+    $('#steps').innerHTML = `
+      <tr><td>全年總所得</td><td class="num">${money(gross)}</td></tr>
+      <tr class="sub"><td>－ 免稅額（${selfCount + adults} 人一般＋${elders} 人 70 歲以上）</td>
+          <td class="num">−${money(exemption)}</td></tr>
+      <tr class="sub"><td>－ ${usedItemized ? '列舉' : '標準'}扣除額
+          ${usedItemized ? '<span class="small muted">（高於標準，已自動採用）</span>' : ''}</td>
+          <td class="num">−${money(generalDeduction)}</td></tr>
+      <tr class="sub"><td>－ 薪資所得特別扣除額</td><td class="num">−${money(salaryDeduction)}</td></tr>
+      <tr class="total"><td>綜合所得淨額</td><td class="num">${money(netIncome)}</td></tr>
+      <tr class="total"><td>應納稅額</td><td class="num">${money(tax)}</td></tr>`;
+
+    /* 級距表 */
+    $('#brackets').innerHTML = segments.map((s, i) => {
+      const from = s.lower === 0 ? '0' : money(s.lower + 1);
+      const to = s.upto === Infinity ? '以上' : money(s.upto);
+      const isCurrent = s.active && (netIncome <= s.upto);
+      return `<tr class="${isCurrent ? 'bracket-now' : ''}">
+        <td>${from} ～ ${to}</td>
+        <td>${(s.rate * 100)}%</td>
+        <td class="num">${s.taxableHere > 0 ? money(s.taxHere) : '—'}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  $('#deductMode').addEventListener('change', () => {
+    $('#itemizedField').classList.toggle('hidden', $('#deductMode').value !== 'itemized');
+    calc();
+  });
+
+  $('#status').addEventListener('change', () => {
+    /* 單身不會有兩個薪資所得者 */
+    const married = $('#status').value === 'married';
+    $('#earners').max = married ? 2 : 1;
+    if (!married) $('#earners').value = 1;
+    calc();
+  });
+
+  $$('input, select').forEach(el => el.addEventListener('input', calc));
+  calc();
+})();
+</script>
+</body>
+</html>

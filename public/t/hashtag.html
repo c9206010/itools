@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hashtag 整理器｜自動加井號、去重複、排版 - 順手工具箱</title>
+<meta name="description" content="免費 Hashtag 整理工具，貼上一串關鍵字自動補上井號、移除重複與無效字元，可切換一行或空白分隔排版，並檢查是否超過 IG 的 30 個上限。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>#</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .io-grid { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; align-items: start; }
+  @media (max-width: 720px) { .io-grid { grid-template-columns: 1fr; } }
+  .tag-preview { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag-pill {
+    background: var(--accent-wash); color: var(--accent);
+    border: 1px solid var(--accent); border-radius: 999px;
+    padding: 3px 12px; font-size: .85rem; font-weight: 600;
+    cursor: pointer;
+  }
+  .tag-pill:hover { background: var(--brand-wash); color: var(--brand-ink); border-color: var(--brand); }
+  .tag-pill.dup { opacity: .45; text-decoration: line-through; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/hashtag.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="hashtag, 標籤, 井字號, ig, 標記">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="Hashtag 整理器｜自動加井號、去重複、排版 - 順手工具箱">
+<meta property="og:description" content="免費 Hashtag 整理工具，貼上一串關鍵字自動補上井號、移除重複與無效字元，可切換一行或空白分隔排版，並檢查是否超過 IG 的 30 個上限。">
+<meta property="og:url" content="https://tools.luka-life.com/t/hashtag.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Hashtag 整理器｜自動加井號、去重複、排版 - 順手工具箱">
+<meta name="twitter:description" content="免費 Hashtag 整理工具，貼上一串關鍵字自動補上井號、移除重複與無效字元，可切換一行或空白分隔排版，並檢查是否超過 IG 的 30 個上限。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Hashtag 整理器",
+  "description": "免費 Hashtag 整理工具，貼上一串關鍵字自動補上井號、移除重複與無效字元，可切換一行或空白分隔排版，並檢查是否超過 IG 的 30 個上限。",
+  "url": "https://tools.luka-life.com/t/hashtag.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "社群小幫手",
+      "item": "https://tools.luka-life.com/#social"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Hashtag 整理器",
+      "item": "https://tools.luka-life.com/t/hashtag.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "「前置空行」是做什麼的？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "把一整串 hashtag 推到貼文下方，讓讀者第一眼看到的是內容而不是標籤。IG 的貼文預覽只會顯示前面幾行，加幾行空白就能把標籤藏在「顯示更多」裡面，版面乾淨很多。這裡產生的空行用的是特殊空白字元，IG 不會把它吃掉。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "大小寫有差嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "搜尋時沒差，#TaipeiFood 跟 #taipeifood 會被歸到同一個標籤。但顯示時會照你打的樣子呈現，所以長的英文標籤習慣把每個字首大寫，讀起來比較清楚。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "可以只複製其中一個標籤嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以，下面預覽區的任何一個標籤點一下就會單獨複製。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="hashtag">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">#️⃣</span>Hashtag 整理器</h1>
+    <p class="lede">關鍵字想到什麼打什麼，這裡幫你補井號、去掉重複的、清掉不能用的字元，再排成你要的樣子。</p>
+  </div>
+
+  <div class="panel">
+    <div class="io-grid mb-2">
+      <div class="field mb-0">
+        <label for="src">關鍵字（換行、逗號、空白分隔都可以）</label>
+        <textarea id="src" rows="9" spellcheck="false">台北美食
+咖啡廳
+#台北美食
+下午茶, 親子友善
+拿鐵 手沖咖啡
+台北 咖啡廳</textarea>
+      </div>
+      <div class="field mb-0">
+        <label for="out">整理結果</label>
+        <textarea id="out" rows="9" spellcheck="false" readonly></textarea>
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="layout">排版方式</label>
+        <select id="layout">
+          <option value="space">用空白分隔（一整段）</option>
+          <option value="line">一行一個</option>
+          <option value="comma">用逗號分隔</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label for="sortMode">排序</label>
+        <select id="sortMode">
+          <option value="">保持原本順序</option>
+          <option value="asc">依字母筆畫排序</option>
+          <option value="len">依長度由短到長</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label for="prefix">前置空行</label>
+        <select id="prefix">
+          <option value="0">不加</option>
+          <option value="1">加 1 行空白</option>
+          <option value="3">加 3 行空白（把標籤推下去）</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="chips mb-2">
+      <label class="chip is-on"><input type="checkbox" id="dedupe" hidden checked> 移除重複</label>
+      <label class="chip is-on"><input type="checkbox" id="clean" hidden checked> 清掉不能用的字元</label>
+      <label class="chip"><input type="checkbox" id="lower" hidden> 英文轉小寫</label>
+    </div>
+
+    <div class="stat-row mb-2">
+      <div class="stat"><div class="stat__num" id="sCount">0</div><div class="stat__label">有效標籤</div></div>
+      <div class="stat"><div class="stat__num" id="sDup">0</div><div class="stat__label">移除重複</div></div>
+      <div class="stat"><div class="stat__num" id="sChars">0</div><div class="stat__label">總字元</div></div>
+      <div class="stat"><div class="stat__num" id="sLimit">—</div><div class="stat__label">IG 上限 30 個</div></div>
+    </div>
+
+    <div class="panel__title">預覽（點任一個可單獨複製）</div>
+    <div class="tag-preview mb-2" id="tagPreview"></div>
+
+    <div class="btn-group">
+      <button class="btn" type="button" id="copyBtn">複製結果</button>
+      <button class="btn btn--ghost" type="button" id="clearBtn">清空</button>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>哪些字元不能放進 hashtag</h2>
+    <p>Hashtag 只認得<strong>文字、數字與底線</strong>。一旦遇到空白、標點、驚嘆號、連字號，標籤就會在那裡斷掉。所以 <code>#台北 美食</code> 實際生效的只有 <code>#台北</code>，後面的「美食」會變成普通文字。</p>
+    <p>勾選「清掉不能用的字元」之後，工具會把這些符號直接移除，讓 <code>#台北美食</code> 連成一個完整的標籤。中文本來就不用空格，這點對中文使用者特別重要。</p>
+
+    <h2>標籤要放幾個</h2>
+    <p>IG 單篇上限 30 個，但<strong>放滿不等於效果好</strong>。塞一堆不相關的熱門標籤反而可能被判定為濫用。比較實際的做法是混搭：幾個大流量的廣泛標籤、幾個中等的主題標籤、再加幾個很精準的小眾標籤，總數抓 10 到 20 個。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>「前置空行」是做什麼的？</summary>
+        <div class="a">把一整串 hashtag 推到貼文下方，讓讀者第一眼看到的是內容而不是標籤。IG 的貼文預覽只會顯示前面幾行，加幾行空白就能把標籤藏在「顯示更多」裡面，版面乾淨很多。這裡產生的空行用的是特殊空白字元，IG 不會把它吃掉。</div>
+      </details>
+      <details>
+        <summary>大小寫有差嗎？</summary>
+        <div class="a">搜尋時沒差，<code>#TaipeiFood</code> 跟 <code>#taipeifood</code> 會被歸到同一個標籤。但顯示時會照你打的樣子呈現，所以長的英文標籤習慣把每個字首大寫，讀起來比較清楚。</div>
+      </details>
+      <details>
+        <summary>可以只複製其中一個標籤嗎？</summary>
+        <div class="a">可以，下面預覽區的任何一個標籤點一下就會單獨複製。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc } = window.U;
+
+  const FILLER = '⠀';   // 點字空格，用來做不會被 IG 吃掉的空行
+
+  const src = $('#src');
+  const out = $('#out');
+
+  document.querySelectorAll('.chip input').forEach(cb => {
+    cb.addEventListener('change', () => {
+      cb.parentElement.classList.toggle('is-on', cb.checked);
+      run();
+    });
+  });
+
+  /* hashtag 只認文字、數字與底線，其餘一律視為結束符號 */
+  function sanitize(word) {
+    return word.replace(/[^\p{L}\p{N}_]/gu, '');
+  }
+
+  function run() {
+    /* 換行、逗號、頓號、空白都當成分隔 */
+    let raw = src.value.split(/[\s,，、]+/).filter(Boolean);
+
+    let tags = raw.map(w => {
+      let t = w.replace(/^#+/, '');            // 先脫掉已有的井號
+      if ($('#clean').checked) t = sanitize(t);
+      if ($('#lower').checked) t = t.toLowerCase();
+      return t;
+    }).filter(t => t.length > 0);
+
+    let dupCount = 0;
+    if ($('#dedupe').checked) {
+      const seen = new Set();
+      const unique = [];
+      tags.forEach(t => {
+        const key = t.toLowerCase();
+        if (seen.has(key)) { dupCount++; return; }
+        seen.add(key);
+        unique.push(t);
+      });
+      tags = unique;
+    }
+
+    const sortMode = $('#sortMode').value;
+    if (sortMode === 'asc') {
+      tags.sort((a, b) => a.localeCompare(b, 'zh-Hant'));
+    } else if (sortMode === 'len') {
+      tags.sort((a, b) => a.length - b.length || a.localeCompare(b, 'zh-Hant'));
+    }
+
+    const withHash = tags.map(t => '#' + t);
+
+    const layout = $('#layout').value;
+    let body;
+    if (layout === 'line') body = withHash.join('\n');
+    else if (layout === 'comma') body = withHash.join(', ');
+    else body = withHash.join(' ');
+
+    const gap = Number($('#prefix').value);
+    const lead = gap > 0 ? Array(gap).fill(FILLER).join('\n') + '\n' : '';
+
+    out.value = lead + body;
+
+    $('#sCount').textContent = tags.length;
+    $('#sDup').textContent = dupCount;
+    $('#sChars').textContent = Array.from(out.value).length.toLocaleString();
+
+    const over = tags.length > 30;
+    $('#sLimit').textContent = over ? `超出 ${tags.length - 30}` : `還可加 ${30 - tags.length}`;
+    $('#sLimit').style.color = over ? 'var(--danger)' : '';
+
+    $('#tagPreview').innerHTML = withHash.map(t =>
+      `<span class="tag-pill" data-copy="${esc(t)}">${esc(t)}</span>`).join('')
+      || '<span class="muted small">還沒有標籤</span>';
+  }
+
+  src.addEventListener('input', run);
+  ['#layout', '#sortMode', '#prefix'].forEach(s =>
+    $(s).addEventListener('change', run));
+
+  $('#copyBtn').addEventListener('click', () => {
+    if (!out.value.trim()) { window.toast('還沒有標籤'); return; }
+    window.copyText(out.value, '已複製整串標籤');
+  });
+
+  $('#clearBtn').addEventListener('click', () => {
+    src.value = '';
+    run();
+    src.focus();
+  });
+
+  run();
+})();
+</script>
+</body>
+</html>

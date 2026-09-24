@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>隨機數字產生器｜指定範圍抽號，可設定不重複 - 順手工具箱</title>
+<meta name="description" content="免費亂數產生器，自訂最小值最大值，一次產生多組隨機數字，可選擇是否允許重複並排序結果，抽號碼、抽座位、選樂透號碼都能用。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔢</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .num-balls { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .ball {
+    min-width: 58px; height: 58px; padding: 0 10px;
+    border-radius: 50%; display: grid; place-items: center;
+    background: var(--brand); color: #fff;
+    font-weight: 800; font-size: 1.15rem;
+    box-shadow: var(--shadow-2);
+    animation: pop .3s ease backwards;
+  }
+  .ball:nth-child(n+2) { background: var(--accent); }
+  @keyframes pop { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/number.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="亂數, 抽號碼, random, number, 樂透">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="隨機數字產生器｜指定範圍抽號，可設定不重複 - 順手工具箱">
+<meta property="og:description" content="免費亂數產生器，自訂最小值最大值，一次產生多組隨機數字，可選擇是否允許重複並排序結果，抽號碼、抽座位、選樂透號碼都能用。">
+<meta property="og:url" content="https://tools.luka-life.com/t/number.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="隨機數字產生器｜指定範圍抽號，可設定不重複 - 順手工具箱">
+<meta name="twitter:description" content="免費亂數產生器，自訂最小值最大值，一次產生多組隨機數字，可選擇是否允許重複並排序結果，抽號碼、抽座位、選樂透號碼都能用。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "隨機數字產生器",
+  "description": "免費亂數產生器，自訂最小值最大值，一次產生多組隨機數字，可選擇是否允許重複並排序結果，抽號碼、抽座位、選樂透號碼都能用。",
+  "url": "https://tools.luka-life.com/t/number.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "隨機抽籤",
+      "item": "https://tools.luka-life.com/#random"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "隨機數字產生器",
+      "item": "https://tools.luka-life.com/t/number.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "這個亂數可以用在正式抽獎嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "結果來自瀏覽器的密碼學等級亂數，公平性沒有問題，拿來辦公室抽獎、課堂抽籤都很夠用。但它不會留下任何紀錄，如果是需要事後舉證的正式活動，建議搭配全程錄影或有公信力的第三方平台。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "可以產生小數嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "目前只產生整數。需要小數的話，一個常見做法是把範圍乘以 100（例如要 1.00 到 5.00 就抽 100 到 500），拿到結果再自己除以 100。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "最多能產生幾組？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "一次最多 500 組。超過的話畫面會太長不好讀，建議分批產生。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="number">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🔢</span>隨機數字產生器</h1>
+    <p class="lede">設定範圍就能抽號。抽座位、抽獎號碼、挑樂透，需要不重複的話勾一下就好。</p>
+  </div>
+
+  <div class="panel">
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="minV">最小值</label>
+        <input type="number" id="minV" value="1" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="maxV">最大值</label>
+        <input type="number" id="maxV" value="100" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="qty">產生幾組</label>
+        <input type="number" id="qty" value="1" min="1" max="500" step="1">
+      </div>
+    </div>
+
+    <div class="chips mb-2">
+      <label class="chip"><input type="checkbox" id="noRepeat" hidden> 不重複</label>
+      <label class="chip"><input type="checkbox" id="doSort" hidden> 由小到大排序</label>
+    </div>
+
+    <button class="btn btn--lg btn--block mb-2" type="button" id="genBtn">產生隨機數字</button>
+
+    <div class="out" id="ballsWrap" aria-live="polite" style="display:grid;place-items:center;min-height:86px">
+      <div class="num-balls" id="balls"></div>
+    </div>
+
+    <div class="btn-group mt-1">
+      <button class="btn btn--ghost btn--sm" type="button" id="copyBtn">複製結果</button>
+      <span class="small muted" id="meta" style="align-self:center"></span>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>「不重複」怎麼運作</h2>
+    <p>勾選之後，工具會用洗牌的方式從整個範圍裡取號，保證每個數字最多出現一次——就像把號碼球全部放進箱子再一顆顆抽出來，抽過的不放回去。要注意<strong>產生組數不能超過範圍內的數字總數</strong>，例如 1 到 10 最多只能抽出 10 組不重複的數字。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>這個亂數可以用在正式抽獎嗎？</summary>
+        <div class="a">結果來自瀏覽器的密碼學等級亂數，公平性沒有問題，拿來辦公室抽獎、課堂抽籤都很夠用。但它不會留下任何紀錄，如果是需要事後舉證的正式活動，建議搭配全程錄影或有公信力的第三方平台。</div>
+      </details>
+      <details>
+        <summary>可以產生小數嗎？</summary>
+        <div class="a">目前只產生整數。需要小數的話，一個常見做法是把範圍乘以 100（例如要 1.00 到 5.00 就抽 100 到 500），拿到結果再自己除以 100。</div>
+      </details>
+      <details>
+        <summary>最多能產生幾組？</summary>
+        <div class="a">一次最多 500 組。超過的話畫面會太長不好讀，建議分批產生。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, randInt, shuffle } = window.U;
+
+  let last = [];
+
+  /* chip 樣式與隱藏的 checkbox 同步 */
+  document.querySelectorAll('.chip input').forEach(cb => {
+    cb.addEventListener('change', () => {
+      cb.parentElement.classList.toggle('is-on', cb.checked);
+    });
+  });
+
+  function generate() {
+    let min = Math.floor(Number($('#minV').value) || 0);
+    let max = Math.floor(Number($('#maxV').value) || 0);
+    let qty = Math.floor(Number($('#qty').value) || 1);
+
+    if (min > max) { [min, max] = [max, min]; $('#minV').value = min; $('#maxV').value = max; }
+    qty = Math.max(1, Math.min(500, qty));
+    $('#qty').value = qty;
+
+    const span = max - min + 1;
+    const noRepeat = $('#noRepeat').checked;
+
+    if (noRepeat && qty > span) {
+      window.toast(`不重複模式下最多只能產生 ${span} 組`);
+      qty = span;
+      $('#qty').value = qty;
+    }
+
+    let result;
+    if (noRepeat) {
+      /* 範圍不大時直接洗牌；範圍很大時用集合抽樣，避免建立巨大陣列 */
+      if (span <= 200000) {
+        const pool = Array.from({ length: span }, (_, i) => min + i);
+        result = shuffle(pool).slice(0, qty);
+      } else {
+        const seen = new Set();
+        result = [];
+        while (result.length < qty) {
+          const v = randInt(min, max);
+          if (!seen.has(v)) { seen.add(v); result.push(v); }
+        }
+      }
+    } else {
+      result = Array.from({ length: qty }, () => randInt(min, max));
+    }
+
+    if ($('#doSort').checked) result.sort((a, b) => a - b);
+
+    last = result;
+    $('#balls').innerHTML = result.map((v, i) =>
+      `<span class="ball" style="animation-delay:${Math.min(i * 40, 600)}ms">${v}</span>`).join('');
+    $('#meta').textContent = `範圍 ${min}–${max}．共 ${result.length} 組`;
+  }
+
+  $('#genBtn').addEventListener('click', generate);
+
+  $('#copyBtn').addEventListener('click', () => {
+    if (!last.length) { window.toast('請先產生數字'); return; }
+    window.copyText(last.join(', '), `已複製 ${last.length} 組數字`);
+  });
+
+  /* Enter 直接產生 */
+  document.querySelectorAll('input[type=number]').forEach(el => {
+    el.addEventListener('keydown', e => { if (e.key === 'Enter') generate(); });
+  });
+
+  generate();
+})();
+</script>
+</body>
+</html>

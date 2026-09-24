@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JSON 格式化工具｜美化、壓縮與語法檢查 - 順手工具箱</title>
+<meta name="description" content="免費線上 JSON 格式化，一鍵美化排版、壓縮成單行、檢查語法錯誤並標出行號，也能排序鍵值與轉成跳脫字串，前端後端除錯必備。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.8em' font-size='80'>{}</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .json-out {
+    background: var(--bg-sunk); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 14px;
+    font-family: var(--mono); font-size: .87rem; line-height: 1.65;
+    white-space: pre; overflow: auto; max-height: 520px; min-height: 180px;
+    tab-size: 2;
+  }
+  .j-key { color: #b83d16; }
+  .j-str { color: #2f7d4f; }
+  .j-num { color: #1e4d5c; }
+  .j-bool { color: #8e44ad; font-weight: 600; }
+  .j-null { color: var(--ink-3); font-style: italic; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .j-key { color: #ff9877; }
+    :root:not([data-theme="light"]) .j-str { color: #7ed99f; }
+    :root:not([data-theme="light"]) .j-num { color: #7fc4d8; }
+    :root:not([data-theme="light"]) .j-bool { color: #c79ae0; }
+  }
+  :root[data-theme="dark"] .j-key { color: #ff9877; }
+  :root[data-theme="dark"] .j-str { color: #7ed99f; }
+  :root[data-theme="dark"] .j-num { color: #7fc4d8; }
+  :root[data-theme="dark"] .j-bool { color: #c79ae0; }
+  .err-box {
+    background: var(--brand-wash); border-left: 3px solid var(--danger);
+    padding: 12px 15px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    font-size: .9rem; margin-bottom: 14px;
+  }
+  .err-box code { background: rgba(0,0,0,.08); }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/json.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="json, 格式化, 美化, 壓縮, 驗證, format">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="JSON 格式化工具｜美化、壓縮與語法檢查 - 順手工具箱">
+<meta property="og:description" content="免費線上 JSON 格式化，一鍵美化排版、壓縮成單行、檢查語法錯誤並標出行號，也能排序鍵值與轉成跳脫字串，前端後端除錯必備。">
+<meta property="og:url" content="https://tools.luka-life.com/t/json.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="JSON 格式化工具｜美化、壓縮與語法檢查 - 順手工具箱">
+<meta name="twitter:description" content="免費線上 JSON 格式化，一鍵美化排版、壓縮成單行、檢查語法錯誤並標出行號，也能排序鍵值與轉成跳脫字串，前端後端除錯必備。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "JSON 格式化",
+  "description": "免費線上 JSON 格式化，一鍵美化排版、壓縮成單行、檢查語法錯誤並標出行號，也能排序鍵值與轉成跳脫字串，前端後端除錯必備。",
+  "url": "https://tools.luka-life.com/t/json.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "開發編碼",
+      "item": "https://tools.luka-life.com/#dev"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "JSON 格式化",
+      "item": "https://tools.luka-life.com/t/json.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "「轉成跳脫字串」什麼時候用？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "當你要把一整段 JSON 當成字串塞進另一段程式碼或另一個 JSON 欄位裡的時候。它會把雙引號變成 \\\"、換行變成 \\n，貼進去才不會把外層的語法弄壞。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "中文會被轉成 \\u 編碼嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會，這個工具輸出的中文維持原樣，可讀性比較好。JSON 標準兩種寫法都合法，多數程式讀取時沒有差別。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "資料會外傳嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會。解析與排版都在你的瀏覽器執行，含有 API 金鑰或客戶資料的 JSON 貼進來也不會送出。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="json">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">{}</span>JSON 格式化</h1>
+    <p class="lede">壓成一行的 JSON 貼進來就變得好讀，語法有錯也會告訴你錯在第幾行第幾個字。</p>
+  </div>
+
+  <div class="panel">
+    <div class="field">
+      <label for="src">貼上 JSON</label>
+      <textarea id="src" rows="7" spellcheck="false" placeholder='{"name":"順手工具箱","tools":40,"free":true}'>{"site":"順手工具箱","tools":40,"free":true,"categories":["隨機","時間","文字"],"meta":{"offline":true,"upload":null}}</textarea>
+    </div>
+
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="indent">縮排</label>
+        <select id="indent">
+          <option value="2">2 個空格</option>
+          <option value="4">4 個空格</option>
+          <option value="tab">Tab</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label for="sortKeys">鍵值排序</label>
+        <select id="sortKeys">
+          <option value="">保持原本順序</option>
+          <option value="asc">依字母排序</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="btn-group mb-2">
+      <button class="btn" type="button" id="beautifyBtn">美化排版</button>
+      <button class="btn btn--ghost" type="button" id="minifyBtn">壓縮成一行</button>
+      <button class="btn btn--ghost" type="button" id="escapeBtn">轉成跳脫字串</button>
+      <button class="btn btn--ghost" type="button" id="unescapeBtn">還原跳脫字串</button>
+      <button class="btn btn--ghost" type="button" id="clearBtn">清空</button>
+    </div>
+
+    <div id="errBox"></div>
+
+    <div class="stat-row mb-2" id="stats">
+      <div class="stat"><div class="stat__num" id="sKeys">—</div><div class="stat__label">鍵的總數</div></div>
+      <div class="stat"><div class="stat__num" id="sDepth">—</div><div class="stat__label">巢狀深度</div></div>
+      <div class="stat"><div class="stat__num" id="sSize">—</div><div class="stat__label">原始大小</div></div>
+      <div class="stat"><div class="stat__num" id="sMin">—</div><div class="stat__label">壓縮後</div></div>
+    </div>
+
+    <div class="field">
+      <label>輸出結果</label>
+      <div class="json-out" id="out" aria-live="polite"></div>
+    </div>
+
+    <button class="btn" type="button" id="copyBtn">複製結果</button>
+  </div>
+
+  <section class="prose">
+    <h2>常見的 JSON 語法錯誤</h2>
+    <ul>
+      <li><strong>最後一個元素後面多了逗號</strong>：<code>[1, 2, 3,]</code> 在 JavaScript 裡合法，但 JSON 不接受。</li>
+      <li><strong>用單引號</strong>：JSON 規定字串一定要用雙引號，<code>{'a': 1}</code> 是錯的。</li>
+      <li><strong>鍵沒有加引號</strong>：<code>{a: 1}</code> 要寫成 <code>{"a": 1}</code>。</li>
+      <li><strong>有註解</strong>：標準 JSON 不支援 <code>//</code> 或 <code>/* */</code> 註解。</li>
+      <li><strong>結尾被截斷</strong>：從瀏覽器主控台複製時常常少了最後幾個括號。</li>
+    </ul>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>「轉成跳脫字串」什麼時候用？</summary>
+        <div class="a">當你要把一整段 JSON 當成字串塞進另一段程式碼或另一個 JSON 欄位裡的時候。它會把雙引號變成 <code>\"</code>、換行變成 <code>\n</code>，貼進去才不會把外層的語法弄壞。</div>
+      </details>
+      <details>
+        <summary>中文會被轉成 \u 編碼嗎？</summary>
+        <div class="a">不會，這個工具輸出的中文維持原樣，可讀性比較好。JSON 標準兩種寫法都合法，多數程式讀取時沒有差別。</div>
+      </details>
+      <details>
+        <summary>資料會外傳嗎？</summary>
+        <div class="a">不會。解析與排版都在你的瀏覽器執行，含有 API 金鑰或客戶資料的 JSON 貼進來也不會送出。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc, bytes } = window.U;
+
+  const src = $('#src');
+  const out = $('#out');
+  let lastText = '';
+
+  function indentStr() {
+    const v = $('#indent').value;
+    return v === 'tab' ? '\t' : Number(v);
+  }
+
+  /* 遞迴重建物件以套用鍵值排序（陣列順序不動） */
+  function sortDeep(value) {
+    if (Array.isArray(value)) return value.map(sortDeep);
+    if (value && typeof value === 'object') {
+      const o = {};
+      Object.keys(value).sort().forEach(k => { o[k] = sortDeep(value[k]); });
+      return o;
+    }
+    return value;
+  }
+
+  function countKeys(v) {
+    if (Array.isArray(v)) return v.reduce((s, x) => s + countKeys(x), 0);
+    if (v && typeof v === 'object') {
+      return Object.keys(v).length + Object.values(v).reduce((s, x) => s + countKeys(x), 0);
+    }
+    return 0;
+  }
+
+  function depthOf(v, d = 1) {
+    if (Array.isArray(v) || (v && typeof v === 'object')) {
+      const children = Array.isArray(v) ? v : Object.values(v);
+      if (!children.length) return d;
+      return Math.max(...children.map(x => depthOf(x, d + 1)));
+    }
+    return d;
+  }
+
+  /* 把錯誤訊息裡的字元位置換算成行列，方便定位 */
+  function locate(text, message) {
+    const m = message.match(/position (\d+)/i);
+    if (!m) return '';
+    const pos = Number(m[1]);
+    const before = text.slice(0, pos);
+    const line = before.split(/\n/).length;
+    const col = pos - before.lastIndexOf('\n');
+    const snippet = text.slice(Math.max(0, pos - 24), pos + 24).replace(/\n/g, '⏎');
+    return `<br>位置：第 <strong>${line}</strong> 行，第 <strong>${col}</strong> 個字元<br>` +
+           `附近內容：<code>${esc(snippet)}</code>`;
+  }
+
+  function showError(text, e) {
+    $('#errBox').innerHTML =
+      `<div class="err-box"><strong>JSON 語法有誤</strong><br>${esc(e.message)}${locate(text, e.message)}</div>`;
+    out.textContent = '';
+    ['#sKeys', '#sDepth', '#sSize', '#sMin'].forEach(s => $(s).textContent = '—');
+  }
+
+  function highlight(json) {
+    /* 先逸出 HTML，再用單一正規表示式依語彙上色 */
+    return esc(json).replace(
+      /("(?:\\.|[^"\\])*"\s*:)|("(?:\\.|[^"\\])*")|(\b-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?\b)|\b(true|false)\b|\b(null)\b/g,
+      (m, key, str, num, bool, nul) => {
+        if (key) return `<span class="j-key">${key}</span>`;
+        if (str) return `<span class="j-str">${str}</span>`;
+        if (num) return `<span class="j-num">${num}</span>`;
+        if (bool) return `<span class="j-bool">${bool}</span>`;
+        return `<span class="j-null">${nul}</span>`;
+      });
+  }
+
+  function process(minify) {
+    const text = src.value.trim();
+    if (!text) {
+      $('#errBox').innerHTML = '';
+      out.textContent = '';
+      return;
+    }
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e) {
+      showError(text, e);
+      return;
+    }
+
+    $('#errBox').innerHTML = '';
+    if ($('#sortKeys').value === 'asc') data = sortDeep(data);
+
+    const pretty = JSON.stringify(data, null, indentStr());
+    const min = JSON.stringify(data);
+    lastText = minify ? min : pretty;
+
+    out.innerHTML = highlight(lastText);
+
+    $('#sKeys').textContent = countKeys(data).toLocaleString();
+    $('#sDepth').textContent = depthOf(data);
+    $('#sSize').textContent = bytes(new TextEncoder().encode(text).length);
+    $('#sMin').textContent = bytes(new TextEncoder().encode(min).length);
+  }
+
+  $('#beautifyBtn').addEventListener('click', () => process(false));
+  $('#minifyBtn').addEventListener('click', () => process(true));
+  src.addEventListener('input', () => process(false));
+  $('#indent').addEventListener('change', () => process(false));
+  $('#sortKeys').addEventListener('change', () => process(false));
+
+  $('#escapeBtn').addEventListener('click', () => {
+    if (!src.value) return window.toast('沒有內容');
+    lastText = JSON.stringify(src.value);
+    out.textContent = lastText;
+    $('#errBox').innerHTML = '';
+  });
+
+  $('#unescapeBtn').addEventListener('click', () => {
+    try {
+      const v = JSON.parse(src.value);
+      if (typeof v !== 'string') {
+        window.toast('這段內容不是跳脫字串');
+        return;
+      }
+      src.value = v;
+      process(false);
+    } catch (e) {
+      window.toast('還原失敗，內容不是有效的跳脫字串');
+    }
+  });
+
+  $('#copyBtn').addEventListener('click', () => {
+    if (!lastText) return window.toast('還沒有結果');
+    window.copyText(lastText, '已複製結果');
+  });
+
+  $('#clearBtn').addEventListener('click', () => {
+    src.value = '';
+    out.textContent = '';
+    lastText = '';
+    $('#errBox').innerHTML = '';
+    ['#sKeys', '#sDepth', '#sSize', '#sMin'].forEach(s => $(s).textContent = '—');
+    src.focus();
+  });
+
+  process(false);
+})();
+</script>
+</body>
+</html>

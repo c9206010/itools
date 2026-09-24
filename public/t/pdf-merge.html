@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PDF 合併｜多份 PDF 串成一份，檔案不上傳 - 順手工具箱</title>
+<meta name="description" content="免費線上 PDF 合併工具，把多個 PDF 檔串成一份，可自由調整順序，全程在瀏覽器完成，合約與報價單不會上傳到任何伺服器。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📎</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .drop {
+    border: 2px dashed var(--border-strong); border-radius: var(--radius-lg);
+    padding: 40px 20px; text-align: center; cursor: pointer;
+    background: var(--surface-2); transition: all .15s ease;
+  }
+  .drop:hover, .drop.is-over { border-color: var(--brand); background: var(--brand-wash); }
+  .drop strong { display: block; font-size: 1.05rem; margin-bottom: 4px; }
+  .pdf-item {
+    display: grid; grid-template-columns: 34px 1fr auto; gap: 12px;
+    align-items: center; padding: 12px 14px;
+    border: 1px solid var(--border); border-radius: var(--radius);
+    background: var(--surface); margin-bottom: 8px;
+  }
+  .pdf-item__no {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--brand); color: #fff;
+    display: grid; place-items: center; font-weight: 700; font-size: .85rem;
+  }
+  .pdf-item__name { font-size: .9rem; font-weight: 600; word-break: break-all; line-height: 1.4; }
+  .pdf-item__meta { font-size: .8rem; color: var(--ink-3); margin-top: 2px; }
+  .pdf-item.is-bad { border-color: var(--danger); }
+  .pdf-item.is-bad .pdf-item__no { background: var(--danger); }
+  .mini-btn {
+    width: 30px; height: 30px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border-strong); background: var(--surface);
+    color: var(--ink-2); cursor: pointer; font-size: .85rem; line-height: 1;
+  }
+  .mini-btn:hover:not(:disabled) { border-color: var(--brand); color: var(--brand); }
+  .mini-btn:disabled { opacity: .3; cursor: default; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/pdf-merge.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="pdf, 合併, merge, 結合, 多合一">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="PDF 合併｜多份 PDF 串成一份，檔案不上傳 - 順手工具箱">
+<meta property="og:description" content="免費線上 PDF 合併工具，把多個 PDF 檔串成一份，可自由調整順序，全程在瀏覽器完成，合約與報價單不會上傳到任何伺服器。">
+<meta property="og:url" content="https://tools.luka-life.com/t/pdf-merge.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PDF 合併｜多份 PDF 串成一份，檔案不上傳 - 順手工具箱">
+<meta name="twitter:description" content="免費線上 PDF 合併工具，把多個 PDF 檔串成一份，可自由調整順序，全程在瀏覽器完成，合約與報價單不會上傳到任何伺服器。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "PDF 合併",
+  "description": "免費線上 PDF 合併工具，把多個 PDF 檔串成一份，可自由調整順序，全程在瀏覽器完成，合約與報價單不會上傳到任何伺服器。",
+  "url": "https://tools.luka-life.com/t/pdf-merge.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "PDF 文件",
+      "item": "https://tools.luka-life.com/#pdf"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "PDF 合併",
+      "item": "https://tools.luka-life.com/t/pdf-merge.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "有密碼的 PDF 可以合併嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "有開啟密碼的檔案不行，工具會標成紅色並跳過。只有限制編輯、沒有開啟密碼的檔案通常可以處理。遇到擋住的檔案，請先用原本的閱讀軟體解除密碼後另存一份再上來。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "檔案大小有限制嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "沒有硬性限制，但因為整份檔案要載進瀏覽器的記憶體，實務上建議總和控制在 100MB 以內。太大的檔案會讓分頁變慢甚至當掉，可以先分批合併再合併一次。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "合併後檔案變大了？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "正常。合併不會重新壓縮內容，所以結果大約是各檔案的總和，有時還會因為結構資訊而略大一點。這個工具不做壓縮，是為了確保畫質與文字完全不失真。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "順序可以調嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以，每一列右邊的上下箭頭就能移動，也可以按「依檔名排序」讓掃描檔自動照編號排好。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="pdf-merge">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">📎</span>PDF 合併</h1>
+    <p class="lede">掃描的合約分成好幾個檔、報告要跟附錄併在一起，拉進來排好順序就合併好了。</p>
+  </div>
+
+  <div class="note mb-2">
+    <strong>檔案不會上傳。</strong>合併是在你自己的瀏覽器裡完成的，這個網站沒有可以接收檔案的後端。不放心的話，把網路斷線之後再操作，功能一樣正常。
+  </div>
+
+  <div class="panel">
+    <div class="drop mb-2" id="drop" role="button" tabindex="0">
+      <strong>把 PDF 拖進來，或點這裡選檔案</strong>
+      <span class="muted small">可以一次選多個，之後還能調順序</span>
+      <input type="file" id="fileInput" accept="application/pdf,.pdf" multiple hidden>
+    </div>
+
+    <div id="list"></div>
+
+    <div class="stat-row mb-2 hidden" id="summary">
+      <div class="stat"><div class="stat__num" id="sFiles">0</div><div class="stat__label">檔案數</div></div>
+      <div class="stat"><div class="stat__num" id="sPages">0</div><div class="stat__label">總頁數</div></div>
+      <div class="stat"><div class="stat__num" id="sSize">—</div><div class="stat__label">原始總大小</div></div>
+    </div>
+
+    <div class="field">
+      <label for="outName">輸出檔名</label>
+      <input type="text" id="outName" value="合併結果.pdf">
+    </div>
+
+    <div class="btn-group">
+      <button class="btn btn--lg" type="button" id="mergeBtn" disabled>合併並下載</button>
+      <button class="btn btn--ghost btn--lg" type="button" id="sortNameBtn">依檔名排序</button>
+      <button class="btn btn--ghost btn--lg" type="button" id="clearBtn">清空</button>
+    </div>
+
+    <p class="hint mt-1" id="statusText"></p>
+  </div>
+
+  <section class="prose">
+    <h2>合併之後書籤跟表單會怎樣</h2>
+    <p>頁面內容、文字、圖片與版面都會完整保留，但要注意兩件事：<strong>書籤目錄與表單欄位在合併後通常會失效</strong>，因為它們綁定在原本的檔案結構上。如果你的 PDF 有需要填寫的表單，建議先填好再合併，或是保留原檔備份。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>有密碼的 PDF 可以合併嗎？</summary>
+        <div class="a">有開啟密碼的檔案不行，工具會標成紅色並跳過。只有限制編輯、沒有開啟密碼的檔案通常可以處理。遇到擋住的檔案，請先用原本的閱讀軟體解除密碼後另存一份再上來。</div>
+      </details>
+      <details>
+        <summary>檔案大小有限制嗎？</summary>
+        <div class="a">沒有硬性限制，但因為整份檔案要載進瀏覽器的記憶體，實務上建議總和控制在 100MB 以內。太大的檔案會讓分頁變慢甚至當掉，可以先分批合併再合併一次。</div>
+      </details>
+      <details>
+        <summary>合併後檔案變大了？</summary>
+        <div class="a">正常。合併不會重新壓縮內容，所以結果大約是各檔案的總和，有時還會因為結構資訊而略大一點。這個工具不做壓縮，是為了確保畫質與文字完全不失真。</div>
+      </details>
+      <details>
+        <summary>順序可以調嗎？</summary>
+        <div class="a">可以，每一列右邊的上下箭頭就能移動，也可以按「依檔名排序」讓掃描檔自動照編號排好。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc, bytes, download } = window.U;
+
+  let items = [];   // { file, name, size, bytes, pages, bad }
+
+  /* ---------- 選檔 ---------- */
+  const drop = $('#drop');
+  const input = $('#fileInput');
+
+  drop.addEventListener('click', () => input.click());
+  drop.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
+  });
+  ['dragenter', 'dragover'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('is-over'); }));
+  ['dragleave', 'drop'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('is-over'); }));
+
+  drop.addEventListener('drop', e => addFiles(e.dataTransfer.files));
+  input.addEventListener('change', e => addFiles(e.target.files));
+
+  function isPdf(f) {
+    return f.type === 'application/pdf' || /\.pdf$/i.test(f.name);
+  }
+
+  async function addFiles(fileList) {
+    const incoming = Array.from(fileList).filter(isPdf);
+    if (!incoming.length) { window.toast('請選擇 PDF 檔'); return; }
+
+    $('#statusText').textContent = '讀取中…';
+
+    for (const file of incoming) {
+      const item = { file, name: file.name, size: file.size };
+      try {
+        const buf = await file.arrayBuffer();
+        item.bytes = buf;
+        /* 先載一次確認檔案可讀並取得頁數，順便擋掉加密檔 */
+        const doc = await PDFLib.PDFDocument.load(buf);
+        item.pages = doc.getPageCount();
+      } catch (e) {
+        item.bad = /encrypt/i.test(e.message) ? '有密碼保護，無法處理' : '檔案損毀或不是有效的 PDF';
+      }
+      items.push(item);
+    }
+
+    $('#statusText').textContent = '';
+    render();
+  }
+
+  /* ---------- 畫面 ---------- */
+  function render() {
+    $('#list').innerHTML = items.map((it, i) => `
+      <div class="pdf-item ${it.bad ? 'is-bad' : ''}">
+        <span class="pdf-item__no">${i + 1}</span>
+        <div>
+          <div class="pdf-item__name">${esc(it.name)}</div>
+          <div class="pdf-item__meta">${
+            it.bad
+              ? `<span style="color:var(--danger)">${esc(it.bad)}</span>`
+              : `${it.pages} 頁．${bytes(it.size)}`
+          }</div>
+        </div>
+        <div style="display:flex;gap:5px">
+          <button class="mini-btn" type="button" data-up="${i}" ${i === 0 ? 'disabled' : ''}
+                  title="往上移" aria-label="往上移">▲</button>
+          <button class="mini-btn" type="button" data-down="${i}" ${i === items.length - 1 ? 'disabled' : ''}
+                  title="往下移" aria-label="往下移">▼</button>
+          <button class="mini-btn" type="button" data-rm="${i}"
+                  title="移除" aria-label="移除">✕</button>
+        </div>
+      </div>`).join('');
+
+    const ok = items.filter(it => !it.bad);
+    $('#summary').classList.toggle('hidden', !items.length);
+    $('#sFiles').textContent = ok.length;
+    $('#sPages').textContent = ok.reduce((s, it) => s + (it.pages || 0), 0);
+    $('#sSize').textContent = bytes(ok.reduce((s, it) => s + it.size, 0));
+
+    $('#mergeBtn').disabled = ok.length < 1;
+  }
+
+  $('#list').addEventListener('click', e => {
+    const up = e.target.closest('[data-up]');
+    const down = e.target.closest('[data-down]');
+    const rm = e.target.closest('[data-rm]');
+
+    if (up) {
+      const i = +up.dataset.up;
+      [items[i - 1], items[i]] = [items[i], items[i - 1]];
+    } else if (down) {
+      const i = +down.dataset.down;
+      [items[i + 1], items[i]] = [items[i], items[i + 1]];
+    } else if (rm) {
+      items.splice(+rm.dataset.rm, 1);
+    } else {
+      return;
+    }
+    render();
+  });
+
+  /* ---------- 合併 ---------- */
+  $('#mergeBtn').addEventListener('click', async () => {
+    const usable = items.filter(it => !it.bad);
+    if (!usable.length) return;
+
+    $('#mergeBtn').disabled = true;
+    $('#statusText').textContent = '合併中…';
+
+    try {
+      const out = await PDFLib.PDFDocument.create();
+
+      for (const it of usable) {
+        const src = await PDFLib.PDFDocument.load(it.bytes);
+        /* copyPages 會連同字型與圖片資源一起複製，版面才不會跑掉 */
+        const pages = await out.copyPages(src, src.getPageIndices());
+        pages.forEach(p => out.addPage(p));
+      }
+
+      out.setProducer('順手工具箱');
+      out.setCreationDate(new Date());
+
+      const data = await out.save();
+      let name = ($('#outName').value || '合併結果').trim();
+      if (!/\.pdf$/i.test(name)) name += '.pdf';
+
+      download(new Blob([data], { type: 'application/pdf' }), name);
+
+      $('#statusText').textContent =
+        `完成：${usable.length} 個檔案、共 ${out.getPageCount()} 頁`;
+      window.toast('合併完成');
+    } catch (e) {
+      $('#statusText').textContent = '合併失敗：' + e.message;
+      window.toast('合併失敗');
+    }
+
+    $('#mergeBtn').disabled = false;
+  });
+
+  $('#sortNameBtn').addEventListener('click', () => {
+    /* 用自然排序，檔名裡的數字才不會出現 10 排在 2 前面 */
+    items.sort((a, b) =>
+      a.name.localeCompare(b.name, 'zh-Hant', { numeric: true, sensitivity: 'base' }));
+    render();
+  });
+
+  $('#clearBtn').addEventListener('click', () => {
+    items = [];
+    input.value = '';
+    $('#statusText').textContent = '';
+    render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

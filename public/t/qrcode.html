@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QR Code 產生器｜網址文字轉條碼，可下載 PNG - 順手工具箱</title>
+<meta name="description" content="免費 QR Code 產生器，輸入網址或文字立即產生二維條碼，可調整尺寸、顏色與容錯等級，並下載 PNG 圖檔，也支援 Wi-Fi 密碼與電話快捷格式。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📱</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .qr-layout { display: grid; gap: 24px; grid-template-columns: 300px minmax(0, 1fr); align-items: start; }
+  @media (max-width: 780px) { .qr-layout { grid-template-columns: 1fr; } }
+  .qr-stage {
+    display: grid; place-items: center; gap: 12px;
+    padding: 20px; background: var(--surface-2);
+    border: 1px solid var(--border); border-radius: var(--radius-lg);
+  }
+  #qrBox { line-height: 0; }
+  #qrBox img, #qrBox canvas { border-radius: 6px; max-width: 100%; height: auto; }
+  .qr-empty { color: var(--ink-3); font-size: .9rem; padding: 60px 10px; text-align: center; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/qrcode.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="qrcode, qr, 二維碼, 條碼, 產生">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="QR Code 產生器｜網址文字轉條碼，可下載 PNG - 順手工具箱">
+<meta property="og:description" content="免費 QR Code 產生器，輸入網址或文字立即產生二維條碼，可調整尺寸、顏色與容錯等級，並下載 PNG 圖檔，也支援 Wi-Fi 密碼與電話快捷格式。">
+<meta property="og:url" content="https://tools.luka-life.com/t/qrcode.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="QR Code 產生器｜網址文字轉條碼，可下載 PNG - 順手工具箱">
+<meta name="twitter:description" content="免費 QR Code 產生器，輸入網址或文字立即產生二維條碼，可調整尺寸、顏色與容錯等級，並下載 PNG 圖檔，也支援 Wi-Fi 密碼與電話快捷格式。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "QR Code 產生器",
+  "description": "免費 QR Code 產生器，輸入網址或文字立即產生二維條碼，可調整尺寸、顏色與容錯等級，並下載 PNG 圖檔，也支援 Wi-Fi 密碼與電話快捷格式。",
+  "url": "https://tools.luka-life.com/t/qrcode.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "開發編碼",
+      "item": "https://tools.luka-life.com/#dev"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "QR Code 產生器",
+      "item": "https://tools.luka-life.com/t/qrcode.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "掃不出來怎麼辦？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "最常見的三個原因：一是內容太長導致圖案過密，二是前景色與背景色對比不夠（淺色底配深色點才掃得到，顏色反過來多數掃描器會失敗），三是列印尺寸太小。先把顏色改回黑白試試。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "產生的 QR Code 會過期嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會。QR Code 是把內容直接編碼進圖案裡，不經過任何轉址服務，所以沒有到期問題，也不會有人統計掃描次數。缺點是產生之後就不能改內容了，網址若要更動，必須重新產生一張。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "內容有長度上限嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "有，而且跟容錯等級有關。純數字最多可以放幾千個字，但中文很佔空間，實務上建議控制在一兩百字以內，太長會密到掃不動。長文章建議改放網址。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="qrcode">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">📱</span>QR Code 產生器</h1>
+    <p class="lede">網址、文字、Wi-Fi 密碼都能變成 QR Code，邊打邊產生，滿意了就下載 PNG。</p>
+  </div>
+
+  <div class="panel">
+    <div class="qr-layout">
+      <div class="qr-stage">
+        <div id="qrBox"><div class="qr-empty">輸入內容後<br>QR Code 會出現在這裡</div></div>
+        <div class="btn-group">
+          <button class="btn btn--sm" type="button" id="downloadBtn">下載 PNG</button>
+          <button class="btn btn--ghost btn--sm" type="button" id="printBtn">列印</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="field">
+          <label for="type">內容類型</label>
+          <select id="type">
+            <option value="text">網址或純文字</option>
+            <option value="wifi">Wi-Fi 連線資訊</option>
+            <option value="tel">電話號碼</option>
+            <option value="sms">簡訊</option>
+            <option value="mail">電子郵件</option>
+          </select>
+        </div>
+
+        <div id="formText">
+          <div class="field">
+            <label for="content">網址或文字</label>
+            <textarea id="content" rows="4" spellcheck="false" placeholder="https://example.com 或任何文字">https://example.com</textarea>
+          </div>
+        </div>
+
+        <div id="formWifi" class="hidden">
+          <div class="row mb-2">
+            <div class="field mb-0">
+              <label for="wSsid">網路名稱 SSID</label>
+              <input type="text" id="wSsid" placeholder="MyWiFi">
+            </div>
+            <div class="field mb-0">
+              <label for="wEnc">加密方式</label>
+              <select id="wEnc">
+                <option value="WPA">WPA／WPA2／WPA3</option>
+                <option value="WEP">WEP</option>
+                <option value="nopass">無密碼</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="wPass">密碼</label>
+            <input type="text" id="wPass" placeholder="連線密碼">
+          </div>
+          <label class="small" style="display:flex;align-items:center;gap:8px">
+            <input type="checkbox" id="wHidden"> 這是隱藏的網路
+          </label>
+        </div>
+
+        <div id="formTel" class="hidden">
+          <div class="field">
+            <label for="telNum">電話號碼</label>
+            <input type="text" id="telNum" placeholder="0912345678">
+          </div>
+        </div>
+
+        <div id="formSms" class="hidden">
+          <div class="field">
+            <label for="smsNum">收件號碼</label>
+            <input type="text" id="smsNum" placeholder="0912345678">
+          </div>
+          <div class="field">
+            <label for="smsBody">簡訊內容</label>
+            <textarea id="smsBody" rows="3" placeholder="預先填好的訊息"></textarea>
+          </div>
+        </div>
+
+        <div id="formMail" class="hidden">
+          <div class="field">
+            <label for="mailTo">收件信箱</label>
+            <input type="text" id="mailTo" placeholder="someone@example.com">
+          </div>
+          <div class="field">
+            <label for="mailSub">主旨</label>
+            <input type="text" id="mailSub" placeholder="主旨">
+          </div>
+          <div class="field">
+            <label for="mailBody">內文</label>
+            <textarea id="mailBody" rows="3"></textarea>
+          </div>
+        </div>
+
+        <div class="row mt-2">
+          <div class="field mb-0">
+            <label for="size">尺寸</label>
+            <select id="size">
+              <option value="200">小（200px）</option>
+              <option value="300" selected>中（300px）</option>
+              <option value="500">大（500px）</option>
+              <option value="800">特大（800px）</option>
+            </select>
+          </div>
+          <div class="field mb-0">
+            <label for="level">容錯等級</label>
+            <select id="level">
+              <option value="L">L　約 7%</option>
+              <option value="M" selected>M　約 15%</option>
+              <option value="Q">Q　約 25%</option>
+              <option value="H">H　約 30%</option>
+            </select>
+          </div>
+          <div class="field mb-0" style="flex:0 1 110px">
+            <label for="fg">前景色</label>
+            <input type="color" id="fg" value="#1c1a17">
+          </div>
+          <div class="field mb-0" style="flex:0 1 110px">
+            <label for="bg">背景色</label>
+            <input type="color" id="bg" value="#ffffff">
+          </div>
+        </div>
+
+        <p class="hint" id="lenInfo"></p>
+      </div>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>容錯等級要選哪一個</h2>
+    <p>QR Code 本身帶有修復能力，即使部分髒污或破損還是掃得到，等級越高能容忍的損壞越多，但相對的<strong>圖案會變得更密</strong>，同樣尺寸下反而更難掃。</p>
+    <ul>
+      <li><strong>L / M</strong>：螢幕顯示或乾淨的印刷品，選這兩個就夠，圖案最清爽。</li>
+      <li><strong>Q / H</strong>：要印在容易磨損的地方（貼紙、戶外看板），或是打算在中間疊一個 logo，選高一點。</li>
+    </ul>
+
+    <h2>Wi-Fi QR Code 怎麼用</h2>
+    <p>選「Wi-Fi 連線資訊」填好網路名稱與密碼，產生的 QR Code 讓客人用手機相機掃一下就能直接連線，不用報密碼。iPhone 與 Android 的原生相機都支援。印出來貼在店裡或放在餐桌上很實用。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>掃不出來怎麼辦？</summary>
+        <div class="a">最常見的三個原因：一是內容太長導致圖案過密，二是前景色與背景色對比不夠（<strong>淺色底配深色點</strong>才掃得到，顏色反過來多數掃描器會失敗），三是列印尺寸太小。先把顏色改回黑白試試。</div>
+      </details>
+      <details>
+        <summary>產生的 QR Code 會過期嗎？</summary>
+        <div class="a">不會。QR Code 是把內容直接編碼進圖案裡，不經過任何轉址服務，所以沒有到期問題，也不會有人統計掃描次數。缺點是產生之後就不能改內容了，網址若要更動，必須重新產生一張。</div>
+      </details>
+      <details>
+        <summary>內容有長度上限嗎？</summary>
+        <div class="a">有，而且跟容錯等級有關。純數字最多可以放幾千個字，但中文很佔空間，實務上建議控制在一兩百字以內，太長會密到掃不動。長文章建議改放網址。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<!-- QR 編碼使用 qrcodejs（MIT 授權）-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$ } = window.U;
+
+  const box = $('#qrBox');
+  let qr = null;
+
+  const FORMS = {
+    text: '#formText', wifi: '#formWifi', tel: '#formTel',
+    sms: '#formSms', mail: '#formMail'
+  };
+
+  /* Wi-Fi 格式裡這幾個字元有特殊意義，必須跳脫 */
+  function escWifi(s) {
+    return String(s).replace(/([\\;,":])/g, '\\$1');
+  }
+
+  function buildContent() {
+    const type = $('#type').value;
+
+    if (type === 'wifi') {
+      const enc = $('#wEnc').value;
+      const ssid = escWifi($('#wSsid').value);
+      if (!ssid) return '';
+      let s = `WIFI:T:${enc};S:${ssid};`;
+      if (enc !== 'nopass') s += `P:${escWifi($('#wPass').value)};`;
+      if ($('#wHidden').checked) s += 'H:true;';
+      return s + ';';
+    }
+
+    if (type === 'tel') {
+      const n = $('#telNum').value.trim();
+      return n ? 'tel:' + n.replace(/[^\d+]/g, '') : '';
+    }
+
+    if (type === 'sms') {
+      const n = $('#smsNum').value.trim();
+      if (!n) return '';
+      const body = $('#smsBody').value;
+      return `SMSTO:${n.replace(/[^\d+]/g, '')}:${body}`;
+    }
+
+    if (type === 'mail') {
+      const to = $('#mailTo').value.trim();
+      if (!to) return '';
+      const params = [];
+      if ($('#mailSub').value) params.push('subject=' + encodeURIComponent($('#mailSub').value));
+      if ($('#mailBody').value) params.push('body=' + encodeURIComponent($('#mailBody').value));
+      return 'mailto:' + to + (params.length ? '?' + params.join('&') : '');
+    }
+
+    return $('#content').value;
+  }
+
+  function render() {
+    const text = buildContent();
+    box.innerHTML = '';
+
+    if (!text) {
+      box.innerHTML = '<div class="qr-empty">輸入內容後<br>QR Code 會出現在這裡</div>';
+      $('#lenInfo').textContent = '';
+      qr = null;
+      return;
+    }
+
+    if (typeof QRCode === 'undefined') {
+      box.innerHTML = '<div class="qr-empty">QR 元件載入失敗<br>請檢查網路連線後重新整理</div>';
+      return;
+    }
+
+    const size = Number($('#size').value);
+    const levelMap = {
+      L: QRCode.CorrectLevel.L, M: QRCode.CorrectLevel.M,
+      Q: QRCode.CorrectLevel.Q, H: QRCode.CorrectLevel.H
+    };
+
+    try {
+      qr = new QRCode(box, {
+        text: text,
+        width: size,
+        height: size,
+        colorDark: $('#fg').value,
+        colorLight: $('#bg').value,
+        correctLevel: levelMap[$('#level').value]
+      });
+      $('#lenInfo').textContent = `目前內容 ${text.length} 個字元`;
+    } catch (e) {
+      box.innerHTML = '<div class="qr-empty">內容太長，無法產生<br>請縮短文字或改用較低的容錯等級</div>';
+      $('#lenInfo').textContent = '';
+    }
+  }
+
+  $('#type').addEventListener('change', () => {
+    const t = $('#type').value;
+    Object.entries(FORMS).forEach(([k, sel]) => {
+      $(sel).classList.toggle('hidden', k !== t);
+    });
+    render();
+  });
+
+  /* 任何欄位變動都重畫 */
+  document.querySelector('.qr-layout').addEventListener('input', render);
+
+  $('#downloadBtn').addEventListener('click', () => {
+    const canvas = box.querySelector('canvas');
+    const img = box.querySelector('img');
+
+    if (canvas) {
+      canvas.toBlob(blob => {
+        if (blob) window.U.download(blob, 'qrcode.png');
+      }, 'image/png');
+    } else if (img && img.src) {
+      /* 部分瀏覽器下 qrcodejs 只產生 img，改用 a[download] 直接存 */
+      const a = document.createElement('a');
+      a.href = img.src;
+      a.download = 'qrcode.png';
+      a.click();
+    } else {
+      window.toast('請先產生 QR Code');
+    }
+  });
+
+  $('#printBtn').addEventListener('click', () => {
+    if (!box.querySelector('canvas') && !box.querySelector('img')) {
+      window.toast('請先產生 QR Code');
+      return;
+    }
+    window.print();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

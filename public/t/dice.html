@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>線上擲骰子｜一次擲多顆，支援 D4 到 D100 - 順手工具箱</title>
+<meta name="description" content="免費線上骰子，一次可擲 1 到 10 顆，支援 6 面、20 面等多種面數，自動加總並記錄每次點數，桌遊跑團臨時缺骰子時最方便。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎲</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .dice-tray { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; min-height: 92px; align-items: center; }
+  .die {
+    width: 78px; height: 78px; border-radius: 14px;
+    background: var(--surface); border: 2px solid var(--border-strong);
+    box-shadow: var(--shadow-2);
+    display: grid; place-items: center;
+    font-size: 2rem; font-weight: 800; color: var(--ink);
+  }
+  .die--pip { padding: 10px; }
+  .die.is-rolling { animation: tumble .5s ease-in-out infinite; }
+  @keyframes tumble {
+    0%   { transform: rotate(0) scale(1); }
+    25%  { transform: rotate(-12deg) scale(1.06); }
+    75%  { transform: rotate(12deg) scale(.96); }
+    100% { transform: rotate(0) scale(1); }
+  }
+  .pips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; width: 100%; height: 100%; }
+  .pips i { border-radius: 50%; background: var(--brand); display: block; }
+  .pips i.off { background: transparent; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/dice.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="骰子, 擲骰, dice, 桌遊, d20">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="線上擲骰子｜一次擲多顆，支援 D4 到 D100 - 順手工具箱">
+<meta property="og:description" content="免費線上骰子，一次可擲 1 到 10 顆，支援 6 面、20 面等多種面數，自動加總並記錄每次點數，桌遊跑團臨時缺骰子時最方便。">
+<meta property="og:url" content="https://tools.luka-life.com/t/dice.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="線上擲骰子｜一次擲多顆，支援 D4 到 D100 - 順手工具箱">
+<meta name="twitter:description" content="免費線上骰子，一次可擲 1 到 10 顆，支援 6 面、20 面等多種面數，自動加總並記錄每次點數，桌遊跑團臨時缺骰子時最方便。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "線上擲骰子",
+  "description": "免費線上骰子，一次可擲 1 到 10 顆，支援 6 面、20 面等多種面數，自動加總並記錄每次點數，桌遊跑團臨時缺骰子時最方便。",
+  "url": "https://tools.luka-life.com/t/dice.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "隨機抽籤",
+      "item": "https://tools.luka-life.com/#random"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "線上擲骰子",
+      "item": "https://tools.luka-life.com/t/dice.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "點數是真的隨機嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "是，使用瀏覽器內建的密碼學等級亂數 crypto.getRandomValues，並修正了取餘數會造成的機率偏差，每一面出現的機率完全相等。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "為什麼超過 6 面就不顯示點點？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "傳統骰子的點點排列只定義到 6 點，7 以上沒有通用畫法，所以直接顯示數字比較清楚。D6 以下會畫成大家熟悉的點陣。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "可以一次擲超過 10 顆嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "目前上限是 10 顆。需要更大量的隨機數字（例如抽 50 組號碼），用「隨機數字產生器」會更適合，它可以一次產生大量結果並選擇是否重複。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="dice">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🎲</span>線上擲骰子</h1>
+    <p class="lede">桌遊骰子不見了、跑團臨時缺 D20，直接在這裡擲。一次最多 10 顆，自動幫你加總。</p>
+  </div>
+
+  <div class="panel">
+    <div class="row mb-2">
+      <div>
+        <label for="diceCount">骰子數量</label>
+        <select id="diceCount">
+          <option>1</option><option selected>2</option><option>3</option><option>4</option>
+          <option>5</option><option>6</option><option>7</option><option>8</option>
+          <option>9</option><option>10</option>
+        </select>
+      </div>
+      <div>
+        <label for="diceSides">面數</label>
+        <select id="diceSides">
+          <option value="4">D4（4 面）</option>
+          <option value="6" selected>D6（一般骰子）</option>
+          <option value="8">D8（8 面）</option>
+          <option value="10">D10（10 面）</option>
+          <option value="12">D12（12 面）</option>
+          <option value="20">D20（20 面）</option>
+          <option value="100">D100（百面）</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="dice-tray mb-2" id="tray" aria-live="polite"></div>
+
+    <button class="btn btn--lg btn--block" type="button" id="rollBtn">擲骰子</button>
+
+    <div class="stat-row mt-2">
+      <div class="stat"><div class="stat__num" id="sum">—</div><div class="stat__label">總和</div></div>
+      <div class="stat"><div class="stat__num" id="maxv">—</div><div class="stat__label">最大</div></div>
+      <div class="stat"><div class="stat__num" id="minv">—</div><div class="stat__label">最小</div></div>
+      <div class="stat"><div class="stat__num" id="rolls">0</div><div class="stat__label">已擲次數</div></div>
+    </div>
+
+    <div class="mt-2 hidden" id="logWrap">
+      <div class="panel__title">最近紀錄</div>
+      <p class="out small" id="log" style="min-height:auto"></p>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>D4、D20 是什麼意思</h2>
+    <p><code>D</code> 是 Dice 的縮寫，後面的數字代表骰子有幾面。一般桌遊用的方形骰是 D6，跑團（如龍與地下城）最常用的是 D20，D100 則是用來判定百分比機率。這裡全部都支援，選好面數按一下就擲。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>點數是真的隨機嗎？</summary>
+        <div class="a">是，使用瀏覽器內建的密碼學等級亂數 <code>crypto.getRandomValues</code>，並修正了取餘數會造成的機率偏差，每一面出現的機率完全相等。</div>
+      </details>
+      <details>
+        <summary>為什麼超過 6 面就不顯示點點？</summary>
+        <div class="a">傳統骰子的點點排列只定義到 6 點，7 以上沒有通用畫法，所以直接顯示數字比較清楚。D6 以下會畫成大家熟悉的點陣。</div>
+      </details>
+      <details>
+        <summary>可以一次擲超過 10 顆嗎？</summary>
+        <div class="a">目前上限是 10 顆。需要更大量的隨機數字（例如抽 50 組號碼），用「隨機數字產生器」會更適合，它可以一次產生大量結果並選擇是否重複。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, randInt } = window.U;
+
+  const tray = $('#tray');
+  const rollBtn = $('#rollBtn');
+  let rollCount = 0;
+  let log = [];
+  let busy = false;
+
+  /* D6 的點陣位置：index 0-8 對應九宮格 */
+  const PIP_MAP = {
+    1: [4],
+    2: [0, 8],
+    3: [0, 4, 8],
+    4: [0, 2, 6, 8],
+    5: [0, 2, 4, 6, 8],
+    6: [0, 2, 3, 5, 6, 8]
+  };
+
+  function dieHTML(value, sides) {
+    if (sides <= 6 && PIP_MAP[value]) {
+      const on = PIP_MAP[value];
+      const cells = Array.from({ length: 9 }, (_, i) =>
+        `<i class="${on.includes(i) ? '' : 'off'}"></i>`).join('');
+      return `<div class="die die--pip" role="img" aria-label="${value} 點"><div class="pips">${cells}</div></div>`;
+    }
+    const fs = String(value).length > 2 ? '1.4rem' : '2rem';
+    return `<div class="die" style="font-size:${fs}" role="img" aria-label="${value} 點">${value}</div>`;
+  }
+
+  function roll() {
+    if (busy) return;
+    busy = true;
+    rollBtn.disabled = true;
+
+    const n = parseInt($('#diceCount').value, 10);
+    const sides = parseInt($('#diceSides').value, 10);
+
+    /* 先放滾動中的骰子做視覺回饋 */
+    tray.innerHTML = Array.from({ length: n }, () =>
+      `<div class="die is-rolling">?</div>`).join('');
+
+    setTimeout(() => {
+      const vals = Array.from({ length: n }, () => randInt(1, sides));
+      tray.innerHTML = vals.map(v => dieHTML(v, sides)).join('');
+
+      const sum = vals.reduce((a, b) => a + b, 0);
+      $('#sum').textContent = sum;
+      $('#maxv').textContent = Math.max(...vals);
+      $('#minv').textContent = Math.min(...vals);
+      $('#rolls').textContent = ++rollCount;
+
+      log.unshift(`${n}D${sides}：${vals.join(' + ')}${n > 1 ? ' = ' + sum : ''}`);
+      log = log.slice(0, 10);
+      $('#logWrap').classList.remove('hidden');
+      $('#log').textContent = log.join('\n');
+
+      busy = false;
+      rollBtn.disabled = false;
+    }, 550);
+  }
+
+  rollBtn.addEventListener('click', roll);
+
+  /* 空白鍵也能擲，但不要干擾正在操作下拉選單的人 */
+  document.addEventListener('keydown', e => {
+    if (e.code === 'Space' && e.target.tagName !== 'SELECT' && e.target.tagName !== 'INPUT') {
+      e.preventDefault();
+      roll();
+    }
+  });
+
+  roll();
+})();
+</script>
+</body>
+</html>

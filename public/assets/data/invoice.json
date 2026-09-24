@@ -1,0 +1,45 @@
+{
+  "_說明": "本檔由 .github/workflows/invoice.yml 自動更新，請勿手動編輯。",
+  "_格式": {
+    "updatedAt": "資料更新日期 YYYY-MM-DD",
+    "source": "資料來源說明",
+    "sourceUrl": "來源網址",
+    "periods": "期別陣列，由新到舊排序，最多保留 6 期（約一年）",
+    "periods[].period": "期別文字，必須是「115年01-02月」這個格式，頁面靠它推算兌獎期限",
+    "periods[].prizes.special": "特別獎 1 組 8 碼字串",
+    "periods[].prizes.grand": "特獎 1 組 8 碼字串",
+    "periods[].prizes.first": "頭獎陣列，通常 3 組 8 碼字串（二至六獎由此推算末幾碼）",
+    "periods[].prizes.additional6": "增開六獎陣列，3 碼字串，可為空陣列"
+  },
+  "updatedAt": "2026-09-24",
+  "source": "財政部稅務入口網 中獎號碼單",
+  "sourceUrl": "https://invoice.etax.nat.gov.tw/",
+  "periods": [
+    {
+      "period": "115年05-06月",
+      "prizes": {
+        "special": "38548029",
+        "grand": "10138845",
+        "first": [
+          "24121106",
+          "28589937",
+          "83663333"
+        ],
+        "additional6": []
+      }
+    },
+    {
+      "period": "115年03-04月",
+      "prizes": {
+        "special": "19531471",
+        "grand": "85941329",
+        "first": [
+          "07225810",
+          "20231230",
+          "83518781"
+        ],
+        "additional6": []
+      }
+    }
+  ]
+}

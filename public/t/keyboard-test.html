@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>鍵盤按鍵測試｜檢查有沒有卡鍵或失靈 - 順手工具箱</title>
+<meta name="description" content="免費線上鍵盤測試工具，按下任何按鍵會即時亮起，可檢查按鍵失靈、卡鍵與連點問題，也會顯示按鍵代碼，買新鍵盤或二手驗機必備。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⌨️</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .kb { display: grid; gap: 5px; user-select: none; }
+  .kb-row { display: flex; gap: 5px; }
+  .key {
+    flex: 1 1 0; min-width: 0; height: 44px;
+    border: 1px solid var(--border-strong); border-radius: 6px;
+    background: var(--surface); display: grid; place-items: center;
+    font-size: .72rem; font-weight: 600; color: var(--ink-2);
+    transition: background .06s ease, border-color .06s ease, transform .06s ease;
+    overflow: hidden; padding: 0 2px; text-align: center; line-height: 1.15;
+  }
+  .key.down { background: var(--brand); border-color: var(--brand); color: #fff; transform: translateY(2px); }
+  .key.hit { background: var(--accent-wash); border-color: var(--accent); color: var(--accent); }
+  .key.hit.down { background: var(--brand); border-color: var(--brand); color: #fff; }
+  .kb-wrap { overflow-x: auto; padding-bottom: 4px; }
+  .kb-inner { min-width: 720px; }
+  .live {
+    font-family: var(--mono); font-size: .88rem;
+    background: var(--bg-sunk); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 12px 14px;
+    display: grid; gap: 4px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  .live b { color: var(--brand); }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/keyboard-test.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="鍵盤, 測試, 按鍵, 卡鍵, 失靈, 檢測">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="鍵盤按鍵測試｜檢查有沒有卡鍵或失靈 - 順手工具箱">
+<meta property="og:description" content="免費線上鍵盤測試工具，按下任何按鍵會即時亮起，可檢查按鍵失靈、卡鍵與連點問題，也會顯示按鍵代碼，買新鍵盤或二手驗機必備。">
+<meta property="og:url" content="https://tools.luka-life.com/t/keyboard-test.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="鍵盤按鍵測試｜檢查有沒有卡鍵或失靈 - 順手工具箱">
+<meta name="twitter:description" content="免費線上鍵盤測試工具，按下任何按鍵會即時亮起，可檢查按鍵失靈、卡鍵與連點問題，也會顯示按鍵代碼，買新鍵盤或二手驗機必備。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "鍵盤按鍵測試",
+  "description": "免費線上鍵盤測試工具，按下任何按鍵會即時亮起，可檢查按鍵失靈、卡鍵與連點問題，也會顯示按鍵代碼，買新鍵盤或二手驗機必備。",
+  "url": "https://tools.luka-life.com/t/keyboard-test.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "裝置檢測",
+      "item": "https://tools.luka-life.com/#device"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "鍵盤按鍵測試",
+      "item": "https://tools.luka-life.com/t/keyboard-test.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "為什麼有些鍵按了會跳走或觸發別的功能？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "因為瀏覽器自己保留了部分快速鍵，例如 F11 全螢幕、F12 開發者工具、Ctrl＋W 關閉分頁。工具已經盡量攔截，但作業系統層級的按鍵攔不住。測這些鍵時建議搭配鍵盤本身的燈效或原廠軟體確認。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "數字鍵盤區沒反應？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "先確認 Num Lock 是開著的。關掉的時候數字區會變成方向鍵功能，送出的是不同的按鍵代碼。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "注音或中文輸入法會影響嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "會。輸入法啟用時可能攔截按鍵，建議先切換到英文輸入模式再測，結果比較準確。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "手機可以用嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "手機的螢幕鍵盤不會送出實體按鍵事件，測不出東西。這個工具是給實體鍵盤用的，請在電腦上開啟。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="keyboard-test">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">⌨️</span>鍵盤按鍵測試</h1>
+    <p class="lede">按下去會亮，放開會留顏色。買新鍵盤驗貨、二手機檢查、確認某顆鍵是不是真的壞了，最快的方法。</p>
+  </div>
+
+  <div class="panel">
+    <p class="hint mb-2">
+      <strong>直接開始按就好。</strong>按過的鍵會留下淡色標記，方便你確認每一顆都測過了。
+      按住不放會維持深色——如果某顆鍵你已經放開卻還是深色，那就是<strong>卡鍵</strong>。
+    </p>
+
+    <div class="kb-wrap mb-2">
+      <div class="kb-inner">
+        <div class="kb" id="kb"></div>
+      </div>
+    </div>
+
+    <div class="live mb-2">
+      <div>最後按下：<b id="lastKey">—</b></div>
+      <div>代碼 code：<b id="lastCode">—</b></div>
+      <div>鍵值 key：<b id="lastVal">—</b></div>
+      <div>按鍵總次數：<b id="pressCount">0</b></div>
+    </div>
+
+    <div class="stat-row mb-2">
+      <div class="stat"><div class="stat__num" id="testedCount">0</div><div class="stat__label">已測試按鍵數</div></div>
+      <div class="stat"><div class="stat__num" id="holdCount">0</div><div class="stat__label">目前按住</div></div>
+      <div class="stat"><div class="stat__num" id="maxHold">0</div><div class="stat__label">同時按住最多</div></div>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn btn--ghost" type="button" id="resetBtn">清除測試紀錄</button>
+      <button class="btn btn--ghost" type="button" id="listBtn">列出沒測到的鍵</button>
+    </div>
+
+    <p class="hint mt-1" id="untested"></p>
+  </div>
+
+  <div class="note">
+    <strong>有幾顆鍵測不到是正常的。</strong>作業系統會攔截部分按鍵不交給瀏覽器，例如 Windows 鍵、部分 Fn 功能鍵、以及某些筆電的音量與亮度鍵。這些鍵在這裡沒反應<strong>不代表壞掉</strong>。另外 <code>F11</code>、<code>F12</code>、<code>Ctrl</code>＋<code>W</code> 這類會觸發瀏覽器功能的組合也建議避開。
+  </div>
+
+  <section class="prose">
+    <h2>可以測出哪些問題</h2>
+    <ul>
+      <li><strong>按鍵完全失靈</strong>：按下去沒有任何反應，那一格不會變色。</li>
+      <li><strong>卡鍵</strong>：放開之後那一格還維持深色，代表訊號沒有正常釋放。</li>
+      <li><strong>連點</strong>（double typing）：按一次卻跳兩次，看「按鍵總次數」有沒有異常增加。這是薄膜與機械軸老化的常見症狀。</li>
+      <li><strong>同時按鍵上限</strong>：按住多顆鍵看「同時按住最多」能到幾——便宜鍵盤常常只能同時辨識 6 顆左右，打遊戲時方向鍵加技能鍵會漏掉。</li>
+    </ul>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>為什麼有些鍵按了會跳走或觸發別的功能？</summary>
+        <div class="a">因為瀏覽器自己保留了部分快速鍵，例如 F11 全螢幕、F12 開發者工具、Ctrl＋W 關閉分頁。工具已經盡量攔截，但作業系統層級的按鍵攔不住。測這些鍵時建議搭配鍵盤本身的燈效或原廠軟體確認。</div>
+      </details>
+      <details>
+        <summary>數字鍵盤區沒反應？</summary>
+        <div class="a">先確認 <code>Num Lock</code> 是開著的。關掉的時候數字區會變成方向鍵功能，送出的是不同的按鍵代碼。</div>
+      </details>
+      <details>
+        <summary>注音或中文輸入法會影響嗎？</summary>
+        <div class="a">會。輸入法啟用時可能攔截按鍵，建議<strong>先切換到英文輸入模式</strong>再測，結果比較準確。</div>
+      </details>
+      <details>
+        <summary>手機可以用嗎？</summary>
+        <div class="a">手機的螢幕鍵盤不會送出實體按鍵事件，測不出東西。這個工具是給實體鍵盤用的，請在電腦上開啟。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc } = window.U;
+
+  /* 以 event.code 為鍵，標準 104 鍵配置。[code, 顯示文字, 寬度倍率] */
+  const LAYOUT = [
+    [['Escape', 'Esc', 1.4], ['F1', 'F1', 1], ['F2', 'F2', 1], ['F3', 'F3', 1], ['F4', 'F4', 1],
+     ['F5', 'F5', 1], ['F6', 'F6', 1], ['F7', 'F7', 1], ['F8', 'F8', 1],
+     ['F9', 'F9', 1], ['F10', 'F10', 1], ['F11', 'F11', 1], ['F12', 'F12', 1],
+     ['PrintScreen', 'PrtSc', 1.2], ['ScrollLock', 'ScrLk', 1.2], ['Pause', 'Pause', 1.2]],
+
+    [['Backquote', '` ~', 1], ['Digit1', '1', 1], ['Digit2', '2', 1], ['Digit3', '3', 1],
+     ['Digit4', '4', 1], ['Digit5', '5', 1], ['Digit6', '6', 1], ['Digit7', '7', 1],
+     ['Digit8', '8', 1], ['Digit9', '9', 1], ['Digit0', '0', 1], ['Minus', '- _', 1],
+     ['Equal', '= +', 1], ['Backspace', 'Backspace', 2.2],
+     ['Insert', 'Ins', 1], ['Home', 'Home', 1], ['PageUp', 'PgUp', 1]],
+
+    [['Tab', 'Tab', 1.6], ['KeyQ', 'Q', 1], ['KeyW', 'W', 1], ['KeyE', 'E', 1], ['KeyR', 'R', 1],
+     ['KeyT', 'T', 1], ['KeyY', 'Y', 1], ['KeyU', 'U', 1], ['KeyI', 'I', 1], ['KeyO', 'O', 1],
+     ['KeyP', 'P', 1], ['BracketLeft', '[ {', 1], ['BracketRight', '] }', 1],
+     ['Backslash', '\\ |', 1.6],
+     ['Delete', 'Del', 1], ['End', 'End', 1], ['PageDown', 'PgDn', 1]],
+
+    [['CapsLock', 'Caps', 1.9], ['KeyA', 'A', 1], ['KeyS', 'S', 1], ['KeyD', 'D', 1],
+     ['KeyF', 'F', 1], ['KeyG', 'G', 1], ['KeyH', 'H', 1], ['KeyJ', 'J', 1], ['KeyK', 'K', 1],
+     ['KeyL', 'L', 1], ['Semicolon', '; :', 1], ['Quote', "' \"", 1], ['Enter', 'Enter', 2.3]],
+
+    [['ShiftLeft', 'Shift', 2.5], ['KeyZ', 'Z', 1], ['KeyX', 'X', 1], ['KeyC', 'C', 1],
+     ['KeyV', 'V', 1], ['KeyB', 'B', 1], ['KeyN', 'N', 1], ['KeyM', 'M', 1],
+     ['Comma', ', <', 1], ['Period', '. >', 1], ['Slash', '/ ?', 1], ['ShiftRight', 'Shift', 2.7],
+     ['ArrowUp', '↑', 1]],
+
+    [['ControlLeft', 'Ctrl', 1.4], ['MetaLeft', 'Win', 1.2], ['AltLeft', 'Alt', 1.2],
+     ['Space', 'Space', 6.4], ['AltRight', 'Alt', 1.2], ['MetaRight', 'Win', 1.2],
+     ['ContextMenu', 'Menu', 1.2], ['ControlRight', 'Ctrl', 1.4],
+     ['ArrowLeft', '←', 1], ['ArrowDown', '↓', 1], ['ArrowRight', '→', 1]],
+
+    [['NumLock', 'Num', 1], ['NumpadDivide', 'N /', 1], ['NumpadMultiply', 'N *', 1],
+     ['NumpadSubtract', 'N -', 1], ['Numpad7', 'N7', 1], ['Numpad8', 'N8', 1],
+     ['Numpad9', 'N9', 1], ['NumpadAdd', 'N +', 1], ['Numpad4', 'N4', 1],
+     ['Numpad5', 'N5', 1], ['Numpad6', 'N6', 1], ['Numpad1', 'N1', 1],
+     ['Numpad2', 'N2', 1], ['Numpad3', 'N3', 1], ['Numpad0', 'N0', 1],
+     ['NumpadDecimal', 'N .', 1], ['NumpadEnter', 'N ↵', 1.4]]
+  ];
+
+  const tested = new Set();
+  const held = new Set();
+  let pressCount = 0;
+  let maxHold = 0;
+
+  function build() {
+    $('#kb').innerHTML = LAYOUT.map(row =>
+      `<div class="kb-row">` + row.map(([code, label, w]) =>
+        `<div class="key" data-code="${esc(code)}" style="flex-grow:${w}">${esc(label)}</div>`
+      ).join('') + `</div>`
+    ).join('');
+  }
+
+  const keyEl = code => document.querySelector(`.key[data-code="${CSS.escape(code)}"]`);
+
+  function updateStats() {
+    $('#testedCount').textContent = tested.size;
+    $('#holdCount').textContent = held.size;
+    $('#maxHold').textContent = maxHold;
+    $('#pressCount').textContent = pressCount;
+  }
+
+  document.addEventListener('keydown', e => {
+    /* 攔掉會讓分頁跑掉的瀏覽器快速鍵，測試才不會中斷 */
+    if (['Tab', 'F1', 'F3', 'F5', 'F7', 'Space', 'Backspace', "'", '/'].includes(e.key)
+        || e.code.startsWith('Arrow') || e.code === 'Space') {
+      e.preventDefault();
+    }
+    if ((e.ctrlKey || e.metaKey) && ['KeyW', 'KeyT', 'KeyN', 'KeyS', 'KeyP', 'KeyF'].includes(e.code)) {
+      e.preventDefault();
+    }
+
+    if (!e.repeat) {
+      pressCount++;
+      held.add(e.code);
+      maxHold = Math.max(maxHold, held.size);
+    }
+
+    tested.add(e.code);
+
+    const el = keyEl(e.code);
+    if (el) el.classList.add('down', 'hit');
+
+    $('#lastKey').textContent = el ? el.textContent : e.code;
+    $('#lastCode').textContent = e.code || '（無）';
+    $('#lastVal').textContent = e.key === ' ' ? '(空白)' : (e.key || '（無）');
+
+    updateStats();
+  });
+
+  document.addEventListener('keyup', e => {
+    held.delete(e.code);
+    const el = keyEl(e.code);
+    if (el) el.classList.remove('down');
+    updateStats();
+  });
+
+  /* 切換視窗時按鍵放開的事件收不到，回來時清掉殘留的按住狀態 */
+  window.addEventListener('blur', () => {
+    held.clear();
+    document.querySelectorAll('.key.down').forEach(el => el.classList.remove('down'));
+    updateStats();
+  });
+
+  $('#resetBtn').addEventListener('click', () => {
+    tested.clear();
+    held.clear();
+    pressCount = 0;
+    maxHold = 0;
+    document.querySelectorAll('.key').forEach(el => el.classList.remove('down', 'hit'));
+    $('#lastKey').textContent = $('#lastCode').textContent = $('#lastVal').textContent = '—';
+    $('#untested').textContent = '';
+    updateStats();
+  });
+
+  $('#listBtn').addEventListener('click', () => {
+    const all = LAYOUT.flat().map(([code, label]) => ({ code, label }));
+    const missing = all.filter(k => !tested.has(k.code));
+
+    if (!missing.length) {
+      $('#untested').innerHTML = '<strong style="color:var(--ok)">全部按鍵都測過了，沒有失靈的鍵。</strong>';
+      return;
+    }
+    $('#untested').innerHTML =
+      `還沒測到 ${missing.length} 顆：` +
+      missing.map(k => `<code>${esc(k.label)}</code>`).join('、') +
+      '<br><span class="muted small">部分功能鍵被系統攔截是正常的，詳見上方說明。</span>';
+  });
+
+  build();
+  updateStats();
+})();
+</script>
+</body>
+</html>

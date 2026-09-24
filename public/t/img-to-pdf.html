@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>圖片轉 PDF｜多張照片合成一份，檔案不上傳 - 順手工具箱</title>
+<meta name="description" content="免費線上圖片轉 PDF 工具，把多張 JPG、PNG 照片合成一份 PDF，可選 A4 或原始尺寸、直橫向與邊界，全程在瀏覽器完成不上傳。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🖨️</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .drop {
+    border: 2px dashed var(--border-strong); border-radius: var(--radius-lg);
+    padding: 36px 20px; text-align: center; cursor: pointer;
+    background: var(--surface-2); transition: all .15s ease;
+  }
+  .drop:hover, .drop.is-over { border-color: var(--brand); background: var(--brand-wash); }
+  .drop strong { display: block; font-size: 1.05rem; margin-bottom: 4px; }
+  .shots { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); }
+  .shot { border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); padding: 8px; }
+  .shot img {
+    width: 100%; aspect-ratio: 1; object-fit: cover;
+    border-radius: 6px; background: var(--bg-sunk); margin-bottom: 6px;
+  }
+  .shot__no { font-size: .76rem; color: var(--ink-3); text-align: center; margin-bottom: 5px; word-break: break-all; }
+  .shot__acts { display: flex; gap: 4px; justify-content: center; }
+  .mini-btn {
+    width: 28px; height: 28px; border-radius: 6px;
+    border: 1px solid var(--border-strong); background: var(--surface);
+    color: var(--ink-2); cursor: pointer; font-size: .75rem; line-height: 1; padding: 0;
+  }
+  .mini-btn:hover:not(:disabled) { border-color: var(--brand); color: var(--brand); }
+  .mini-btn:disabled { opacity: .3; cursor: default; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/img-to-pdf.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="圖片轉pdf, jpg轉pdf, 照片, 合併, 掃描">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="圖片轉 PDF｜多張照片合成一份，檔案不上傳 - 順手工具箱">
+<meta property="og:description" content="免費線上圖片轉 PDF 工具，把多張 JPG、PNG 照片合成一份 PDF，可選 A4 或原始尺寸、直橫向與邊界，全程在瀏覽器完成不上傳。">
+<meta property="og:url" content="https://tools.luka-life.com/t/img-to-pdf.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="圖片轉 PDF｜多張照片合成一份，檔案不上傳 - 順手工具箱">
+<meta name="twitter:description" content="免費線上圖片轉 PDF 工具，把多張 JPG、PNG 照片合成一份 PDF，可選 A4 或原始尺寸、直橫向與邊界，全程在瀏覽器完成不上傳。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "圖片轉 PDF",
+  "description": "免費線上圖片轉 PDF 工具，把多張 JPG、PNG 照片合成一份 PDF，可選 A4 或原始尺寸、直橫向與邊界，全程在瀏覽器完成不上傳。",
+  "url": "https://tools.luka-life.com/t/img-to-pdf.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "PDF 文件",
+      "item": "https://tools.luka-life.com/#pdf"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "圖片轉 PDF",
+      "item": "https://tools.luka-life.com/t/img-to-pdf.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "照片方向不對怎麼辦？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "選「自動」方向，工具會依每張圖是直的還是橫的自己決定頁面方向。如果某幾張還是不對，通常是手機照片的旋轉資訊沒被正確讀取，先用「圖片尺寸調整」工具另存一次再回來轉，多半就正常了。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "可以放幾張圖？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "沒有硬性上限，但每張圖都要載進記憶體處理，建議一次 50 張以內。張數很多時轉換過程可能要等個幾秒，畫面暫時沒反應是正常的。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "HEIC（iPhone 原始格式）可以嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "多數瀏覽器讀不了 HEIC。最簡單的解法是在 iPhone 的「設定 → 相機 → 格式」改成「相容性最佳」，之後拍的照片就是 JPG；已經拍好的可以用 LINE 或 email 傳一次，過程中通常會自動轉成 JPG。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "順序可以調嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以，每張縮圖下面的左右箭頭就能移動，也可以按「依檔名排序」讓 IMG_001、IMG_002 這類檔名自動排好。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="img-to-pdf">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🖨️</span>圖片轉 PDF</h1>
+    <p class="lede">手機拍的證件、收據、作業，一張張合成一份 PDF 交出去，比傳一堆照片專業得多。</p>
+  </div>
+
+  <div class="note mb-2">
+    <strong>檔案不會上傳。</strong>轉換在你自己的瀏覽器裡完成，證件與收據這類敏感照片不會送到任何伺服器。
+  </div>
+
+  <div class="panel">
+    <div class="drop mb-2" id="drop" role="button" tabindex="0">
+      <strong>把圖片拖進來，或點這裡選檔案</strong>
+      <span class="muted small">支援 JPG、PNG、WebP，可一次選多張並調順序</span>
+      <input type="file" id="fileInput" accept="image/*" multiple hidden>
+    </div>
+
+    <div class="shots mb-2" id="shots"></div>
+
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="pageSize">頁面尺寸</label>
+        <select id="pageSize">
+          <option value="a4">A4</option>
+          <option value="letter">Letter</option>
+          <option value="a5">A5</option>
+          <option value="fit">跟著圖片原始尺寸</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label for="orient">方向</label>
+        <select id="orient">
+          <option value="auto">自動（依每張圖判斷）</option>
+          <option value="portrait">全部直式</option>
+          <option value="landscape">全部橫式</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label for="margin">邊界（mm）</label>
+        <input type="number" id="margin" value="10" min="0" max="50" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="quality">JPG 畫質：<strong id="qLabel">85</strong>％</label>
+        <input type="range" id="quality" min="40" max="100" value="85">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="outName">輸出檔名</label>
+      <input type="text" id="outName" value="圖片合輯.pdf">
+    </div>
+
+    <div class="btn-group">
+      <button class="btn btn--lg" type="button" id="runBtn" disabled>轉成 PDF 並下載</button>
+      <button class="btn btn--ghost btn--lg" type="button" id="sortBtn">依檔名排序</button>
+      <button class="btn btn--ghost btn--lg" type="button" id="clearBtn">清空</button>
+    </div>
+
+    <p class="hint mt-1" id="statusText"></p>
+  </div>
+
+  <section class="prose">
+    <h2>「A4」跟「跟著圖片原始尺寸」怎麼選</h2>
+    <ul>
+      <li><strong>A4</strong>：每一頁都是標準 A4，圖片會等比縮到剛好放得下並置中。要<strong>列印出來</strong>或交給別人看，選這個最保險。</li>
+      <li><strong>跟著圖片原始尺寸</strong>：頁面大小完全照圖片走，不會有白邊。適合純粹是為了把一堆圖打包成一個檔、只在螢幕上看的情況。</li>
+    </ul>
+
+    <h2>為什麼 PNG 會被轉成 JPG</h2>
+    <p>為了控制檔案大小。照片存成 PNG 塞進 PDF，檔案會膨脹到好幾倍。所以工具預設把圖片重新編碼成 JPG，你可以用畫質滑桿決定要壓多少。<strong>如果圖片有透明背景，透明處會被填成白色</strong>——這在 PDF 裡本來就是常見做法，因為紙本沒有「透明」這回事。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>照片方向不對怎麼辦？</summary>
+        <div class="a">選「自動」方向，工具會依每張圖是直的還是橫的自己決定頁面方向。如果某幾張還是不對，通常是手機照片的旋轉資訊沒被正確讀取，先用「圖片尺寸調整」工具另存一次再回來轉，多半就正常了。</div>
+      </details>
+      <details>
+        <summary>可以放幾張圖？</summary>
+        <div class="a">沒有硬性上限，但每張圖都要載進記憶體處理，建議一次 50 張以內。張數很多時轉換過程可能要等個幾秒，畫面暫時沒反應是正常的。</div>
+      </details>
+      <details>
+        <summary>HEIC（iPhone 原始格式）可以嗎？</summary>
+        <div class="a">多數瀏覽器讀不了 HEIC。最簡單的解法是在 iPhone 的「設定 → 相機 → 格式」改成「相容性最佳」，之後拍的照片就是 JPG；已經拍好的可以用 LINE 或 email 傳一次，過程中通常會自動轉成 JPG。</div>
+      </details>
+      <details>
+        <summary>順序可以調嗎？</summary>
+        <div class="a">可以，每張縮圖下面的左右箭頭就能移動，也可以按「依檔名排序」讓 IMG_001、IMG_002 這類檔名自動排好。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc, download } = window.U;
+
+  /* 常見頁面尺寸，單位是 PDF 的 point（1pt = 1/72 吋） */
+  const SIZES = {
+    a4: [595.28, 841.89],
+    letter: [612, 792],
+    a5: [419.53, 595.28]
+  };
+  const MM_TO_PT = 72 / 25.4;
+
+  let items = [];   // { file, name, url }
+
+  /* ---------- 選檔 ---------- */
+  const drop = $('#drop');
+  const input = $('#fileInput');
+
+  drop.addEventListener('click', () => input.click());
+  drop.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
+  });
+  ['dragenter', 'dragover'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('is-over'); }));
+  ['dragleave', 'drop'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('is-over'); }));
+
+  drop.addEventListener('drop', e => addFiles(e.dataTransfer.files));
+  input.addEventListener('change', e => addFiles(e.target.files));
+
+  function addFiles(list) {
+    const incoming = Array.from(list).filter(f => f.type.startsWith('image/'));
+    if (!incoming.length) { window.toast('請選擇圖片檔'); return; }
+
+    incoming.forEach(f => items.push({ file: f, name: f.name, url: URL.createObjectURL(f) }));
+    render();
+  }
+
+  function render() {
+    $('#shots').innerHTML = items.map((it, i) => `
+      <div class="shot">
+        <img src="${it.url}" alt="${esc(it.name)} 的縮圖">
+        <div class="shot__no">${i + 1}．${esc(it.name.length > 14 ? it.name.slice(0, 13) + '…' : it.name)}</div>
+        <div class="shot__acts">
+          <button class="mini-btn" type="button" data-mu="${i}" ${i === 0 ? 'disabled' : ''}
+                  title="往前移" aria-label="往前移">←</button>
+          <button class="mini-btn" type="button" data-md="${i}" ${i === items.length - 1 ? 'disabled' : ''}
+                  title="往後移" aria-label="往後移">→</button>
+          <button class="mini-btn" type="button" data-rm="${i}" title="移除" aria-label="移除">✕</button>
+        </div>
+      </div>`).join('');
+
+    $('#runBtn').disabled = items.length === 0;
+  }
+
+  $('#shots').addEventListener('click', e => {
+    const btn = e.target.closest('button[data-mu],button[data-md],button[data-rm]');
+    if (!btn) return;
+    const d = btn.dataset;
+
+    if (d.mu !== undefined) {
+      const i = +d.mu;
+      [items[i - 1], items[i]] = [items[i], items[i - 1]];
+    } else if (d.md !== undefined) {
+      const i = +d.md;
+      [items[i + 1], items[i]] = [items[i], items[i + 1]];
+    } else {
+      const i = +d.rm;
+      URL.revokeObjectURL(items[i].url);
+      items.splice(i, 1);
+    }
+    render();
+  });
+
+  /* ---------- 轉檔 ---------- */
+  function loadImage(url) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error('圖片讀取失敗'));
+      img.src = url;
+    });
+  }
+
+  /* 統一重新編碼成 JPG，避免 PNG 照片讓 PDF 爆肥 */
+  function toJpegBytes(img, quality) {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0);
+
+    return new Promise(resolve => {
+      canvas.toBlob(async blob => {
+        resolve(new Uint8Array(await blob.arrayBuffer()));
+      }, 'image/jpeg', quality);
+    });
+  }
+
+  $('#runBtn').addEventListener('click', async () => {
+    if (!items.length) return;
+
+    $('#runBtn').disabled = true;
+    const sizeKey = $('#pageSize').value;
+    const orient = $('#orient').value;
+    const marginPt = (Number($('#margin').value) || 0) * MM_TO_PT;
+    const quality = Number($('#quality').value) / 100;
+
+    try {
+      const pdf = await PDFLib.PDFDocument.create();
+
+      for (let i = 0; i < items.length; i++) {
+        $('#statusText').textContent = `處理中… ${i + 1} / ${items.length}`;
+
+        const img = await loadImage(items[i].url);
+        const jpegBytes = await toJpegBytes(img, quality);
+        const embedded = await pdf.embedJpg(jpegBytes);
+
+        const iw = embedded.width, ih = embedded.height;
+        let pw, ph;
+
+        if (sizeKey === 'fit') {
+          /* 跟著圖片走：頁面就是圖片大小，再加上邊界 */
+          pw = iw + marginPt * 2;
+          ph = ih + marginPt * 2;
+        } else {
+          const [a, b] = SIZES[sizeKey];
+          const wantLandscape = orient === 'landscape'
+            || (orient === 'auto' && iw > ih);
+          pw = wantLandscape ? b : a;
+          ph = wantLandscape ? a : b;
+        }
+
+        const page = pdf.addPage([pw, ph]);
+
+        /* 等比縮到扣除邊界後的可用區域，並且置中 */
+        const availW = Math.max(1, pw - marginPt * 2);
+        const availH = Math.max(1, ph - marginPt * 2);
+        const scale = Math.min(availW / iw, availH / ih);
+        const dw = iw * scale;
+        const dh = ih * scale;
+
+        page.drawImage(embedded, {
+          x: (pw - dw) / 2,
+          y: (ph - dh) / 2,
+          width: dw,
+          height: dh
+        });
+
+        await new Promise(r => setTimeout(r, 0));   // 讓出主執行緒
+      }
+
+      pdf.setProducer('順手工具箱');
+      pdf.setCreationDate(new Date());
+
+      const data = await pdf.save();
+      let name = ($('#outName').value || '圖片合輯').trim();
+      if (!/\.pdf$/i.test(name)) name += '.pdf';
+
+      download(new Blob([data], { type: 'application/pdf' }), name);
+      $('#statusText').textContent = `完成，共 ${items.length} 頁`;
+      window.toast('轉換完成');
+    } catch (e) {
+      $('#statusText').textContent = '轉換失敗：' + e.message;
+    }
+
+    $('#runBtn').disabled = false;
+  });
+
+  $('#sortBtn').addEventListener('click', () => {
+    items.sort((a, b) =>
+      a.name.localeCompare(b.name, 'zh-Hant', { numeric: true, sensitivity: 'base' }));
+    render();
+  });
+
+  $('#clearBtn').addEventListener('click', () => {
+    items.forEach(it => URL.revokeObjectURL(it.url));
+    items = [];
+    input.value = '';
+    $('#statusText').textContent = '';
+    render();
+  });
+
+  $('#quality').addEventListener('input', e => {
+    $('#qLabel').textContent = e.target.value;
+  });
+
+  /* 跟著圖片尺寸時，方向選項沒有意義 */
+  $('#pageSize').addEventListener('change', () => {
+    $('#orient').disabled = $('#pageSize').value === 'fit';
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>線上時鐘｜現在時間大字顯示，支援全螢幕 - 順手工具箱</title>
+<meta name="description" content="免費線上時鐘，大字顯示現在時間與日期，可切換 12／24 小時制、顯示秒數與全螢幕模式，直播、講課、櫃檯當電子鐘用剛好。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕐</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .clock-face {
+    text-align: center; padding: 38px 14px;
+    background: var(--bg-sunk); border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+  }
+  .clock-time {
+    font-size: clamp(3rem, .5rem + 17vw, 9rem);
+    font-weight: 800; line-height: 1; letter-spacing: -.045em;
+    font-variant-numeric: tabular-nums;
+  }
+  .clock-time .sec { color: var(--brand); }
+  .clock-time .ampm { font-size: .3em; color: var(--ink-3); margin-left: .2em; letter-spacing: 0; }
+  .clock-date { font-size: clamp(1rem, .7rem + 1.3vw, 1.4rem); color: var(--ink-2); margin-top: 14px; }
+  :fullscreen .clock-face { display: grid; place-content: center; height: 100vh; border-radius: 0; border: 0; }
+  :fullscreen .clock-time { font-size: min(20vw, 34vh); }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/clock.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="時鐘, 現在時間, clock, 全螢幕">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="線上時鐘｜現在時間大字顯示，支援全螢幕 - 順手工具箱">
+<meta property="og:description" content="免費線上時鐘，大字顯示現在時間與日期，可切換 12／24 小時制、顯示秒數與全螢幕模式，直播、講課、櫃檯當電子鐘用剛好。">
+<meta property="og:url" content="https://tools.luka-life.com/t/clock.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="線上時鐘｜現在時間大字顯示，支援全螢幕 - 順手工具箱">
+<meta name="twitter:description" content="免費線上時鐘，大字顯示現在時間與日期，可切換 12／24 小時制、顯示秒數與全螢幕模式，直播、講課、櫃檯當電子鐘用剛好。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "線上時鐘",
+  "description": "免費線上時鐘，大字顯示現在時間與日期，可切換 12／24 小時制、顯示秒數與全螢幕模式，直播、講課、櫃檯當電子鐘用剛好。",
+  "url": "https://tools.luka-life.com/t/clock.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "時間計時",
+      "item": "https://tools.luka-life.com/#time"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "線上時鐘",
+      "item": "https://tools.luka-life.com/t/clock.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "這個時間準不準？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "它顯示的就是你裝置上的系統時間。現在的電腦跟手機預設都會自動跟網路校時，誤差通常在一秒以內。如果你發現差很多，多半是裝置的「自動設定時間」被關掉了。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "可以看其他國家的時間嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "這頁只顯示你所在時區。要看日本、美國或歐洲現在幾點，用「世界時區換算」那個工具，它可以同時列出多個城市的當地時間。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "全螢幕之後螢幕會不會自動休眠？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "有可能，這由作業系統的電源設定決定。要長時間顯示，建議先把電腦的螢幕休眠時間調長，或是接上電源。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="clock">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🕐</span>線上時鐘</h1>
+    <p class="lede">現在幾點，用大字顯示。開全螢幕就變成電子鐘，講課、直播、擺在櫃檯都好用。</p>
+  </div>
+
+  <div class="panel">
+    <div class="clock-face mb-2" id="face">
+      <div class="clock-time" id="time">--:--</div>
+      <div class="clock-date" id="date">載入中…</div>
+    </div>
+
+    <div class="chips mb-2">
+      <label class="chip is-on"><input type="checkbox" id="showSec" hidden checked> 顯示秒數</label>
+      <label class="chip"><input type="checkbox" id="use12" hidden> 12 小時制</label>
+      <label class="chip is-on"><input type="checkbox" id="showDate" hidden checked> 顯示日期</label>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn" type="button" id="fsBtn">全螢幕顯示</button>
+      <button class="btn btn--ghost" type="button" id="copyBtn">複製現在時間</button>
+    </div>
+
+    <div class="note mt-2">
+      <strong>時間來源：</strong>你的電腦或手機本身的系統時鐘，時區也跟著裝置走（目前偵測到 <span id="tz" class="mono"></span>）。如果顯示的時間不對，要調的是裝置的日期時間設定。
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>這個時間準不準？</summary>
+        <div class="a">它顯示的就是你裝置上的系統時間。現在的電腦跟手機預設都會自動跟網路校時，誤差通常在一秒以內。如果你發現差很多，多半是裝置的「自動設定時間」被關掉了。</div>
+      </details>
+      <details>
+        <summary>可以看其他國家的時間嗎？</summary>
+        <div class="a">這頁只顯示你所在時區。要看日本、美國或歐洲現在幾點，用「世界時區換算」那個工具，它可以同時列出多個城市的當地時間。</div>
+      </details>
+      <details>
+        <summary>全螢幕之後螢幕會不會自動休眠？</summary>
+        <div class="a">有可能，這由作業系統的電源設定決定。要長時間顯示，建議先把電腦的螢幕休眠時間調長，或是接上電源。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, pad } = window.U;
+
+  const WEEK = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+
+  const timeEl = $('#time');
+  const dateEl = $('#date');
+
+  try {
+    $('#tz').textContent = Intl.DateTimeFormat().resolvedOptions().timeZone || '系統預設';
+  } catch (e) {
+    $('#tz').textContent = '系統預設';
+  }
+
+  /* chip 外觀與 checkbox 同步 */
+  document.querySelectorAll('.chip input').forEach(cb => {
+    cb.addEventListener('change', () => {
+      cb.parentElement.classList.toggle('is-on', cb.checked);
+      render();
+    });
+  });
+
+  function render() {
+    const now = new Date();
+    let h = now.getHours();
+    let suffix = '';
+
+    if ($('#use12').checked) {
+      suffix = h < 12 ? '上午' : '下午';
+      h = h % 12 || 12;
+    }
+
+    let html = pad(h) + ':' + pad(now.getMinutes());
+    if ($('#showSec').checked) {
+      html += '<span class="sec">:' + pad(now.getSeconds()) + '</span>';
+    }
+    if (suffix) html += '<span class="ampm">' + suffix + '</span>';
+    timeEl.innerHTML = html;
+
+    dateEl.classList.toggle('hidden', !$('#showDate').checked);
+    dateEl.textContent = `${now.getFullYear()} 年 ${now.getMonth() + 1} 月 ${now.getDate()} 日　${WEEK[now.getDay()]}`;
+  }
+
+  $('#fsBtn').addEventListener('click', () => {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else $('#face').requestFullscreen().catch(() => window.toast('這個瀏覽器不支援全螢幕'));
+  });
+
+  $('#copyBtn').addEventListener('click', () => {
+    const n = new Date();
+    const text = `${n.getFullYear()}-${pad(n.getMonth() + 1)}-${pad(n.getDate())} ` +
+                 `${pad(n.getHours())}:${pad(n.getMinutes())}:${pad(n.getSeconds())}`;
+    window.copyText(text, '已複製 ' + text);
+  });
+
+  render();
+  setInterval(render, 250);
+})();
+</script>
+</body>
+</html>

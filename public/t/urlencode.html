@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>URL 編碼解碼｜中文網址與參數轉換 - 順手工具箱</title>
+<meta name="description" content="免費 URL 編碼解碼工具，把中文網址、查詢參數轉成百分號編碼或還原回中文，並可拆解網址結構查看每個參數，複製到的長網址一看就懂。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔗</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .io-grid { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; align-items: start; }
+  @media (max-width: 720px) { .io-grid { grid-template-columns: 1fr; } }
+  .param-key { font-weight: 600; color: var(--brand-ink); word-break: break-all; }
+  .param-val { word-break: break-all; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/urlencode.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="url, encode, 網址編碼, percent, 中文網址">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="URL 編碼解碼｜中文網址與參數轉換 - 順手工具箱">
+<meta property="og:description" content="免費 URL 編碼解碼工具，把中文網址、查詢參數轉成百分號編碼或還原回中文，並可拆解網址結構查看每個參數，複製到的長網址一看就懂。">
+<meta property="og:url" content="https://tools.luka-life.com/t/urlencode.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="URL 編碼解碼｜中文網址與參數轉換 - 順手工具箱">
+<meta name="twitter:description" content="免費 URL 編碼解碼工具，把中文網址、查詢參數轉成百分號編碼或還原回中文，並可拆解網址結構查看每個參數，複製到的長網址一看就懂。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "URL 編碼解碼",
+  "description": "免費 URL 編碼解碼工具，把中文網址、查詢參數轉成百分號編碼或還原回中文，並可拆解網址結構查看每個參數，複製到的長網址一看就懂。",
+  "url": "https://tools.luka-life.com/t/urlencode.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "開發編碼",
+      "item": "https://tools.luka-life.com/#dev"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "URL 編碼解碼",
+      "item": "https://tools.luka-life.com/t/urlencode.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "空格為什麼有時變成 %20 有時變成 +？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "兩種都有人用。%20 是標準的百分號編碼；+ 則是表單送出時的舊慣例，只在查詢字串裡有效。解碼時這個工具兩種都認得。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "解碼失敗是什麼原因？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "通常是字串裡有落單的 % 符號，後面沒有跟著兩個十六進位數字。檢查一下是不是複製時被截斷了。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "網址拆解表看不到？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "只有當輸入的內容是一個完整、可解析的網址（含 http:// 或 https://）時才會顯示。純文字不會出現拆解表。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="urlencode">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🔗</span>URL 編碼解碼</h1>
+    <p class="lede">網址裡那串 %E4%B8%AD%E6%96%87 到底是什麼，貼進來就看得懂了。反過來把中文轉成編碼也行。</p>
+  </div>
+
+  <div class="panel">
+    <div class="io-grid mb-2">
+      <div class="field mb-0">
+        <label for="plain">原始文字或網址</label>
+        <textarea id="plain" rows="7" spellcheck="false">https://example.com/search?q=順手工具箱&type=線上工具</textarea>
+        <div class="btn-group mt-1">
+          <button class="btn btn--sm" type="button" id="encodeBtn">編碼 →</button>
+          <button class="btn btn--ghost btn--sm" type="button" id="copyPlain">複製</button>
+        </div>
+      </div>
+
+      <div class="field mb-0">
+        <label for="encoded">編碼結果</label>
+        <textarea id="encoded" rows="7" spellcheck="false"></textarea>
+        <div class="btn-group mt-1">
+          <button class="btn btn--sm" type="button" id="decodeBtn">← 解碼</button>
+          <button class="btn btn--ghost btn--sm" type="button" id="copyEncoded">複製</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="mode">編碼強度</label>
+      <select id="mode">
+        <option value="component">參數用（會編碼 &amp; = ? / 等符號）</option>
+        <option value="uri">整段網址用（保留 : / ? &amp; = 等結構符號）</option>
+      </select>
+      <p class="hint">要編碼的如果是<strong>整個網址</strong>，選第二個；如果只是要放進 <code>?q=</code> 後面的<strong>單一參數值</strong>，選第一個。</p>
+    </div>
+
+    <p class="small muted mb-2" id="info"></p>
+
+    <div class="hidden" id="breakdownWrap">
+      <div class="panel__title">網址拆解</div>
+      <div class="table-scroll">
+        <table class="data">
+          <tbody id="breakdown"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <button class="btn btn--ghost btn--sm mt-2" type="button" id="clearBtn">清空</button>
+  </div>
+
+  <section class="prose">
+    <h2>為什麼網址不能直接放中文</h2>
+    <p>網址的規格只允許英數字與少數符號，中文、空格、特殊符號都必須先轉成 <code>%</code> 開頭的<strong>百分號編碼</strong>。現在的瀏覽器很聰明，網址列會自動幫你轉並且顯示成中文，所以平常感覺不到；但當你把網址複製出來貼到別的地方，就會看到那串看不懂的 % 編碼了。</p>
+
+    <h2>encodeURI 跟 encodeURIComponent 差在哪</h2>
+    <ul>
+      <li><strong>整段網址用</strong>（encodeURI）：保留 <code>: / ? # &amp; =</code> 這些結構符號不動，因為它們是網址的骨架。</li>
+      <li><strong>參數用</strong>（encodeURIComponent）：連這些符號也一起編碼。因為參數值裡如果含有 <code>&amp;</code>，不編碼就會被誤認成參數的分隔符，整個網址就壞了。</li>
+    </ul>
+    <p>簡單的判斷法：<strong>你處理的是整條網址還是網址的一小段</strong>。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>空格為什麼有時變成 %20 有時變成 +？</summary>
+        <div class="a">兩種都有人用。<code>%20</code> 是標準的百分號編碼；<code>+</code> 則是表單送出時的舊慣例，只在查詢字串裡有效。解碼時這個工具兩種都認得。</div>
+      </details>
+      <details>
+        <summary>解碼失敗是什麼原因？</summary>
+        <div class="a">通常是字串裡有落單的 <code>%</code> 符號，後面沒有跟著兩個十六進位數字。檢查一下是不是複製時被截斷了。</div>
+      </details>
+      <details>
+        <summary>網址拆解表看不到？</summary>
+        <div class="a">只有當輸入的內容是一個完整、可解析的網址（含 http:// 或 https://）時才會顯示。純文字不會出現拆解表。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc } = window.U;
+
+  const plain = $('#plain');
+  const encoded = $('#encoded');
+  let lock = false;
+
+  function encode() {
+    if (lock) return;
+    lock = true;
+    try {
+      const fn = $('#mode').value === 'uri' ? encodeURI : encodeURIComponent;
+      encoded.value = fn(plain.value);
+      encoded.style.borderColor = '';
+      $('#info').textContent = plain.value
+        ? `${plain.value.length} 字元 → ${encoded.value.length} 字元`
+        : '';
+    } catch (e) {
+      $('#info').textContent = '編碼失敗：' + e.message;
+    }
+    lock = false;
+    breakdown(plain.value);
+  }
+
+  function decode() {
+    if (lock) return;
+    lock = true;
+    try {
+      if (!encoded.value.trim()) {
+        plain.value = '';
+        $('#info').textContent = '';
+      } else {
+        /* 先把舊式表單的 + 還原成空格，再做百分號解碼 */
+        plain.value = decodeURIComponent(encoded.value.replace(/\+/g, ' '));
+        encoded.style.borderColor = '';
+        $('#info').textContent = '解碼成功';
+      }
+    } catch (e) {
+      encoded.style.borderColor = 'var(--danger)';
+      $('#info').textContent = '解碼失敗：內容裡有不完整的百分號編碼';
+    }
+    lock = false;
+    breakdown(plain.value);
+  }
+
+  /* 能解析成網址時，把各部位與查詢參數列出來 */
+  function breakdown(text) {
+    const t = (text || '').trim();
+    if (!/^https?:\/\//i.test(t)) {
+      $('#breakdownWrap').classList.add('hidden');
+      return;
+    }
+
+    let u;
+    try { u = new URL(t); }
+    catch (e) { $('#breakdownWrap').classList.add('hidden'); return; }
+
+    const rows = [
+      ['通訊協定', u.protocol.replace(':', '')],
+      ['主機', u.hostname],
+      u.port ? ['連接埠', u.port] : null,
+      ['路徑', decodeURIComponent(u.pathname)],
+      u.hash ? ['錨點', decodeURIComponent(u.hash)] : null
+    ].filter(Boolean);
+
+    let html = rows.map(([k, v]) =>
+      `<tr><td class="param-key" style="width:110px">${esc(k)}</td><td class="param-val">${esc(v)}</td></tr>`
+    ).join('');
+
+    const params = Array.from(u.searchParams.entries());
+    if (params.length) {
+      html += `<tr><td colspan="2" style="background:var(--surface-2);font-weight:600">查詢參數（${params.length} 個）</td></tr>`;
+      html += params.map(([k, v]) =>
+        `<tr><td class="param-key">${esc(k)}</td><td class="param-val">${esc(v) || '<span class="muted">（空值）</span>'}</td></tr>`
+      ).join('');
+    }
+
+    $('#breakdown').innerHTML = html;
+    $('#breakdownWrap').classList.remove('hidden');
+  }
+
+  plain.addEventListener('input', encode);
+  encoded.addEventListener('input', decode);
+  $('#mode').addEventListener('change', encode);
+  $('#encodeBtn').addEventListener('click', encode);
+  $('#decodeBtn').addEventListener('click', decode);
+
+  $('#copyPlain').addEventListener('click', () => {
+    if (!plain.value) return window.toast('沒有內容');
+    window.copyText(plain.value);
+  });
+  $('#copyEncoded').addEventListener('click', () => {
+    if (!encoded.value) return window.toast('沒有內容');
+    window.copyText(encoded.value);
+  });
+
+  $('#clearBtn').addEventListener('click', () => {
+    plain.value = encoded.value = '';
+    $('#info').textContent = '';
+    $('#breakdownWrap').classList.add('hidden');
+    plain.focus();
+  });
+
+  encode();
+})();
+</script>
+</body>
+</html>

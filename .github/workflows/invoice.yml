@@ -1,0 +1,58 @@
+# 自動更新統一發票中獎號碼
+#
+# 不需要任何設定，推上 GitHub 之後就會自己跑。
+# 資料來源是財政部稅務入口網的公開中獎號碼單，不需要 API 金鑰、不需要 Secret。
+#
+# 每次執行會抓「本期」與「上期」兩頁，合併進 public/assets/data/invoice.json，
+# 保留最近 6 期（約一年）。抓不到或格式不對就直接失敗並保留舊資料，
+# 絕不寫入可能有誤的號碼。
+
+name: 更新發票中獎號碼
+
+on:
+  schedule:
+    # 統一發票每兩個月的 25 日開獎（單數月）。
+    # 在 25 到 28 日每天跑一次，抓到相同號碼就不會有任何變更。
+    # cron 時間為 UTC，4:00 UTC 約等於台灣中午 12 點。
+    - cron: '0 4 25-28 1,3,5,7,9,11 *'
+    # 每月 1 號再補跑一次，避免開獎當天官方頁面還沒更新而錯過。
+    - cron: '0 4 1 2,4,6,8,10,12 *'
+  workflow_dispatch:      # 也可以在 Actions 頁面手動觸發
+  push:
+    # 只要你有 push，順便檢查一次。
+    # 這樣 GitHub 不會因為 repo 長期沒動作而停用排程。
+    branches: [ main, master ]
+    paths-ignore:
+      - 'public/assets/data/invoice.json'   # 避免自己 commit 又觸發自己
+
+permissions:
+  contents: write
+
+# 同時只跑一個，避免排程與 push 撞在一起造成推送衝突
+concurrency:
+  group: invoice-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 取出程式碼
+        uses: actions/checkout@v4
+
+      - name: 抓取並寫入中獎號碼
+        run: node .github/scripts/fetch-invoice.mjs
+
+      - name: 有變更才 commit
+        run: |
+          if [[ -n "$(git status --porcelain public/assets/data/invoice.json)" ]]; then
+            git config user.name  "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add public/assets/data/invoice.json
+            git commit -m "chore: 更新統一發票中獎號碼"
+            git push
+            echo "已更新並推送"
+          else
+            echo "號碼沒有變化，不做任何事"
+          fi

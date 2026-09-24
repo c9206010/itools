@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Base64 編碼解碼｜支援中文與檔案轉換 - 順手工具箱</title>
+<meta name="description" content="免費線上 Base64 編碼與解碼工具，完整支援中文與 Emoji，可切換網址安全格式，也能把圖片等檔案轉成 Base64 字串，全程在瀏覽器完成不上傳。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .io-grid { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; align-items: start; }
+  @media (max-width: 720px) { .io-grid { grid-template-columns: 1fr; } }
+  .swap-hint { text-align: center; color: var(--ink-3); font-size: 1.3rem; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/base64.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="base64, 編碼, 解碼, encode, decode">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="Base64 編碼解碼｜支援中文與檔案轉換 - 順手工具箱">
+<meta property="og:description" content="免費線上 Base64 編碼與解碼工具，完整支援中文與 Emoji，可切換網址安全格式，也能把圖片等檔案轉成 Base64 字串，全程在瀏覽器完成不上傳。">
+<meta property="og:url" content="https://tools.luka-life.com/t/base64.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Base64 編碼解碼｜支援中文與檔案轉換 - 順手工具箱">
+<meta name="twitter:description" content="免費線上 Base64 編碼與解碼工具，完整支援中文與 Emoji，可切換網址安全格式，也能把圖片等檔案轉成 Base64 字串，全程在瀏覽器完成不上傳。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Base64 編碼解碼",
+  "description": "免費線上 Base64 編碼與解碼工具，完整支援中文與 Emoji，可切換網址安全格式，也能把圖片等檔案轉成 Base64 字串，全程在瀏覽器完成不上傳。",
+  "url": "https://tools.luka-life.com/t/base64.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "開發編碼",
+      "item": "https://tools.luka-life.com/#dev"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Base64 編碼解碼",
+      "item": "https://tools.luka-life.com/t/base64.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "中文為什麼有些工具會轉出亂碼？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "因為瀏覽器內建的 btoa 只吃單位元組字元，遇到中文會直接報錯或出錯。這個工具先把文字轉成 UTF-8 位元組再編碼，所以中文、日文、Emoji 都能正確來回轉換。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "「網址安全格式」是什麼？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "標準 Base64 會用到 + 和 /，這兩個字元在網址裡有特殊意義，直接放進 URL 會出問題。網址安全格式把它們換成 - 和 _，就可以安心放在網址或檔名裡。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "檔案會上傳到伺服器嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會。檔案是用瀏覽器的 FileReader 在你自己的電腦上讀取與轉換的，完全沒有經過網路。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="base64">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🔐</span>Base64 編碼解碼</h1>
+    <p class="lede">文字轉 Base64、Base64 轉回文字，中文跟 Emoji 都不會變亂碼。也可以直接丟檔案進來轉。</p>
+  </div>
+
+  <div class="panel">
+    <div class="io-grid mb-2">
+      <div class="field mb-0">
+        <label for="plain">原始文字</label>
+        <textarea id="plain" rows="9" spellcheck="false" placeholder="在這裡輸入文字，右邊會即時顯示編碼結果">順手工具箱 Handy Tools 🧰</textarea>
+        <div class="btn-group mt-1">
+          <button class="btn btn--sm" type="button" id="encodeBtn">編碼 →</button>
+          <button class="btn btn--ghost btn--sm" type="button" id="copyPlain">複製</button>
+        </div>
+      </div>
+
+      <div class="field mb-0">
+        <label for="encoded">Base64</label>
+        <textarea id="encoded" rows="9" spellcheck="false" placeholder="或把 Base64 貼在這裡，左邊會顯示解碼結果"></textarea>
+        <div class="btn-group mt-1">
+          <button class="btn btn--sm" type="button" id="decodeBtn">← 解碼</button>
+          <button class="btn btn--ghost btn--sm" type="button" id="copyEncoded">複製</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="chips mb-2">
+      <label class="chip"><input type="checkbox" id="urlSafe" hidden> 網址安全格式（- _ 取代 + /）</label>
+      <label class="chip"><input type="checkbox" id="noPad" hidden> 去掉結尾的 = 號</label>
+      <label class="chip"><input type="checkbox" id="wrap76" hidden> 每 76 字元換行</label>
+    </div>
+
+    <p class="small muted mb-2" id="info"></p>
+
+    <div class="panel__title">把檔案轉成 Base64</div>
+    <input type="file" id="fileInput" class="mb-1">
+    <p class="hint mb-1">選一個檔案就會轉成 Base64（含 data URI 前綴，可直接貼進 HTML 或 CSS）。大檔案會很長，建議 2MB 以下。</p>
+    <textarea id="fileOut" rows="4" spellcheck="false" readonly placeholder="檔案轉換結果會出現在這裡"></textarea>
+    <div class="btn-group mt-1">
+      <button class="btn btn--ghost btn--sm" type="button" id="copyFile">複製檔案編碼</button>
+      <span class="small muted" id="fileInfo" style="align-self:center"></span>
+    </div>
+
+    <button class="btn btn--ghost btn--sm mt-2" type="button" id="clearBtn">全部清空</button>
+  </div>
+
+  <section class="prose">
+    <h2>Base64 不是加密</h2>
+    <p>這點很重要：Base64 只是<strong>把資料換一種表示方式</strong>，任何人拿到都能直接解回原文，完全沒有保密效果。它的用途是讓二進位資料（圖片、附件）能夠安全地通過只接受文字的管道，例如電子郵件、JSON、網址參數。<strong>密碼、金鑰、個資千萬不要只用 Base64 就當作保護。</strong></p>
+
+    <h2>為什麼編碼後會變長</h2>
+    <p>Base64 用 4 個字元表示原本的 3 個位元組，所以編碼後的長度大約是原本的 <strong>1.33 倍</strong>。把圖片內嵌成 data URI 之前記得先評估，小圖示很划算，大圖片反而會讓網頁變肥。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>中文為什麼有些工具會轉出亂碼？</summary>
+        <div class="a">因為瀏覽器內建的 <code>btoa</code> 只吃單位元組字元，遇到中文會直接報錯或出錯。這個工具先把文字轉成 UTF-8 位元組再編碼，所以中文、日文、Emoji 都能正確來回轉換。</div>
+      </details>
+      <details>
+        <summary>「網址安全格式」是什麼？</summary>
+        <div class="a">標準 Base64 會用到 <code>+</code> 和 <code>/</code>，這兩個字元在網址裡有特殊意義，直接放進 URL 會出問題。網址安全格式把它們換成 <code>-</code> 和 <code>_</code>，就可以安心放在網址或檔名裡。</div>
+      </details>
+      <details>
+        <summary>檔案會上傳到伺服器嗎？</summary>
+        <div class="a">不會。檔案是用瀏覽器的 FileReader 在你自己的電腦上讀取與轉換的，完全沒有經過網路。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, bytes } = window.U;
+
+  const plain = $('#plain');
+  const encoded = $('#encoded');
+  let lock = false;   // 避免雙向綁定互相觸發
+
+  document.querySelectorAll('.chip input').forEach(cb => {
+    cb.addEventListener('change', () => {
+      cb.parentElement.classList.toggle('is-on', cb.checked);
+      encode();
+    });
+  });
+
+  /* btoa 只能處理單位元組，先手動轉成 UTF-8 才不會弄壞中文 */
+  function utf8ToB64(str) {
+    const bytesArr = new TextEncoder().encode(str);
+    let bin = '';
+    // 分段組字串，避免 apply 在大資料時爆堆疊
+    const CHUNK = 0x8000;
+    for (let i = 0; i < bytesArr.length; i += CHUNK) {
+      bin += String.fromCharCode.apply(null, bytesArr.subarray(i, i + CHUNK));
+    }
+    return btoa(bin);
+  }
+
+  function b64ToUtf8(b64) {
+    const bin = atob(b64);
+    const arr = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+    return new TextDecoder().decode(arr);
+  }
+
+  function applyOptions(b64) {
+    let s = b64;
+    if ($('#urlSafe').checked) s = s.replace(/\+/g, '-').replace(/\//g, '_');
+    if ($('#noPad').checked) s = s.replace(/=+$/, '');
+    if ($('#wrap76').checked) s = s.replace(/(.{76})/g, '$1\n');
+    return s;
+  }
+
+  /* 還原成標準 Base64 再解碼，讓網址安全格式與缺 padding 的字串都能吃 */
+  function normalize(s) {
+    let t = s.replace(/\s+/g, '').replace(/-/g, '+').replace(/_/g, '/');
+    const pad = t.length % 4;
+    if (pad === 2) t += '==';
+    else if (pad === 3) t += '=';
+    else if (pad === 1) throw new Error('長度不正確');
+    return t;
+  }
+
+  function encode() {
+    if (lock) return;
+    lock = true;
+    try {
+      const raw = utf8ToB64(plain.value);
+      encoded.value = applyOptions(raw);
+      encoded.style.borderColor = '';
+      const inBytes = new TextEncoder().encode(plain.value).length;
+      $('#info').textContent = plain.value
+        ? `原始 ${bytes(inBytes)} → 編碼後 ${bytes(encoded.value.replace(/\s/g, '').length)}`
+        : '';
+    } catch (e) {
+      encoded.value = '';
+      $('#info').textContent = '編碼失敗：' + e.message;
+    }
+    lock = false;
+  }
+
+  function decode() {
+    if (lock) return;
+    lock = true;
+    try {
+      if (!encoded.value.trim()) {
+        plain.value = '';
+        $('#info').textContent = '';
+      } else {
+        plain.value = b64ToUtf8(normalize(encoded.value));
+        encoded.style.borderColor = '';
+        $('#info').textContent = '解碼成功';
+      }
+    } catch (e) {
+      encoded.style.borderColor = 'var(--danger)';
+      $('#info').textContent = '解碼失敗：這段內容不是有效的 Base64';
+    }
+    lock = false;
+  }
+
+  plain.addEventListener('input', encode);
+  encoded.addEventListener('input', decode);
+  $('#encodeBtn').addEventListener('click', encode);
+  $('#decodeBtn').addEventListener('click', decode);
+
+  $('#copyPlain').addEventListener('click', () => {
+    if (!plain.value) return window.toast('沒有內容');
+    window.copyText(plain.value);
+  });
+  $('#copyEncoded').addEventListener('click', () => {
+    if (!encoded.value) return window.toast('沒有內容');
+    window.copyText(encoded.value);
+  });
+
+  /* ---------- 檔案轉 Base64 ---------- */
+  $('#fileInput').addEventListener('change', e => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 8 * 1024 * 1024) {
+      window.toast('檔案超過 8MB，可能會很慢');
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      $('#fileOut').value = reader.result;
+      $('#fileInfo').textContent =
+        `${file.name}．原始 ${bytes(file.size)} → 編碼後 ${bytes(reader.result.length)}`;
+    };
+    reader.onerror = () => window.toast('讀取檔案失敗');
+    reader.readAsDataURL(file);
+  });
+
+  $('#copyFile').addEventListener('click', () => {
+    if (!$('#fileOut').value) return window.toast('還沒有選檔案');
+    window.copyText($('#fileOut').value, '已複製檔案編碼');
+  });
+
+  $('#clearBtn').addEventListener('click', () => {
+    plain.value = encoded.value = $('#fileOut').value = '';
+    $('#fileInput').value = '';
+    $('#info').textContent = $('#fileInfo').textContent = '';
+    plain.focus();
+  });
+
+  encode();
+})();
+</script>
+</body>
+</html>

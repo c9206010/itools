@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>英文大小寫轉換｜駝峰、蛇形、標題式一鍵切換 - 順手工具箱</title>
+<meta name="description" content="免費大小寫轉換工具，一鍵把文字變成全大寫、全小寫、首字大寫、標題式、camelCase、snake_case、kebab-case 或常數寫法，寫程式與排版都好用。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='72'>Aa</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .case-grid { display: grid; gap: 8px; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  .case-btn {
+    text-align: left; padding: 11px 13px;
+    border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+    background: var(--surface); cursor: pointer; font: inherit;
+    transition: all .12s ease;
+  }
+  .case-btn:hover { border-color: var(--brand); background: var(--brand-wash); }
+  .case-btn b { display: block; font-size: .9rem; color: var(--ink); }
+  .case-btn span { display: block; font-size: .78rem; color: var(--ink-3); font-family: var(--mono); margin-top: 3px; word-break: break-all; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/case.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="大小寫, camel, snake, case, 轉換">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="英文大小寫轉換｜駝峰、蛇形、標題式一鍵切換 - 順手工具箱">
+<meta property="og:description" content="免費大小寫轉換工具，一鍵把文字變成全大寫、全小寫、首字大寫、標題式、camelCase、snake_case、kebab-case 或常數寫法，寫程式與排版都好用。">
+<meta property="og:url" content="https://tools.luka-life.com/t/case.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="英文大小寫轉換｜駝峰、蛇形、標題式一鍵切換 - 順手工具箱">
+<meta name="twitter:description" content="免費大小寫轉換工具，一鍵把文字變成全大寫、全小寫、首字大寫、標題式、camelCase、snake_case、kebab-case 或常數寫法，寫程式與排版都好用。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "大小寫轉換",
+  "description": "免費大小寫轉換工具，一鍵把文字變成全大寫、全小寫、首字大寫、標題式、camelCase、snake_case、kebab-case 或常數寫法，寫程式與排版都好用。",
+  "url": "https://tools.luka-life.com/t/case.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "文字處理",
+      "item": "https://tools.luka-life.com/#text"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "大小寫轉換",
+      "item": "https://tools.luka-life.com/t/case.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "「標題式」是怎麼判斷的？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "採用英文標題的常見慣例：每個字首大寫，但 a、an、the、of、in、and 這類短介系詞與冠詞維持小寫，除非它是第一個字或最後一個字。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "中文會被影響嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "中文沒有大小寫的概念，轉換時會原封不動保留，只有英文字母會被改動。不過要注意 snake_case 這類會拆字重組的格式，遇到中英混排可能會把空白換成底線，建議純英文再使用。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "可以一次轉很多行嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以。大小寫類的轉換會保留換行；命名類的格式（駝峰、蛇形等）則會把整段文字視為一個名稱來組合，多行的話建議一行一行處理。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="case">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">Aa</span>大小寫轉換</h1>
+    <p class="lede">選一種格式按下去就換好了。命名變數、改標題、整理從 PDF 複製出來的全大寫文字都用得上。</p>
+  </div>
+
+  <div class="panel">
+    <div class="field">
+      <label for="src">原始文字</label>
+      <textarea id="src" rows="6" spellcheck="false">hello world from this handy tool</textarea>
+    </div>
+
+    <div class="panel__title">選一種格式</div>
+    <div class="case-grid mb-2" id="caseGrid"></div>
+
+    <div class="field">
+      <label for="out">轉換結果</label>
+      <textarea id="out" rows="6" spellcheck="false" readonly></textarea>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn" type="button" id="copyBtn">複製結果</button>
+      <button class="btn btn--ghost" type="button" id="applyBtn">結果貼回上方繼續轉</button>
+      <button class="btn btn--ghost" type="button" id="clearBtn">清空</button>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>程式命名那幾種寫法差在哪</h2>
+    <ul>
+      <li><code>camelCase</code>：第一個字小寫，之後每個字首大寫。JavaScript 的變數與函式最常用。</li>
+      <li><code>PascalCase</code>：每個字首都大寫。通常用在類別名稱與元件名稱。</li>
+      <li><code>snake_case</code>：全小寫，用底線連接。Python 與資料庫欄位的慣例。</li>
+      <li><code>kebab-case</code>：全小寫，用連字號連接。網址、CSS 類別名稱常見。</li>
+      <li><code>CONSTANT_CASE</code>：全大寫加底線。用來表示常數。</li>
+    </ul>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>「標題式」是怎麼判斷的？</summary>
+        <div class="a">採用英文標題的常見慣例：每個字首大寫，但 a、an、the、of、in、and 這類短介系詞與冠詞維持小寫，除非它是第一個字或最後一個字。</div>
+      </details>
+      <details>
+        <summary>中文會被影響嗎？</summary>
+        <div class="a">中文沒有大小寫的概念，轉換時會原封不動保留，只有英文字母會被改動。不過要注意 <code>snake_case</code> 這類會拆字重組的格式，遇到中英混排可能會把空白換成底線，建議純英文再使用。</div>
+      </details>
+      <details>
+        <summary>可以一次轉很多行嗎？</summary>
+        <div class="a">可以。大小寫類的轉換會保留換行；命名類的格式（駝峰、蛇形等）則會把整段文字視為一個名稱來組合，多行的話建議一行一行處理。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc } = window.U;
+
+  const src = $('#src');
+  const out = $('#out');
+
+  /* 標題式中維持小寫的虛詞 */
+  const MINOR = new Set(['a', 'an', 'the', 'and', 'but', 'or', 'nor', 'for', 'so', 'yet',
+    'at', 'by', 'in', 'of', 'on', 'to', 'up', 'as', 'via', 'per', 'vs']);
+
+  /* 把任意寫法拆成單字陣列，是所有命名格式的共同基礎 */
+  function tokens(text) {
+    return text
+      .replace(/([a-z0-9])([A-Z])/g, '$1 $2')      // camelCase 之間插空白
+      .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')   // HTTPServer → HTTP Server
+      .split(/[\s_\-.]+/)
+      .filter(Boolean);
+  }
+
+  const FORMATS = [
+    { key: 'upper', name: '全部大寫', sample: 'HELLO WORLD',
+      fn: t => t.toUpperCase() },
+    { key: 'lower', name: '全部小寫', sample: 'hello world',
+      fn: t => t.toLowerCase() },
+    { key: 'sentence', name: '句首大寫', sample: 'Hello world',
+      fn: t => t.toLowerCase().replace(/(^\s*|[.!?]\s+)([a-z])/g,
+        (m, pre, ch) => pre + ch.toUpperCase()) },
+    { key: 'capital', name: '每字首大寫', sample: 'Hello World',
+      fn: t => t.toLowerCase().replace(/\b([a-z])/g, (m, c) => c.toUpperCase()) },
+    { key: 'title', name: '標題式', sample: 'The Art of War',
+      fn: t => {
+        const words = t.toLowerCase().split(/(\s+)/);
+        const lastIdx = words.length - 1;
+        return words.map((w, i) => {
+          if (!w.trim()) return w;
+          const isEdge = i === 0 || i === lastIdx;
+          if (!isEdge && MINOR.has(w)) return w;
+          return w.charAt(0).toUpperCase() + w.slice(1);
+        }).join('');
+      } },
+    { key: 'toggle', name: '大小寫互換', sample: 'hELLO wORLD',
+      fn: t => t.replace(/[a-zA-Z]/g, c =>
+        c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()) },
+    { key: 'camel', name: 'camelCase', sample: 'helloWorld',
+      fn: t => tokens(t).map((w, i) => i === 0
+        ? w.toLowerCase()
+        : w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join('') },
+    { key: 'pascal', name: 'PascalCase', sample: 'HelloWorld',
+      fn: t => tokens(t).map(w =>
+        w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join('') },
+    { key: 'snake', name: 'snake_case', sample: 'hello_world',
+      fn: t => tokens(t).map(w => w.toLowerCase()).join('_') },
+    { key: 'kebab', name: 'kebab-case', sample: 'hello-world',
+      fn: t => tokens(t).map(w => w.toLowerCase()).join('-') },
+    { key: 'constant', name: 'CONSTANT_CASE', sample: 'HELLO_WORLD',
+      fn: t => tokens(t).map(w => w.toUpperCase()).join('_') },
+    { key: 'dot', name: 'dot.case', sample: 'hello.world',
+      fn: t => tokens(t).map(w => w.toLowerCase()).join('.') }
+  ];
+
+  $('#caseGrid').innerHTML = FORMATS.map(f =>
+    `<button class="case-btn" type="button" data-key="${f.key}">
+       <b>${esc(f.name)}</b><span>${esc(f.sample)}</span>
+     </button>`).join('');
+
+  let active = 'upper';
+
+  function convert() {
+    const f = FORMATS.find(x => x.key === active);
+    if (!f) return;
+    try {
+      out.value = f.fn(src.value);
+    } catch (e) {
+      out.value = '';
+      window.toast('轉換失敗，請檢查輸入內容');
+    }
+  }
+
+  $('#caseGrid').addEventListener('click', e => {
+    const btn = e.target.closest('.case-btn');
+    if (!btn) return;
+    active = btn.dataset.key;
+    convert();
+  });
+
+  src.addEventListener('input', convert);
+
+  $('#copyBtn').addEventListener('click', () => {
+    if (!out.value) { window.toast('還沒有結果'); return; }
+    window.copyText(out.value);
+  });
+
+  $('#applyBtn').addEventListener('click', () => {
+    if (!out.value) return;
+    src.value = out.value;
+    convert();
+  });
+
+  $('#clearBtn').addEventListener('click', () => {
+    src.value = out.value = '';
+    src.focus();
+  });
+
+  convert();
+})();
+</script>
+</body>
+</html>

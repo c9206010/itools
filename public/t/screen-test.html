@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>螢幕壞點檢測｜純色全螢幕找亮點與暗點 - 順手工具箱</title>
+<meta name="description" content="免費線上螢幕檢測工具，用純色全螢幕畫面檢查液晶螢幕的亮點、暗點與色偏，另附灰階與漸層測試圖，買螢幕或二手驗機時使用。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔳</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .swatch-grid { display: grid; gap: 9px; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); }
+  .swatch {
+    aspect-ratio: 16/10; border-radius: var(--radius-sm); cursor: pointer;
+    border: 1px solid var(--border-strong); position: relative; overflow: hidden;
+    font: inherit; padding: 0;
+  }
+  .swatch span {
+    position: absolute; left: 6px; bottom: 6px;
+    background: rgba(0,0,0,.62); color: #fff;
+    font-size: .7rem; padding: 2px 8px; border-radius: 999px; font-weight: 600;
+  }
+  #fsLayer {
+    position: fixed; inset: 0; z-index: 999; display: none;
+    cursor: none; touch-action: none;
+  }
+  #fsLayer.on { display: block; }
+  #fsHint {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    background: rgba(0,0,0,.7); color: #fff; padding: 14px 22px;
+    border-radius: 12px; font-size: .92rem; text-align: center; line-height: 1.7;
+    transition: opacity .4s ease; pointer-events: none;
+  }
+  #fsHint.fade { opacity: 0; }
+  .spec-row { display: grid; grid-template-columns: 1fr auto; gap: 10px;
+              padding: 9px 12px; border-bottom: 1px solid var(--border); font-size: .9rem; }
+  .spec-row:last-child { border-bottom: 0; }
+  .spec-row b { font-family: var(--mono); font-weight: 700; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/screen-test.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="螢幕, 壞點, 亮點, 檢測, 液晶, dead, pixel">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="螢幕壞點檢測｜純色全螢幕找亮點與暗點 - 順手工具箱">
+<meta property="og:description" content="免費線上螢幕檢測工具，用純色全螢幕畫面檢查液晶螢幕的亮點、暗點與色偏，另附灰階與漸層測試圖，買螢幕或二手驗機時使用。">
+<meta property="og:url" content="https://tools.luka-life.com/t/screen-test.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="螢幕壞點檢測｜純色全螢幕找亮點與暗點 - 順手工具箱">
+<meta name="twitter:description" content="免費線上螢幕檢測工具，用純色全螢幕畫面檢查液晶螢幕的亮點、暗點與色偏，另附灰階與漸層測試圖，買螢幕或二手驗機時使用。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "螢幕壞點檢測",
+  "description": "免費線上螢幕檢測工具，用純色全螢幕畫面檢查液晶螢幕的亮點、暗點與色偏，另附灰階與漸層測試圖，買螢幕或二手驗機時使用。",
+  "url": "https://tools.luka-life.com/t/screen-test.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "裝置檢測",
+      "item": "https://tools.luka-life.com/#device"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "螢幕壞點檢測",
+      "item": "https://tools.luka-life.com/t/screen-test.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "發現壞點可以要求退換嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "網購在台灣有七天鑑賞期，期間內可以無條件退貨，這是最直接的做法。實體店購買則要看店家與品牌的政策。重點是收到貨當天就測，不要等過了鑑賞期才發現。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "壞點會自己好嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "「暗點」偶爾是子畫素卡住，有機會透過快速閃爍畫面的方式復原，但成功率不高。真正的物理損壞不會自己好，也不會傳染擴散。不要用手指用力按壓螢幕嘗試修復，那只會造成更大範圍的損傷。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "為什麼全黑畫面看起來偏灰？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "那是液晶螢幕的正常現象，背光沒辦法完全關閉，這叫做漏光。四個角落或邊緣特別亮也是常見的。OLED 螢幕因為畫素能完全關閉，黑色才會是純黑。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "手機可以測嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以，一樣點顏色進入全螢幕。不過手機瀏覽器的網址列有時不會完全隱藏，邊緣區域可能檢查不到，建議搭配左右滑動確認。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="screen-test">
+
+<div id="fsLayer" role="dialog" aria-label="全螢幕檢測畫面">
+  <div id="fsHint">
+    點一下或按方向鍵切換下一個顏色<br>
+    按 <strong>Esc</strong> 離開
+  </div>
+</div>
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🔳</span>螢幕壞點檢測</h1>
+    <p class="lede">買新螢幕、收二手筆電，先用純色全螢幕掃一遍。亮點暗點在單一顏色的背景上最容易現形。</p>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title">點一個顏色開始全螢幕檢測</div>
+    <div class="swatch-grid mb-2" id="swatches"></div>
+
+    <div class="btn-group">
+      <button class="btn btn--lg" type="button" id="autoBtn">自動輪播（每 3 秒換色）</button>
+      <button class="btn btn--ghost btn--lg" type="button" id="startBtn">從第一個顏色開始</button>
+    </div>
+
+    <p class="hint mt-1">
+      進入全螢幕之後：<strong>點一下</strong>或按<strong>左右方向鍵</strong>換顏色，按 <strong>Esc</strong> 離開。
+    </p>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title">你的螢幕資訊</div>
+    <div id="specs"></div>
+  </div>
+
+  <section class="prose">
+    <h2>怎麼看才找得到壞點</h2>
+    <ol>
+      <li><strong>先把螢幕擦乾淨。</strong>十次有八次的「壞點」其實是灰塵或指紋。</li>
+      <li><strong>在全黑畫面找亮點</strong>：黑底上出現的白色、紅色或藍色小點，是永遠亮著的<strong>亮點</strong>。</li>
+      <li><strong>在全白畫面找暗點</strong>：白底上的黑色小點，是永遠不亮的<strong>暗點</strong>。</li>
+      <li><strong>紅、綠、藍各看一遍</strong>：有些子畫素只壞掉一個顏色，只在特定色上才看得出來。</li>
+      <li>眼睛距離螢幕約 30 到 50 公分，慢慢掃過整個畫面，特別注意四個角落。</li>
+    </ol>
+
+    <h2>亮點跟暗點哪個嚴重</h2>
+    <p><strong>亮點比暗點惱人得多</strong>。暗點在多數畫面下幾乎看不到，但亮點在看電影或深色背景工作時會一直閃在那裡。要注意的是，各家廠商的保固標準不同，<strong>通常要達到一定數量才符合換貨條件</strong>，一兩個點多半不在保固範圍內。買之前先問清楚該品牌的「亮點保固」政策，有些會提供「零亮點」的加購保固。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>發現壞點可以要求退換嗎？</summary>
+        <div class="a">網購在台灣有七天鑑賞期，期間內可以無條件退貨，這是最直接的做法。實體店購買則要看店家與品牌的政策。重點是<strong>收到貨當天就測</strong>，不要等過了鑑賞期才發現。</div>
+      </details>
+      <details>
+        <summary>壞點會自己好嗎？</summary>
+        <div class="a">「暗點」偶爾是子畫素卡住，有機會透過快速閃爍畫面的方式復原，但成功率不高。真正的物理損壞不會自己好，也不會傳染擴散。不要用手指用力按壓螢幕嘗試修復，那只會造成更大範圍的損傷。</div>
+      </details>
+      <details>
+        <summary>為什麼全黑畫面看起來偏灰？</summary>
+        <div class="a">那是液晶螢幕的正常現象，背光沒辦法完全關閉，這叫做漏光。四個角落或邊緣特別亮也是常見的。OLED 螢幕因為畫素能完全關閉，黑色才會是純黑。</div>
+      </details>
+      <details>
+        <summary>手機可以測嗎？</summary>
+        <div class="a">可以，一樣點顏色進入全螢幕。不過手機瀏覽器的網址列有時不會完全隱藏，邊緣區域可能檢查不到，建議搭配左右滑動確認。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc } = window.U;
+
+  const COLORS = [
+    { name: '純黑（找亮點）', css: '#000000' },
+    { name: '純白（找暗點）', css: '#ffffff' },
+    { name: '純紅', css: '#ff0000' },
+    { name: '純綠', css: '#00ff00' },
+    { name: '純藍', css: '#0000ff' },
+    { name: '青色', css: '#00ffff' },
+    { name: '洋紅', css: '#ff00ff' },
+    { name: '黃色', css: '#ffff00' },
+    { name: '深灰 25%', css: '#404040' },
+    { name: '中灰 50%', css: '#808080' },
+    { name: '淺灰 75%', css: '#bfbfbf' },
+    { name: '灰階漸層', css: 'linear-gradient(90deg,#000,#fff)' },
+    { name: '彩色漸層', css: 'linear-gradient(90deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)' }
+  ];
+
+  const layer = $('#fsLayer');
+  const hint = $('#fsHint');
+  let index = 0;
+  let autoTimer = null;
+
+  function renderSwatches() {
+    $('#swatches').innerHTML = COLORS.map((c, i) =>
+      `<button class="swatch" type="button" data-i="${i}" style="background:${c.css}"
+               aria-label="以${esc(c.name)}全螢幕檢測">
+         <span>${esc(c.name)}</span>
+       </button>`).join('');
+  }
+
+  function show(i) {
+    index = (i + COLORS.length) % COLORS.length;
+    layer.style.background = COLORS[index].css;
+  }
+
+  function enter(i) {
+    show(i);
+    layer.classList.add('on');
+
+    hint.classList.remove('fade');
+    setTimeout(() => hint.classList.add('fade'), 2200);
+
+    /* 盡量進入真正的全螢幕，被拒絕也還是有整頁覆蓋層可用 */
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    }
+  }
+
+  function exit() {
+    layer.classList.remove('on');
+    stopAuto();
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+  }
+
+  function startAuto() {
+    stopAuto();
+    autoTimer = setInterval(() => show(index + 1), 3000);
+  }
+
+  function stopAuto() {
+    if (autoTimer) clearInterval(autoTimer);
+    autoTimer = null;
+  }
+
+  $('#swatches').addEventListener('click', e => {
+    const btn = e.target.closest('.swatch');
+    if (btn) enter(+btn.dataset.i);
+  });
+
+  $('#startBtn').addEventListener('click', () => enter(0));
+  $('#autoBtn').addEventListener('click', () => { enter(0); startAuto(); });
+
+  layer.addEventListener('click', () => {
+    stopAuto();          // 手動切換就取消輪播，避免打架
+    show(index + 1);
+  });
+
+  document.addEventListener('keydown', e => {
+    if (!layer.classList.contains('on')) return;
+
+    if (e.key === 'Escape') { exit(); return; }
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault();
+      stopAuto();
+      show(index + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      stopAuto();
+      show(index - 1);
+    }
+  });
+
+  /* 使用者用瀏覽器的方式離開全螢幕時，覆蓋層也要跟著收起來 */
+  document.addEventListener('fullscreenchange', () => {
+    if (!document.fullscreenElement && layer.classList.contains('on')) exit();
+  });
+
+  /* ---------- 螢幕資訊 ---------- */
+  function renderSpecs() {
+    const dpr = window.devicePixelRatio || 1;
+    const rows = [
+      ['瀏覽器可視區域', `${window.innerWidth} × ${window.innerHeight} px`],
+      ['螢幕解析度', `${screen.width} × ${screen.height} px`],
+      ['實際像素解析度', `${Math.round(screen.width * dpr)} × ${Math.round(screen.height * dpr)} px`],
+      ['像素比 DPR', dpr.toFixed(2)],
+      ['色彩深度', screen.colorDepth + ' 位元'],
+      ['長寬比', (screen.width / screen.height).toFixed(3)]
+    ];
+
+    /* 有些瀏覽器支援更新率查詢，沒有就不顯示這一列 */
+    if (screen.refreshRate) rows.push(['更新率', screen.refreshRate + ' Hz']);
+
+    $('#specs').innerHTML = rows.map(([k, v]) =>
+      `<div class="spec-row"><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join('');
+  }
+
+  renderSwatches();
+  renderSpecs();
+  window.addEventListener('resize', renderSpecs);
+})();
+</script>
+</body>
+</html>

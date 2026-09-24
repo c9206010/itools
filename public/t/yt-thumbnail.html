@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YouTube 縮圖擷取｜貼網址取得各尺寸封面圖 - 順手工具箱</title>
+<meta name="description" content="免費 YouTube 縮圖擷取工具，貼上影片網址即可取得最高解析度到小尺寸的封面圖，支援一般影片、Shorts 與短網址，可直接下載或複製圖片網址。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>▶</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .thumbs { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+  .thumb {
+    border: 1px solid var(--border); border-radius: var(--radius);
+    background: var(--surface); overflow: hidden;
+  }
+  .thumb img {
+    width: 100%; aspect-ratio: 16/9; object-fit: cover;
+    background: var(--bg-sunk); display: block;
+  }
+  .thumb__body { padding: 11px 13px; }
+  .thumb__name { font-size: .88rem; font-weight: 700; }
+  .thumb__size { font-size: .78rem; color: var(--ink-3); margin: 2px 0 9px; font-family: var(--mono); }
+  .thumb.is-missing { opacity: .45; }
+  .thumb.is-missing .thumb__size::after { content: "　這個尺寸不存在"; color: var(--danger); }
+  .vid-id {
+    font-family: var(--mono); background: var(--bg-sunk);
+    padding: 2px 8px; border-radius: 4px; font-size: .9em;
+  }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/yt-thumbnail.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="youtube, 縮圖, 封面, thumbnail, 下載">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="YouTube 縮圖擷取｜貼網址取得各尺寸封面圖 - 順手工具箱">
+<meta property="og:description" content="免費 YouTube 縮圖擷取工具，貼上影片網址即可取得最高解析度到小尺寸的封面圖，支援一般影片、Shorts 與短網址，可直接下載或複製圖片網址。">
+<meta property="og:url" content="https://tools.luka-life.com/t/yt-thumbnail.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="YouTube 縮圖擷取｜貼網址取得各尺寸封面圖 - 順手工具箱">
+<meta name="twitter:description" content="免費 YouTube 縮圖擷取工具，貼上影片網址即可取得最高解析度到小尺寸的封面圖，支援一般影片、Shorts 與短網址，可直接下載或複製圖片網址。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "YouTube 縮圖擷取",
+  "description": "免費 YouTube 縮圖擷取工具，貼上影片網址即可取得最高解析度到小尺寸的封面圖，支援一般影片、Shorts 與短網址，可直接下載或複製圖片網址。",
+  "url": "https://tools.luka-life.com/t/yt-thumbnail.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "社群小幫手",
+      "item": "https://tools.luka-life.com/#social"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "YouTube 縮圖擷取",
+      "item": "https://tools.luka-life.com/t/yt-thumbnail.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "為什麼最高畫質那張抓不到？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "代表這支影片沒有上傳到那個解析度的縮圖，通常發生在比較早期或以低畫質上傳的影片。這種情況就改用下面的標準畫質那張，內容是一樣的，只是解析度較低。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Shorts 的網址可以嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以。Shorts 也是 YouTube 影片，一樣有影片 ID，工具會自動辨識出來。不過 Shorts 是直式影片，縮圖多半是橫式畫面的截取，上下可能會有黑邊。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "私人或未列出的影片可以抓嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "設為「私人」的不行。「未列出」的影片因為縮圖網址是公開的，通常抓得到，但請尊重上傳者不公開的意願。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "下載按鈕沒反應？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "因為圖片放在 YouTube 的伺服器上，瀏覽器的安全限制讓網頁無法直接把它存成檔案。按下載會幫你在新分頁開啟原圖，接著在圖片上按右鍵選「另存圖片」即可。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="yt-thumbnail">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">▶️</span>YouTube 縮圖擷取</h1>
+    <p class="lede">貼上影片網址，把封面圖各種尺寸抓出來。做簡報、寫推薦文、整理片單都用得到。</p>
+  </div>
+
+  <div class="panel">
+    <div class="field">
+      <label for="urlInput">YouTube 影片網址或影片 ID</label>
+      <input type="text" id="urlInput" spellcheck="false" autocomplete="off"
+             placeholder="https://www.youtube.com/watch?v=… 或 https://youtu.be/…">
+      <p class="hint" id="parseInfo">一般影片、Shorts、youtu.be 短網址、嵌入網址都認得。</p>
+    </div>
+
+    <div id="result" class="hidden">
+      <div class="panel__title">可用的縮圖</div>
+      <div class="thumbs" id="thumbs"></div>
+    </div>
+  </div>
+
+  <div class="note note--warn">
+    <strong>使用前請留意著作權。</strong>影片縮圖屬於原創作者。拿來做個人收藏、片單整理，或是在評論、教學文章裡引用並註明出處，通常沒有問題；但<strong>不要直接拿別人的縮圖當成自己影片的封面</strong>，或用在商業宣傳上，那會構成侵權。
+  </div>
+
+  <section class="prose">
+    <h2>這些尺寸差在哪</h2>
+    <div class="table-scroll">
+      <table class="data">
+        <thead><tr><th>名稱</th><th>尺寸</th><th>什麼時候用</th></tr></thead>
+        <tbody>
+          <tr><td>最高畫質</td><td>1280×720</td><td>簡報、文章配圖，最常用</td></tr>
+          <tr><td>標準畫質</td><td>640×480</td><td>一般網頁用，檔案較小</td></tr>
+          <tr><td>高畫質</td><td>480×360</td><td>清單縮圖</td></tr>
+          <tr><td>中畫質</td><td>320×180</td><td>小卡片</td></tr>
+          <tr><td>預設</td><td>120×90</td><td>極小圖示</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small muted">並非每支影片都有全部尺寸。比較舊或畫質較低的影片可能沒有 1280×720 的版本，工具會把抓不到的那幾張標示出來。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>為什麼最高畫質那張抓不到？</summary>
+        <div class="a">代表這支影片沒有上傳到那個解析度的縮圖，通常發生在比較早期或以低畫質上傳的影片。這種情況就改用下面的標準畫質那張，內容是一樣的，只是解析度較低。</div>
+      </details>
+      <details>
+        <summary>Shorts 的網址可以嗎？</summary>
+        <div class="a">可以。Shorts 也是 YouTube 影片，一樣有影片 ID，工具會自動辨識出來。不過 Shorts 是直式影片，縮圖多半是橫式畫面的截取，上下可能會有黑邊。</div>
+      </details>
+      <details>
+        <summary>私人或未列出的影片可以抓嗎？</summary>
+        <div class="a">設為「私人」的不行。「未列出」的影片因為縮圖網址是公開的，通常抓得到，但請尊重上傳者不公開的意願。</div>
+      </details>
+      <details>
+        <summary>下載按鈕沒反應？</summary>
+        <div class="a">因為圖片放在 YouTube 的伺服器上，瀏覽器的安全限制讓網頁無法直接把它存成檔案。按下載會幫你在新分頁開啟原圖，接著在圖片上按右鍵選「另存圖片」即可。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc } = window.U;
+
+  /* YouTube 公開的縮圖檔名對照 */
+  const SIZES = [
+    { key: 'maxresdefault', name: '最高畫質', size: '1280 × 720' },
+    { key: 'sddefault',     name: '標準畫質', size: '640 × 480' },
+    { key: 'hqdefault',     name: '高畫質',   size: '480 × 360' },
+    { key: 'mqdefault',     name: '中畫質',   size: '320 × 180' },
+    { key: 'default',       name: '預設',     size: '120 × 90' }
+  ];
+
+  /* 從各種形式的網址裡找出 11 碼的影片 ID */
+  function extractId(input) {
+    const s = input.trim();
+    if (!s) return null;
+
+    /* 直接貼 ID 的情況 */
+    if (/^[\w-]{11}$/.test(s)) return s;
+
+    const patterns = [
+      /[?&]v=([\w-]{11})/,          // watch?v=
+      /youtu\.be\/([\w-]{11})/,     // 短網址
+      /\/shorts\/([\w-]{11})/,      // Shorts
+      /\/embed\/([\w-]{11})/,       // 嵌入
+      /\/live\/([\w-]{11})/,        // 直播
+      /\/v\/([\w-]{11})/            // 舊版
+    ];
+
+    for (const re of patterns) {
+      const m = s.match(re);
+      if (m) return m[1];
+    }
+    return null;
+  }
+
+  function render(id) {
+    $('#thumbs').innerHTML = SIZES.map(s => {
+      const url = `https://i.ytimg.com/vi/${id}/${s.key}.jpg`;
+      return `<div class="thumb" data-key="${s.key}">
+        <img src="${url}" alt="${esc(s.name)}縮圖預覽" loading="lazy">
+        <div class="thumb__body">
+          <div class="thumb__name">${esc(s.name)}</div>
+          <div class="thumb__size">${esc(s.size)}</div>
+          <div class="btn-group">
+            <a class="btn btn--sm" href="${url}" target="_blank" rel="noopener">開啟原圖</a>
+            <button class="btn btn--ghost btn--sm" type="button" data-copy="${url}">複製網址</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+
+    /* YouTube 對不存在的尺寸會回傳一張 120×90 的灰底佔位圖，用尺寸判斷比較準 */
+    $('#thumbs').querySelectorAll('img').forEach(im => {
+      im.addEventListener('load', () => {
+        const card = im.closest('.thumb');
+        const isPlaceholder = im.naturalWidth <= 120 && card.dataset.key !== 'default';
+        card.classList.toggle('is-missing', isPlaceholder);
+      });
+      im.addEventListener('error', () => {
+        im.closest('.thumb').classList.add('is-missing');
+      });
+    });
+
+    $('#result').classList.remove('hidden');
+  }
+
+  function handle() {
+    const raw = $('#urlInput').value;
+    const id = extractId(raw);
+
+    if (!raw.trim()) {
+      $('#parseInfo').textContent = '一般影片、Shorts、youtu.be 短網址、嵌入網址都認得。';
+      $('#parseInfo').style.color = '';
+      $('#result').classList.add('hidden');
+      return;
+    }
+
+    if (!id) {
+      $('#parseInfo').textContent = '找不到影片 ID，請確認網址是否完整。';
+      $('#parseInfo').style.color = 'var(--danger)';
+      $('#result').classList.add('hidden');
+      return;
+    }
+
+    $('#parseInfo').innerHTML = `影片 ID：<span class="vid-id">${esc(id)}</span>`;
+    $('#parseInfo').style.color = '';
+    render(id);
+  }
+
+  $('#urlInput').addEventListener('input', handle);
+  $('#urlInput').addEventListener('paste', () => setTimeout(handle, 0));
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>線上倒數計時器｜大字幕倒數，時間到有提示音 - 順手工具箱</title>
+<meta name="description" content="免費線上計時器，設定時分秒就開始倒數，大字顯示方便遠距離看，時間到會響提示音並閃爍，支援全螢幕，煮麵、運動、考試計時都好用。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⏳</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .timer-face {
+    text-align: center; padding: 26px 10px;
+    background: var(--bg-sunk); border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+  }
+  .timer-digits {
+    font-size: clamp(3rem, 1rem + 16vw, 8rem);
+    font-weight: 800; line-height: 1; letter-spacing: -.04em;
+    font-variant-numeric: tabular-nums;
+  }
+  .timer-face.is-done { animation: alarm 1s ease-in-out infinite; }
+  .timer-face.is-done .timer-digits { color: var(--brand); }
+  @keyframes alarm {
+    0%, 100% { background: var(--bg-sunk); }
+    50% { background: var(--brand-wash); }
+  }
+  .progress { height: 6px; border-radius: 999px; background: var(--border); overflow: hidden; margin-top: 16px; }
+  .progress i { display: block; height: 100%; background: var(--brand); width: 100%; transition: width .25s linear; }
+  :fullscreen .timer-face { display: grid; place-content: center; height: 100vh; border-radius: 0; }
+  :fullscreen .timer-digits { font-size: min(22vw, 30vh); }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/countdown.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="倒數, 計時器, timer, 廚房計時">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="線上倒數計時器｜大字幕倒數，時間到有提示音 - 順手工具箱">
+<meta property="og:description" content="免費線上計時器，設定時分秒就開始倒數，大字顯示方便遠距離看，時間到會響提示音並閃爍，支援全螢幕，煮麵、運動、考試計時都好用。">
+<meta property="og:url" content="https://tools.luka-life.com/t/countdown.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="線上倒數計時器｜大字幕倒數，時間到有提示音 - 順手工具箱">
+<meta name="twitter:description" content="免費線上計時器，設定時分秒就開始倒數，大字顯示方便遠距離看，時間到會響提示音並閃爍，支援全螢幕，煮麵、運動、考試計時都好用。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "倒數計時器",
+  "description": "免費線上計時器，設定時分秒就開始倒數，大字顯示方便遠距離看，時間到會響提示音並閃爍，支援全螢幕，煮麵、運動、考試計時都好用。",
+  "url": "https://tools.luka-life.com/t/countdown.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "時間計時",
+      "item": "https://tools.luka-life.com/#time"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "倒數計時器",
+      "item": "https://tools.luka-life.com/t/countdown.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "提示音沒有響？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "瀏覽器規定頁面必須先有互動才能播放聲音。只要你有按過「開始」通常就沒問題；如果仍然沒聲音，檢查一下分頁是不是被靜音（網址列旁邊的喇叭圖示），或是系統音量被關掉了。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "可以設定超過 24 小時嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "小時欄位最多到 99，所以最長可以設到 99 小時 59 分 59 秒。不過這麼長的時間建議用手機鬧鐘，瀏覽器分頁被關掉計時就中斷了。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "全螢幕怎麼退出？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "按鍵盤的 Esc，或再按一次「全螢幕」按鈕。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="countdown">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">⏳</span>倒數計時器</h1>
+    <p class="lede">設好時間按開始就好。字夠大，放在旁邊煮東西或帶活動時遠遠一眼就看得到剩幾分鐘。</p>
+  </div>
+
+  <div class="panel">
+    <div class="timer-face mb-2" id="face">
+      <div class="timer-digits" id="digits" aria-live="off">05:00</div>
+      <div class="small muted" id="status">準備開始</div>
+      <div class="progress" aria-hidden="true"><i id="bar"></i></div>
+    </div>
+
+    <div class="row row--tight mb-2">
+      <div class="field mb-0">
+        <label for="hh">時</label>
+        <input type="number" id="hh" value="0" min="0" max="99" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="mm">分</label>
+        <input type="number" id="mm" value="5" min="0" max="59" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="ss">秒</label>
+        <input type="number" id="ss" value="0" min="0" max="59" step="1">
+      </div>
+    </div>
+
+    <div class="chips mb-2">
+      <button class="chip" type="button" data-preset="60">1 分鐘</button>
+      <button class="chip" type="button" data-preset="180">3 分鐘</button>
+      <button class="chip" type="button" data-preset="300">5 分鐘</button>
+      <button class="chip" type="button" data-preset="600">10 分鐘</button>
+      <button class="chip" type="button" data-preset="1500">25 分鐘</button>
+      <button class="chip" type="button" data-preset="3600">1 小時</button>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn btn--lg" type="button" id="startBtn">開始</button>
+      <button class="btn btn--ghost btn--lg" type="button" id="resetBtn">重設</button>
+      <button class="btn btn--ghost btn--lg" type="button" id="fsBtn">全螢幕</button>
+    </div>
+
+    <label class="small mt-2" style="display:flex;align-items:center;gap:8px">
+      <input type="checkbox" id="sound" checked> 時間到播放提示音
+    </label>
+  </div>
+
+  <section class="prose">
+    <h2>切到別的分頁還會準嗎</h2>
+    <p>會。計時是用<strong>目標時間戳記</strong>去算剩餘秒數，不是靠一秒加一次的累計，所以就算瀏覽器把背景分頁的計時器降速，切回來的瞬間數字仍然是正確的。不過要注意手機把瀏覽器整個切到背景時，提示音有可能被系統擋掉，重要的事情建議搭配手機內建鬧鐘。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>提示音沒有響？</summary>
+        <div class="a">瀏覽器規定頁面必須先有互動才能播放聲音。只要你有按過「開始」通常就沒問題；如果仍然沒聲音，檢查一下分頁是不是被靜音（網址列旁邊的喇叭圖示），或是系統音量被關掉了。</div>
+      </details>
+      <details>
+        <summary>可以設定超過 24 小時嗎？</summary>
+        <div class="a">小時欄位最多到 99，所以最長可以設到 99 小時 59 分 59 秒。不過這麼長的時間建議用手機鬧鐘，瀏覽器分頁被關掉計時就中斷了。</div>
+      </details>
+      <details>
+        <summary>全螢幕怎麼退出？</summary>
+        <div class="a">按鍵盤的 <code>Esc</code>，或再按一次「全螢幕」按鈕。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, pad } = window.U;
+
+  const face = $('#face');
+  const digits = $('#digits');
+  const statusEl = $('#status');
+  const bar = $('#bar');
+  const startBtn = $('#startBtn');
+
+  let totalMs = 300000;   // 設定的總長度
+  let endAt = 0;          // 目標時間戳
+  let remain = totalMs;   // 剩餘毫秒
+  let raf = null;
+  let running = false;
+
+  function readInputs() {
+    const h = Math.min(99, Math.max(0, Math.floor(Number($('#hh').value) || 0)));
+    const m = Math.min(59, Math.max(0, Math.floor(Number($('#mm').value) || 0)));
+    const s = Math.min(59, Math.max(0, Math.floor(Number($('#ss').value) || 0)));
+    $('#hh').value = h; $('#mm').value = m; $('#ss').value = s;
+    return ((h * 3600) + (m * 60) + s) * 1000;
+  }
+
+  function fmt(ms) {
+    const t = Math.max(0, Math.ceil(ms / 1000));
+    const h = Math.floor(t / 3600);
+    const m = Math.floor(t / 60) % 60;
+    const s = t % 60;
+    return (h > 0 ? pad(h) + ':' : '') + pad(m) + ':' + pad(s);
+  }
+
+  function paint() {
+    digits.textContent = fmt(remain);
+    bar.style.width = totalMs > 0 ? (remain / totalMs * 100) + '%' : '0%';
+    document.title = running
+      ? fmt(remain) + '｜倒數計時器'
+      : '線上倒數計時器｜大字幕倒數，時間到有提示音 - 順手工具箱';
+  }
+
+  function tick() {
+    remain = endAt - Date.now();
+    if (remain <= 0) {
+      remain = 0;
+      paint();
+      finish();
+      return;
+    }
+    paint();
+    raf = requestAnimationFrame(tick);
+  }
+
+  function start() {
+    if (running) { pause(); return; }
+    if (remain <= 0) remain = readInputs();
+    if (remain <= 0) { window.toast('請先設定時間'); return; }
+
+    totalMs = Math.max(totalMs, remain);
+    endAt = Date.now() + remain;
+    running = true;
+    face.classList.remove('is-done');
+    startBtn.textContent = '暫停';
+    statusEl.textContent = '倒數中';
+    tick();
+  }
+
+  function pause() {
+    running = false;
+    cancelAnimationFrame(raf);
+    startBtn.textContent = '繼續';
+    statusEl.textContent = '已暫停';
+    paint();
+  }
+
+  function reset() {
+    running = false;
+    cancelAnimationFrame(raf);
+    totalMs = remain = readInputs();
+    face.classList.remove('is-done');
+    startBtn.textContent = '開始';
+    statusEl.textContent = '準備開始';
+    paint();
+  }
+
+  function finish() {
+    running = false;
+    cancelAnimationFrame(raf);
+    face.classList.add('is-done');
+    startBtn.textContent = '開始';
+    statusEl.textContent = '時間到！';
+    document.title = '⏰ 時間到！';
+    if ($('#sound').checked) beep();
+  }
+
+  /* 用 Web Audio 合成提示音，不必外載音檔 */
+  function beep() {
+    let ctx;
+    try {
+      ctx = new (window.AudioContext || window.webkitAudioContext)();
+    } catch (e) { return; }
+
+    [0, 0.45, 0.9].forEach(offset => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = 880;
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      const t = ctx.currentTime + offset;
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.3, t + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
+      osc.start(t);
+      osc.stop(t + 0.36);
+    });
+    setTimeout(() => ctx.close(), 2000);
+  }
+
+  startBtn.addEventListener('click', start);
+  $('#resetBtn').addEventListener('click', reset);
+
+  $$('input[type=number]').forEach(el => {
+    el.addEventListener('change', () => { if (!running) reset(); });
+  });
+
+  $$('[data-preset]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const s = Number(btn.dataset.preset);
+      $('#hh').value = Math.floor(s / 3600);
+      $('#mm').value = Math.floor(s / 60) % 60;
+      $('#ss').value = s % 60;
+      reset();
+    });
+  });
+
+  $('#fsBtn').addEventListener('click', () => {
+    if (document.fullscreenElement) document.exitFullscreen();
+    else face.requestFullscreen().catch(() => window.toast('這個瀏覽器不支援全螢幕'));
+  });
+
+  /* 空白鍵開始或暫停 */
+  document.addEventListener('keydown', e => {
+    if (e.code === 'Space' && !/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) {
+      e.preventDefault();
+      start();
+    }
+  });
+
+  reset();
+})();
+</script>
+</body>
+</html>

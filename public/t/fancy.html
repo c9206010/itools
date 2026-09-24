@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>酷炫字體產生器｜英數轉花體、粗體、圓圈字 - 順手工具箱</title>
+<meta name="description" content="免費特殊字體產生器，把英文與數字轉成粗體、斜體、花體、哥德體、圓圈字、方框字、全形字等樣式，一鍵複製貼到社群暱稱與貼文。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='80'>🅵</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .style-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 14px; border: 1px solid var(--border);
+    border-radius: var(--radius-sm); background: var(--surface);
+    margin-bottom: 8px; cursor: pointer;
+    transition: border-color .12s ease, background .12s ease;
+  }
+  .style-row:hover { border-color: var(--brand); background: var(--brand-wash); }
+  .style-row__name { flex: none; width: 96px; font-size: .8rem; color: var(--ink-3); }
+  .style-row__out { flex: 1 1 auto; font-size: 1.1rem; word-break: break-word; min-width: 0; line-height: 1.5; }
+  .style-row__copy { flex: none; font-size: .78rem; color: var(--brand); font-weight: 600; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/fancy.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="特殊字體, 花體字, 酷文字, fancy, text">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="酷炫字體產生器｜英數轉花體、粗體、圓圈字 - 順手工具箱">
+<meta property="og:description" content="免費特殊字體產生器，把英文與數字轉成粗體、斜體、花體、哥德體、圓圈字、方框字、全形字等樣式，一鍵複製貼到社群暱稱與貼文。">
+<meta property="og:url" content="https://tools.luka-life.com/t/fancy.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="酷炫字體產生器｜英數轉花體、粗體、圓圈字 - 順手工具箱">
+<meta name="twitter:description" content="免費特殊字體產生器，把英文與數字轉成粗體、斜體、花體、哥德體、圓圈字、方框字、全形字等樣式，一鍵複製貼到社群暱稱與貼文。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "酷炫字體產生器",
+  "description": "免費特殊字體產生器，把英文與數字轉成粗體、斜體、花體、哥德體、圓圈字、方框字、全形字等樣式，一鍵複製貼到社群暱稱與貼文。",
+  "url": "https://tools.luka-life.com/t/fancy.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "文字處理",
+      "item": "https://tools.luka-life.com/#text"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "酷炫字體產生器",
+      "item": "https://tools.luka-life.com/t/fancy.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "為什麼有些字變成方框或問號？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "代表對方的裝置或 App 沒有收錄那個字元的字型。這種情況在較舊的 Android 手機、部分桌面軟體上比較常見，沒辦法從你這邊解決，建議挑通用性高的樣式，例如粗體、全形字、圓圈字。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "中文可以轉嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不行。Unicode 只有為英文字母與數字準備這些變體，中文沒有對應的符號集，所以中文字會原封不動保留。唯一例外是「全形」樣式，它本來就是給中日韓排版用的。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "用在暱稱上會不會被系統擋？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "有可能。有些平台為了防止濫用，會限制暱稱只能用一般字母。如果貼上去存檔失敗，換一種樣式試試，或改用只裝飾部分文字的做法。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="fancy">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🅵</span>酷炫字體產生器</h1>
+    <p class="lede">打一行英文，下面自動變出十幾種樣式，點一下就複製。拿來改社群暱稱或做標題很方便。</p>
+  </div>
+
+  <div class="panel">
+    <div class="field">
+      <label for="src">輸入英文或數字</label>
+      <input type="text" id="src" value="Hello World 123" maxlength="120" spellcheck="false" autocomplete="off">
+      <p class="hint">點下面任何一列就會複製該樣式。中文沒有對應的變體字，會原樣保留。</p>
+    </div>
+
+    <div id="styles"></div>
+  </div>
+
+  <section class="prose">
+    <h2>這些字其實不是字體</h2>
+    <p>很重要的一個觀念：這裡產生的不是「改字型」，而是<strong>換成 Unicode 裡長得不一樣的另一批字元</strong>。它們本來是給數學公式用的符號集，因為外型特別才被拿來當裝飾字用。</p>
+    <p>這代表兩件事：好處是複製到哪裡都保持原樣，不必對方裝字型；壞處是<strong>它們在電腦眼中不是英文字母</strong>，所以搜尋不到、螢幕報讀軟體會念得亂七八糟，有些平台的暱稱欄位也會直接擋掉。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>為什麼有些字變成方框或問號？</summary>
+        <div class="a">代表對方的裝置或 App 沒有收錄那個字元的字型。這種情況在較舊的 Android 手機、部分桌面軟體上比較常見，沒辦法從你這邊解決，建議挑通用性高的樣式，例如粗體、全形字、圓圈字。</div>
+      </details>
+      <details>
+        <summary>中文可以轉嗎？</summary>
+        <div class="a">不行。Unicode 只有為英文字母與數字準備這些變體，中文沒有對應的符號集，所以中文字會原封不動保留。唯一例外是「全形」樣式，它本來就是給中日韓排版用的。</div>
+      </details>
+      <details>
+        <summary>用在暱稱上會不會被系統擋？</summary>
+        <div class="a">有可能。有些平台為了防止濫用，會限制暱稱只能用一般字母。如果貼上去存檔失敗，換一種樣式試試，或改用只裝飾部分文字的做法。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc } = window.U;
+
+  const UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const LOWER = 'abcdefghijklmnopqrstuvwxyz';
+  const DIGIT = '0123456789';
+
+  /* 多數變體字在 Unicode 裡是連續排列的，給起點就能用位移算出來。
+     少數字母被挪到別處（例如花體的 B、E、F…），用 holes 補回。 */
+  function block(upperStart, lowerStart, digitStart, holes) {
+    const map = {};
+    const put = (chars, start) => {
+      if (start === null) return;
+      for (let i = 0; i < chars.length; i++) {
+        map[chars[i]] = String.fromCodePoint(start + i);
+      }
+    };
+    put(UPPER, upperStart);
+    put(LOWER, lowerStart);
+    put(DIGIT, digitStart);
+    if (holes) Object.assign(map, holes);
+    return map;
+  }
+
+  /* 由字元清單直接建表，用於非連續排列的樣式 */
+  function listMap(upperList, lowerList, digitList) {
+    const map = {};
+    const put = (src, list) => {
+      if (!list) return;
+      const arr = Array.from(list);
+      for (let i = 0; i < src.length && i < arr.length; i++) map[src[i]] = arr[i];
+    };
+    put(UPPER, upperList);
+    put(LOWER, lowerList);
+    put(DIGIT, digitList);
+    return map;
+  }
+
+  const STYLES = [
+    { name: '粗體', map: block(0x1D400, 0x1D41A, 0x1D7CE) },
+    { name: '斜體', map: block(0x1D434, 0x1D44E, null, { h: 'ℎ' }) },
+    { name: '粗斜體', map: block(0x1D468, 0x1D482, null) },
+    { name: '無襯線粗體', map: block(0x1D5D4, 0x1D5EE, 0x1D7EC) },
+    { name: '花體', map: block(0x1D49C, 0x1D4B6, null, {
+        B: 'ℬ', E: 'ℰ', F: 'ℱ', H: 'ℋ', I: 'ℐ', L: 'ℒ', M: 'ℳ', R: 'ℛ',
+        e: 'ℯ', g: 'ℊ', o: 'ℴ'
+      }) },
+    { name: '粗花體', map: block(0x1D4D0, 0x1D4EA, null) },
+    { name: '哥德體', map: block(0x1D504, 0x1D51E, null, {
+        C: 'ℭ', H: 'ℌ', I: 'ℑ', R: 'ℜ', Z: 'ℨ'
+      }) },
+    { name: '空心字', map: block(0x1D538, 0x1D552, 0x1D7D8, {
+        C: 'ℂ', H: 'ℍ', N: 'ℕ', P: 'ℙ', Q: 'ℚ', R: 'ℝ', Z: 'ℤ'
+      }) },
+    { name: '等寬字', map: block(0x1D670, 0x1D68A, 0x1D7F6) },
+    { name: '圓圈字', map: block(0x24B6, 0x24D0, null, {
+        '0': '⓪', '1': '①', '2': '②', '3': '③', '4': '④',
+        '5': '⑤', '6': '⑥', '7': '⑦', '8': '⑧', '9': '⑨'
+      }) },
+    { name: '黑底圓圈', map: listMap(
+        '🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩',
+        '🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩',
+        '⓿❶❷❸❹❺❻❼❽❾') },
+    { name: '方框字', map: block(0x1F130, 0x1F130, null) },
+    { name: '黑底方框', map: block(0x1F170, 0x1F170, null) },
+    { name: '全形字', map: block(0xFF21, 0xFF41, 0xFF10) },
+    { name: '上標小字', map: listMap(
+        'ᴬᴮᶜᴰᴱᶠᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾQᴿˢᵀᵁⱽᵂˣʸᶻ',
+        'ᵃᵇᶜᵈᵉᶠᵍʰⁱʲᵏˡᵐⁿᵒᵖqʳˢᵗᵘᵛʷˣʸᶻ',
+        '⁰¹²³⁴⁵⁶⁷⁸⁹') },
+    { name: '小型大寫', map: listMap(
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+        'ᴀʙᴄᴅᴇғɢʜɪᴊᴋʟᴍɴᴏᴘqʀsᴛᴜᴠᴡxʏᴢ',
+        null) },
+    { name: '上下顛倒', map: listMap(
+        '∀𝗕ƆᗡƎℲ⅁HIſʞ˥WNOԀΌᴚS⊥∩ΛMX⅄Z',
+        'ɐqɔpǝɟƃɥıɾʞlɯuodbɹsʇnʌʍxʎz',
+        '0ƖᄅƐㄣϛ9ㄥ86'), reverse: true },
+    { name: '刪除線', combining: '̶' },
+    { name: '底線', combining: '̲' }
+  ];
+
+  function transform(text, style) {
+    let chars = Array.from(text);
+
+    if (style.combining) {
+      return chars.map(c => c === ' ' ? c : c + style.combining).join('');
+    }
+
+    let out = chars.map(c => style.map[c] || c);
+    if (style.reverse) out.reverse();
+    return out.join('');
+  }
+
+  function render() {
+    const text = $('#src').value;
+    $('#styles').innerHTML = STYLES.map((s, i) => {
+      const result = transform(text, s);
+      return `<div class="style-row" data-copy="${esc(result)}" role="button" tabindex="0">
+        <span class="style-row__name">${esc(s.name)}</span>
+        <span class="style-row__out">${esc(result) || '<span class="muted">（輸入文字）</span>'}</span>
+        <span class="style-row__copy">複製</span>
+      </div>`;
+    }).join('');
+  }
+
+  $('#src').addEventListener('input', render);
+
+  /* 鍵盤也能觸發複製（data-copy 的點擊由 layout.js 統一處理） */
+  $('#styles').addEventListener('keydown', e => {
+    const row = e.target.closest('.style-row');
+    if (row && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault();
+      row.click();
+    }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

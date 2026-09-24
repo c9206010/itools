@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>移除重複行｜清單去重複、刪空行、去頭尾空白 - 順手工具箱</title>
+<meta name="description" content="免費線上去除重複行工具，一鍵移除清單中重複的項目、刪掉空行與多餘空白，可選擇只保留重複項或只保留唯一項，整理名單與資料必備。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧹</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .io-grid { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 720px) { .io-grid { grid-template-columns: 1fr; } }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/dedupe.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="去重複, 移除, 重複行, dedupe, unique">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="移除重複行｜清單去重複、刪空行、去頭尾空白 - 順手工具箱">
+<meta property="og:description" content="免費線上去除重複行工具，一鍵移除清單中重複的項目、刪掉空行與多餘空白，可選擇只保留重複項或只保留唯一項，整理名單與資料必備。">
+<meta property="og:url" content="https://tools.luka-life.com/t/dedupe.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="移除重複行｜清單去重複、刪空行、去頭尾空白 - 順手工具箱">
+<meta name="twitter:description" content="免費線上去除重複行工具，一鍵移除清單中重複的項目、刪掉空行與多餘空白，可選擇只保留重複項或只保留唯一項，整理名單與資料必備。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "重複行移除",
+  "description": "免費線上去除重複行工具，一鍵移除清單中重複的項目、刪掉空行與多餘空白，可選擇只保留重複項或只保留唯一項，整理名單與資料必備。",
+  "url": "https://tools.luka-life.com/t/dedupe.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "文字處理",
+      "item": "https://tools.luka-life.com/#text"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "重複行移除",
+      "item": "https://tools.luka-life.com/t/dedupe.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "全形空白跟半形空白算一樣嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不算。它們在電腦眼中是不同的字元，「王 小明」用全形空白跟用半形空白會被視為兩筆不同的資料。從 Excel 或 PDF 複製過來的名單常有這個問題，勾選「去除頭尾空白」只能處理行首行尾，中間的要自己用「批次取代」處理。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "可以處理幾萬行嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以。去重複用的是雜湊表，速度跟行數成正比，十萬行也是瞬間完成。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "原本的順序會被打亂嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會，除非你勾「結果排序」。預設是保留第一次出現的順序。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="dedupe">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🧹</span>重複行移除</h1>
+    <p class="lede">名單貼進去，重複的自動清掉。也可以反過來只留下重複出現的項目，用來抓重複報名的人很方便。</p>
+  </div>
+
+  <div class="panel">
+    <div class="io-grid mb-2">
+      <div class="field mb-0">
+        <label for="src">原始清單（一行一筆）</label>
+        <textarea id="src" rows="12" spellcheck="false" placeholder="每一行是一筆資料">蘋果
+香蕉
+蘋果
+橘子
+
+香蕉
+葡萄
+蘋果</textarea>
+      </div>
+      <div class="field mb-0">
+        <label for="out">處理結果</label>
+        <textarea id="out" rows="12" spellcheck="false" readonly></textarea>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="mode">要做什麼</label>
+      <select id="mode">
+        <option value="unique">去除重複，每筆只留一個</option>
+        <option value="onlyDup">只留下有重複出現的項目</option>
+        <option value="onlyOnce">只留下完全沒重複的項目</option>
+        <option value="countDup">統計每筆出現幾次</option>
+      </select>
+    </div>
+
+    <div class="chips mb-2">
+      <label class="chip is-on"><input type="checkbox" id="trim" hidden checked> 去除頭尾空白</label>
+      <label class="chip is-on"><input type="checkbox" id="dropEmpty" hidden checked> 刪除空行</label>
+      <label class="chip"><input type="checkbox" id="ignoreCase" hidden> 忽略大小寫</label>
+      <label class="chip"><input type="checkbox" id="doSort" hidden> 結果排序</label>
+    </div>
+
+    <div class="stat-row mb-2">
+      <div class="stat"><div class="stat__num" id="nIn">0</div><div class="stat__label">原始行數</div></div>
+      <div class="stat"><div class="stat__num" id="nOut">0</div><div class="stat__label">結果行數</div></div>
+      <div class="stat"><div class="stat__num" id="nRemoved">0</div><div class="stat__label">減少了</div></div>
+      <div class="stat"><div class="stat__num" id="nDup">0</div><div class="stat__label">有重複的項目</div></div>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn" type="button" id="copyBtn">複製結果</button>
+      <button class="btn btn--ghost" type="button" id="applyBtn">結果貼回左邊</button>
+      <button class="btn btn--ghost" type="button" id="clearBtn">清空</button>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>四種模式怎麼選</h2>
+    <ul>
+      <li><strong>去除重複</strong>：最常用。重複的只留第一次出現的那個，順序維持原樣。</li>
+      <li><strong>只留有重複的</strong>：找出「出現兩次以上」的項目，抓重複報名、重複匯入的資料很好用。</li>
+      <li><strong>只留沒重複的</strong>：反過來，找出只出現一次的項目，可以用來比對兩份名單的差集。</li>
+      <li><strong>統計出現次數</strong>：列出每一筆出現幾次，依次數由多到少排。</li>
+    </ul>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>全形空白跟半形空白算一樣嗎？</summary>
+        <div class="a">不算。它們在電腦眼中是不同的字元，「王 小明」用全形空白跟用半形空白會被視為兩筆不同的資料。從 Excel 或 PDF 複製過來的名單常有這個問題，勾選「去除頭尾空白」只能處理行首行尾，中間的要自己用「批次取代」處理。</div>
+      </details>
+      <details>
+        <summary>可以處理幾萬行嗎？</summary>
+        <div class="a">可以。去重複用的是雜湊表，速度跟行數成正比，十萬行也是瞬間完成。</div>
+      </details>
+      <details>
+        <summary>原本的順序會被打亂嗎？</summary>
+        <div class="a">不會，除非你勾「結果排序」。預設是保留第一次出現的順序。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $ } = window.U;
+
+  const src = $('#src');
+  const out = $('#out');
+
+  document.querySelectorAll('.chip input').forEach(cb => {
+    cb.addEventListener('change', () => {
+      cb.parentElement.classList.toggle('is-on', cb.checked);
+      run();
+    });
+  });
+
+  function run() {
+    let lines = src.value.split(/\r?\n/);
+    const nIn = src.value === '' ? 0 : lines.length;
+
+    if ($('#trim').checked) lines = lines.map(s => s.trim());
+    if ($('#dropEmpty').checked) lines = lines.filter(s => s !== '');
+
+    const ignoreCase = $('#ignoreCase').checked;
+    const keyOf = s => ignoreCase ? s.toLowerCase() : s;
+
+    /* 先數出每個鍵出現幾次，四種模式都從這張表推出來 */
+    const counts = new Map();
+    const firstSeen = new Map();
+    lines.forEach(line => {
+      const k = keyOf(line);
+      counts.set(k, (counts.get(k) || 0) + 1);
+      if (!firstSeen.has(k)) firstSeen.set(k, line);
+    });
+
+    const mode = $('#mode').value;
+    let result;
+
+    if (mode === 'unique') {
+      result = Array.from(firstSeen.values());
+    } else if (mode === 'onlyDup') {
+      result = Array.from(counts.entries())
+        .filter(([k, c]) => c > 1)
+        .map(([k]) => firstSeen.get(k));
+    } else if (mode === 'onlyOnce') {
+      result = Array.from(counts.entries())
+        .filter(([k, c]) => c === 1)
+        .map(([k]) => firstSeen.get(k));
+    } else {
+      result = Array.from(counts.entries())
+        .sort((a, b) => b[1] - a[1])
+        .map(([k, c]) => `${firstSeen.get(k)}\t${c}`);
+    }
+
+    if ($('#doSort').checked) {
+      result.sort((a, b) => a.localeCompare(b, 'zh-Hant'));
+    }
+
+    out.value = result.join('\n');
+
+    const dupCount = Array.from(counts.values()).filter(c => c > 1).length;
+    $('#nIn').textContent = nIn.toLocaleString();
+    $('#nOut').textContent = result.length.toLocaleString();
+    $('#nRemoved').textContent = Math.max(0, nIn - result.length).toLocaleString();
+    $('#nDup').textContent = dupCount.toLocaleString();
+  }
+
+  src.addEventListener('input', run);
+  $('#mode').addEventListener('change', run);
+
+  $('#copyBtn').addEventListener('click', () => {
+    if (!out.value) { window.toast('還沒有結果'); return; }
+    window.copyText(out.value, '已複製結果');
+  });
+
+  $('#applyBtn').addEventListener('click', () => {
+    if (!out.value) return;
+    src.value = out.value;
+    run();
+  });
+
+  $('#clearBtn').addEventListener('click', () => {
+    src.value = out.value = '';
+    run();
+    src.focus();
+  });
+
+  run();
+})();
+</script>
+</body>
+</html>

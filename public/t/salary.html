@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>薪資實領計算｜勞健保勞退扣完實拿多少 - 順手工具箱</title>
+<meta name="description" content="免費薪資試算工具，輸入月薪即可估算勞保費、健保費、勞退自提後的實領金額，並顯示雇主實際負擔的人事成本，費率可自行調整。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .big-num { font-size: clamp(1.7rem, 1rem + 2.6vw, 2.6rem); font-weight: 800; color: var(--ok); line-height: 1.2; }
+  td.num, th.num { text-align: right; font-family: var(--mono); }
+  tr.total td { font-weight: 800; background: var(--surface-2); }
+  .flow-bar { height: 30px; border-radius: 6px; overflow: hidden; display: flex; font-size: .72rem; font-weight: 700; }
+  .flow-bar div { display: grid; place-items: center; color: #fff; overflow: hidden; white-space: nowrap; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/salary.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="薪資, 勞保, 健保, 勞退, 實領, 扣款">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="薪資實領計算｜勞健保勞退扣完實拿多少 - 順手工具箱">
+<meta property="og:description" content="免費薪資試算工具，輸入月薪即可估算勞保費、健保費、勞退自提後的實領金額，並顯示雇主實際負擔的人事成本，費率可自行調整。">
+<meta property="og:url" content="https://tools.luka-life.com/t/salary.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="薪資實領計算｜勞健保勞退扣完實拿多少 - 順手工具箱">
+<meta name="twitter:description" content="免費薪資試算工具，輸入月薪即可估算勞保費、健保費、勞退自提後的實領金額，並顯示雇主實際負擔的人事成本，費率可自行調整。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "薪資實領計算",
+  "description": "免費薪資試算工具，輸入月薪即可估算勞保費、健保費、勞退自提後的實領金額，並顯示雇主實際負擔的人事成本，費率可自行調整。",
+  "url": "https://tools.luka-life.com/t/salary.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "台灣生活",
+      "item": "https://tools.luka-life.com/#tw"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "薪資實領計算",
+      "item": "https://tools.luka-life.com/t/salary.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "為什麼實際薪資單扣得比這裡多？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "最常見的原因是投保級距。勞健保不是直接拿你的月薪去乘，而是對照「投保薪資分級表」往上取到你薪資所在的那一級。例如月薪 45,200 元可能被歸到 45,800 的那一級，保費就照 45,800 算。另外薪資單還會扣每月的所得稅預扣，這裡沒有計入。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "公司幫我保「低薪」可以嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不行，那是違法的高薪低報。雇主必須依你的實際薪資投保，低報會影響你的失業給付、職災補償與退休金，而且可能讓你在真的需要時領不到應有的金額。發現的話可以向勞保局檢舉。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "兼職或部分工時也要保嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "要。只要有僱傭關係，雇主就有投保義務，只是部分工時者的投保薪資會依實際工作時數與薪資計算。健保則可能依情況選擇在公司或其他管道投保。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "「公司總人事成本」為什麼比我的月薪高那麼多？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "因為公司除了給你薪水，還要負擔勞保 70%、健保 60% 與勞退 6%，加起來通常是月薪的一成以上。這也是為什麼談薪水時，雇主心裡的數字跟你看到的月薪不一樣。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="salary">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">💰</span>薪資實領計算</h1>
+    <p class="lede">談好的月薪扣掉勞健保跟勞退，實際入帳是多少？順便告訴你公司為了請你實際花了多少。</p>
+  </div>
+
+  <div class="panel">
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="salary">月薪（元）</label>
+        <input type="number" id="salary" value="45000" min="0" step="100">
+      </div>
+      <div class="field mb-0">
+        <label for="dependents">健保眷屬人數</label>
+        <input type="number" id="dependents" value="0" min="0" max="3" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="selfPension">勞退自提比例（％）</label>
+        <select id="selfPension">
+          <option value="0">0（不自提）</option>
+          <option value="1">1</option><option value="2">2</option>
+          <option value="3">3</option><option value="4">4</option>
+          <option value="5">5</option><option value="6">6</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="tc mb-2">
+      <div class="big-num" id="netPay">—</div>
+      <div class="small muted">每月實領（稅前，未計入所得稅預扣）</div>
+    </div>
+
+    <div class="flow-bar mb-2" id="flowBar"></div>
+
+    <div class="table-scroll mb-2">
+      <table class="data">
+        <thead>
+          <tr><th>項目</th><th class="num">你負擔</th><th class="num">公司負擔</th><th>說明</th></tr>
+        </thead>
+        <tbody id="breakdown"></tbody>
+      </table>
+    </div>
+
+    <div class="stat-row mb-2">
+      <div class="stat"><div class="stat__num" id="selfTotal">—</div><div class="stat__label">你被扣總額</div></div>
+      <div class="stat"><div class="stat__num" id="empTotal">—</div><div class="stat__label">公司額外負擔</div></div>
+      <div class="stat"><div class="stat__num" id="costTotal">—</div><div class="stat__label">公司總人事成本</div></div>
+      <div class="stat"><div class="stat__num" id="yearly">—</div><div class="stat__label">年薪（12 個月）</div></div>
+    </div>
+
+    <details class="mb-2">
+      <summary style="cursor:pointer;font-weight:600;font-size:.92rem;padding:8px 0">
+        費率設定（預設為 2026 年度，可自行調整）
+      </summary>
+      <div class="row mt-1">
+        <div class="field mb-0">
+          <label for="laborRate">勞保費率（％）</label>
+          <input type="number" id="laborRate" value="12.5" min="0" max="30" step="0.01">
+        </div>
+        <div class="field mb-0">
+          <label for="healthRate">健保費率（％）</label>
+          <input type="number" id="healthRate" value="5.17" min="0" max="30" step="0.01">
+        </div>
+        <div class="field mb-0">
+          <label for="laborCap">勞保投保上限</label>
+          <input type="number" id="laborCap" value="45800" min="0" step="100">
+        </div>
+        <div class="field mb-0">
+          <label for="healthFloor">健保投保下限</label>
+          <input type="number" id="healthFloor" value="29500" min="0" step="100">
+        </div>
+      </div>
+      <p class="hint">勞工負擔比例：勞保 20%、健保 30%，為法定比例，未開放調整。</p>
+    </details>
+  </div>
+
+  <div class="note note--warn">
+    <strong>這是估算，不是薪資單。</strong>有三個地方跟實際會有落差：
+    <ul style="margin:8px 0 0;padding-left:1.2em">
+      <li><strong>投保級距</strong>：勞健保實際是用「投保薪資分級表」計算，會往上取到你薪資所在的那一級，所以真實扣款通常會比這裡<strong>略高一點</strong>。這個工具直接用月薪估算，沒有套級距表。</li>
+      <li><strong>所得稅</strong>：未計入每月的薪資所得扣繳，實際入帳可能再少一些。</li>
+      <li><strong>費率調整</strong>：預設值為 2026 年度公告，之後如有調整請自行修改上方的費率設定。</li>
+    </ul>
+    正式數字請以公司的薪資單，以及勞保局、健保署的公告為準。
+  </div>
+
+  <section class="prose">
+    <h2>三筆錢分別是什麼</h2>
+    <ul>
+      <li><strong>勞保</strong>：包含普通事故保險與就業保險，保障失能、生育、職災、老年年金與失業給付。費用由勞工負擔 20%、雇主 70%、政府 10%。</li>
+      <li><strong>健保</strong>：看病用的。勞工負擔 30%、雇主 60%、政府 10%。要注意<strong>眷屬的健保費也是由你負擔</strong>，一個眷屬就多一份，最多計到 3 口。</li>
+      <li><strong>勞退</strong>：退休金專戶。<strong>雇主一定要提繳 6%</strong>，這筆錢不是從你薪水裡扣的，是公司額外出的。你可以再自願提繳 0 到 6%，那部分才是從薪水扣。</li>
+    </ul>
+
+    <h2>勞退要不要自提</h2>
+    <p>自提的錢會進到你自己的退休金專戶，而且<strong>當年度可以從所得中全額扣除，等於節稅</strong>。缺點是這筆錢要等到符合請領條件才能領（一般是 60 歲），中途不能動用。</p>
+    <p>簡單的判斷方式：如果你的所得稅率級距較高、短期內沒有大筆資金需求，自提是划算的；如果現在現金流吃緊或有更急的用途，就先不要自提。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>為什麼實際薪資單扣得比這裡多？</summary>
+        <div class="a">最常見的原因是投保級距。勞健保不是直接拿你的月薪去乘，而是對照「投保薪資分級表」往上取到你薪資所在的那一級。例如月薪 45,200 元可能被歸到 45,800 的那一級，保費就照 45,800 算。另外薪資單還會扣每月的所得稅預扣，這裡沒有計入。</div>
+      </details>
+      <details>
+        <summary>公司幫我保「低薪」可以嗎？</summary>
+        <div class="a">不行，那是違法的高薪低報。雇主必須依你的實際薪資投保，低報會影響你的失業給付、職災補償與退休金，而且可能讓你在真的需要時領不到應有的金額。發現的話可以向勞保局檢舉。</div>
+      </details>
+      <details>
+        <summary>兼職或部分工時也要保嗎？</summary>
+        <div class="a">要。只要有僱傭關係，雇主就有投保義務，只是部分工時者的投保薪資會依實際工作時數與薪資計算。健保則可能依情況選擇在公司或其他管道投保。</div>
+      </details>
+      <details>
+        <summary>「公司總人事成本」為什麼比我的月薪高那麼多？</summary>
+        <div class="a">因為公司除了給你薪水，還要負擔勞保 70%、健保 60% 與勞退 6%，加起來通常是月薪的一成以上。這也是為什麼談薪水時，雇主心裡的數字跟你看到的月薪不一樣。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, esc } = window.U;
+
+  /* 法定負擔比例，不開放調整 */
+  const LABOR_SELF = 0.20, LABOR_EMP = 0.70;
+  const HEALTH_SELF = 0.30, HEALTH_EMP = 0.60;
+  const PENSION_EMP = 0.06;
+
+  const money = n => Math.round(n).toLocaleString('zh-TW');
+
+  function calc() {
+    const salary = Math.max(0, Number($('#salary').value) || 0);
+    const deps = Math.max(0, Math.min(3, Math.floor(Number($('#dependents').value) || 0)));
+    const selfPct = Number($('#selfPension').value) / 100;
+
+    const laborRate = (Number($('#laborRate').value) || 0) / 100;
+    const healthRate = (Number($('#healthRate').value) || 0) / 100;
+    const laborCap = Number($('#laborCap').value) || Infinity;
+    const healthFloor = Number($('#healthFloor').value) || 0;
+
+    /* 勞保有投保上限，健保有下限，兩者的計算基礎不同 */
+    const laborBase = Math.min(salary, laborCap);
+    const healthBase = Math.max(salary, healthFloor);
+    const pensionBase = salary;
+
+    const laborSelf = laborBase * laborRate * LABOR_SELF;
+    const laborEmp = laborBase * laborRate * LABOR_EMP;
+
+    /* 健保：本人加眷屬，每一口都是一份 */
+    const healthSelf = healthBase * healthRate * HEALTH_SELF * (1 + deps);
+    const healthEmp = healthBase * healthRate * HEALTH_EMP;
+
+    const pensionSelf = pensionBase * selfPct;
+    const pensionEmp = pensionBase * PENSION_EMP;
+
+    const selfTotal = laborSelf + healthSelf + pensionSelf;
+    const empTotal = laborEmp + healthEmp + pensionEmp;
+    const net = salary - selfTotal;
+
+    $('#netPay').textContent = money(net) + ' 元';
+
+    $('#breakdown').innerHTML = `
+      <tr>
+        <td>勞保費</td>
+        <td class="num">${money(laborSelf)}</td>
+        <td class="num">${money(laborEmp)}</td>
+        <td class="small muted">投保 ${money(laborBase)}${salary > laborCap ? '（已達上限）' : ''}</td>
+      </tr>
+      <tr>
+        <td>健保費</td>
+        <td class="num">${money(healthSelf)}</td>
+        <td class="num">${money(healthEmp)}</td>
+        <td class="small muted">投保 ${money(healthBase)}${deps ? `．本人＋${deps} 眷屬` : ''}</td>
+      </tr>
+      <tr>
+        <td>勞退金</td>
+        <td class="num">${money(pensionSelf)}</td>
+        <td class="num">${money(pensionEmp)}</td>
+        <td class="small muted">雇主 6% 法定．你自提 ${(selfPct * 100).toFixed(0)}%</td>
+      </tr>
+      <tr class="total">
+        <td>合計</td>
+        <td class="num">${money(selfTotal)}</td>
+        <td class="num">${money(empTotal)}</td>
+        <td class="small muted">—</td>
+      </tr>`;
+
+    $('#selfTotal').textContent = money(selfTotal);
+    $('#empTotal').textContent = money(empTotal);
+    $('#costTotal').textContent = money(salary + empTotal);
+    $('#yearly').textContent = money(salary * 12);
+
+    /* 視覺化：實領 vs 各項扣款佔月薪的比例 */
+    if (salary > 0) {
+      const seg = (v, color, label) => {
+        const pct = v / salary * 100;
+        return pct < 0.5 ? '' :
+          `<div style="width:${pct}%;background:${color}" title="${label} ${money(v)} 元">${
+            pct > 8 ? label : ''}</div>`;
+      };
+      $('#flowBar').innerHTML =
+        seg(net, 'var(--ok)', '實領') +
+        seg(laborSelf, 'var(--accent)', '勞保') +
+        seg(healthSelf, 'var(--brand)', '健保') +
+        seg(pensionSelf, 'var(--warn)', '勞退自提');
+    } else {
+      $('#flowBar').innerHTML = '';
+    }
+  }
+
+  $$('input, select').forEach(el => el.addEventListener('input', calc));
+  calc();
+})();
+</script>
+</body>
+</html>

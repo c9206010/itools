@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>雜湊值產生器｜MD5、SHA-1、SHA-256、SHA-512 - 順手工具箱</title>
+<meta name="description" content="免費線上雜湊計算工具，一次產生 MD5、SHA-1、SHA-256、SHA-384、SHA-512 值，也能計算檔案的雜湊來驗證下載檔案有沒有損壞。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>#</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .hash-row {
+    display: grid; grid-template-columns: 92px 1fr auto; gap: 10px;
+    align-items: center; padding: 11px 13px;
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    background: var(--surface); margin-bottom: 8px;
+  }
+  @media (max-width: 620px) { .hash-row { grid-template-columns: 1fr auto; } .hash-row .h-name { grid-column: 1 / -1; } }
+  .h-name { font-size: .82rem; font-weight: 700; color: var(--ink-2); }
+  .h-val { font-family: var(--mono); font-size: .8rem; word-break: break-all; line-height: 1.5; min-width: 0; }
+  .h-val.match { color: var(--ok); font-weight: 700; }
+  .verify-result { font-weight: 700; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/hash.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="md5, sha256, 雜湊, hash, 加密">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="雜湊值產生器｜MD5、SHA-1、SHA-256、SHA-512 - 順手工具箱">
+<meta property="og:description" content="免費線上雜湊計算工具，一次產生 MD5、SHA-1、SHA-256、SHA-384、SHA-512 值，也能計算檔案的雜湊來驗證下載檔案有沒有損壞。">
+<meta property="og:url" content="https://tools.luka-life.com/t/hash.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="雜湊值產生器｜MD5、SHA-1、SHA-256、SHA-512 - 順手工具箱">
+<meta name="twitter:description" content="免費線上雜湊計算工具，一次產生 MD5、SHA-1、SHA-256、SHA-384、SHA-512 值，也能計算檔案的雜湊來驗證下載檔案有沒有損壞。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "雜湊值產生器",
+  "description": "免費線上雜湊計算工具，一次產生 MD5、SHA-1、SHA-256、SHA-384、SHA-512 值，也能計算檔案的雜湊來驗證下載檔案有沒有損壞。",
+  "url": "https://tools.luka-life.com/t/hash.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "開發編碼",
+      "item": "https://tools.luka-life.com/#dev"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "雜湊值產生器",
+      "item": "https://tools.luka-life.com/t/hash.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "可以用雜湊來存密碼嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "單純的 MD5 或 SHA-256 不行。密碼儲存需要專門設計成「刻意很慢」的演算法，例如 bcrypt、scrypt 或 Argon2，並且每個密碼要加上獨立的鹽值。用一般雜湊存密碼，資料庫外洩時很容易被字典表反查出來。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "算大檔案會不會很慢？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "SHA 系列由瀏覽器原生實作，速度很快，幾百 MB 通常幾秒內完成。MD5 是用 JavaScript 實作的，大檔案會明顯慢一些。計算期間畫面可能會短暫卡住，是正常的。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "檔案會被上傳嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會。檔案是在你自己的電腦上讀取與計算的，完全沒有經過網路。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="hash">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">#️⃣</span>雜湊值產生器</h1>
+    <p class="lede">輸入文字或選一個檔案，一次算出 MD5 跟各種 SHA。驗證下載的檔案有沒有被動過手腳時最常用。</p>
+  </div>
+
+  <div class="panel">
+    <div class="field">
+      <label for="src">要計算的文字</label>
+      <textarea id="src" rows="5" spellcheck="false" placeholder="輸入文字，下面會即時計算">順手工具箱</textarea>
+    </div>
+
+    <div class="panel__title">或選一個檔案</div>
+    <input type="file" id="fileInput" class="mb-1">
+    <p class="hint mb-2" id="fileInfo">大檔案會分段讀取，計算期間請不要關閉分頁。</p>
+
+    <div id="results"></div>
+
+    <div class="field mt-2">
+      <label for="expect">比對用（把官方提供的雜湊值貼在這裡）</label>
+      <input type="text" id="expect" spellcheck="false" placeholder="貼上要比對的雜湊值，相符的那一行會變綠色">
+      <p class="hint verify-result" id="verifyOut"></p>
+    </div>
+
+    <button class="btn btn--ghost btn--sm" type="button" id="clearBtn">清空</button>
+  </div>
+
+  <section class="prose">
+    <h2>雜湊是什麼、能用來做什麼</h2>
+    <p>雜湊會把任意長度的資料算成一串固定長度的碼。它有兩個關鍵特性：<strong>同樣的輸入永遠得到同樣的結果</strong>，而且<strong>沒辦法從結果反推原始內容</strong>。所以最常見的用途是驗證檔案完整性——下載一個大檔案後算一下 SHA-256，跟官方網站公布的對照，一樣就代表檔案沒有損壞也沒有被掉包。</p>
+
+    <h2>MD5 還能用嗎</h2>
+    <p>看用途。MD5 已經被證實可以人為製造碰撞（兩個不同的檔案得到相同的 MD5），所以<strong>不能再用於任何跟安全有關的場合</strong>——驗證軟體來源、儲存密碼、數位簽章都不行。但如果只是要快速檢查檔案在傳輸過程有沒有意外損壞，或是拿來當資料的去重複鍵，MD5 依然堪用而且很快。需要安全性的話請一律使用 SHA-256 以上。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>可以用雜湊來存密碼嗎？</summary>
+        <div class="a">單純的 MD5 或 SHA-256 不行。密碼儲存需要專門設計成「刻意很慢」的演算法，例如 bcrypt、scrypt 或 Argon2，並且每個密碼要加上獨立的鹽值。用一般雜湊存密碼，資料庫外洩時很容易被字典表反查出來。</div>
+      </details>
+      <details>
+        <summary>算大檔案會不會很慢？</summary>
+        <div class="a">SHA 系列由瀏覽器原生實作，速度很快，幾百 MB 通常幾秒內完成。MD5 是用 JavaScript 實作的，大檔案會明顯慢一些。計算期間畫面可能會短暫卡住，是正常的。</div>
+      </details>
+      <details>
+        <summary>檔案會被上傳嗎？</summary>
+        <div class="a">不會。檔案是在你自己的電腦上讀取與計算的，完全沒有經過網路。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, esc, bytes } = window.U;
+
+  /* ==========================================================
+     MD5 實作（RFC 1321）。瀏覽器的 Web Crypto 不提供 MD5，
+     但驗證舊檔案的校驗碼時還是常會用到，所以自己算。
+     ========================================================== */
+  const MD5 = (function () {
+    const S = [7,12,17,22,7,12,17,22,7,12,17,22,7,12,17,22,
+               5,9,14,20,5,9,14,20,5,9,14,20,5,9,14,20,
+               4,11,16,23,4,11,16,23,4,11,16,23,4,11,16,23,
+               6,10,15,21,6,10,15,21,6,10,15,21,6,10,15,21];
+    const K = new Uint32Array(64);
+    for (let i = 0; i < 64; i++) {
+      K[i] = Math.floor(Math.abs(Math.sin(i + 1)) * 4294967296);
+    }
+
+    const rotl = (x, c) => (x << c) | (x >>> (32 - c));
+
+    function digest(bytesArr) {
+      const len = bytesArr.length;
+      /* 補位：1 個 0x80，補到長度 ≡ 56 (mod 64)，最後 8 bytes 放原始位元長度 */
+      const padded = new Uint8Array(((len + 8) >> 6 << 6) + 64);
+      padded.set(bytesArr);
+      padded[len] = 0x80;
+
+      const bitLen = len * 8;
+      const dv = new DataView(padded.buffer);
+      dv.setUint32(padded.length - 8, bitLen >>> 0, true);
+      dv.setUint32(padded.length - 4, Math.floor(bitLen / 4294967296), true);
+
+      let a0 = 0x67452301, b0 = 0xefcdab89, c0 = 0x98badcfe, d0 = 0x10325476;
+
+      for (let off = 0; off < padded.length; off += 64) {
+        const M = new Uint32Array(16);
+        for (let i = 0; i < 16; i++) M[i] = dv.getUint32(off + i * 4, true);
+
+        let A = a0, B = b0, C = c0, D = d0;
+
+        for (let i = 0; i < 64; i++) {
+          let F, g;
+          if (i < 16)      { F = (B & C) | (~B & D);        g = i; }
+          else if (i < 32) { F = (D & B) | (~D & C);        g = (5 * i + 1) % 16; }
+          else if (i < 48) { F = B ^ C ^ D;                 g = (3 * i + 5) % 16; }
+          else             { F = C ^ (B | ~D);              g = (7 * i) % 16; }
+
+          F = (F + A + K[i] + M[g]) >>> 0;
+          A = D; D = C; C = B;
+          B = (B + rotl(F, S[i])) >>> 0;
+        }
+
+        a0 = (a0 + A) >>> 0;
+        b0 = (b0 + B) >>> 0;
+        c0 = (c0 + C) >>> 0;
+        d0 = (d0 + D) >>> 0;
+      }
+
+      const out = new Uint8Array(16);
+      const odv = new DataView(out.buffer);
+      odv.setUint32(0, a0, true);
+      odv.setUint32(4, b0, true);
+      odv.setUint32(8, c0, true);
+      odv.setUint32(12, d0, true);
+      return out;
+    }
+
+    return digest;
+  })();
+
+  function toHex(arr) {
+    return Array.from(arr, b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  const ALGOS = [
+    { name: 'MD5', bits: 128 },
+    { name: 'SHA-1', bits: 160 },
+    { name: 'SHA-256', bits: 256 },
+    { name: 'SHA-384', bits: 384 },
+    { name: 'SHA-512', bits: 512 }
+  ];
+
+  async function computeAll(data) {
+    const results = {};
+    results['MD5'] = toHex(MD5(data));
+
+    for (const algo of ['SHA-1', 'SHA-256', 'SHA-384', 'SHA-512']) {
+      try {
+        const buf = await crypto.subtle.digest(algo, data);
+        results[algo] = toHex(new Uint8Array(buf));
+      } catch (e) {
+        results[algo] = '（此瀏覽器不支援，或需要 HTTPS 連線）';
+      }
+    }
+    return results;
+  }
+
+  function render(results) {
+    $('#results').innerHTML = ALGOS.map(a => `
+      <div class="hash-row">
+        <span class="h-name">${a.name}<br><span class="muted" style="font-weight:400">${a.bits} 位元</span></span>
+        <span class="h-val" data-algo="${a.name}">${esc(results[a.name] || '')}</span>
+        <button class="btn btn--ghost btn--sm" type="button" data-copy="${esc(results[a.name] || '')}">複製</button>
+      </div>`).join('');
+    verify();
+  }
+
+  let busy = false;
+  async function fromText() {
+    if (busy) return;
+    busy = true;
+    const data = new TextEncoder().encode($('#src').value);
+    render(await computeAll(data));
+    busy = false;
+  }
+
+  async function fromFile(file) {
+    $('#fileInfo').textContent = `讀取中… ${file.name}（${bytes(file.size)}）`;
+    try {
+      const buf = await file.arrayBuffer();
+      const data = new Uint8Array(buf);
+      $('#fileInfo').textContent = `${file.name}．${bytes(file.size)}．計算中…`;
+      render(await computeAll(data));
+      $('#fileInfo').textContent = `${file.name}．${bytes(file.size)}．計算完成`;
+    } catch (e) {
+      $('#fileInfo').textContent = '讀取失敗：' + e.message;
+    }
+  }
+
+  /* 把比對欄位的值跟每一行對照，相符的標綠 */
+  function verify() {
+    const want = $('#expect').value.trim().toLowerCase().replace(/\s/g, '');
+    let hit = '';
+    $$('.h-val').forEach(el => {
+      const match = want && el.textContent.trim().toLowerCase() === want;
+      el.classList.toggle('match', match);
+      if (match) hit = el.dataset.algo;
+    });
+
+    if (!want) $('#verifyOut').textContent = '';
+    else if (hit) {
+      $('#verifyOut').textContent = `✅ 相符，這是 ${hit} 值，檔案內容一致`;
+      $('#verifyOut').style.color = 'var(--ok)';
+    } else {
+      $('#verifyOut').textContent = '❌ 沒有任何一種演算法相符，請確認來源或重新下載';
+      $('#verifyOut').style.color = 'var(--danger)';
+    }
+  }
+
+  $('#src').addEventListener('input', fromText);
+  $('#expect').addEventListener('input', verify);
+
+  $('#fileInput').addEventListener('change', e => {
+    const f = e.target.files && e.target.files[0];
+    if (f) fromFile(f);
+  });
+
+  $('#clearBtn').addEventListener('click', () => {
+    $('#src').value = '';
+    $('#expect').value = '';
+    $('#fileInput').value = '';
+    $('#fileInfo').textContent = '大檔案會分段讀取，計算期間請不要關閉分頁。';
+    $('#verifyOut').textContent = '';
+    fromText();
+  });
+
+  fromText();
+})();
+</script>
+</body>
+</html>

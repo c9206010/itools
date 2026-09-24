@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>線上番茄鐘｜25 分專注 5 分休息，可自訂時間 - 順手工具箱</title>
+<meta name="description" content="免費番茄鐘計時器，預設 25 分鐘工作搭配 5 分鐘短休息，每四輪進入長休息，可自訂長度與自動接續，讀書工作專注必備。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍅</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .pomo {
+    text-align: center; padding: 28px 14px;
+    border-radius: var(--radius-lg); border: 1px solid var(--border);
+    background: var(--bg-sunk); transition: background .4s ease;
+  }
+  .pomo[data-phase="focus"] { background: var(--brand-wash); }
+  .pomo[data-phase="short"], .pomo[data-phase="long"] { background: var(--accent-wash); }
+  .pomo__phase {
+    display: inline-block; padding: 4px 16px; border-radius: 999px;
+    font-size: .85rem; font-weight: 700; margin-bottom: 12px;
+    background: var(--brand); color: #fff;
+  }
+  .pomo[data-phase="short"] .pomo__phase,
+  .pomo[data-phase="long"] .pomo__phase { background: var(--accent); }
+  .pomo__digits {
+    font-size: clamp(3.2rem, 1rem + 15vw, 7rem);
+    font-weight: 800; line-height: 1; letter-spacing: -.04em;
+    font-variant-numeric: tabular-nums;
+  }
+  .dots { display: flex; gap: 7px; justify-content: center; margin-top: 14px; }
+  .dots i {
+    width: 11px; height: 11px; border-radius: 50%;
+    background: var(--border-strong); display: block;
+  }
+  .dots i.on { background: var(--brand); }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/pomodoro.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="番茄鐘, pomodoro, 專注, 讀書">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="線上番茄鐘｜25 分專注 5 分休息，可自訂時間 - 順手工具箱">
+<meta property="og:description" content="免費番茄鐘計時器，預設 25 分鐘工作搭配 5 分鐘短休息，每四輪進入長休息，可自訂長度與自動接續，讀書工作專注必備。">
+<meta property="og:url" content="https://tools.luka-life.com/t/pomodoro.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="線上番茄鐘｜25 分專注 5 分休息，可自訂時間 - 順手工具箱">
+<meta name="twitter:description" content="免費番茄鐘計時器，預設 25 分鐘工作搭配 5 分鐘短休息，每四輪進入長休息，可自訂長度與自動接續，讀書工作專注必備。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "番茄鐘",
+  "description": "免費番茄鐘計時器，預設 25 分鐘工作搭配 5 分鐘短休息，每四輪進入長休息，可自訂長度與自動接續，讀書工作專注必備。",
+  "url": "https://tools.luka-life.com/t/pomodoro.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "時間計時",
+      "item": "https://tools.luka-life.com/#time"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "番茄鐘",
+      "item": "https://tools.luka-life.com/t/pomodoro.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "25 分鐘對我太短或太長怎麼辦？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "直接改。上面的四個欄位都能自訂，很多人用 45 分鐘搭配 10 分鐘休息，也有人用 15 分鐘起步慢慢拉長。找到自己能持續不分心的長度比照著標準做更重要。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "中途被打斷怎麼算？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "按「跳過本段」直接進休息，或按開始鍵暫停。原始方法論的建議是被打斷就作廢重來，但實務上不必那麼嚴格，重點是讓自己回到專注狀態。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "關掉分頁進度會留著嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會，重新整理就歸零。計時期間分頁標題會顯示剩餘時間，切到其他分頁也看得到進度。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="pomodoro">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🍅</span>番茄鐘</h1>
+    <p class="lede">專注 25 分鐘、休息 5 分鐘，每完成四輪給自己一次長休息。時間長度都能改成自己習慣的節奏。</p>
+  </div>
+
+  <div class="panel">
+    <div class="pomo mb-2" id="pomo" data-phase="focus">
+      <div class="pomo__phase" id="phaseLabel">專注時間</div>
+      <div class="pomo__digits" id="digits">25:00</div>
+      <div class="small muted mt-1" id="statusText">按開始進入第 1 個番茄</div>
+      <div class="dots" id="dots" aria-hidden="true"></div>
+    </div>
+
+    <div class="btn-group mb-2">
+      <button class="btn btn--lg" type="button" id="startBtn">開始</button>
+      <button class="btn btn--ghost btn--lg" type="button" id="skipBtn">跳過本段</button>
+      <button class="btn btn--ghost btn--lg" type="button" id="resetBtn">全部重來</button>
+    </div>
+
+    <div class="panel__title">時間設定（分鐘）</div>
+    <div class="row row--tight mb-2">
+      <div class="field mb-0">
+        <label for="focusMin">專注</label>
+        <input type="number" id="focusMin" value="25" min="1" max="180" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="shortMin">短休息</label>
+        <input type="number" id="shortMin" value="5" min="1" max="60" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="longMin">長休息</label>
+        <input type="number" id="longMin" value="15" min="1" max="120" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="cycles">幾輪後長休息</label>
+        <input type="number" id="cycles" value="4" min="2" max="10" step="1">
+      </div>
+    </div>
+
+    <label class="small" style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <input type="checkbox" id="autoNext" checked> 一段結束自動接下一段
+    </label>
+    <label class="small" style="display:flex;align-items:center;gap:8px">
+      <input type="checkbox" id="sound" checked> 切換時播放提示音
+    </label>
+
+    <div class="stat-row mt-2">
+      <div class="stat"><div class="stat__num" id="doneCount">0</div><div class="stat__label">完成番茄數</div></div>
+      <div class="stat"><div class="stat__num" id="focusTotal">0</div><div class="stat__label">累積專注（分）</div></div>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>番茄鐘是什麼</h2>
+    <p>一種把時間切成固定區塊的專注方法：工作 25 分鐘算一個「番茄」，結束後休息 5 分鐘，連續四個番茄之後放一次比較長的休息。重點不在 25 這個數字，而是<strong>在番茄進行中不要做別的事</strong>——訊息、通知、臨時想到的雜事，通通寫下來等休息時再處理。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>25 分鐘對我太短或太長怎麼辦？</summary>
+        <div class="a">直接改。上面的四個欄位都能自訂，很多人用 45 分鐘搭配 10 分鐘休息，也有人用 15 分鐘起步慢慢拉長。找到自己能持續不分心的長度比照著標準做更重要。</div>
+      </details>
+      <details>
+        <summary>中途被打斷怎麼算？</summary>
+        <div class="a">按「跳過本段」直接進休息，或按開始鍵暫停。原始方法論的建議是被打斷就作廢重來，但實務上不必那麼嚴格，重點是讓自己回到專注狀態。</div>
+      </details>
+      <details>
+        <summary>關掉分頁進度會留著嗎？</summary>
+        <div class="a">不會，重新整理就歸零。計時期間分頁標題會顯示剩餘時間，切到其他分頁也看得到進度。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, pad } = window.U;
+
+  const PHASES = {
+    focus: { label: '專注時間', input: 'focusMin' },
+    short: { label: '短休息',   input: 'shortMin' },
+    long:  { label: '長休息',   input: 'longMin' }
+  };
+
+  const pomo = $('#pomo');
+  const digits = $('#digits');
+  const startBtn = $('#startBtn');
+
+  let phase = 'focus';
+  let remain = 25 * 60000;
+  let endAt = 0;
+  let running = false;
+  let timer = null;
+  let done = 0;           // 完成的番茄數
+  let focusMinutes = 0;   // 累積專注分鐘
+
+  function minutesOf(p) {
+    return Math.max(1, Math.floor(Number($('#' + PHASES[p].input).value) || 1));
+  }
+
+  function fmt(ms) {
+    const t = Math.max(0, Math.ceil(ms / 1000));
+    return pad(Math.floor(t / 60)) + ':' + pad(t % 60);
+  }
+
+  function paintDots() {
+    const per = Math.max(2, Math.floor(Number($('#cycles').value) || 4));
+    const inCycle = done % per;
+    $('#dots').innerHTML = Array.from({ length: per }, (_, i) =>
+      `<i class="${i < inCycle ? 'on' : ''}"></i>`).join('');
+  }
+
+  function paint() {
+    digits.textContent = fmt(remain);
+    pomo.dataset.phase = phase;
+    $('#phaseLabel').textContent = PHASES[phase].label;
+    $('#doneCount').textContent = done;
+    $('#focusTotal').textContent = focusMinutes;
+    document.title = running
+      ? `${fmt(remain)}｜${PHASES[phase].label}`
+      : '線上番茄鐘｜25 分專注 5 分休息，可自訂時間 - 順手工具箱';
+    paintDots();
+  }
+
+  function setPhase(p, autoStart) {
+    phase = p;
+    remain = minutesOf(p) * 60000;
+    running = false;
+    clearInterval(timer);
+    startBtn.textContent = '開始';
+    $('#statusText').textContent = p === 'focus'
+      ? `按開始進入第 ${done + 1} 個番茄`
+      : '休息一下，起來走動走動';
+    paint();
+    if (autoStart) start();
+  }
+
+  function tick() {
+    remain = endAt - Date.now();
+    if (remain <= 0) {
+      remain = 0;
+      paint();
+      complete();
+      return;
+    }
+    paint();
+  }
+
+  function start() {
+    if (running) {
+      running = false;
+      clearInterval(timer);
+      startBtn.textContent = '繼續';
+      $('#statusText').textContent = '已暫停';
+      paint();
+      return;
+    }
+    endAt = Date.now() + remain;
+    running = true;
+    startBtn.textContent = '暫停';
+    $('#statusText').textContent = phase === 'focus' ? '專注中，別分心' : '休息中';
+    clearInterval(timer);
+    timer = setInterval(tick, 250);
+    tick();
+  }
+
+  function complete() {
+    running = false;
+    clearInterval(timer);
+    if ($('#sound').checked) beep(phase === 'focus');
+
+    const per = Math.max(2, Math.floor(Number($('#cycles').value) || 4));
+    let next;
+
+    if (phase === 'focus') {
+      done++;
+      focusMinutes += minutesOf('focus');
+      next = (done % per === 0) ? 'long' : 'short';
+    } else {
+      next = 'focus';
+    }
+
+    setPhase(next, $('#autoNext').checked);
+  }
+
+  /* 專注結束與休息結束用不同音高，不看螢幕也分得出來 */
+  function beep(isFocusEnd) {
+    let ctx;
+    try { ctx = new (window.AudioContext || window.webkitAudioContext)(); }
+    catch (e) { return; }
+
+    const notes = isFocusEnd ? [660, 880] : [880, 660];
+    notes.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      osc.connect(gain); gain.connect(ctx.destination);
+      const t = ctx.currentTime + i * 0.3;
+      gain.gain.setValueAtTime(0, t);
+      gain.gain.linearRampToValueAtTime(0.28, t + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
+      osc.start(t); osc.stop(t + 0.3);
+    });
+    setTimeout(() => ctx.close(), 1500);
+  }
+
+  startBtn.addEventListener('click', start);
+  $('#skipBtn').addEventListener('click', complete);
+
+  $('#resetBtn').addEventListener('click', () => {
+    done = 0; focusMinutes = 0;
+    setPhase('focus', false);
+  });
+
+  $$('input[type=number]').forEach(el => {
+    el.addEventListener('change', () => {
+      if (!running) setPhase(phase, false);
+      else paintDots();
+    });
+  });
+
+  setPhase('focus', false);
+})();
+</script>
+</body>
+</html>

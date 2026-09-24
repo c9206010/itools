@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>隨機抽籤點名｜從名單抽出一個或多個 - 順手工具箱</title>
+<meta name="description" content="免費線上抽籤器，貼上名單即可隨機抽人，支援一次抽多位、抽中後不放回、跑馬燈抽選動畫，課堂點名與辦公室抽獎都好用。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎰</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .slot {
+    background: linear-gradient(180deg, var(--surface-2), var(--bg-sunk));
+    border: 2px dashed var(--border-strong); border-radius: var(--radius-lg);
+    padding: 34px 16px; text-align: center; min-height: 120px;
+    display: grid; place-items: center; gap: 8px;
+  }
+  .slot__name {
+    font-size: clamp(1.7rem, 1rem + 4vw, 2.8rem);
+    font-weight: 800; letter-spacing: -.02em; line-height: 1.25;
+    word-break: break-all;
+  }
+  .slot.is-live { border-color: var(--brand); border-style: solid; }
+  .slot.is-live .slot__name { color: var(--ink-3); }
+  .slot.is-done .slot__name { color: var(--brand); }
+  .winner-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .winner-list span {
+    background: var(--brand-wash); color: var(--brand-ink);
+    border: 1px solid var(--brand); border-radius: 999px;
+    padding: 3px 12px; font-size: .88rem; font-weight: 600;
+  }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/picker.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="抽籤, 點名, 抽人, lucky, draw">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="隨機抽籤點名｜從名單抽出一個或多個 - 順手工具箱">
+<meta property="og:description" content="免費線上抽籤器，貼上名單即可隨機抽人，支援一次抽多位、抽中後不放回、跑馬燈抽選動畫，課堂點名與辦公室抽獎都好用。">
+<meta property="og:url" content="https://tools.luka-life.com/t/picker.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="隨機抽籤點名｜從名單抽出一個或多個 - 順手工具箱">
+<meta name="twitter:description" content="免費線上抽籤器，貼上名單即可隨機抽人，支援一次抽多位、抽中後不放回、跑馬燈抽選動畫，課堂點名與辦公室抽獎都好用。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "隨機抽籤點名",
+  "description": "免費線上抽籤器，貼上名單即可隨機抽人，支援一次抽多位、抽中後不放回、跑馬燈抽選動畫，課堂點名與辦公室抽獎都好用。",
+  "url": "https://tools.luka-life.com/t/picker.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "隨機抽籤",
+      "item": "https://tools.luka-life.com/#random"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "隨機抽籤點名",
+      "item": "https://tools.luka-life.com/t/picker.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "一次可以抽幾位？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "最多 50 位，而且不會超過名單剩餘人數。一次抽多位時，抽出來的名字保證彼此不重複。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "抽完可以復原嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "按「全部重來」會把已抽出的名字放回名單。不過原始名單建議自己另外留一份，避免誤按清空。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "名單很長會不會卡？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "幾千人的名單都沒問題，抽選本身是瞬間完成的，跑馬燈只是視覺效果。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="picker">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🎰</span>隨機抽籤點名</h1>
+    <p class="lede">貼上名單按一下就抽。上課點名、抽誰上台、辦公室抽獎，抽過的可以自動排除不再出現。</p>
+  </div>
+
+  <div class="panel">
+    <div class="slot mb-2" id="slot">
+      <div class="slot__name" id="slotName">準備好了</div>
+      <div class="small muted" id="slotSub">輸入名單後按「開始抽」</div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="field mb-0" style="flex:0 1 140px">
+        <label for="pickN">一次抽幾位</label>
+        <input type="number" id="pickN" value="1" min="1" max="50" step="1">
+      </div>
+      <div class="field mb-0" style="flex:2 1 220px">
+        <label>&nbsp;</label>
+        <button class="btn btn--lg btn--block" type="button" id="drawBtn">開始抽</button>
+      </div>
+    </div>
+
+    <label class="small" style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+      <input type="checkbox" id="noReturn" checked> 抽中後從名單移除（不放回）
+    </label>
+
+    <div class="field">
+      <label for="names">名單（一行一個）</label>
+      <textarea id="names" rows="8" spellcheck="false">王小明
+陳美美
+林大華
+張志豪
+李佩珊
+黃建國
+吳雅婷
+劉承翰</textarea>
+      <p class="hint">剩餘 <strong id="remain">0</strong> 人可抽</p>
+    </div>
+
+    <div class="hidden" id="wonWrap">
+      <div class="panel__title">已抽出（<span id="wonCount">0</span>）</div>
+      <div class="winner-list" id="won"></div>
+      <button class="btn btn--ghost btn--sm mt-1" type="button" id="resetBtn">全部重來</button>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>「不放回」跟「放回」差在哪</h2>
+    <p>勾選<strong>不放回</strong>時，抽中的人會從名單移到下方的已抽出區，之後不會再被抽到——適合排上台順序、分配工作這種每個人只能中一次的場合。取消勾選則是每次都從完整名單抽，同一個人有機會連續被抽中，適合純粹靠運氣的抽獎。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>一次可以抽幾位？</summary>
+        <div class="a">最多 50 位，而且不會超過名單剩餘人數。一次抽多位時，抽出來的名字保證彼此不重複。</div>
+      </details>
+      <details>
+        <summary>抽完可以復原嗎？</summary>
+        <div class="a">按「全部重來」會把已抽出的名字放回名單。不過原始名單建議自己另外留一份，避免誤按清空。</div>
+      </details>
+      <details>
+        <summary>名單很長會不會卡？</summary>
+        <div class="a">幾千人的名單都沒問題，抽選本身是瞬間完成的，跑馬燈只是視覺效果。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc, randInt, shuffle, lines } = window.U;
+
+  const namesEl = $('#names');
+  const slot = $('#slot');
+  const slotName = $('#slotName');
+  const slotSub = $('#slotSub');
+  const drawBtn = $('#drawBtn');
+
+  let won = [];
+  let busy = false;
+
+  function pool() { return lines(namesEl.value); }
+
+  function refresh() {
+    $('#remain').textContent = pool().length;
+    $('#wonCount').textContent = won.length;
+    $('#won').innerHTML = won.map(n => `<span>${esc(n)}</span>`).join('');
+    $('#wonWrap').classList.toggle('hidden', won.length === 0);
+  }
+
+  function draw() {
+    if (busy) return;
+    const list = pool();
+    if (!list.length) { window.toast('名單是空的'); return; }
+
+    let n = Math.max(1, Math.floor(Number($('#pickN').value) || 1));
+    n = Math.min(n, list.length, 50);
+    $('#pickN').value = n;
+
+    const picked = shuffle(list).slice(0, n);
+
+    busy = true;
+    drawBtn.disabled = true;
+    slot.classList.add('is-live');
+    slot.classList.remove('is-done');
+    slotSub.textContent = '抽選中…';
+
+    /* 跑馬燈：隨機閃名字，越到後面越慢，最後才定格 */
+    let elapsed = 0;
+    const total = 1800;
+    function tick() {
+      slotName.textContent = list[randInt(0, list.length - 1)];
+      elapsed += 60 + elapsed / 12;
+      if (elapsed < total) {
+        setTimeout(tick, 60 + elapsed / 12);
+      } else {
+        settle(picked);
+      }
+    }
+    tick();
+  }
+
+  function settle(picked) {
+    slot.classList.remove('is-live');
+    slot.classList.add('is-done');
+    slotName.textContent = picked.join('、');
+    slotSub.textContent = picked.length > 1 ? `抽出 ${picked.length} 位` : '恭喜';
+
+    if ($('#noReturn').checked) {
+      /* 名單裡可能有同名的人，用計數方式確保只移除這次抽中的那幾筆 */
+      const need = new Map();
+      picked.forEach(n => need.set(n, (need.get(n) || 0) + 1));
+
+      const rest = pool().filter(n => {
+        const c = need.get(n);
+        if (c) { need.set(n, c - 1); return false; }
+        return true;
+      });
+      namesEl.value = rest.join('\n');
+      won = won.concat(picked);
+    }
+
+    refresh();
+    busy = false;
+    drawBtn.disabled = false;
+  }
+
+  drawBtn.addEventListener('click', draw);
+  namesEl.addEventListener('input', refresh);
+
+  $('#resetBtn').addEventListener('click', () => {
+    if (won.length) {
+      namesEl.value = (pool().concat(won)).join('\n');
+      won = [];
+    }
+    slot.classList.remove('is-done', 'is-live');
+    slotName.textContent = '準備好了';
+    slotSub.textContent = '輸入名單後按「開始抽」';
+    refresh();
+  });
+
+  refresh();
+})();
+</script>
+</body>
+</html>

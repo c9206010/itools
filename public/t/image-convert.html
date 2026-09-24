@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>圖片格式轉換｜PNG、JPG、WebP 互轉 - 順手工具箱</title>
+<meta name="description" content="免費線上圖片格式轉換工具，PNG、JPG、WebP 互相轉換，可批次處理並自訂透明背景填色，全程在瀏覽器完成，圖片不會上傳到伺服器。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔄</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .drop {
+    border: 2px dashed var(--border-strong); border-radius: var(--radius-lg);
+    padding: 36px 20px; text-align: center; cursor: pointer;
+    background: var(--surface-2); transition: all .15s ease;
+  }
+  .drop:hover, .drop.is-over { border-color: var(--brand); background: var(--brand-wash); }
+  .drop strong { display: block; font-size: 1.05rem; margin-bottom: 4px; }
+  .item {
+    display: grid; grid-template-columns: 64px 1fr auto; gap: 12px;
+    align-items: center; padding: 11px;
+    border: 1px solid var(--border); border-radius: var(--radius);
+    background: var(--surface); margin-bottom: 9px;
+  }
+  @media (max-width: 560px) { .item { grid-template-columns: 52px 1fr; } .item .item-act { grid-column: 2; justify-self: end; } }
+  .item img {
+    width: 64px; height: 64px; object-fit: contain; border-radius: var(--radius-sm);
+    /* 棋盤格底，看得出透明區 */
+    background-image:
+      linear-gradient(45deg, #ccc 25%, transparent 25%),
+      linear-gradient(-45deg, #ccc 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #ccc 75%),
+      linear-gradient(-45deg, transparent 75%, #ccc 75%);
+    background-size: 12px 12px;
+    background-position: 0 0, 0 6px, 6px -6px, -6px 0;
+  }
+  .item-name { font-size: .88rem; font-weight: 600; word-break: break-all; line-height: 1.4; }
+  .item-meta { font-size: .8rem; color: var(--ink-3); margin-top: 3px; }
+  .arrow { color: var(--brand); font-weight: 700; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/image-convert.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="圖片轉檔, png, jpg, webp, 格式轉換">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="圖片格式轉換｜PNG、JPG、WebP 互轉 - 順手工具箱">
+<meta property="og:description" content="免費線上圖片格式轉換工具，PNG、JPG、WebP 互相轉換，可批次處理並自訂透明背景填色，全程在瀏覽器完成，圖片不會上傳到伺服器。">
+<meta property="og:url" content="https://tools.luka-life.com/t/image-convert.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="圖片格式轉換｜PNG、JPG、WebP 互轉 - 順手工具箱">
+<meta name="twitter:description" content="免費線上圖片格式轉換工具，PNG、JPG、WebP 互相轉換，可批次處理並自訂透明背景填色，全程在瀏覽器完成，圖片不會上傳到伺服器。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "圖片格式轉換",
+  "description": "免費線上圖片格式轉換工具，PNG、JPG、WebP 互相轉換，可批次處理並自訂透明背景填色，全程在瀏覽器完成，圖片不會上傳到伺服器。",
+  "url": "https://tools.luka-life.com/t/image-convert.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "圖片處理",
+      "item": "https://tools.luka-life.com/#image"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "圖片格式轉換",
+      "item": "https://tools.luka-life.com/t/image-convert.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "GIF 動圖轉出來變成靜態的？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "對，這是預期行為。瀏覽器的 Canvas 只能取到動圖的第一個畫格，所以轉出來會是那一張靜態圖。要保留動畫需要專門處理動態格式的工具。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "HEIC（iPhone 照片）可以轉嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "要看瀏覽器。Safari 可以，Chrome 與 Edge 多數情況不支援直接讀取 HEIC。比較可靠的做法是在 iPhone 的「設定 → 相機 → 格式」改成「相容性最佳」，之後拍的照片就會是 JPG。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "轉成 PNG 檔案怎麼變大了？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "因為 PNG 是無損格式。一張原本已經高度壓縮過的 JPG 照片轉成 PNG，檔案通常會大好幾倍。照片請維持 JPG 或改用 WebP，PNG 留給截圖與需要透明的圖。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "圖片會上傳嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會。解碼與編碼都在你的瀏覽器裡完成，沒有任何資料送出。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="image-convert">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🔄</span>圖片格式轉換</h1>
+    <p class="lede">PNG 轉 JPG、JPG 轉 WebP，換個副檔名不夠，得真的重新編碼才行。拉進來選格式就好。</p>
+  </div>
+
+  <div class="panel">
+    <div class="drop mb-2" id="drop" role="button" tabindex="0">
+      <strong>把圖片拖進來，或點這裡選檔案</strong>
+      <span class="muted small">支援 JPG、PNG、WebP、GIF、BMP，可一次選多張</span>
+      <input type="file" id="fileInput" accept="image/*" multiple hidden>
+    </div>
+
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="format">轉換成</label>
+        <select id="format">
+          <option value="image/jpeg">JPG　照片、檔案最小</option>
+          <option value="image/png">PNG　無損、支援透明</option>
+          <option value="image/webp">WebP　最省空間的現代格式</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label for="quality">畫質：<strong id="qLabel">92</strong>％</label>
+        <input type="range" id="quality" min="10" max="100" value="92">
+      </div>
+    </div>
+
+    <div class="field" id="bgField">
+      <label for="bgColor">透明背景填色</label>
+      <div class="row row--tight">
+        <input type="color" id="bgColor" value="#ffffff" style="flex:0 0 auto">
+        <div style="flex:1 1 auto;align-self:center" class="small muted">
+          JPG 不支援透明，原本透明的地方會填成這個顏色。
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-group mb-2">
+      <button class="btn" type="button" id="convertBtn" disabled>開始轉換</button>
+      <button class="btn btn--ghost" type="button" id="downloadAll" disabled>全部下載</button>
+      <button class="btn btn--ghost" type="button" id="clearBtn">清空</button>
+    </div>
+
+    <div id="list"></div>
+  </div>
+
+  <section class="prose">
+    <h2>改副檔名不等於轉檔</h2>
+    <p>把 <code>photo.png</code> 直接改名成 <code>photo.jpg</code> <strong>並不會真的變成 JPG</strong>，檔案內容還是 PNG 的編碼。多數軟體能靠內容判讀所以看起來沒事，但上傳到嚴格檢查格式的系統就會被擋，或是在某些程式裡直接打不開。真正的轉檔必須重新解碼再用新格式編碼，也就是這個工具做的事。</p>
+
+    <h2>三種格式怎麼選</h2>
+    <div class="table-scroll">
+      <table class="data">
+        <thead><tr><th>格式</th><th>透明</th><th>壓縮</th><th>適合</th></tr></thead>
+        <tbody>
+          <tr><td>JPG</td><td>不支援</td><td>破壞性</td><td>照片、人像、風景</td></tr>
+          <tr><td>PNG</td><td>支援</td><td>無損</td><td>截圖、圖表、去背素材、logo</td></tr>
+          <tr><td>WebP</td><td>支援</td><td>兩種都有</td><td>網頁用圖，同畫質下檔案最小</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>GIF 動圖轉出來變成靜態的？</summary>
+        <div class="a">對，這是預期行為。瀏覽器的 Canvas 只能取到動圖的第一個畫格，所以轉出來會是那一張靜態圖。要保留動畫需要專門處理動態格式的工具。</div>
+      </details>
+      <details>
+        <summary>HEIC（iPhone 照片）可以轉嗎？</summary>
+        <div class="a">要看瀏覽器。Safari 可以，Chrome 與 Edge 多數情況不支援直接讀取 HEIC。比較可靠的做法是在 iPhone 的「設定 → 相機 → 格式」改成「相容性最佳」，之後拍的照片就會是 JPG。</div>
+      </details>
+      <details>
+        <summary>轉成 PNG 檔案怎麼變大了？</summary>
+        <div class="a">因為 PNG 是無損格式。一張原本已經高度壓縮過的 JPG 照片轉成 PNG，檔案通常會大好幾倍。照片請維持 JPG 或改用 WebP，PNG 留給截圖與需要透明的圖。</div>
+      </details>
+      <details>
+        <summary>圖片會上傳嗎？</summary>
+        <div class="a">不會。解碼與編碼都在你的瀏覽器裡完成，沒有任何資料送出。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc, bytes, download } = window.U;
+
+  const EXT = { 'image/jpeg': '.jpg', 'image/png': '.png', 'image/webp': '.webp' };
+  const LABEL = { 'image/jpeg': 'JPG', 'image/png': 'PNG', 'image/webp': 'WebP' };
+
+  let files = [];
+
+  /* ---------- 選檔與拖放 ---------- */
+  const drop = $('#drop');
+  const input = $('#fileInput');
+
+  drop.addEventListener('click', () => input.click());
+  drop.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
+  });
+  ['dragenter', 'dragover'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('is-over'); }));
+  ['dragleave', 'drop'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('is-over'); }));
+
+  drop.addEventListener('drop', e => addFiles(e.dataTransfer.files));
+  input.addEventListener('change', e => addFiles(e.target.files));
+
+  function addFiles(list) {
+    const incoming = Array.from(list).filter(f => f.type.startsWith('image/'));
+    if (!incoming.length) { window.toast('請選擇圖片檔'); return; }
+
+    incoming.forEach(f => files.push({
+      file: f, name: f.name, before: f.size,
+      fromType: f.type, url: URL.createObjectURL(f)
+    }));
+
+    $('#convertBtn').disabled = false;
+    render();
+  }
+
+  /* ---------- 轉換 ---------- */
+  function loadImage(url) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error('這個格式瀏覽器無法讀取'));
+      img.src = url;
+    });
+  }
+
+  async function convertOne(item) {
+    const img = await loadImage(item.url);
+    const w = img.naturalWidth, h = img.naturalHeight;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+
+    const type = $('#format').value;
+    /* JPG 沒有 alpha 通道，透明處必須先填色，否則會變黑 */
+    if (type === 'image/jpeg') {
+      ctx.fillStyle = $('#bgColor').value;
+      ctx.fillRect(0, 0, w, h);
+    }
+    ctx.drawImage(img, 0, 0);
+
+    const q = Number($('#quality').value) / 100;
+    const blob = await new Promise(res =>
+      canvas.toBlob(res, type, type === 'image/png' ? undefined : q));
+
+    if (!blob) throw new Error('這個瀏覽器不支援輸出 ' + LABEL[type]);
+
+    item.blob = blob;
+    item.after = blob.size;
+    item.toType = type;
+    item.w = w;
+    item.h = h;
+    item.outName = item.name.replace(/\.[^.]+$/, '') + EXT[type];
+  }
+
+  async function convertAll() {
+    if (!files.length) return;
+    $('#convertBtn').disabled = true;
+    $('#convertBtn').textContent = '轉換中…';
+
+    for (const item of files) {
+      item.error = null;
+      try { await convertOne(item); }
+      catch (e) { item.error = e.message; }
+      render();
+      await new Promise(r => setTimeout(r, 0));
+    }
+
+    $('#convertBtn').disabled = false;
+    $('#convertBtn').textContent = '重新轉換';
+    $('#downloadAll').disabled = false;
+    window.toast('轉換完成');
+  }
+
+  /* ---------- 畫面 ---------- */
+  function shortType(mime) {
+    return LABEL[mime] || (mime || '').replace('image/', '').toUpperCase() || '未知';
+  }
+
+  function render() {
+    $('#list').innerHTML = files.map((it, i) => {
+      let meta;
+      if (it.error) {
+        meta = `<span style="color:var(--danger)">${esc(it.error)}</span>`;
+      } else if (it.blob) {
+        const diff = (1 - it.after / it.before) * 100;
+        const word = diff >= 0
+          ? `<span style="color:var(--ok);font-weight:700">省下 ${diff.toFixed(0)}%</span>`
+          : `<span style="color:var(--danger);font-weight:700">增加 ${Math.abs(diff).toFixed(0)}%</span>`;
+        meta = `${shortType(it.fromType)} <span class="arrow">→</span> ${shortType(it.toType)}　` +
+               `${bytes(it.before)} → ${bytes(it.after)}　${word}　` +
+               `<span class="muted">${it.w}×${it.h}</span>`;
+      } else {
+        meta = `${shortType(it.fromType)}　${bytes(it.before)}　<span class="muted">等待轉換</span>`;
+      }
+
+      return `<div class="item">
+        <img src="${it.url}" alt="${esc(it.name)} 的縮圖">
+        <div>
+          <div class="item-name">${esc(it.name)}</div>
+          <div class="item-meta">${meta}</div>
+        </div>
+        <div class="item-act">
+          ${it.blob ? `<button class="btn btn--sm" type="button" data-dl="${i}">下載</button>` : ''}
+          <button class="btn btn--ghost btn--sm" type="button" data-rm="${i}">移除</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  $('#list').addEventListener('click', e => {
+    const dl = e.target.closest('[data-dl]');
+    if (dl) {
+      const it = files[+dl.dataset.dl];
+      if (it.blob) download(it.blob, it.outName);
+      return;
+    }
+    const rm = e.target.closest('[data-rm]');
+    if (rm) {
+      const i = +rm.dataset.rm;
+      URL.revokeObjectURL(files[i].url);
+      files.splice(i, 1);
+      if (!files.length) {
+        $('#convertBtn').disabled = true;
+        $('#downloadAll').disabled = true;
+      }
+      render();
+    }
+  });
+
+  $('#convertBtn').addEventListener('click', convertAll);
+
+  $('#downloadAll').addEventListener('click', () => {
+    const done = files.filter(f => f.blob);
+    if (!done.length) return window.toast('還沒有轉換結果');
+    done.forEach((it, i) => setTimeout(() => download(it.blob, it.outName), i * 300));
+    window.toast(`開始下載 ${done.length} 個檔案`);
+  });
+
+  $('#clearBtn').addEventListener('click', () => {
+    files.forEach(f => URL.revokeObjectURL(f.url));
+    files = [];
+    input.value = '';
+    $('#convertBtn').disabled = true;
+    $('#convertBtn').textContent = '開始轉換';
+    $('#downloadAll').disabled = true;
+    render();
+  });
+
+  $('#quality').addEventListener('input', e => {
+    $('#qLabel').textContent = e.target.value;
+  });
+
+  /* 依輸出格式調整可用的選項，避免讓人設定沒作用的參數 */
+  $('#format').addEventListener('change', () => {
+    const type = $('#format').value;
+    const isPng = type === 'image/png';
+    $('#quality').disabled = isPng;
+    $('#qLabel').textContent = isPng ? '無損' : $('#quality').value;
+    $('#bgField').classList.toggle('hidden', type !== 'image/jpeg');
+  });
+})();
+</script>
+</body>
+</html>

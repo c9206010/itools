@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>資遣費計算｜新舊制年資分開算應領金額 - 順手工具箱</title>
+<meta name="description" content="免費資遣費計算器，輸入到職與離職日期即可自動切分勞退新舊制年資，分別計算應領資遣費，並顯示預告期間與預告工資。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📤</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .big-num { font-size: clamp(1.8rem, 1rem + 3vw, 2.8rem); font-weight: 800; color: var(--brand); line-height: 1.2; }
+  td.num, th.num { text-align: right; font-family: var(--mono); }
+  tr.total td { font-weight: 800; background: var(--surface-2); }
+  .split-bar { height: 28px; border-radius: 6px; overflow: hidden; display: flex; font-size: .72rem; font-weight: 700; }
+  .split-bar div { display: grid; place-items: center; color: #fff; overflow: hidden; white-space: nowrap; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/severance.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="資遣費, 資遣, 遣散費, 年資, 新制, 舊制">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="資遣費計算｜新舊制年資分開算應領金額 - 順手工具箱">
+<meta property="og:description" content="免費資遣費計算器，輸入到職與離職日期即可自動切分勞退新舊制年資，分別計算應領資遣費，並顯示預告期間與預告工資。">
+<meta property="og:url" content="https://tools.luka-life.com/t/severance.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="資遣費計算｜新舊制年資分開算應領金額 - 順手工具箱">
+<meta name="twitter:description" content="免費資遣費計算器，輸入到職與離職日期即可自動切分勞退新舊制年資，分別計算應領資遣費，並顯示預告期間與預告工資。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "資遣費計算",
+  "description": "免費資遣費計算器，輸入到職與離職日期即可自動切分勞退新舊制年資，分別計算應領資遣費，並顯示預告期間與預告工資。",
+  "url": "https://tools.luka-life.com/t/severance.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "台灣生活",
+      "item": "https://tools.luka-life.com/#tw"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "資遣費計算",
+      "item": "https://tools.luka-life.com/t/severance.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "被公司「勸退」算資遣嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "要看離職證明怎麼寫。如果你簽的是「自願離職」，法律上就拿不到資遣費，也領不到失業給付。公司口頭說「你自己寫離職吧，我們會給你一筆」是很常見的陷阱——那筆錢可能遠低於法定資遣費，而且你還損失了失業給付。被資遣就要求開立「非自願離職證明書」，這是你的權利。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "資遣費什麼時候要給？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "依勞工退休金條例，雇主應於終止勞動契約後 30 日內發給。逾期未給可以向勞工局申訴。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "資遣費要繳稅嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "資遣費屬於退職所得，有免稅額度，通常一般上班族的資遣費金額在免稅範圍內。金額較高時超過部分才需課稅，詳細級距請查國稅局的退職所得規定。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "我可以同時領資遣費跟失業給付嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以，兩者互不影響。資遣費是雇主給的，失業給付是勞保的就業保險給付，要件是非自願離職且有投保年資。記得拿到非自願離職證明書後盡快到就業服務站辦理。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="severance">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">📤</span>資遣費計算</h1>
+    <p class="lede">被資遣時該拿多少。新舊制年資的算法差一倍，這裡幫你自動切開分別計算。</p>
+  </div>
+
+  <div class="panel">
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="hireDate">到職日</label>
+        <input type="date" id="hireDate">
+      </div>
+      <div class="field mb-0">
+        <label for="leaveDate">離職生效日</label>
+        <input type="date" id="leaveDate">
+      </div>
+      <div class="field mb-0">
+        <label for="avgSalary">月平均工資（元）</label>
+        <input type="number" id="avgSalary" value="45000" min="0" step="100">
+      </div>
+    </div>
+    <p class="hint mb-2">
+      月平均工資是<strong>離職前六個月的工資總額平均</strong>，包含本薪、全勤、固定津貼與經常性給與，
+      不是只算本薪。年終獎金等非經常性給與不列入。
+    </p>
+
+    <div class="tc mb-2">
+      <div class="big-num" id="totalOut">—</div>
+      <div class="small muted">應領資遣費合計</div>
+    </div>
+
+    <div class="split-bar mb-1" id="splitBar"></div>
+    <p class="hint tc mb-2" id="splitNote"></p>
+
+    <div class="table-scroll mb-2">
+      <table class="data">
+        <thead>
+          <tr><th>制度</th><th>年資期間</th><th class="num">年資</th><th>基數</th><th class="num">金額</th></tr>
+        </thead>
+        <tbody id="breakdown"></tbody>
+      </table>
+    </div>
+
+    <div class="stat-row mb-2">
+      <div class="stat"><div class="stat__num" id="totalYears">—</div><div class="stat__label">總年資</div></div>
+      <div class="stat"><div class="stat__num" id="noticeDays">—</div><div class="stat__label">預告期間</div></div>
+      <div class="stat"><div class="stat__num" id="noticePay">—</div><div class="stat__label">未預告應給工資</div></div>
+      <div class="stat"><div class="stat__num" id="jobLeave">—</div><div class="stat__label">謀職假</div></div>
+    </div>
+  </div>
+
+  <div class="note note--warn">
+    <strong>這是依法定標準試算，不是法律意見。</strong>幾個要注意的地方：
+    <ul style="margin:8px 0 0;padding-left:1.2em">
+      <li><strong>自請離職沒有資遣費</strong>。只有雇主依勞基法第 11 條或第 13 條但書資遣、或勞工依第 14 條被迫離職，才有資遣費。</li>
+      <li>資遣費之外，<strong>未休完的特休必須另外折算工資</strong>，那是獨立的一筆。</li>
+      <li>月平均工資的認定常有爭議，若你有變動性獎金或津貼，實際金額可能更高。</li>
+    </ul>
+    有爭議請洽當地勞工局申請勞資爭議調解，那是免費的。
+  </div>
+
+  <section class="prose">
+    <h2>新舊制差在哪，為什麼要分開算</h2>
+    <p>勞工退休金制度在 <strong>2005 年 7 月 1 日</strong>改制，資遣費的計算方式也跟著分成兩套：</p>
+    <div class="table-scroll">
+      <table class="data">
+        <thead><tr><th></th><th>舊制（2005/7/1 之前）</th><th>新制（2005/7/1 之後）</th></tr></thead>
+        <tbody>
+          <tr><td>每滿 1 年</td><td>發 <strong>1 個月</strong>平均工資</td><td>發 <strong>0.5 個月</strong>平均工資</td></tr>
+          <tr><td>未滿 1 年</td><td>按比例計算</td><td>按比例計算</td></tr>
+          <tr><td>上限</td><td><strong>無上限</strong></td><td>最高 <strong>6 個月</strong>平均工資</td></tr>
+          <tr><td>法源</td><td>勞基法第 17 條</td><td>勞工退休金條例第 12 條</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>如果你 2005 年 7 月以前就到職，年資會<strong>橫跨兩個制度</strong>，必須以那天為界切成兩段分別計算再加總——這就是這個工具自動幫你做的事。年資很長的資深員工，舊制那一段往往佔了金額的大部分。</p>
+
+    <h2>預告期間是什麼</h2>
+    <p>依勞基法第 16 條，雇主資遣你之前必須提前預告：</p>
+    <ul>
+      <li>年資 3 個月以上未滿 1 年：<strong>10 日前</strong>預告</li>
+      <li>年資 1 年以上未滿 3 年：<strong>20 日前</strong>預告</li>
+      <li>年資 3 年以上：<strong>30 日前</strong>預告</li>
+    </ul>
+    <p>如果公司沒有提前預告就要你走，必須<strong>給付預告期間的工資</strong>。另外在預告期間內，你每週可以請最多兩天的<strong>謀職假去找工作，這兩天公司要照給工資</strong>。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>被公司「勸退」算資遣嗎？</summary>
+        <div class="a">要看離職證明怎麼寫。如果你簽的是「自願離職」，法律上就拿不到資遣費，也領不到失業給付。公司口頭說「你自己寫離職吧，我們會給你一筆」是很常見的陷阱——那筆錢可能遠低於法定資遣費，而且你還損失了失業給付。<strong>被資遣就要求開立「非自願離職證明書」</strong>，這是你的權利。</div>
+      </details>
+      <details>
+        <summary>資遣費什麼時候要給？</summary>
+        <div class="a">依勞工退休金條例，雇主應於終止勞動契約後 <strong>30 日內</strong>發給。逾期未給可以向勞工局申訴。</div>
+      </details>
+      <details>
+        <summary>資遣費要繳稅嗎？</summary>
+        <div class="a">資遣費屬於退職所得，有免稅額度，通常一般上班族的資遣費金額在免稅範圍內。金額較高時超過部分才需課稅，詳細級距請查國稅局的退職所得規定。</div>
+      </details>
+      <details>
+        <summary>我可以同時領資遣費跟失業給付嗎？</summary>
+        <div class="a">可以，兩者互不影響。資遣費是雇主給的，失業給付是勞保的就業保險給付，要件是非自願離職且有投保年資。記得拿到非自願離職證明書後盡快到就業服務站辦理。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, esc, pad } = window.U;
+
+  /* 勞退新制上路日，年資以此為界切成兩段 */
+  const SWITCH = new Date(2005, 6, 1, 12);   // 2005-07-01
+  const DAY = 86400000;
+  const YEAR = 365.2425 * DAY;
+
+  const money = n => Math.round(n).toLocaleString('zh-TW');
+
+  function parseDate(str) {
+    if (!str) return null;
+    const [y, m, d] = str.split('-').map(Number);
+    if (!y || !m || !d) return null;
+    return new Date(y, m - 1, d, 12, 0, 0, 0);
+  }
+  const toInput = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const fmt = d => `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}`;
+
+  /** 年資轉成「幾年幾個月」的文字 */
+  function yearsText(ms) {
+    const years = ms / YEAR;
+    const y = Math.floor(years);
+    const m = Math.round((years - y) * 12);
+    if (m === 12) return `${y + 1} 年`;
+    return m ? `${y} 年 ${m} 個月` : `${y} 年`;
+  }
+
+  function calc() {
+    const hire = parseDate($('#hireDate').value);
+    const leave = parseDate($('#leaveDate').value);
+    const avg = Math.max(0, Number($('#avgSalary').value) || 0);
+
+    if (!hire || !leave) {
+      $('#totalOut').textContent = '請選擇到職日與離職日';
+      $('#breakdown').innerHTML = '';
+      $('#splitBar').innerHTML = '';
+      return;
+    }
+    if (hire >= leave) {
+      $('#totalOut').textContent = '離職日必須晚於到職日';
+      $('#breakdown').innerHTML = '';
+      $('#splitBar').innerHTML = '';
+      return;
+    }
+
+    /* ---------- 切分新舊制年資 ---------- */
+    const oldStart = hire;
+    const oldEnd = leave < SWITCH ? leave : SWITCH;
+    const oldMs = Math.max(0, oldEnd - oldStart);
+
+    const newStart = hire > SWITCH ? hire : SWITCH;
+    const newMs = Math.max(0, leave - newStart);
+
+    const oldYears = oldMs / YEAR;
+    const newYears = newMs / YEAR;
+
+    /* 舊制：每滿 1 年 1 個月，未滿 1 年按比例，無上限 */
+    const oldBase = oldYears;
+    const oldPay = avg * oldBase;
+
+    /* 新制：每滿 1 年 0.5 個月，未滿 1 年按比例，上限 6 個月 */
+    const newBaseRaw = newYears * 0.5;
+    const newBase = Math.min(6, newBaseRaw);
+    const newPay = avg * newBase;
+    const capped = newBaseRaw > 6;
+
+    const total = oldPay + newPay;
+
+    $('#totalOut').textContent = money(total) + ' 元';
+
+    /* ---------- 明細 ---------- */
+    const rows = [];
+    if (oldMs > 0) {
+      rows.push(`<tr>
+        <td>舊制<br><span class="small muted">勞基法第 17 條</span></td>
+        <td class="small">${fmt(oldStart)} ～ ${fmt(oldEnd)}</td>
+        <td class="num">${yearsText(oldMs)}</td>
+        <td>${oldBase.toFixed(3)} 個月</td>
+        <td class="num">${money(oldPay)}</td>
+      </tr>`);
+    }
+    if (newMs > 0) {
+      rows.push(`<tr>
+        <td>新制<br><span class="small muted">勞退條例第 12 條</span></td>
+        <td class="small">${fmt(newStart)} ～ ${fmt(leave)}</td>
+        <td class="num">${yearsText(newMs)}</td>
+        <td>${newBase.toFixed(3)} 個月${capped ? '<br><span class="small" style="color:var(--warn)">已達 6 個月上限</span>' : ''}</td>
+        <td class="num">${money(newPay)}</td>
+      </tr>`);
+    }
+    rows.push(`<tr class="total">
+      <td>合計</td><td>—</td>
+      <td class="num">${yearsText(leave - hire)}</td>
+      <td>${(oldBase + newBase).toFixed(3)} 個月</td>
+      <td class="num">${money(total)}</td>
+    </tr>`);
+
+    $('#breakdown').innerHTML = rows.join('');
+
+    /* ---------- 比例條 ---------- */
+    if (total > 0) {
+      const oldPct = oldPay / total * 100;
+      $('#splitBar').innerHTML =
+        (oldPct > 0.5 ? `<div style="width:${oldPct}%;background:var(--accent)">舊制 ${oldPct.toFixed(0)}%</div>` : '') +
+        (oldPct < 99.5 ? `<div style="width:${100 - oldPct}%;background:var(--brand)">新制 ${(100 - oldPct).toFixed(0)}%</div>` : '');
+
+      $('#splitNote').textContent = oldMs > 0 && newMs > 0
+        ? '你的年資橫跨兩個制度，已依 2005 年 7 月 1 日切分後分別計算。'
+        : (oldMs > 0 ? '你的年資全部屬於舊制。' : '你的年資全部屬於新制。');
+    } else {
+      $('#splitBar').innerHTML = '';
+      $('#splitNote').textContent = '';
+    }
+
+    /* ---------- 年資與預告期 ---------- */
+    const totalYears = (leave - hire) / YEAR;
+    $('#totalYears').textContent = yearsText(leave - hire);
+
+    let notice = 0;
+    if (totalYears >= 3) notice = 30;
+    else if (totalYears >= 1) notice = 20;
+    else if (totalYears >= 0.25) notice = 10;
+
+    $('#noticeDays').textContent = notice ? notice + ' 日前' : '未滿 3 個月免預告';
+    $('#noticePay').textContent = notice ? money(avg / 30 * notice) + ' 元' : '—';
+
+    /* 謀職假：預告期間內每週最多 2 日，工資照給 */
+    const jobDays = notice ? Math.floor(notice / 7) * 2 : 0;
+    $('#jobLeave').textContent = jobDays ? `最多 ${jobDays} 日` : '—';
+  }
+
+  const today = new Date();
+  $('#leaveDate').value = toInput(today);
+
+  $$('input').forEach(el => el.addEventListener('input', calc));
+  calc();
+})();
+</script>
+</body>
+</html>

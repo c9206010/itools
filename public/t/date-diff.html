@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>日期天數計算｜算相差幾天，或往前往後推算日期 - 順手工具箱</title>
+<meta name="description" content="免費日期計算器，輸入兩個日期算出相差幾天幾週幾個月，也能從某天往前或往後推算 N 天後是哪一天，並顯示扣除週末的工作天數。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .tabs { display: flex; gap: 6px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  .tab {
+    padding: 9px 18px; border: 0; background: none; cursor: pointer;
+    font: inherit; font-size: .93rem; font-weight: 600; color: var(--ink-3);
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+  }
+  .tab.is-on { color: var(--brand); border-bottom-color: var(--brand); }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/date-diff.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="天數, 日期計算, 相差, 幾天, date">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="日期天數計算｜算相差幾天，或往前往後推算日期 - 順手工具箱">
+<meta property="og:description" content="免費日期計算器，輸入兩個日期算出相差幾天幾週幾個月，也能從某天往前或往後推算 N 天後是哪一天，並顯示扣除週末的工作天數。">
+<meta property="og:url" content="https://tools.luka-life.com/t/date-diff.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="日期天數計算｜算相差幾天，或往前往後推算日期 - 順手工具箱">
+<meta name="twitter:description" content="免費日期計算器，輸入兩個日期算出相差幾天幾週幾個月，也能從某天往前或往後推算 N 天後是哪一天，並顯示扣除週末的工作天數。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "日期天數計算",
+  "description": "免費日期計算器，輸入兩個日期算出相差幾天幾週幾個月，也能從某天往前或往後推算 N 天後是哪一天，並顯示扣除週末的工作天數。",
+  "url": "https://tools.luka-life.com/t/date-diff.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "時間計時",
+      "item": "https://tools.luka-life.com/#time"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "日期天數計算",
+      "item": "https://tools.luka-life.com/t/date-diff.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "「約幾個月」為什麼是約的？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "每個月的天數不一樣（28 到 31 天），所以用天數換算月份一定有誤差。這裡採用平均每月 30.44 天來估算，適合抓個大概，要精確的月份請用「推算日期」分頁的月為單位。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "加一個月遇到月底怎麼處理？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "例如 1 月 31 日加一個月，2 月沒有 31 號，工具會自動收斂到該月的最後一天也就是 2 月 28 或 29 日，這是日期計算的常見慣例。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "有考慮閏年嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "有。天數計算是直接用實際日期相減，2 月 29 日會被正確計入。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="date-diff">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">📅</span>日期天數計算</h1>
+    <p class="lede">算兩個日期中間隔了幾天，或是從某一天往後推 90 天是哪天。順便幫你扣掉週末算工作天。</p>
+  </div>
+
+  <div class="panel">
+    <div class="tabs" role="tablist">
+      <button class="tab is-on" type="button" data-tab="diff" role="tab">算相差天數</button>
+      <button class="tab" type="button" data-tab="add" role="tab">推算日期</button>
+    </div>
+
+    <!-- 相差天數 -->
+    <div id="panel-diff">
+      <div class="row mb-2">
+        <div class="field mb-0">
+          <label for="d1">起始日期</label>
+          <input type="date" id="d1">
+        </div>
+        <div class="field mb-0">
+          <label for="d2">結束日期</label>
+          <input type="date" id="d2">
+        </div>
+      </div>
+
+      <label class="small" style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+        <input type="checkbox" id="includeEnd"> 把結束當天也算進去
+      </label>
+
+      <div class="out out--big" id="diffOut">—</div>
+
+      <div class="stat-row mt-2">
+        <div class="stat"><div class="stat__num" id="dWeeks">—</div><div class="stat__label">週數</div></div>
+        <div class="stat"><div class="stat__num" id="dMonths">—</div><div class="stat__label">約幾個月</div></div>
+        <div class="stat"><div class="stat__num" id="dWork">—</div><div class="stat__label">工作天（扣週末）</div></div>
+        <div class="stat"><div class="stat__num" id="dHours">—</div><div class="stat__label">小時</div></div>
+      </div>
+    </div>
+
+    <!-- 推算日期 -->
+    <div id="panel-add" class="hidden">
+      <div class="row mb-2">
+        <div class="field mb-0">
+          <label for="baseDate">基準日期</label>
+          <input type="date" id="baseDate">
+        </div>
+        <div class="field mb-0">
+          <label for="offset">間隔</label>
+          <input type="number" id="offset" value="90" step="1">
+        </div>
+        <div class="field mb-0">
+          <label for="unit">單位</label>
+          <select id="unit">
+            <option value="day">天</option>
+            <option value="week">週</option>
+            <option value="month">月</option>
+            <option value="year">年</option>
+            <option value="workday">工作天（跳過六日）</option>
+          </select>
+        </div>
+        <div class="field mb-0">
+          <label for="dir">方向</label>
+          <select id="dir">
+            <option value="1">之後</option>
+            <option value="-1">之前</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="out out--big" id="addOut">—</div>
+      <p class="hint tc" id="addSub"></p>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>「把結束當天也算進去」是什麼意思</h2>
+    <p>從 1 月 1 日到 1 月 10 日，如果問「中間隔幾天」答案是 <strong>9 天</strong>；但如果問「這段期間總共幾天」，含頭含尾就是 <strong>10 天</strong>。請假天數、住宿天數、活動期間常常要用含頭含尾的算法，勾起來就對了。</p>
+
+    <h2>工作天怎麼算</h2>
+    <p>工作天的計算是把期間內所有的<strong>星期六與星期日扣掉</strong>。要注意它沒有排除國定假日與補班日，台灣每年的行事曆都不一樣，遇到連假請自行再調整。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>「約幾個月」為什麼是約的？</summary>
+        <div class="a">每個月的天數不一樣（28 到 31 天），所以用天數換算月份一定有誤差。這裡採用平均每月 30.44 天來估算，適合抓個大概，要精確的月份請用「推算日期」分頁的月為單位。</div>
+      </details>
+      <details>
+        <summary>加一個月遇到月底怎麼處理？</summary>
+        <div class="a">例如 1 月 31 日加一個月，2 月沒有 31 號，工具會自動收斂到該月的最後一天也就是 2 月 28 或 29 日，這是日期計算的常見慣例。</div>
+      </details>
+      <details>
+        <summary>有考慮閏年嗎？</summary>
+        <div class="a">有。天數計算是直接用實際日期相減，2 月 29 日會被正確計入。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, pad } = window.U;
+
+  const WEEK = ['日', '一', '二', '三', '四', '五', '六'];
+  const DAY_MS = 86400000;
+
+  function todayStr(offsetDays = 0) {
+    const d = new Date();
+    d.setDate(d.getDate() + offsetDays);
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  }
+
+  /* 用本地時間的正午建立 Date，避開時區與日光節約造成的跨日誤差 */
+  function parse(str) {
+    if (!str) return null;
+    const [y, m, d] = str.split('-').map(Number);
+    if (!y || !m || !d) return null;
+    return new Date(y, m - 1, d, 12, 0, 0, 0);
+  }
+
+  function fmtFull(d) {
+    return `${d.getFullYear()} 年 ${d.getMonth() + 1} 月 ${d.getDate()} 日（星期${WEEK[d.getDay()]}）`;
+  }
+
+  /* 計算 a 到 b 之間有幾個非週末的日子（不含 a 當天，含 b 當天） */
+  function workdaysBetween(a, b) {
+    let count = 0;
+    const step = a <= b ? 1 : -1;
+    const cur = new Date(a);
+    while (cur.getTime() !== b.getTime()) {
+      cur.setDate(cur.getDate() + step);
+      const w = cur.getDay();
+      if (w !== 0 && w !== 6) count++;
+    }
+    return count;
+  }
+
+  /* ---------- 相差天數 ---------- */
+  function calcDiff() {
+    const a = parse($('#d1').value);
+    const b = parse($('#d2').value);
+    if (!a || !b) { $('#diffOut').textContent = '請選擇兩個日期'; return; }
+
+    let days = Math.round((b - a) / DAY_MS);
+    const inclusive = $('#includeEnd').checked;
+    const shown = Math.abs(days) + (inclusive ? 1 : 0);
+
+    $('#diffOut').textContent = `${shown} 天`;
+    $('#dWeeks').textContent = (shown / 7).toFixed(1);
+    $('#dMonths').textContent = (shown / 30.44).toFixed(1);
+    $('#dHours').textContent = (shown * 24).toLocaleString();
+
+    let work = workdaysBetween(a, b);
+    if (inclusive) {
+      const w = a.getDay();
+      if (w !== 0 && w !== 6) work++;
+    }
+    $('#dWork').textContent = work;
+  }
+
+  /* ---------- 推算日期 ---------- */
+  function calcAdd() {
+    const base = parse($('#baseDate').value);
+    if (!base) { $('#addOut').textContent = '請選擇基準日期'; return; }
+
+    const n = Math.floor(Number($('#offset').value) || 0);
+    const dir = Number($('#dir').value);
+    const unit = $('#unit').value;
+    const amount = n * dir;
+    const out = new Date(base);
+
+    if (unit === 'day') {
+      out.setDate(out.getDate() + amount);
+    } else if (unit === 'week') {
+      out.setDate(out.getDate() + amount * 7);
+    } else if (unit === 'year') {
+      out.setFullYear(out.getFullYear() + amount);
+    } else if (unit === 'month') {
+      /* 先記住原本的日，加完月份若溢位就收斂到該月最後一天 */
+      const targetDay = out.getDate();
+      out.setDate(1);
+      out.setMonth(out.getMonth() + amount);
+      const lastDay = new Date(out.getFullYear(), out.getMonth() + 1, 0).getDate();
+      out.setDate(Math.min(targetDay, lastDay));
+    } else if (unit === 'workday') {
+      let left = Math.abs(amount);
+      const step = amount >= 0 ? 1 : -1;
+      while (left > 0) {
+        out.setDate(out.getDate() + step);
+        const w = out.getDay();
+        if (w !== 0 && w !== 6) left--;
+      }
+    }
+
+    $('#addOut').textContent = fmtFull(out);
+
+    const realDays = Math.round((out - base) / DAY_MS);
+    $('#addSub').textContent = realDays === 0
+      ? '與基準日同一天'
+      : `距離基準日實際相差 ${Math.abs(realDays)} 天`;
+  }
+
+  /* ---------- 分頁切換 ---------- */
+  $$('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      $$('.tab').forEach(t => t.classList.toggle('is-on', t === tab));
+      $('#panel-diff').classList.toggle('hidden', tab.dataset.tab !== 'diff');
+      $('#panel-add').classList.toggle('hidden', tab.dataset.tab !== 'add');
+    });
+  });
+
+  $('#d1').value = todayStr();
+  $('#d2').value = todayStr(30);
+  $('#baseDate').value = todayStr();
+
+  ['#d1', '#d2', '#includeEnd'].forEach(s =>
+    $(s).addEventListener('input', calcDiff));
+  ['#baseDate', '#offset', '#unit', '#dir'].forEach(s =>
+    $(s).addEventListener('input', calcAdd));
+
+  calcDiff();
+  calcAdd();
+})();
+</script>
+</body>
+</html>

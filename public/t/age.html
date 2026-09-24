@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>年齡計算器｜精確算出幾歲幾月幾天，附生肖星座 - 順手工具箱</title>
+<meta name="description" content="免費線上年齡計算，輸入生日算出實歲與虛歲、已經活了幾天、距離下次生日還有多久，並顯示生肖與星座。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎂</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/age.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="年齡, 歲數, 虛歲, 生日, age">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="年齡計算器｜精確算出幾歲幾月幾天，附生肖星座 - 順手工具箱">
+<meta property="og:description" content="免費線上年齡計算，輸入生日算出實歲與虛歲、已經活了幾天、距離下次生日還有多久，並顯示生肖與星座。">
+<meta property="og:url" content="https://tools.luka-life.com/t/age.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="年齡計算器｜精確算出幾歲幾月幾天，附生肖星座 - 順手工具箱">
+<meta name="twitter:description" content="免費線上年齡計算，輸入生日算出實歲與虛歲、已經活了幾天、距離下次生日還有多久，並顯示生肖與星座。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "年齡計算器",
+  "description": "免費線上年齡計算，輸入生日算出實歲與虛歲、已經活了幾天、距離下次生日還有多久，並顯示生肖與星座。",
+  "url": "https://tools.luka-life.com/t/age.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "時間計時",
+      "item": "https://tools.luka-life.com/#time"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "年齡計算器",
+      "item": "https://tools.luka-life.com/t/age.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "生肖是用國曆還是農曆算？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "這裡用的是國曆年份換算，所以在農曆年前出生的人（大約每年一到二月）可能會跟正統生肖差一位。要完全精確必須查該年的農曆春節日期，這個工具沒有內建農曆資料。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "可以算未來的日期嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以，把基準日設成未來的某一天，就會算出那時候是幾歲。如果出生日期晚於基準日，工具會提示你順序反了。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "閏年 2 月 29 日出生怎麼算生日？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "非閏年時，工具會把生日視為 3 月 1 日來計算下次生日倒數，這是比較通行的處理方式。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="age">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🎂</span>年齡計算器</h1>
+    <p class="lede">輸入生日，馬上知道現在幾歲幾個月又幾天、總共活了多少天，還有下次生日倒數。</p>
+  </div>
+
+  <div class="panel">
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="birth">出生日期</label>
+        <input type="date" id="birth">
+      </div>
+      <div class="field mb-0">
+        <label for="refDate">計算基準日</label>
+        <input type="date" id="refDate">
+      </div>
+    </div>
+    <p class="hint mb-2">基準日預設是今天，想算某個特定日子當時幾歲的話可以改。</p>
+
+    <div class="out out--big" id="mainAge">請先選擇出生日期</div>
+
+    <div class="stat-row mt-2">
+      <div class="stat"><div class="stat__num" id="vAge">—</div><div class="stat__label">虛歲</div></div>
+      <div class="stat"><div class="stat__num" id="totalDays">—</div><div class="stat__label">總天數</div></div>
+      <div class="stat"><div class="stat__num" id="totalWeeks">—</div><div class="stat__label">總週數</div></div>
+      <div class="stat"><div class="stat__num" id="totalHours">—</div><div class="stat__label">總小時</div></div>
+    </div>
+
+    <div class="stat-row mt-1">
+      <div class="stat"><div class="stat__num" id="zodiac">—</div><div class="stat__label">生肖</div></div>
+      <div class="stat"><div class="stat__num" id="star">—</div><div class="stat__label">星座</div></div>
+      <div class="stat"><div class="stat__num" id="weekday">—</div><div class="stat__label">出生那天星期幾</div></div>
+      <div class="stat"><div class="stat__num" id="nextBday">—</div><div class="stat__label">距離下次生日</div></div>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>實歲跟虛歲差在哪</h2>
+    <p><strong>實歲</strong>是從出生那天算起，每過一次生日才加一歲，也就是法律與醫療上用的年齡。<strong>虛歲</strong>是傳統算法，出生當下就算一歲，之後每過一次農曆年再加一歲。這裡的虛歲採用最常見的簡化算法（國曆年份相減加一），過年前後會跟嚴格的農曆算法有一年落差，僅供參考。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>生肖是用國曆還是農曆算？</summary>
+        <div class="a">這裡用的是國曆年份換算，所以在農曆年前出生的人（大約每年一到二月）可能會跟正統生肖差一位。要完全精確必須查該年的農曆春節日期，這個工具沒有內建農曆資料。</div>
+      </details>
+      <details>
+        <summary>可以算未來的日期嗎？</summary>
+        <div class="a">可以，把基準日設成未來的某一天，就會算出那時候是幾歲。如果出生日期晚於基準日，工具會提示你順序反了。</div>
+      </details>
+      <details>
+        <summary>閏年 2 月 29 日出生怎麼算生日？</summary>
+        <div class="a">非閏年時，工具會把生日視為 3 月 1 日來計算下次生日倒數，這是比較通行的處理方式。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, pad } = window.U;
+
+  const WEEK = ['日', '一', '二', '三', '四', '五', '六'];
+  const ZODIAC = ['鼠', '牛', '虎', '兔', '龍', '蛇', '馬', '羊', '猴', '雞', '狗', '豬'];
+  /* 星座分界：每個月的起始日，當天含在後面那個星座 */
+  const STARS = [
+    [1, 20, '水瓶座'], [2, 19, '雙魚座'], [3, 21, '牡羊座'], [4, 20, '金牛座'],
+    [5, 21, '雙子座'], [6, 22, '巨蟹座'], [7, 23, '獅子座'], [8, 23, '處女座'],
+    [9, 23, '天秤座'], [10, 24, '天蠍座'], [11, 22, '射手座'], [12, 22, '摩羯座']
+  ];
+  const DAY_MS = 86400000;
+
+  function todayStr() {
+    const d = new Date();
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  }
+
+  function parse(str) {
+    if (!str) return null;
+    const [y, m, d] = str.split('-').map(Number);
+    if (!y || !m || !d) return null;
+    return new Date(y, m - 1, d, 12, 0, 0, 0);
+  }
+
+  function starSign(month, day) {
+    /* 找出最後一個「起始日已經過了」的分界 */
+    let name = '摩羯座';
+    for (const [m, d, n] of STARS) {
+      if (month > m || (month === m && day >= d)) name = n;
+    }
+    return name;
+  }
+
+  function calc() {
+    const b = parse($('#birth').value);
+    const ref = parse($('#refDate').value);
+
+    if (!b || !ref) { $('#mainAge').textContent = '請先選擇出生日期'; return; }
+    if (b > ref) { $('#mainAge').textContent = '出生日期不能晚於基準日'; return; }
+
+    /* 逐級借位算出「幾歲幾個月又幾天」 */
+    let years = ref.getFullYear() - b.getFullYear();
+    let months = ref.getMonth() - b.getMonth();
+    let days = ref.getDate() - b.getDate();
+
+    if (days < 0) {
+      months--;
+      // 借上一個月的天數
+      const prevMonthDays = new Date(ref.getFullYear(), ref.getMonth(), 0).getDate();
+      days += prevMonthDays;
+    }
+    if (months < 0) { years--; months += 12; }
+
+    $('#mainAge').textContent = `${years} 歲 ${months} 個月 ${days} 天`;
+
+    const totalDays = Math.round((ref - b) / DAY_MS);
+    $('#totalDays').textContent = totalDays.toLocaleString();
+    $('#totalWeeks').textContent = Math.floor(totalDays / 7).toLocaleString();
+    $('#totalHours').textContent = (totalDays * 24).toLocaleString();
+
+    /* 虛歲：國曆年份相減加一 */
+    $('#vAge').textContent = (ref.getFullYear() - b.getFullYear() + 1) + ' 歲';
+
+    /* 生肖：西元 4 年為鼠年，取模對照 */
+    $('#zodiac').textContent = ZODIAC[((b.getFullYear() - 4) % 12 + 12) % 12];
+    $('#star').textContent = starSign(b.getMonth() + 1, b.getDate());
+    $('#weekday').textContent = '星期' + WEEK[b.getDay()];
+
+    /* 下次生日：閏日生日在平年視為 3/1 */
+    const isLeapDay = b.getMonth() === 1 && b.getDate() === 29;
+    function makeBirthday(year) {
+      if (isLeapDay) {
+        const isLeap = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+        return isLeap ? new Date(year, 1, 29, 12) : new Date(year, 2, 1, 12);
+      }
+      return new Date(year, b.getMonth(), b.getDate(), 12);
+    }
+
+    let next = makeBirthday(ref.getFullYear());
+    if (next < ref) next = makeBirthday(ref.getFullYear() + 1);
+
+    const left = Math.round((next - ref) / DAY_MS);
+    $('#nextBday').textContent = left === 0 ? '就是今天 🎉' : left + ' 天';
+  }
+
+  $('#refDate').value = todayStr();
+  $('#birth').addEventListener('input', calc);
+  $('#refDate').addEventListener('input', calc);
+  calc();
+})();
+</script>
+</body>
+</html>

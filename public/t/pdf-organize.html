@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PDF 旋轉與刪頁｜掃描檔轉正、重排頁面順序 - 順手工具箱</title>
+<meta name="description" content="免費線上 PDF 整理工具，把橫躺的掃描檔轉正、刪掉不要的頁面、調整頁面順序，全程在瀏覽器完成，檔案不會上傳。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔃</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .drop {
+    border: 2px dashed var(--border-strong); border-radius: var(--radius-lg);
+    padding: 36px 20px; text-align: center; cursor: pointer;
+    background: var(--surface-2); transition: all .15s ease;
+  }
+  .drop:hover, .drop.is-over { border-color: var(--brand); background: var(--brand-wash); }
+  .drop strong { display: block; font-size: 1.05rem; margin-bottom: 4px; }
+  .pages { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+  .pcard {
+    border: 1px solid var(--border); border-radius: var(--radius);
+    background: var(--surface); padding: 8px; text-align: center;
+  }
+  .pcard.is-del { opacity: .38; border-style: dashed; }
+  .pthumb {
+    aspect-ratio: .74; border: 1px solid var(--border); border-radius: 6px;
+    background: var(--bg-sunk); display: grid; place-items: center;
+    margin-bottom: 7px; overflow: hidden; position: relative;
+  }
+  .pthumb span {
+    font-size: 1.4rem; font-weight: 800; color: var(--ink-3);
+    transition: transform .2s ease;
+  }
+  .pcard__no { font-size: .78rem; color: var(--ink-3); margin-bottom: 5px; }
+  .pcard__acts { display: flex; gap: 3px; justify-content: center; flex-wrap: wrap; }
+  .mini-btn {
+    width: 28px; height: 28px; border-radius: 6px;
+    border: 1px solid var(--border-strong); background: var(--surface);
+    color: var(--ink-2); cursor: pointer; font-size: .75rem; line-height: 1; padding: 0;
+  }
+  .mini-btn:hover:not(:disabled) { border-color: var(--brand); color: var(--brand); }
+  .mini-btn:disabled { opacity: .3; cursor: default; }
+  .mini-btn.on { background: var(--danger); border-color: var(--danger); color: #fff; }
+  .rot-tag {
+    position: absolute; top: 4px; right: 5px;
+    font-size: .66rem; background: var(--brand); color: #fff;
+    padding: 1px 6px; border-radius: 999px; font-weight: 700;
+  }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/pdf-organize.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="pdf, 旋轉, 刪除頁面, 轉正, 排序">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="PDF 旋轉與刪頁｜掃描檔轉正、重排頁面順序 - 順手工具箱">
+<meta property="og:description" content="免費線上 PDF 整理工具，把橫躺的掃描檔轉正、刪掉不要的頁面、調整頁面順序，全程在瀏覽器完成，檔案不會上傳。">
+<meta property="og:url" content="https://tools.luka-life.com/t/pdf-organize.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PDF 旋轉與刪頁｜掃描檔轉正、重排頁面順序 - 順手工具箱">
+<meta name="twitter:description" content="免費線上 PDF 整理工具，把橫躺的掃描檔轉正、刪掉不要的頁面、調整頁面順序，全程在瀏覽器完成，檔案不會上傳。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "PDF 旋轉與刪頁",
+  "description": "免費線上 PDF 整理工具，把橫躺的掃描檔轉正、刪掉不要的頁面、調整頁面順序，全程在瀏覽器完成，檔案不會上傳。",
+  "url": "https://tools.luka-life.com/t/pdf-organize.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "PDF 文件",
+      "item": "https://tools.luka-life.com/#pdf"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "PDF 旋轉與刪頁",
+      "item": "https://tools.luka-life.com/t/pdf-organize.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "原本的檔案會被改到嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會。工具只讀取你的檔案，處理結果是另存成一個新檔下載，原檔完全不動。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "可以調整頁面順序嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以，每張卡片下面的左右箭頭就能把那一頁往前或往後移。移動後的頁碼會即時更新，最後存檔就是你看到的順序。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "刪掉的頁面可以救回來嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "存檔前都可以。標成刪除的卡片會變淡但還在，再按一次垃圾桶就取消刪除。只有按下「套用並下載」之後，輸出的新檔才會真的不包含那些頁。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "有密碼的 PDF 呢？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "有開啟密碼的檔案沒辦法處理，請先用原本的閱讀軟體解除密碼另存一份再上來。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="pdf-organize">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🔃</span>PDF 旋轉與刪頁</h1>
+    <p class="lede">掃描出來整個橫躺、中間夾了幾頁空白紙，在這裡一頁一頁轉正跟刪掉，順序也能重排。</p>
+  </div>
+
+  <div class="note mb-2">
+    <strong>檔案不會上傳。</strong>所有處理都在你的瀏覽器裡完成，這個網站沒有可以接收檔案的後端。
+  </div>
+
+  <div class="panel">
+    <div class="drop mb-2" id="drop" role="button" tabindex="0">
+      <strong>把 PDF 拖進來，或點這裡選檔案</strong>
+      <span class="muted small">一次處理一個檔案</span>
+      <input type="file" id="fileInput" accept="application/pdf,.pdf" hidden>
+    </div>
+
+    <div id="editor" class="hidden">
+      <p class="small mb-2" id="fileInfo"></p>
+
+      <div class="btn-group mb-2">
+        <button class="btn btn--ghost btn--sm" type="button" id="rotAllL">全部左轉 90°</button>
+        <button class="btn btn--ghost btn--sm" type="button" id="rotAllR">全部右轉 90°</button>
+        <button class="btn btn--ghost btn--sm" type="button" id="resetBtn">全部還原</button>
+      </div>
+
+      <div class="pages mb-2" id="pages"></div>
+
+      <div class="stat-row mb-2">
+        <div class="stat"><div class="stat__num" id="sKeep">0</div><div class="stat__label">保留頁數</div></div>
+        <div class="stat"><div class="stat__num" id="sDel">0</div><div class="stat__label">將刪除</div></div>
+        <div class="stat"><div class="stat__num" id="sRot">0</div><div class="stat__label">已旋轉</div></div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn--lg" type="button" id="saveBtn">套用並下載</button>
+        <button class="btn btn--ghost btn--lg" type="button" id="clearBtn">換一個檔案</button>
+      </div>
+
+      <p class="hint mt-1" id="statusText"></p>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>為什麼沒有顯示頁面縮圖</h2>
+    <p>要畫出 PDF 的內容縮圖，需要再多載入一個好幾百 KB 的渲染引擎，會讓頁面變慢很多。這個工具只用到輕量的 PDF 編輯功能，所以用<strong>頁碼方塊配上旋轉角度標示</strong>來操作。每一頁目前轉了幾度、會不會被刪掉，卡片上都看得到，實務上足夠用。</p>
+
+    <h2>旋轉是永久的嗎</h2>
+    <p>是。這裡改的是 PDF 檔案裡記錄的頁面旋轉屬性，存檔之後任何閱讀軟體打開都會是轉正的樣子，跟你在閱讀器裡「暫時轉一下畫面」不一樣——那種操作關掉就沒了。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>原本的檔案會被改到嗎？</summary>
+        <div class="a">不會。工具只讀取你的檔案，處理結果是另存成一個新檔下載，原檔完全不動。</div>
+      </details>
+      <details>
+        <summary>可以調整頁面順序嗎？</summary>
+        <div class="a">可以，每張卡片下面的左右箭頭就能把那一頁往前或往後移。移動後的頁碼會即時更新，最後存檔就是你看到的順序。</div>
+      </details>
+      <details>
+        <summary>刪掉的頁面可以救回來嗎？</summary>
+        <div class="a">存檔前都可以。標成刪除的卡片會變淡但還在，再按一次垃圾桶就取消刪除。只有按下「套用並下載」之後，輸出的新檔才會真的不包含那些頁。</div>
+      </details>
+      <details>
+        <summary>有密碼的 PDF 呢？</summary>
+        <div class="a">有開啟密碼的檔案沒辦法處理，請先用原本的閱讀軟體解除密碼另存一份再上來。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc, bytes, download } = window.U;
+
+  let srcBytes = null;
+  let srcName = '';
+  /* 每一頁的狀態：src 是它在原始檔的索引，rot 是相對原本再轉幾度 */
+  let pages = [];
+
+  /* ---------- 選檔 ---------- */
+  const drop = $('#drop');
+  const input = $('#fileInput');
+
+  drop.addEventListener('click', () => input.click());
+  drop.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
+  });
+  ['dragenter', 'dragover'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('is-over'); }));
+  ['dragleave', 'drop'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('is-over'); }));
+
+  drop.addEventListener('drop', e => loadFile(e.dataTransfer.files[0]));
+  input.addEventListener('change', e => loadFile(e.target.files[0]));
+
+  async function loadFile(file) {
+    if (!file) return;
+    if (file.type !== 'application/pdf' && !/\.pdf$/i.test(file.name)) {
+      window.toast('請選擇 PDF 檔');
+      return;
+    }
+
+    $('#statusText').textContent = '讀取中…';
+    try {
+      srcBytes = await file.arrayBuffer();
+      const doc = await PDFLib.PDFDocument.load(srcBytes);
+      const n = doc.getPageCount();
+      srcName = file.name.replace(/\.pdf$/i, '');
+
+      pages = Array.from({ length: n }, (_, i) => ({ src: i, rot: 0, del: false }));
+
+      $('#fileInfo').innerHTML =
+        `<strong>${esc(file.name)}</strong>　共 ${n} 頁．${bytes(file.size)}`;
+      $('#editor').classList.remove('hidden');
+      $('#statusText').textContent = '';
+      render();
+    } catch (e) {
+      $('#statusText').textContent =
+        /encrypt/i.test(e.message) ? '這個檔案有密碼保護，無法處理' : '讀取失敗：檔案可能損毀';
+      window.toast('讀取失敗');
+    }
+  }
+
+  /* ---------- 畫面 ---------- */
+  function render() {
+    $('#pages').innerHTML = pages.map((p, i) => `
+      <div class="pcard ${p.del ? 'is-del' : ''}">
+        <div class="pthumb">
+          ${p.rot ? `<span class="rot-tag">${p.rot}°</span>` : ''}
+          <span style="transform:rotate(${p.rot}deg)">${p.src + 1}</span>
+        </div>
+        <div class="pcard__no">${p.del ? '將刪除' : `第 ${i + 1} 頁`}</div>
+        <div class="pcard__acts">
+          <button class="mini-btn" type="button" data-l="${i}" title="左轉 90 度" aria-label="左轉 90 度">↺</button>
+          <button class="mini-btn" type="button" data-r="${i}" title="右轉 90 度" aria-label="右轉 90 度">↻</button>
+          <button class="mini-btn ${p.del ? 'on' : ''}" type="button" data-d="${i}"
+                  title="${p.del ? '取消刪除' : '刪除這一頁'}" aria-label="刪除這一頁">🗑</button>
+        </div>
+        <div class="pcard__acts" style="margin-top:3px">
+          <button class="mini-btn" type="button" data-mu="${i}" ${i === 0 ? 'disabled' : ''}
+                  title="往前移" aria-label="往前移">←</button>
+          <button class="mini-btn" type="button" data-md="${i}" ${i === pages.length - 1 ? 'disabled' : ''}
+                  title="往後移" aria-label="往後移">→</button>
+        </div>
+      </div>`).join('');
+
+    const keep = pages.filter(p => !p.del);
+    $('#sKeep').textContent = keep.length;
+    $('#sDel').textContent = pages.length - keep.length;
+    $('#sRot').textContent = pages.filter(p => p.rot !== 0).length;
+    $('#saveBtn').disabled = keep.length === 0;
+  }
+
+  $('#pages').addEventListener('click', e => {
+    const btn = e.target.closest('button[data-l],button[data-r],button[data-d],button[data-mu],button[data-md]');
+    if (!btn) return;
+    const d = btn.dataset;
+
+    if (d.l !== undefined) {
+      const p = pages[+d.l];
+      p.rot = (p.rot + 270) % 360;         // 左轉等於右轉 270
+    } else if (d.r !== undefined) {
+      const p = pages[+d.r];
+      p.rot = (p.rot + 90) % 360;
+    } else if (d.d !== undefined) {
+      const p = pages[+d.d];
+      p.del = !p.del;
+    } else if (d.mu !== undefined) {
+      const i = +d.mu;
+      [pages[i - 1], pages[i]] = [pages[i], pages[i - 1]];
+    } else if (d.md !== undefined) {
+      const i = +d.md;
+      [pages[i + 1], pages[i]] = [pages[i], pages[i + 1]];
+    }
+    render();
+  });
+
+  $('#rotAllL').addEventListener('click', () => {
+    pages.forEach(p => { p.rot = (p.rot + 270) % 360; });
+    render();
+  });
+  $('#rotAllR').addEventListener('click', () => {
+    pages.forEach(p => { p.rot = (p.rot + 90) % 360; });
+    render();
+  });
+  $('#resetBtn').addEventListener('click', () => {
+    pages.sort((a, b) => a.src - b.src);
+    pages.forEach(p => { p.rot = 0; p.del = false; });
+    render();
+  });
+
+  /* ---------- 存檔 ---------- */
+  $('#saveBtn').addEventListener('click', async () => {
+    const keep = pages.filter(p => !p.del);
+    if (!keep.length) return;
+
+    $('#saveBtn').disabled = true;
+    $('#statusText').textContent = '處理中…';
+
+    try {
+      const src = await PDFLib.PDFDocument.load(srcBytes);
+      const out = await PDFLib.PDFDocument.create();
+
+      const copied = await out.copyPages(src, keep.map(p => p.src));
+
+      copied.forEach((page, i) => {
+        const extra = keep[i].rot;
+        if (extra) {
+          /* 在原本的旋轉角度上再疊加，掃描檔本身就帶角度時才不會轉錯 */
+          const base = page.getRotation().angle || 0;
+          page.setRotation(PDFLib.degrees((base + extra) % 360));
+        }
+        out.addPage(page);
+      });
+
+      out.setProducer('順手工具箱');
+      const data = await out.save();
+      download(new Blob([data], { type: 'application/pdf' }), `${srcName}_已整理.pdf`);
+
+      $('#statusText').textContent = `完成，輸出 ${keep.length} 頁`;
+      window.toast('處理完成');
+    } catch (e) {
+      $('#statusText').textContent = '處理失敗：' + e.message;
+    }
+
+    $('#saveBtn').disabled = false;
+  });
+
+  $('#clearBtn').addEventListener('click', () => {
+    srcBytes = null;
+    pages = [];
+    input.value = '';
+    $('#editor').classList.add('hidden');
+    $('#statusText').textContent = '';
+  });
+})();
+</script>
+</body>
+</html>

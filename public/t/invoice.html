@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>統一發票對獎｜可查歷史期別，也能自己輸入號碼 - 順手工具箱</title>
+<meta name="description" content="免費統一發票對獎工具，一次貼上多張發票號碼即可比對中獎號碼，可切換最近多期期別並提示兌獎期限，也支援自行輸入中獎號碼對獎。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧾</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .tabs { display: flex; gap: 6px; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
+  .tab {
+    padding: 9px 18px; border: 0; background: none; cursor: pointer;
+    font: inherit; font-size: .93rem; font-weight: 600; color: var(--ink-3);
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+  }
+  .tab.is-on { color: var(--brand); border-bottom-color: var(--brand); }
+
+  .period-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 10px; padding: 12px 15px;
+    background: var(--accent-wash); border-radius: var(--radius-sm); margin-bottom: 14px;
+  }
+  .period-bar strong { font-size: 1.05rem; color: var(--accent); }
+  .period-bar.expired { background: var(--brand-wash); }
+  .period-bar.expired strong { color: var(--brand-ink); }
+
+  .expire-note {
+    padding: 11px 15px; border-radius: var(--radius-sm);
+    font-size: .9rem; margin-bottom: 14px; font-weight: 600;
+  }
+  .expire-note.ok { background: rgba(47,125,79,.12); color: var(--ok); }
+  .expire-note.soon { background: var(--brand-wash); color: var(--brand-ink); }
+  .expire-note.gone { background: rgba(192,57,43,.12); color: var(--danger); }
+
+  .prize-row {
+    display: grid; grid-template-columns: 116px 1fr; gap: 12px; align-items: center;
+    padding: 9px 12px; border-bottom: 1px solid var(--border);
+  }
+  .prize-row:last-child { border-bottom: 0; }
+  .prize-row b { font-size: .88rem; }
+  .prize-row b small { display: block; color: var(--ink-3); font-weight: 400; font-size: .76rem; }
+  .prize-nums { display: flex; flex-wrap: wrap; gap: 8px; }
+  .prize-nums code {
+    font-family: var(--mono); font-size: 1.05rem; font-weight: 700;
+    background: var(--bg-sunk); padding: 3px 10px; border-radius: 5px; letter-spacing: 1px;
+  }
+  .prize-nums code i { font-style: normal; color: var(--brand); }
+
+  .result-row {
+    display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center;
+    padding: 11px 14px; border: 1px solid var(--border);
+    border-radius: var(--radius-sm); background: var(--surface); margin-bottom: 7px;
+  }
+  .result-row.win { border-color: var(--ok); background: rgba(47,125,79,.08); }
+  .result-row.bad { border-color: var(--warn); }
+  .result-row__num { font-family: var(--mono); font-size: 1.05rem; font-weight: 700; letter-spacing: 1px; }
+  .result-row__tag { font-weight: 700; font-size: .92rem; }
+  .result-row.win .result-row__tag { color: var(--ok); }
+  .result-row:not(.win) .result-row__tag { color: var(--ink-3); font-weight: 500; }
+
+  .manual-grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+  .manual-grid input { font-family: var(--mono); letter-spacing: 1px; }
+
+  .no-data {
+    text-align: center; padding: 28px 18px;
+    background: var(--surface-2); border: 1px dashed var(--border-strong);
+    border-radius: var(--radius);
+  }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/invoice.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="發票, 對獎, 統一發票, 中獎號碼, 兌獎">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="統一發票對獎｜可查歷史期別，也能自己輸入號碼 - 順手工具箱">
+<meta property="og:description" content="免費統一發票對獎工具，一次貼上多張發票號碼即可比對中獎號碼，可切換最近多期期別並提示兌獎期限，也支援自行輸入中獎號碼對獎。">
+<meta property="og:url" content="https://tools.luka-life.com/t/invoice.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="統一發票對獎｜可查歷史期別，也能自己輸入號碼 - 順手工具箱">
+<meta name="twitter:description" content="免費統一發票對獎工具，一次貼上多張發票號碼即可比對中獎號碼，可切換最近多期期別並提示兌獎期限，也支援自行輸入中獎號碼對獎。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "統一發票對獎",
+  "description": "免費統一發票對獎工具，一次貼上多張發票號碼即可比對中獎號碼，可切換最近多期期別並提示兌獎期限，也支援自行輸入中獎號碼對獎。",
+  "url": "https://tools.luka-life.com/t/invoice.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "台灣生活",
+      "item": "https://tools.luka-life.com/#tw"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "統一發票對獎",
+      "item": "https://tools.luka-life.com/t/invoice.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "一張發票會同時中好幾個獎嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會重複領。如果同時符合多個獎項的條件，以獎金最高的那一個計算。這個工具也是照這個規則，每張發票只顯示最高的那一獎。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "可以查更早以前的期別嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "下拉選單裡是系統自動收集的最近幾期。更早的期別請切到「自己輸入中獎號碼」，從財政部網站查到號碼後填進去就能對。不過要提醒你，那些期別幾乎確定已經過了兌獎期限，只能知道有沒有中，領不到獎金。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "電子發票載具要怎麼對？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "存在載具裡的發票不需要手動對。你可以在財政部的電子發票 App 或網站設定自動匯款帳戶，中獎會直接匯到你的帳戶，完全不用自己核對，也不會忘記兌獎。這個工具主要是給有紙本發票的人用的。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "我的號碼會被記錄嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會。對獎完全在你的瀏覽器裡完成，號碼沒有送到任何伺服器，重新整理就消失了。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="invoice">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🧾</span>統一發票對獎</h1>
+    <p class="lede">一疊發票一張張核對很容易看花。把號碼全部貼進來，中了哪一獎直接標給你看。</p>
+  </div>
+
+  <div class="panel">
+    <div class="tabs" role="tablist">
+      <button class="tab is-on" type="button" data-tab="auto" role="tab">選期別對獎</button>
+      <button class="tab" type="button" data-tab="manual" role="tab">自己輸入中獎號碼</button>
+    </div>
+
+    <!-- 選期別 -->
+    <div id="panel-auto">
+      <div id="autoBody"></div>
+    </div>
+
+    <!-- 自行輸入 -->
+    <div id="panel-manual" class="hidden">
+      <p class="hint mb-2">
+        從財政部網站或發票背面抄下中獎號碼填進來，就能對獎。
+        <strong>適合查很舊的期別</strong>，或是資料還沒更新的時候。
+      </p>
+
+      <div class="field">
+        <label for="mPeriod">期別名稱（自由填寫，只用來顯示）</label>
+        <input type="text" id="mPeriod" placeholder="例如 115年01-02月" maxlength="30">
+      </div>
+
+      <div class="manual-grid mb-2">
+        <div class="field mb-0">
+          <label for="mSpecial">特別獎（1,000 萬）</label>
+          <input type="text" id="mSpecial" inputmode="numeric" maxlength="8" placeholder="8 位數字">
+        </div>
+        <div class="field mb-0">
+          <label for="mGrand">特獎（200 萬）</label>
+          <input type="text" id="mGrand" inputmode="numeric" maxlength="8" placeholder="8 位數字">
+        </div>
+      </div>
+
+      <div class="manual-grid mb-2">
+        <div class="field mb-0">
+          <label for="mFirst1">頭獎第 1 組</label>
+          <input type="text" id="mFirst1" inputmode="numeric" maxlength="8" placeholder="8 位數字">
+        </div>
+        <div class="field mb-0">
+          <label for="mFirst2">頭獎第 2 組</label>
+          <input type="text" id="mFirst2" inputmode="numeric" maxlength="8" placeholder="8 位數字">
+        </div>
+        <div class="field mb-0">
+          <label for="mFirst3">頭獎第 3 組</label>
+          <input type="text" id="mFirst3" inputmode="numeric" maxlength="8" placeholder="8 位數字">
+        </div>
+        <div class="field mb-0">
+          <label for="mExtra">增開六獎（可空白）</label>
+          <input type="text" id="mExtra" maxlength="40" placeholder="3 位數字，多組用逗號分隔">
+        </div>
+      </div>
+
+      <p class="hint" id="manualState"></p>
+    </div>
+  </div>
+
+  <div class="panel hidden" id="checkPanel">
+    <div class="field">
+      <label for="nums">你的發票號碼（一行一張，只要後 8 碼數字）</label>
+      <textarea id="nums" rows="8" spellcheck="false"
+                placeholder="12345678&#10;87654321&#10;也可以連英文字軌一起貼，例如 AB-12345678"></textarea>
+      <p class="hint">英文字軌、減號、空白都會自動忽略，只取數字比對。</p>
+    </div>
+
+    <div class="btn-group mb-2">
+      <button class="btn btn--lg" type="button" id="checkBtn">開始對獎</button>
+      <button class="btn btn--ghost btn--lg" type="button" id="clearBtn">清空</button>
+    </div>
+
+    <div class="stat-row mb-2 hidden" id="summary">
+      <div class="stat"><div class="stat__num" id="sTotal">0</div><div class="stat__label">對獎張數</div></div>
+      <div class="stat"><div class="stat__num" id="sWin">0</div><div class="stat__label">中獎張數</div></div>
+      <div class="stat"><div class="stat__num" id="sAmount">0</div><div class="stat__label">總獎金（元）</div></div>
+    </div>
+
+    <div id="results"></div>
+  </div>
+
+  <div class="note note--warn">
+    <strong>對獎結果僅供參考，請以財政部公告為準。</strong>中獎發票務必<strong>保留正本</strong>，領獎需要正本與身分證明文件。
+    頁面顯示的兌獎期限是依開獎日推算的，實際期間以官方公告為準。
+    <span id="sourceLine"></span>
+  </div>
+
+  <section class="prose">
+    <h2>怎麼對才不會漏掉</h2>
+    <p>統一發票的中獎規則是<strong>從後面往前比對</strong>，這是最多人搞錯的地方：</p>
+    <ul>
+      <li><strong>特別獎與特獎</strong>：號碼<strong>八位數全部相同</strong>才中。</li>
+      <li><strong>頭獎</strong>：八位數全部相同。</li>
+      <li><strong>二獎到六獎</strong>：跟<strong>頭獎號碼</strong>比對末幾碼——末七碼中二獎、末六碼中三獎，依此類推到末三碼中六獎。</li>
+    </ul>
+    <p>所以一張發票只要末三碼跟任何一組頭獎號碼的末三碼相同，至少就中了 200 元。很多人只看前面幾碼對不上就丟掉，其實是白白損失。</p>
+
+    <h2>兌獎期限怎麼算</h2>
+    <p>領獎期間是<strong>開獎日的次月 6 日起算三個月</strong>。以一到二月期為例，三月二十五日開獎，領獎期間就是四月六日到七月五日。過了期限，就算對中了也領不到錢。</p>
+    <p>這一頁會自動幫每個期別推算期限並標示狀態：還在期限內會顯示綠色，快到期顯示橘色，已過期則會用紅色明確告訴你<strong>這期已經不能領了</strong>，避免空歡喜一場。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>一張發票會同時中好幾個獎嗎？</summary>
+        <div class="a">不會重複領。如果同時符合多個獎項的條件，<strong>以獎金最高的那一個計算</strong>。這個工具也是照這個規則，每張發票只顯示最高的那一獎。</div>
+      </details>
+      <details>
+        <summary>可以查更早以前的期別嗎？</summary>
+        <div class="a">下拉選單裡是系統自動收集的最近幾期。更早的期別請切到「自己輸入中獎號碼」，從財政部網站查到號碼後填進去就能對。不過要提醒你，那些期別幾乎確定已經過了兌獎期限，只能知道有沒有中，領不到獎金。</div>
+      </details>
+      <details>
+        <summary>電子發票載具要怎麼對？</summary>
+        <div class="a">存在載具裡的發票不需要手動對。你可以在財政部的電子發票 App 或網站設定<strong>自動匯款帳戶</strong>，中獎會直接匯到你的帳戶，完全不用自己核對，也不會忘記兌獎。這個工具主要是給有紙本發票的人用的。</div>
+      </details>
+      <details>
+        <summary>我的號碼會被記錄嗎？</summary>
+        <div class="a">不會。對獎完全在你的瀏覽器裡完成，號碼沒有送到任何伺服器，重新整理就消失了。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, esc } = window.U;
+
+  /* 獎項規則：matchLen 是要比對的末幾碼，from 指出號碼來源 */
+  const RULES = [
+    { name: '特別獎',  amount: 10000000, matchLen: 8, from: 'special' },
+    { name: '特獎',    amount: 2000000,  matchLen: 8, from: 'grand' },
+    { name: '頭獎',    amount: 200000,   matchLen: 8, from: 'first' },
+    { name: '二獎',    amount: 40000,    matchLen: 7, from: 'first' },
+    { name: '三獎',    amount: 10000,    matchLen: 6, from: 'first' },
+    { name: '四獎',    amount: 4000,     matchLen: 5, from: 'first' },
+    { name: '五獎',    amount: 1000,     matchLen: 4, from: 'first' },
+    { name: '六獎',    amount: 200,      matchLen: 3, from: 'first' },
+    { name: '增開六獎', amount: 200,     matchLen: 3, from: 'additional6' }
+  ];
+
+  let DATA = null;        // 資料檔內容
+  let active = null;      // 目前使用的 { period, prizes }
+  let mode = 'auto';
+
+  /* ---------- 兌獎期限推算 ----------
+     規則：開獎日為期別結束月的次月 25 日，
+     領獎期間自開獎日之次月 6 日起算三個月（到第三個月的 5 日）。 */
+  function claimWindow(periodLabel) {
+    const m = /(\d{3})年(\d{2})-(\d{2})月/.exec(periodLabel || '');
+    if (!m) return null;
+
+    const year = Number(m[1]) + 1911;
+    const endMonth = Number(m[3]);          // 1-12
+
+    // JS 的 Date 會自動處理月份溢位跨年
+    const draw = new Date(year, endMonth, 25);            // 次月 25 日
+    const start = new Date(year, endMonth + 1, 6);        // 再次月 6 日
+    const end = new Date(year, endMonth + 4, 5);          // 起算三個月後的 5 日
+
+    return { draw, start, end };
+  }
+
+  const fmtDate = d => `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}`;
+
+  function expiryInfo(periodLabel) {
+    const w = claimWindow(periodLabel);
+    if (!w) return null;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const daysLeft = Math.round((w.end - today) / 86400000);
+
+    if (daysLeft < 0) {
+      return {
+        cls: 'gone',
+        text: `⚠️ 這一期的兌獎期限已於 ${fmtDate(w.end)} 截止，即使對中也無法領獎。`,
+        window: w
+      };
+    }
+    if (today < w.start) {
+      return {
+        cls: 'ok',
+        text: `兌獎期間為 ${fmtDate(w.start)} 至 ${fmtDate(w.end)}，尚未開始領獎。`,
+        window: w
+      };
+    }
+    if (daysLeft <= 30) {
+      return {
+        cls: 'soon',
+        text: `⏳ 兌獎期限至 ${fmtDate(w.end)}，只剩 ${daysLeft} 天，中獎的話盡快去領。`,
+        window: w
+      };
+    }
+    return {
+      cls: 'ok',
+      text: `兌獎期限至 ${fmtDate(w.end)}，還有 ${daysLeft} 天。`,
+      window: w
+    };
+  }
+
+  /* ---------- 載入資料檔 ---------- */
+  async function loadData() {
+    try {
+      const res = await fetch('../assets/data/invoice.json', { cache: 'no-cache' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const json = await res.json();
+
+      const list = Array.isArray(json.periods) ? json.periods.filter(valid) : [];
+      DATA = list.length ? { ...json, periods: list } : null;
+    } catch (e) {
+      DATA = null;
+    }
+    renderAuto();
+  }
+
+  function valid(p) {
+    return p && p.prizes && /^\d{8}$/.test(p.prizes.special || '')
+      && Array.isArray(p.prizes.first) && p.prizes.first.some(n => /^\d{8}$/.test(n));
+  }
+
+  /* ---------- 選期別分頁 ---------- */
+  function renderAuto() {
+    if (!DATA) {
+      $('#autoBody').innerHTML = `
+        <div class="no-data">
+          <p style="font-size:1.05rem;font-weight:700;margin-bottom:6px">中獎號碼尚未載入</p>
+          <p class="small muted" style="max-width:48ch;margin-inline:auto">
+            資料檔還沒有內容，所以這裡沒有可選的期別。<br>
+            <strong>你還是可以對獎</strong>——切到上面的「自己輸入中獎號碼」分頁，
+            從財政部網站抄下號碼填進去即可。
+          </p>
+          <p class="mt-2">
+            <a class="btn" href="https://invoice.etax.nat.gov.tw/" target="_blank" rel="noopener">
+              前往財政部查中獎號碼
+            </a>
+          </p>
+        </div>`;
+      if (mode === 'auto') $('#checkPanel').classList.add('hidden');
+      return;
+    }
+
+    const options = DATA.periods.map((p, i) => {
+      const info = expiryInfo(p.period);
+      const tag = info ? ({ gone: '（已過期）', soon: '（即將到期）', ok: '' })[info.cls] : '';
+      return `<option value="${i}">${esc(p.period)}${tag}</option>`;
+    }).join('');
+
+    $('#autoBody').innerHTML = `
+      <div class="field">
+        <label for="periodSelect">選擇期別</label>
+        <select id="periodSelect">${options}</select>
+      </div>
+      <div id="periodDetail"></div>`;
+
+    $('#periodSelect').addEventListener('change', e => selectPeriod(+e.target.value));
+    selectPeriod(0);
+
+    $('#sourceLine').innerHTML = DATA.updatedAt
+      ? `資料更新於 ${esc(DATA.updatedAt)}，來源：${esc(DATA.source || '財政部')}。`
+      : '';
+  }
+
+  function selectPeriod(i) {
+    active = DATA.periods[i];
+    const info = expiryInfo(active.period);
+
+    $('#periodDetail').innerHTML =
+      `<div class="period-bar ${info && info.cls === 'gone' ? 'expired' : ''}">
+         <div>
+           <strong>${esc(active.period)}</strong>
+           <div class="small muted">中獎號碼</div>
+         </div>
+       </div>` +
+      (info ? `<div class="expire-note ${info.cls}">${esc(info.text)}</div>` : '') +
+      prizeTable(active.prizes);
+
+    $('#checkPanel').classList.remove('hidden');
+    rerunIfNeeded();
+  }
+
+  /* 把末三碼標色，呼應六獎的比對規則 */
+  function hl(n) {
+    if (!/^\d{8}$/.test(n)) return esc(n);
+    return esc(n.slice(0, 5)) + '<i>' + esc(n.slice(5)) + '</i>';
+  }
+
+  function prizeTable(p) {
+    const rows = [];
+    const row = (name, note, nums, highlight) =>
+      `<div class="prize-row">
+         <b>${esc(name)}<small>${esc(note)}</small></b>
+         <div class="prize-nums">${nums.map(n =>
+           `<code>${highlight ? hl(n) : esc(n)}</code>`).join('')}</div>
+       </div>`;
+
+    if (p.special) rows.push(row('特別獎', '1,000 萬元．八碼全中', [p.special], false));
+    if (p.grand) rows.push(row('特獎', '200 萬元．八碼全中', [p.grand], false));
+    if (p.first && p.first.length) {
+      rows.push(row('頭獎', '20 萬元．末幾碼對應二至六獎', p.first, true));
+    }
+    if (p.additional6 && p.additional6.length) {
+      rows.push(row('增開六獎', '200 元．末三碼相同', p.additional6, false));
+    }
+    return rows.join('');
+  }
+
+  /* ---------- 自行輸入分頁 ---------- */
+  function readManual() {
+    const clean = sel => ($(sel).value || '').replace(/\D/g, '').slice(-8);
+
+    const prizes = {
+      special: clean('#mSpecial'),
+      grand: clean('#mGrand'),
+      first: [clean('#mFirst1'), clean('#mFirst2'), clean('#mFirst3')]
+        .filter(n => /^\d{8}$/.test(n)),
+      additional6: ($('#mExtra').value || '')
+        .split(/[\s,，、]+/)
+        .map(s => s.replace(/\D/g, ''))
+        .filter(n => /^\d{3}$/.test(n))
+    };
+
+    const hasAny = /^\d{8}$/.test(prizes.special)
+      || /^\d{8}$/.test(prizes.grand)
+      || prizes.first.length > 0
+      || prizes.additional6.length > 0;
+
+    if (!hasAny) {
+      $('#manualState').textContent = '至少要填一組號碼才能對獎。頭獎最重要，二到六獎都是從它推算的。';
+      $('#manualState').style.color = 'var(--ink-3)';
+      active = null;
+      $('#checkPanel').classList.add('hidden');
+      return;
+    }
+
+    const notes = [];
+    if (!prizes.first.length) notes.push('沒有填頭獎，將無法判定二獎到六獎');
+    if (!/^\d{8}$/.test(prizes.special)) notes.push('沒有填特別獎');
+
+    $('#manualState').textContent = notes.length
+      ? '可以對獎了，但：' + notes.join('；')
+      : '號碼齊全，可以對獎了。';
+    $('#manualState').style.color = notes.length ? 'var(--warn)' : 'var(--ok)';
+
+    active = { period: $('#mPeriod').value.trim() || '自訂期別', prizes };
+    $('#checkPanel').classList.remove('hidden');
+    rerunIfNeeded();
+  }
+
+  /* ---------- 對獎 ---------- */
+  function poolFor(from) {
+    const p = active.prizes;
+    if (from === 'special') return p.special ? [p.special] : [];
+    if (from === 'grand') return p.grand ? [p.grand] : [];
+    if (from === 'first') return Array.isArray(p.first) ? p.first : [];
+    if (from === 'additional6') return Array.isArray(p.additional6) ? p.additional6 : [];
+    return [];
+  }
+
+  /* 回傳最高獎項，沒中回傳 null */
+  function checkOne(number) {
+    for (const rule of RULES) {
+      const tail = number.slice(-rule.matchLen);
+      for (const winning of poolFor(rule.from)) {
+        if (winning.slice(-rule.matchLen) === tail) return rule;
+      }
+    }
+    return null;
+  }
+
+  let hasRun = false;
+
+  function run() {
+    if (!active) return;
+
+    const lines = $('#nums').value.split(/\r?\n/);
+    const results = [];
+
+    lines.forEach(line => {
+      const raw = line.trim();
+      if (!raw) return;
+
+      /* 只取數字並用末 8 碼比對，這樣貼上字軌或帶減號都認得 */
+      const digits = raw.replace(/\D/g, '');
+      if (digits.length < 3) {
+        results.push({ raw, bad: '數字太少，無法比對' });
+        return;
+      }
+
+      const num = digits.slice(-8);
+      results.push({ raw, num, prize: checkOne(num), short: digits.length < 8 });
+    });
+
+    if (!results.length) {
+      $('#results').innerHTML = '';
+      $('#summary').classList.add('hidden');
+      window.toast('請先輸入發票號碼');
+      return;
+    }
+
+    hasRun = true;
+    let winCount = 0, total = 0;
+
+    $('#results').innerHTML = results.map(r => {
+      if (r.bad) {
+        return `<div class="result-row bad">
+          <span class="result-row__num">${esc(r.raw)}</span>
+          <span class="result-row__tag" style="color:var(--warn)">${esc(r.bad)}</span>
+        </div>`;
+      }
+
+      if (r.prize) { winCount++; total += r.prize.amount; }
+
+      return `<div class="result-row ${r.prize ? 'win' : ''}">
+        <span class="result-row__num">${esc(r.num)}${
+          r.short ? ' <span class="small muted">（不足 8 碼，僅比對末幾碼）</span>' : ''
+        }</span>
+        <span class="result-row__tag">${
+          r.prize
+            ? `🎉 ${esc(r.prize.name)}　${r.prize.amount.toLocaleString('zh-TW')} 元`
+            : '未中獎'
+        }</span>
+      </div>`;
+    }).join('');
+
+    $('#summary').classList.remove('hidden');
+    $('#sTotal').textContent = results.filter(r => !r.bad).length;
+    $('#sWin').textContent = winCount;
+    $('#sAmount').textContent = total.toLocaleString('zh-TW');
+
+    if (winCount) {
+      const info = expiryInfo(active.period);
+      window.toast(info && info.cls === 'gone'
+        ? `中了 ${winCount} 張，但這期已過兌獎期限`
+        : `恭喜，中了 ${winCount} 張！`);
+    } else {
+      window.toast('這批沒有中獎');
+    }
+  }
+
+  /* 換期別或改號碼時，若已經對過就自動重算一次 */
+  function rerunIfNeeded() {
+    if (hasRun && $('#nums').value.trim()) run();
+  }
+
+  /* ---------- 分頁切換 ---------- */
+  $$('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      $$('.tab').forEach(t => t.classList.toggle('is-on', t === tab));
+      mode = tab.dataset.tab;
+      $('#panel-auto').classList.toggle('hidden', mode !== 'auto');
+      $('#panel-manual').classList.toggle('hidden', mode !== 'manual');
+
+      if (mode === 'auto') {
+        if (DATA) selectPeriod($('#periodSelect') ? +$('#periodSelect').value : 0);
+        else $('#checkPanel').classList.add('hidden');
+      } else {
+        readManual();
+      }
+    });
+  });
+
+  ['#mPeriod', '#mSpecial', '#mGrand', '#mFirst1', '#mFirst2', '#mFirst3', '#mExtra']
+    .forEach(s => $(s).addEventListener('input', readManual));
+
+  $('#checkBtn').addEventListener('click', run);
+  $('#clearBtn').addEventListener('click', () => {
+    $('#nums').value = '';
+    $('#results').innerHTML = '';
+    $('#summary').classList.add('hidden');
+    hasRun = false;
+    $('#nums').focus();
+  });
+
+  loadData();
+})();
+</script>
+</body>
+</html>

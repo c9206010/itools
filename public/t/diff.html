@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>線上文字比對｜逐行找出兩段文字的差異 - 順手工具箱</title>
+<meta name="description" content="免費文字比對工具，貼上兩段文字即可逐行標示新增、刪除與修改處，支援忽略大小寫與空白，校稿、比對合約版本、檢查程式碼都適用。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .diff-inputs { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 720px) { .diff-inputs { grid-template-columns: 1fr; } }
+  .diff-view {
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    overflow: auto; max-height: 560px; background: var(--bg-sunk);
+    font-family: var(--mono); font-size: .86rem; line-height: 1.65;
+  }
+  .dline { display: flex; white-space: pre-wrap; word-break: break-word; }
+  .dline > .n {
+    flex: none; width: 48px; text-align: right; padding: 0 9px;
+    color: var(--ink-3); background: rgba(128,128,128,.07);
+    user-select: none; font-size: .78rem;
+  }
+  .dline > .c { flex: 1 1 auto; padding: 0 10px; min-width: 0; }
+  .dline.add { background: rgba(47, 125, 79, .14); }
+  .dline.add .c::before { content: "+ "; color: var(--ok); font-weight: 700; }
+  .dline.del { background: rgba(192, 57, 43, .13); }
+  .dline.del .c::before { content: "− "; color: var(--danger); font-weight: 700; }
+  .dline.same .c::before { content: "  "; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: .84rem; color: var(--ink-3); }
+  .legend i { display: inline-block; width: 11px; height: 11px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/diff.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="比對, 差異, diff, 對照, 比較">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="線上文字比對｜逐行找出兩段文字的差異 - 順手工具箱">
+<meta property="og:description" content="免費文字比對工具，貼上兩段文字即可逐行標示新增、刪除與修改處，支援忽略大小寫與空白，校稿、比對合約版本、檢查程式碼都適用。">
+<meta property="og:url" content="https://tools.luka-life.com/t/diff.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="線上文字比對｜逐行找出兩段文字的差異 - 順手工具箱">
+<meta name="twitter:description" content="免費文字比對工具，貼上兩段文字即可逐行標示新增、刪除與修改處，支援忽略大小寫與空白，校稿、比對合約版本、檢查程式碼都適用。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "文字比對",
+  "description": "免費文字比對工具，貼上兩段文字即可逐行標示新增、刪除與修改處，支援忽略大小寫與空白，校稿、比對合約版本、檢查程式碼都適用。",
+  "url": "https://tools.luka-life.com/t/diff.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "文字處理",
+      "item": "https://tools.luka-life.com/#text"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "文字比對",
+      "item": "https://tools.luka-life.com/t/diff.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "可以比對到字元層級嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "目前是以「行」為單位比對。一行裡只改了兩個字，整行會標成一刪一增。想看更細的差異，可以把長段落先斷成短句再比。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "文字量有限制嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "幾千行都沒問題。比對的計算量會隨行數成長，如果貼進上萬行可能會卡個一兩秒，建議分段處理。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "內容會外傳嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會。比對完全在你的瀏覽器裡跑，合約、程式碼、個資貼進來都不會送到任何伺服器。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="diff">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🔍</span>文字比對</h1>
+    <p class="lede">兩份文件到底改了哪裡，貼上去一眼就知道。綠色是新增、紅色是刪除，沒變的維持原色。</p>
+  </div>
+
+  <div class="panel">
+    <div class="diff-inputs mb-2">
+      <div class="field mb-0">
+        <label for="textA">原始文字</label>
+        <textarea id="textA" rows="10" spellcheck="false" placeholder="貼上原本的內容"></textarea>
+      </div>
+      <div class="field mb-0">
+        <label for="textB">修改後文字</label>
+        <textarea id="textB" rows="10" spellcheck="false" placeholder="貼上新版的內容"></textarea>
+      </div>
+    </div>
+
+    <div class="chips mb-2">
+      <label class="chip"><input type="checkbox" id="ignoreCase" hidden> 忽略大小寫</label>
+      <label class="chip"><input type="checkbox" id="ignoreSpace" hidden> 忽略頭尾空白</label>
+      <label class="chip"><input type="checkbox" id="onlyDiff" hidden> 只顯示有差異的行</label>
+    </div>
+
+    <div class="btn-group mb-2">
+      <button class="btn" type="button" id="runBtn">開始比對</button>
+      <button class="btn btn--ghost" type="button" id="swapBtn">左右對調</button>
+      <button class="btn btn--ghost" type="button" id="clearBtn">清空</button>
+    </div>
+
+    <div class="stat-row mb-2">
+      <div class="stat"><div class="stat__num" id="cAdd">0</div><div class="stat__label">新增行</div></div>
+      <div class="stat"><div class="stat__num" id="cDel">0</div><div class="stat__label">刪除行</div></div>
+      <div class="stat"><div class="stat__num" id="cSame">0</div><div class="stat__label">相同行</div></div>
+    </div>
+
+    <p class="legend mb-1">
+      <span><i style="background:rgba(47,125,79,.45)"></i>新增</span>
+      <span><i style="background:rgba(192,57,43,.4)"></i>刪除</span>
+      <span><i style="background:rgba(128,128,128,.2)"></i>未變動</span>
+    </p>
+    <div class="diff-view" id="view" aria-live="polite"></div>
+  </div>
+
+  <section class="prose">
+    <h2>它怎麼判斷差異</h2>
+    <p>工具用的是<strong>最長共同子序列</strong>的演算法，先找出兩段文字裡「順序相同且沒被改動」的行，剩下的就是新增或刪除。這比單純一行對一行比較聰明——在中間插入一段之後，後面的內容不會整片被誤判成全部改過。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>可以比對到字元層級嗎？</summary>
+        <div class="a">目前是以「行」為單位比對。一行裡只改了兩個字，整行會標成一刪一增。想看更細的差異，可以把長段落先斷成短句再比。</div>
+      </details>
+      <details>
+        <summary>文字量有限制嗎？</summary>
+        <div class="a">幾千行都沒問題。比對的計算量會隨行數成長，如果貼進上萬行可能會卡個一兩秒，建議分段處理。</div>
+      </details>
+      <details>
+        <summary>內容會外傳嗎？</summary>
+        <div class="a">不會。比對完全在你的瀏覽器裡跑，合約、程式碼、個資貼進來都不會送到任何伺服器。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, esc } = window.U;
+
+  document.querySelectorAll('.chip input').forEach(cb => {
+    cb.addEventListener('change', () => {
+      cb.parentElement.classList.toggle('is-on', cb.checked);
+      run();
+    });
+  });
+
+  /* 正規化：依設定決定比較時要不要忽略大小寫與頭尾空白 */
+  function norm(line) {
+    let s = line;
+    if ($('#ignoreSpace').checked) s = s.trim();
+    if ($('#ignoreCase').checked) s = s.toLowerCase();
+    return s;
+  }
+
+  /* 最長共同子序列，回傳合併後的差異列表 */
+  function diffLines(a, b) {
+    const n = a.length, m = b.length;
+    const na = a.map(norm), nb = b.map(norm);
+
+    /* DP 表：lcs[i][j] = a 前 i 行與 b 前 j 行的最長共同長度 */
+    const lcs = Array.from({ length: n + 1 }, () => new Uint32Array(m + 1));
+    for (let i = n - 1; i >= 0; i--) {
+      for (let j = m - 1; j >= 0; j--) {
+        lcs[i][j] = na[i] === nb[j]
+          ? lcs[i + 1][j + 1] + 1
+          : Math.max(lcs[i + 1][j], lcs[i][j + 1]);
+      }
+    }
+
+    /* 回溯組出結果 */
+    const out = [];
+    let i = 0, j = 0;
+    while (i < n && j < m) {
+      if (na[i] === nb[j]) {
+        out.push({ type: 'same', text: a[i], la: i + 1, lb: j + 1 });
+        i++; j++;
+      } else if (lcs[i + 1][j] >= lcs[i][j + 1]) {
+        out.push({ type: 'del', text: a[i], la: i + 1 });
+        i++;
+      } else {
+        out.push({ type: 'add', text: b[j], lb: j + 1 });
+        j++;
+      }
+    }
+    while (i < n) out.push({ type: 'del', text: a[i], la: ++i });
+    while (j < m) out.push({ type: 'add', text: b[j], lb: ++j });
+
+    return out;
+  }
+
+  function run() {
+    const a = $('#textA').value.split(/\r?\n/);
+    const b = $('#textB').value.split(/\r?\n/);
+
+    if (!$('#textA').value && !$('#textB').value) {
+      $('#view').innerHTML = '';
+      $('#cAdd').textContent = $('#cDel').textContent = $('#cSame').textContent = '0';
+      return;
+    }
+
+    const result = diffLines(a, b);
+    let add = 0, del = 0, same = 0;
+    result.forEach(r => {
+      if (r.type === 'add') add++;
+      else if (r.type === 'del') del++;
+      else same++;
+    });
+
+    $('#cAdd').textContent = add;
+    $('#cDel').textContent = del;
+    $('#cSame').textContent = same;
+
+    const onlyDiff = $('#onlyDiff').checked;
+    const rows = result
+      .filter(r => !onlyDiff || r.type !== 'same')
+      .map(r => {
+        const num = r.type === 'add' ? r.lb : r.la;
+        return `<div class="dline ${r.type}"><span class="n">${num}</span><span class="c">${esc(r.text) || '&nbsp;'}</span></div>`;
+      });
+
+    $('#view').innerHTML = rows.length
+      ? rows.join('')
+      : '<div class="dline same"><span class="n"></span><span class="c">兩段文字完全相同</span></div>';
+  }
+
+  $('#runBtn').addEventListener('click', run);
+  $('#textA').addEventListener('input', run);
+  $('#textB').addEventListener('input', run);
+
+  $('#swapBtn').addEventListener('click', () => {
+    const t = $('#textA').value;
+    $('#textA').value = $('#textB').value;
+    $('#textB').value = t;
+    run();
+  });
+
+  $('#clearBtn').addEventListener('click', () => {
+    $('#textA').value = $('#textB').value = '';
+    run();
+  });
+})();
+</script>
+</body>
+</html>

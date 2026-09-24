@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>油錢與里程計算｜算油耗、單趟油錢與分攤 - 順手工具箱</title>
+<meta name="description" content="免費油錢計算工具，用加油紀錄算出實際油耗，估算一趟路要花多少油錢，並支援多人分攤與來回程計算，出遊前抓預算很方便。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⛽</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .tabs { display: flex; gap: 6px; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  .tab {
+    padding: 9px 18px; border: 0; background: none; cursor: pointer;
+    font: inherit; font-size: .93rem; font-weight: 600; color: var(--ink-3);
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+  }
+  .tab.is-on { color: var(--brand); border-bottom-color: var(--brand); }
+  .big-num { font-size: clamp(1.7rem, 1rem + 2.6vw, 2.6rem); font-weight: 800; color: var(--brand); line-height: 1.2; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/fuel.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="油錢, 油耗, 公里, 加油, 里程, 分攤">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="油錢與里程計算｜算油耗、單趟油錢與分攤 - 順手工具箱">
+<meta property="og:description" content="免費油錢計算工具，用加油紀錄算出實際油耗，估算一趟路要花多少油錢，並支援多人分攤與來回程計算，出遊前抓預算很方便。">
+<meta property="og:url" content="https://tools.luka-life.com/t/fuel.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="油錢與里程計算｜算油耗、單趟油錢與分攤 - 順手工具箱">
+<meta name="twitter:description" content="免費油錢計算工具，用加油紀錄算出實際油耗，估算一趟路要花多少油錢，並支援多人分攤與來回程計算，出遊前抓預算很方便。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "油錢與里程計算",
+  "description": "免費油錢計算工具，用加油紀錄算出實際油耗，估算一趟路要花多少油錢，並支援多人分攤與來回程計算，出遊前抓預算很方便。",
+  "url": "https://tools.luka-life.com/t/fuel.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "台灣生活",
+      "item": "https://tools.luka-life.com/#tw"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "油錢與里程計算",
+      "item": "https://tools.luka-life.com/t/fuel.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "油耗要算幾次才準？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "至少連續記錄三到四次加滿，取平均會比較穩定。單次計算容易受到那段期間路況的影響——如果那陣子剛好都在市區塞車，算出來會偏低。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "電動車可以用這個算嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不行，電動車的單位是「每度電跑幾公里」，計算邏輯不同。這個工具是給汽油與柴油車用的。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "分攤要不要把過路費算進去？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "上面有欄位可以填，會一起納入分攤。實務上常見的做法是油錢與過路費一起均分，車主不另外收折舊費用；如果是長途或很頻繁的共乘，有些人會加計一點磨損費，這就看彼此的默契了。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "油價要填多少？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "填你實際加的那個油品當天的價格。台灣油價每週調整，各家加油站也會有優惠價差，最準的方式是看上次加油的收據，或用第二個分頁直接從「加油金額 ÷ 公升數」換算出你實際付的單價。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="fuel">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">⛽</span>油錢與里程計算</h1>
+    <p class="lede">這趟路開下去要花多少油錢、幾個人怎麼分，出發前先算清楚比較不會有話講。</p>
+  </div>
+
+  <div class="panel">
+    <div class="tabs" role="tablist">
+      <button class="tab is-on" type="button" data-tab="trip" role="tab">算這趟油錢</button>
+      <button class="tab" type="button" data-tab="mpg" role="tab">算我的車油耗</button>
+    </div>
+
+    <!-- 算油錢 -->
+    <div id="panel-trip">
+      <div class="row mb-2">
+        <div class="field mb-0">
+          <label for="distance">單程距離（公里）</label>
+          <input type="number" id="distance" value="120" min="0" step="0.1">
+        </div>
+        <div class="field mb-0">
+          <label for="mpg">油耗（公里／公升）</label>
+          <input type="number" id="mpg" value="14" min="0.1" step="0.1">
+        </div>
+        <div class="field mb-0">
+          <label for="price">油價（元／公升）</label>
+          <input type="number" id="price" value="30" min="0" step="0.1">
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="field mb-0">
+          <label for="roundTrip">行程</label>
+          <select id="roundTrip">
+            <option value="1">單程</option>
+            <option value="2" selected>來回</option>
+          </select>
+        </div>
+        <div class="field mb-0">
+          <label for="people">分攤人數</label>
+          <input type="number" id="people" value="4" min="1" max="50" step="1">
+        </div>
+        <div class="field mb-0">
+          <label for="toll">過路費與停車費（元）</label>
+          <input type="number" id="toll" value="0" min="0" step="10">
+        </div>
+      </div>
+
+      <div class="tc mb-2">
+        <div class="big-num" id="perPerson">—</div>
+        <div class="small muted">每人分攤</div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat"><div class="stat__num" id="totalKm">—</div><div class="stat__label">總里程</div></div>
+        <div class="stat"><div class="stat__num" id="liters">—</div><div class="stat__label">耗油量</div></div>
+        <div class="stat"><div class="stat__num" id="fuelCost">—</div><div class="stat__label">油錢</div></div>
+        <div class="stat"><div class="stat__num" id="grandTotal">—</div><div class="stat__label">總支出</div></div>
+      </div>
+
+      <p class="hint mt-2" id="tripNote"></p>
+    </div>
+
+    <!-- 算油耗 -->
+    <div id="panel-mpg" class="hidden">
+      <p class="hint mb-2">
+        最準的做法：<strong>加滿油</strong>後把里程表歸零（或記下數字），正常開一段時間，下次<strong>再加滿</strong>時記錄跑了幾公里、加了幾公升。
+      </p>
+
+      <div class="row mb-2">
+        <div class="field mb-0">
+          <label for="km">這段期間跑了（公里）</label>
+          <input type="number" id="km" value="420" min="0" step="1">
+        </div>
+        <div class="field mb-0">
+          <label for="fuelUsed">加滿花了（公升）</label>
+          <input type="number" id="fuelUsed" value="30" min="0.1" step="0.1">
+        </div>
+        <div class="field mb-0">
+          <label for="paid">這次加油金額（元）</label>
+          <input type="number" id="paid" value="900" min="0" step="10">
+        </div>
+      </div>
+
+      <div class="tc mb-2">
+        <div class="big-num" id="mpgResult">—</div>
+        <div class="small muted">實際油耗（公里／公升）</div>
+      </div>
+
+      <div class="stat-row mb-2">
+        <div class="stat"><div class="stat__num" id="costPerKm">—</div><div class="stat__label">每公里成本</div></div>
+        <div class="stat"><div class="stat__num" id="pricePerL">—</div><div class="stat__label">換算油價</div></div>
+        <div class="stat"><div class="stat__num" id="per100">—</div><div class="stat__label">每百公里耗油</div></div>
+      </div>
+
+      <button class="btn" type="button" id="useMpg">把這個油耗帶到「算這趟油錢」</button>
+      <p class="hint mt-1" id="mpgNote"></p>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>為什麼實際油耗跟原廠公布的差很多</h2>
+    <p>原廠的油耗數字是在實驗室的標準測試條件下跑出來的，現實中幾乎不可能複製。影響最大的幾個因素：</p>
+    <ul>
+      <li><strong>市區還是高速</strong>：走走停停最耗油，高速公路定速最省。同一台車差距可以到三成以上。</li>
+      <li><strong>冷氣</strong>：夏天全開會明顯增加負擔。</li>
+      <li><strong>載重與胎壓</strong>：滿載乘客行李，或胎壓不足，油耗都會變差。</li>
+      <li><strong>駕駛習慣</strong>：急加速急煞車是油耗殺手。</li>
+    </ul>
+    <p>所以想抓準預算，用自己實際加油紀錄算出來的油耗最可靠，這也是第二個分頁的用途。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>油耗要算幾次才準？</summary>
+        <div class="a">至少連續記錄三到四次加滿，取平均會比較穩定。單次計算容易受到那段期間路況的影響——如果那陣子剛好都在市區塞車，算出來會偏低。</div>
+      </details>
+      <details>
+        <summary>電動車可以用這個算嗎？</summary>
+        <div class="a">不行，電動車的單位是「每度電跑幾公里」，計算邏輯不同。這個工具是給汽油與柴油車用的。</div>
+      </details>
+      <details>
+        <summary>分攤要不要把過路費算進去？</summary>
+        <div class="a">上面有欄位可以填，會一起納入分攤。實務上常見的做法是油錢與過路費一起均分，車主不另外收折舊費用；如果是長途或很頻繁的共乘，有些人會加計一點磨損費，這就看彼此的默契了。</div>
+      </details>
+      <details>
+        <summary>油價要填多少？</summary>
+        <div class="a">填你實際加的那個油品當天的價格。台灣油價每週調整，各家加油站也會有優惠價差，最準的方式是看上次加油的收據，或用第二個分頁直接從「加油金額 ÷ 公升數」換算出你實際付的單價。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$ } = window.U;
+
+  const money = n => Math.round(n).toLocaleString('zh-TW') + ' 元';
+  const num = (n, d = 1) => Number(n.toFixed(d)).toLocaleString('zh-TW');
+
+  /* ---------- 算這趟油錢 ---------- */
+  function calcTrip() {
+    const dist = Math.max(0, Number($('#distance').value) || 0);
+    const mpg = Math.max(0.1, Number($('#mpg').value) || 0.1);
+    const price = Math.max(0, Number($('#price').value) || 0);
+    const trips = Number($('#roundTrip').value);
+    const people = Math.max(1, Math.floor(Number($('#people').value) || 1));
+    const toll = Math.max(0, Number($('#toll').value) || 0);
+
+    const totalKm = dist * trips;
+    const liters = totalKm / mpg;
+    const fuelCost = liters * price;
+    const grand = fuelCost + toll;
+
+    $('#totalKm').textContent = num(totalKm) + ' km';
+    $('#liters').textContent = num(liters) + ' L';
+    $('#fuelCost').textContent = money(fuelCost);
+    $('#grandTotal').textContent = money(grand);
+    $('#perPerson').textContent = money(grand / people);
+
+    $('#tripNote').textContent = people > 1
+      ? `${people} 人分攤，每人 ${money(grand / people)}（含過路費與停車費 ${money(toll)}）。`
+      : `總支出 ${money(grand)}，其中油錢 ${money(fuelCost)}。`;
+  }
+
+  /* ---------- 算油耗 ---------- */
+  function calcMpg() {
+    const km = Math.max(0, Number($('#km').value) || 0);
+    const used = Math.max(0.1, Number($('#fuelUsed').value) || 0.1);
+    const paid = Math.max(0, Number($('#paid').value) || 0);
+
+    const mpg = km / used;
+    const unitPrice = paid / used;
+    const perKm = km > 0 ? paid / km : 0;
+
+    $('#mpgResult').textContent = num(mpg, 2);
+    $('#costPerKm').textContent = perKm.toFixed(2) + ' 元';
+    $('#pricePerL').textContent = unitPrice.toFixed(2) + ' 元';
+    $('#per100').textContent = mpg > 0 ? num(100 / mpg, 2) + ' L' : '—';
+
+    /* 給個粗略的參考評語，幫使用者判斷數字合不合理 */
+    let judge;
+    if (mpg >= 20) judge = '相當省油，多半是小車、油電車或以高速路段為主。';
+    else if (mpg >= 14) judge = '一般家用車的常見範圍。';
+    else if (mpg >= 9) judge = '偏耗油，可能是大車、常跑市區，或冷氣使用較多。';
+    else judge = '這個數字偏低，確認一下里程與公升數是否填反了。';
+
+    $('#mpgNote').textContent = judge;
+    calcMpg.value = mpg;
+  }
+
+  /* ---------- 分頁 ---------- */
+  $$('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      $$('.tab').forEach(t => t.classList.toggle('is-on', t === tab));
+      $('#panel-trip').classList.toggle('hidden', tab.dataset.tab !== 'trip');
+      $('#panel-mpg').classList.toggle('hidden', tab.dataset.tab !== 'mpg');
+    });
+  });
+
+  $('#useMpg').addEventListener('click', () => {
+    if (!calcMpg.value || !isFinite(calcMpg.value)) return;
+    $('#mpg').value = calcMpg.value.toFixed(2);
+
+    /* 順便把換算出來的實際油價也帶過去，估算會更貼近現實 */
+    const used = Math.max(0.1, Number($('#fuelUsed').value) || 0.1);
+    const paid = Math.max(0, Number($('#paid').value) || 0);
+    if (paid > 0) $('#price').value = (paid / used).toFixed(1);
+
+    calcTrip();
+    $$('.tab')[0].click();
+    window.toast('已帶入油耗與油價');
+  });
+
+  ['#distance', '#mpg', '#price', '#roundTrip', '#people', '#toll'].forEach(s =>
+    $(s).addEventListener('input', calcTrip));
+  ['#km', '#fuelUsed', '#paid'].forEach(s =>
+    $(s).addEventListener('input', calcMpg));
+
+  calcTrip();
+  calcMpg();
+})();
+</script>
+</body>
+</html>

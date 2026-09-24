@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UUID 產生器｜批次產生 v4 唯一識別碼 - 順手工具箱</title>
+<meta name="description" content="免費 UUID 產生器，一次批次產生多組 v4 隨機唯一識別碼，可切換大小寫、去除連字號或加上大括號，開發測試建立主鍵很方便。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🆔</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/uuid.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="uuid, guid, 唯一識別碼, 產生">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="UUID 產生器｜批次產生 v4 唯一識別碼 - 順手工具箱">
+<meta property="og:description" content="免費 UUID 產生器，一次批次產生多組 v4 隨機唯一識別碼，可切換大小寫、去除連字號或加上大括號，開發測試建立主鍵很方便。">
+<meta property="og:url" content="https://tools.luka-life.com/t/uuid.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="UUID 產生器｜批次產生 v4 唯一識別碼 - 順手工具箱">
+<meta name="twitter:description" content="免費 UUID 產生器，一次批次產生多組 v4 隨機唯一識別碼，可切換大小寫、去除連字號或加上大括號，開發測試建立主鍵很方便。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "UUID 產生器",
+  "description": "免費 UUID 產生器，一次批次產生多組 v4 隨機唯一識別碼，可切換大小寫、去除連字號或加上大括號，開發測試建立主鍵很方便。",
+  "url": "https://tools.luka-life.com/t/uuid.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "開發編碼",
+      "item": "https://tools.luka-life.com/#dev"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "UUID 產生器",
+      "item": "https://tools.luka-life.com/t/uuid.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "v1、v4、v7 差在哪？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "v1 含有時間戳與網卡位址，可以排序但會洩漏機器資訊；v4 是純隨機，最通用也最常見；v7 是較新的版本，開頭帶時間戳所以可以照時間排序，同時保有隨機性，很適合當資料庫主鍵。這個工具產生的是 v4。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "可以當資料庫主鍵嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以，而且在分散式系統裡很常見，因為不需要跟中央伺服器要號。要注意的是 v4 完全隨機，拿來當有序索引的主鍵時，寫入效能會比遞增整數差一些，資料量很大時可以考慮改用 v7 或 ULID。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "一次最多能產生幾組？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "1000 組。需要更多的話按幾次再合併，或是直接在自己的程式裡用 crypto.randomUUID() 產生。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="uuid">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🆔</span>UUID 產生器</h1>
+    <p class="lede">需要一堆不會重複的識別碼時就用它。一次可以產生好幾百組，格式也能照你的專案習慣調整。</p>
+  </div>
+
+  <div class="panel">
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="qty">產生數量</label>
+        <input type="number" id="qty" value="10" min="1" max="1000" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="fmt">格式</label>
+        <select id="fmt">
+          <option value="std">標準（8-4-4-4-12）</option>
+          <option value="nodash">去掉連字號</option>
+          <option value="brace">加上大括號</option>
+          <option value="urn">URN 格式</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label for="caseOpt">大小寫</label>
+        <select id="caseOpt">
+          <option value="lower">小寫</option>
+          <option value="upper">大寫</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="btn-group mb-2">
+      <button class="btn" type="button" id="genBtn">產生</button>
+      <button class="btn btn--ghost" type="button" id="copyBtn">全部複製</button>
+      <button class="btn btn--ghost" type="button" id="downloadBtn">下載 txt</button>
+    </div>
+
+    <div class="field">
+      <label>結果<span class="muted small" id="countInfo"></span></label>
+      <textarea id="out" rows="14" spellcheck="false" readonly></textarea>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>UUID v4 是怎麼保證不重複的</h2>
+    <p>嚴格來說它<strong>不保證</strong>，只是重複的機率低到可以忽略。v4 的 128 個位元裡有 122 個是隨機的，換算下來即使每秒產生十億組，要跑上好幾十年才有機會撞到一次。實務上直接當成唯一值使用是安全的。</p>
+    <p>這個工具用的是瀏覽器的密碼學等級亂數來源，不是一般的 <code>Math.random</code>，所以產生的值既不可預測也分布均勻。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>v1、v4、v7 差在哪？</summary>
+        <div class="a">v1 含有時間戳與網卡位址，可以排序但會洩漏機器資訊；v4 是純隨機，最通用也最常見；v7 是較新的版本，開頭帶時間戳所以可以照時間排序，同時保有隨機性，很適合當資料庫主鍵。這個工具產生的是 <strong>v4</strong>。</div>
+      </details>
+      <details>
+        <summary>可以當資料庫主鍵嗎？</summary>
+        <div class="a">可以，而且在分散式系統裡很常見，因為不需要跟中央伺服器要號。要注意的是 v4 完全隨機，拿來當有序索引的主鍵時，寫入效能會比遞增整數差一些，資料量很大時可以考慮改用 v7 或 ULID。</div>
+      </details>
+      <details>
+        <summary>一次最多能產生幾組？</summary>
+        <div class="a">1000 組。需要更多的話按幾次再合併，或是直接在自己的程式裡用 <code>crypto.randomUUID()</code> 產生。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $ } = window.U;
+
+  /* 優先用原生 randomUUID，沒有時自己依 RFC 4122 組一組 v4 */
+  function makeUUID() {
+    if (crypto.randomUUID) return crypto.randomUUID();
+
+    const b = new Uint8Array(16);
+    crypto.getRandomValues(b);
+    b[6] = (b[6] & 0x0f) | 0x40;   // 版本 4
+    b[8] = (b[8] & 0x3f) | 0x80;   // variant 10xx
+
+    const hex = Array.from(b, x => x.toString(16).padStart(2, '0')).join('');
+    return [
+      hex.slice(0, 8), hex.slice(8, 12), hex.slice(12, 16),
+      hex.slice(16, 20), hex.slice(20)
+    ].join('-');
+  }
+
+  function format(id) {
+    const fmt = $('#fmt').value;
+    let s = id;
+    if (fmt === 'nodash') s = s.replace(/-/g, '');
+    else if (fmt === 'brace') s = '{' + s + '}';
+    else if (fmt === 'urn') s = 'urn:uuid:' + s;
+    return $('#caseOpt').value === 'upper' ? s.toUpperCase() : s.toLowerCase();
+  }
+
+  function generate() {
+    let n = Math.floor(Number($('#qty').value) || 1);
+    n = Math.max(1, Math.min(1000, n));
+    $('#qty').value = n;
+
+    const list = Array.from({ length: n }, () => format(makeUUID()));
+    $('#out').value = list.join('\n');
+    $('#countInfo').textContent = `　共 ${n} 組`;
+  }
+
+  $('#genBtn').addEventListener('click', generate);
+  ['#fmt', '#caseOpt'].forEach(s => $(s).addEventListener('change', generate));
+  $('#qty').addEventListener('keydown', e => { if (e.key === 'Enter') generate(); });
+
+  $('#copyBtn').addEventListener('click', () => {
+    if (!$('#out').value) return window.toast('還沒有產生');
+    window.copyText($('#out').value, '已全部複製');
+  });
+
+  $('#downloadBtn').addEventListener('click', () => {
+    if (!$('#out').value) return window.toast('還沒有產生');
+    window.U.download(new Blob([$('#out').value], { type: 'text/plain;charset=utf-8' }), 'uuid.txt');
+  });
+
+  generate();
+})();
+</script>
+</body>
+</html>

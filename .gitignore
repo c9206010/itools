@@ -1,0 +1,17 @@
+# 作業系統產生的雜物
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# 編輯器
+.vscode/
+.idea/
+*.swp
+
+# Node（這個專案不需要，但萬一之後裝了套件）
+node_modules/
+npm-debug.log*
+
+# 本機測試產物
+*.local
+/tmp/

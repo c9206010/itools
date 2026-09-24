@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>圖片尺寸調整｜指定寬高縮放，可鎖定比例 - 順手工具箱</title>
+<meta name="description" content="免費線上圖片縮放工具，輸入寬高或百分比即可調整圖片尺寸，可鎖定長寬比避免變形，並提供常用社群尺寸預設，全程在瀏覽器完成不上傳。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📐</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .drop {
+    border: 2px dashed var(--border-strong); border-radius: var(--radius-lg);
+    padding: 36px 20px; text-align: center; cursor: pointer;
+    background: var(--surface-2); transition: all .15s ease;
+  }
+  .drop:hover, .drop.is-over { border-color: var(--brand); background: var(--brand-wash); }
+  .drop strong { display: block; font-size: 1.05rem; margin-bottom: 4px; }
+  .preview-wrap {
+    background: var(--bg-sunk); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 14px; text-align: center;
+  }
+  .preview-wrap img { max-height: 320px; margin-inline: auto; border-radius: var(--radius-sm); }
+  .lock-btn {
+    width: 40px; height: 38px; flex: 0 0 auto; align-self: flex-end;
+    border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+    background: var(--surface); cursor: pointer; font-size: 1rem;
+  }
+  .lock-btn.is-on { background: var(--brand); border-color: var(--brand); color: #fff; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/image-resize.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="圖片尺寸, 縮放, resize, 改大小, 解析度">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="圖片尺寸調整｜指定寬高縮放，可鎖定比例 - 順手工具箱">
+<meta property="og:description" content="免費線上圖片縮放工具，輸入寬高或百分比即可調整圖片尺寸，可鎖定長寬比避免變形，並提供常用社群尺寸預設，全程在瀏覽器完成不上傳。">
+<meta property="og:url" content="https://tools.luka-life.com/t/image-resize.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="圖片尺寸調整｜指定寬高縮放，可鎖定比例 - 順手工具箱">
+<meta name="twitter:description" content="免費線上圖片縮放工具，輸入寬高或百分比即可調整圖片尺寸，可鎖定長寬比避免變形，並提供常用社群尺寸預設，全程在瀏覽器完成不上傳。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "圖片尺寸調整",
+  "description": "免費線上圖片縮放工具，輸入寬高或百分比即可調整圖片尺寸，可鎖定長寬比避免變形，並提供常用社群尺寸預設，全程在瀏覽器完成不上傳。",
+  "url": "https://tools.luka-life.com/t/image-resize.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "圖片處理",
+      "item": "https://tools.luka-life.com/#image"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "圖片尺寸調整",
+      "item": "https://tools.luka-life.com/t/image-resize.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "「限制在指定範圍內」跟直接指定寬高差在哪？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "這個模式會等比縮到剛好塞進你給的框框裡，不管圖是直的還是橫的都不會變形也不會超出。批次處理不同方向的照片時特別好用，例如統一限制在 1920×1080 之內。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "會裁切圖片嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會，這個工具只做縮放，完整畫面都會保留。需要裁切的話得用其他工具。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "圖片會上傳嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會。縮放是用瀏覽器的 Canvas 在你自己的裝置上完成的，檔案沒有經過網路。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="image-resize">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">📐</span>圖片尺寸調整</h1>
+    <p class="lede">把圖縮到指定的寬高。鎖定比例就不會壓扁變形，也可以直接套社群平台的常用尺寸。</p>
+  </div>
+
+  <div class="panel">
+    <div class="drop mb-2" id="drop" role="button" tabindex="0">
+      <strong>把圖片拖進來，或點這裡選檔案</strong>
+      <span class="muted small">支援 JPG、PNG、WebP</span>
+      <input type="file" id="fileInput" accept="image/*" hidden>
+    </div>
+
+    <div id="editor" class="hidden">
+      <div class="preview-wrap mb-2">
+        <img id="preview" alt="調整後的圖片預覽">
+        <p class="small muted mt-1 mb-0" id="dims"></p>
+      </div>
+
+      <div class="field">
+        <label for="mode">調整方式</label>
+        <select id="mode">
+          <option value="px">指定像素寬高</option>
+          <option value="pct">依百分比縮放</option>
+          <option value="fit">限制在指定範圍內（等比縮到剛好放得下）</option>
+        </select>
+      </div>
+
+      <div id="modePx">
+        <div class="row row--tight mb-2">
+          <div class="field mb-0">
+            <label for="w">寬度（px）</label>
+            <input type="number" id="w" min="1" max="20000" step="1">
+          </div>
+          <button class="lock-btn is-on" type="button" id="lockBtn"
+                  title="鎖定長寬比" aria-label="鎖定長寬比">🔒</button>
+          <div class="field mb-0">
+            <label for="h">高度（px）</label>
+            <input type="number" id="h" min="1" max="20000" step="1">
+          </div>
+        </div>
+      </div>
+
+      <div id="modePct" class="hidden">
+        <div class="field">
+          <label for="pct">縮放比例：<strong id="pctLabel">100</strong>％</label>
+          <input type="range" id="pct" min="5" max="200" value="100">
+        </div>
+      </div>
+
+      <div id="modeFit" class="hidden">
+        <div class="row row--tight mb-2">
+          <div class="field mb-0">
+            <label for="fitW">最大寬度</label>
+            <input type="number" id="fitW" value="1920" min="1" step="1">
+          </div>
+          <div class="field mb-0">
+            <label for="fitH">最大高度</label>
+            <input type="number" id="fitH" value="1080" min="1" step="1">
+          </div>
+        </div>
+      </div>
+
+      <div class="panel__title">常用尺寸</div>
+      <div class="chips mb-2" id="presets"></div>
+
+      <div class="row mb-2">
+        <div class="field mb-0">
+          <label for="format">輸出格式</label>
+          <select id="format">
+            <option value="keep">維持原格式</option>
+            <option value="image/jpeg">JPG</option>
+            <option value="image/png">PNG</option>
+            <option value="image/webp">WebP</option>
+          </select>
+        </div>
+        <div class="field mb-0">
+          <label for="quality">畫質：<strong id="qLabel">90</strong>％</label>
+          <input type="range" id="quality" min="10" max="100" value="90">
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn--lg" type="button" id="downloadBtn">下載圖片</button>
+        <button class="btn btn--ghost btn--lg" type="button" id="resetBtn">還原原始尺寸</button>
+        <button class="btn btn--ghost btn--lg" type="button" id="clearBtn">換一張</button>
+      </div>
+
+      <p class="hint mt-1" id="sizeInfo"></p>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>放大圖片不會變清楚</h2>
+    <p>把小圖拉大只是把每個像素撐開，<strong>原本沒有的細節不會憑空出現</strong>，結果通常是模糊或有鋸齒。這個工具允許放大到 200%，但實際用途有限，真的需要放大請找原始檔，或使用 AI 超解析度的專門服務。縮小則不會有這個問題，效果很好。</p>
+
+    <h2>鎖定比例是什麼意思</h2>
+    <p>開啟時，你改寬度高度會自動跟著算，圖片維持原本的長寬比例不變形。<strong>關閉之後可以分別指定寬高</strong>，但如果比例跟原圖不同，圖片就會被拉長或壓扁。多數情況建議保持鎖定。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>「限制在指定範圍內」跟直接指定寬高差在哪？</summary>
+        <div class="a">這個模式會<strong>等比縮到剛好塞進你給的框框裡</strong>，不管圖是直的還是橫的都不會變形也不會超出。批次處理不同方向的照片時特別好用，例如統一限制在 1920×1080 之內。</div>
+      </details>
+      <details>
+        <summary>會裁切圖片嗎？</summary>
+        <div class="a">不會，這個工具只做縮放，完整畫面都會保留。需要裁切的話得用其他工具。</div>
+      </details>
+      <details>
+        <summary>圖片會上傳嗎？</summary>
+        <div class="a">不會。縮放是用瀏覽器的 Canvas 在你自己的裝置上完成的，檔案沒有經過網路。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, esc, bytes, download } = window.U;
+
+  const PRESETS = [
+    ['原始尺寸', 0, 0],
+    ['1920 寬', 1920, 0],
+    ['1200 寬', 1200, 0],
+    ['800 寬', 800, 0],
+    ['IG 方形 1080', 1080, 1080],
+    ['IG 直式 1080×1350', 1080, 1350],
+    ['FB 封面 1200×630', 1200, 630],
+    ['YouTube 封面 1280×720', 1280, 720],
+    ['大頭貼 400×400', 400, 400]
+  ];
+
+  let srcImage = null;
+  let srcFile = null;
+  let ratio = 1;
+  let locked = true;
+  let outBlob = null;
+  let outUrl = null;
+
+  /* ---------- 選檔 ---------- */
+  const drop = $('#drop');
+  const input = $('#fileInput');
+
+  drop.addEventListener('click', () => input.click());
+  drop.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
+  });
+  ['dragenter', 'dragover'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('is-over'); }));
+  ['dragleave', 'drop'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('is-over'); }));
+
+  drop.addEventListener('drop', e => {
+    const f = e.dataTransfer.files[0];
+    if (f) loadFile(f);
+  });
+  input.addEventListener('change', e => {
+    const f = e.target.files[0];
+    if (f) loadFile(f);
+  });
+
+  function loadFile(file) {
+    if (!file.type.startsWith('image/')) { window.toast('請選擇圖片檔'); return; }
+
+    srcFile = file;
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+
+    img.onload = () => {
+      srcImage = img;
+      ratio = img.naturalWidth / img.naturalHeight;
+      $('#w').value = img.naturalWidth;
+      $('#h').value = img.naturalHeight;
+      $('#editor').classList.remove('hidden');
+      render();
+    };
+    img.onerror = () => window.toast('圖片讀取失敗');
+    img.src = url;
+  }
+
+  /* ---------- 計算目標尺寸 ---------- */
+  function targetSize() {
+    if (!srcImage) return { w: 0, h: 0 };
+    const ow = srcImage.naturalWidth, oh = srcImage.naturalHeight;
+    const mode = $('#mode').value;
+
+    if (mode === 'pct') {
+      const p = Number($('#pct').value) / 100;
+      return { w: Math.max(1, Math.round(ow * p)), h: Math.max(1, Math.round(oh * p)) };
+    }
+
+    if (mode === 'fit') {
+      const mw = Number($('#fitW').value) || ow;
+      const mh = Number($('#fitH').value) || oh;
+      /* 取兩個方向裡較嚴格的那個縮放比，且不放大 */
+      const scale = Math.min(mw / ow, mh / oh, 1);
+      return { w: Math.max(1, Math.round(ow * scale)), h: Math.max(1, Math.round(oh * scale)) };
+    }
+
+    return {
+      w: Math.max(1, Math.floor(Number($('#w').value) || ow)),
+      h: Math.max(1, Math.floor(Number($('#h').value) || oh))
+    };
+  }
+
+  function outputType() {
+    const v = $('#format').value;
+    if (v !== 'keep') return v;
+    return (srcFile && /^image\/(jpeg|png|webp)$/.test(srcFile.type))
+      ? srcFile.type
+      : 'image/jpeg';
+  }
+
+  /* ---------- 產生結果 ---------- */
+  let pending = null;
+  function render() {
+    if (!srcImage) return;
+    const { w, h } = targetSize();
+
+    const canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+
+    const type = outputType();
+    if (type === 'image/jpeg') {
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, w, h);
+    }
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(srcImage, 0, 0, w, h);
+
+    const q = Number($('#quality').value) / 100;
+
+    /* 連續拖滑桿時只保留最後一次結果 */
+    const token = {};
+    pending = token;
+
+    canvas.toBlob(blob => {
+      if (pending !== token || !blob) return;
+
+      if (outUrl) URL.revokeObjectURL(outUrl);
+      outBlob = blob;
+      outUrl = URL.createObjectURL(blob);
+      $('#preview').src = outUrl;
+
+      $('#dims').textContent =
+        `原始 ${srcImage.naturalWidth}×${srcImage.naturalHeight}　→　輸出 ${w}×${h}`;
+      $('#sizeInfo').textContent =
+        `原始檔案 ${bytes(srcFile.size)}　→　輸出約 ${bytes(blob.size)}`;
+    }, type, type === 'image/png' ? undefined : q);
+  }
+
+  /* ---------- 互動 ---------- */
+  $('#w').addEventListener('input', () => {
+    if (locked && srcImage) {
+      $('#h').value = Math.max(1, Math.round(Number($('#w').value) / ratio));
+    }
+    render();
+  });
+
+  $('#h').addEventListener('input', () => {
+    if (locked && srcImage) {
+      $('#w').value = Math.max(1, Math.round(Number($('#h').value) * ratio));
+    }
+    render();
+  });
+
+  $('#lockBtn').addEventListener('click', () => {
+    locked = !locked;
+    $('#lockBtn').classList.toggle('is-on', locked);
+    $('#lockBtn').textContent = locked ? '🔒' : '🔓';
+    $('#lockBtn').title = locked ? '已鎖定長寬比' : '未鎖定，可分別設定寬高';
+  });
+
+  $('#mode').addEventListener('change', () => {
+    const m = $('#mode').value;
+    $('#modePx').classList.toggle('hidden', m !== 'px');
+    $('#modePct').classList.toggle('hidden', m !== 'pct');
+    $('#modeFit').classList.toggle('hidden', m !== 'fit');
+    render();
+  });
+
+  $('#pct').addEventListener('input', e => {
+    $('#pctLabel').textContent = e.target.value;
+    render();
+  });
+
+  ['#fitW', '#fitH', '#format'].forEach(s =>
+    $(s).addEventListener('input', render));
+
+  $('#quality').addEventListener('input', e => {
+    $('#qLabel').textContent = e.target.value;
+    render();
+  });
+
+  $('#presets').innerHTML = PRESETS.map((p, i) =>
+    `<button class="chip" type="button" data-i="${i}">${esc(p[0])}</button>`).join('');
+
+  $('#presets').addEventListener('click', e => {
+    const btn = e.target.closest('.chip');
+    if (!btn || !srcImage) return;
+    const [, pw, ph] = PRESETS[+btn.dataset.i];
+
+    $('#mode').value = 'px';
+    $('#mode').dispatchEvent(new Event('change'));
+
+    if (!pw) {
+      $('#w').value = srcImage.naturalWidth;
+      $('#h').value = srcImage.naturalHeight;
+    } else if (!ph) {
+      $('#w').value = pw;
+      $('#h').value = Math.round(pw / ratio);
+    } else {
+      /* 有指定長寬的版位，等比縮到剛好放得下，避免變形 */
+      const scale = Math.min(pw / srcImage.naturalWidth, ph / srcImage.naturalHeight);
+      $('#w').value = Math.max(1, Math.round(srcImage.naturalWidth * scale));
+      $('#h').value = Math.max(1, Math.round(srcImage.naturalHeight * scale));
+    }
+    render();
+  });
+
+  $('#downloadBtn').addEventListener('click', () => {
+    if (!outBlob) return window.toast('還沒有結果');
+    const type = outputType();
+    const ext = type === 'image/png' ? '.png' : type === 'image/webp' ? '.webp' : '.jpg';
+    const base = (srcFile.name || 'image').replace(/\.[^.]+$/, '');
+    const { w, h } = targetSize();
+    download(outBlob, `${base}_${w}x${h}${ext}`);
+  });
+
+  $('#resetBtn').addEventListener('click', () => {
+    if (!srcImage) return;
+    $('#mode').value = 'px';
+    $('#mode').dispatchEvent(new Event('change'));
+    $('#w').value = srcImage.naturalWidth;
+    $('#h').value = srcImage.naturalHeight;
+    $('#pct').value = 100;
+    $('#pctLabel').textContent = '100';
+    render();
+  });
+
+  $('#clearBtn').addEventListener('click', () => {
+    if (outUrl) URL.revokeObjectURL(outUrl);
+    srcImage = srcFile = outBlob = null;
+    outUrl = null;
+    input.value = '';
+    $('#editor').classList.add('hidden');
+  });
+})();
+</script>
+</body>
+</html>

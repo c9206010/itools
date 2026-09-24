@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>線上字數統計｜中英文分開計算，含行數段落數 - 順手工具箱</title>
+<meta name="description" content="免費字數統計工具，即時計算總字數、字元數、中文字、英文單字、數字、標點、行數與段落數，還會估算朗讀與閱讀時間，寫作業與投稿字數限制必備。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔠</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/count.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="字數, 統計, word, count, 計算字數">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="線上字數統計｜中英文分開計算，含行數段落數 - 順手工具箱">
+<meta property="og:description" content="免費字數統計工具，即時計算總字數、字元數、中文字、英文單字、數字、標點、行數與段落數，還會估算朗讀與閱讀時間，寫作業與投稿字數限制必備。">
+<meta property="og:url" content="https://tools.luka-life.com/t/count.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="線上字數統計｜中英文分開計算，含行數段落數 - 順手工具箱">
+<meta name="twitter:description" content="免費字數統計工具，即時計算總字數、字元數、中文字、英文單字、數字、標點、行數與段落數，還會估算朗讀與閱讀時間，寫作業與投稿字數限制必備。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "字數統計",
+  "description": "免費字數統計工具，即時計算總字數、字元數、中文字、英文單字、數字、標點、行數與段落數，還會估算朗讀與閱讀時間，寫作業與投稿字數限制必備。",
+  "url": "https://tools.luka-life.com/t/count.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "文字處理",
+      "item": "https://tools.luka-life.com/#text"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "字數統計",
+      "item": "https://tools.luka-life.com/t/count.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Emoji 算幾個字？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "這裡用的是實際的字元數計算，多數 Emoji 會算成 1 個，但部分組合型的 Emoji（例如有膚色或家庭組合的）在底層是由多個字元組成，可能被算成 2 個以上。不同平台的計算方式也不一致，有嚴格限制時建議保留一點餘裕。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "段落數怎麼算的？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "以「空白行」為分隔。連續的文字視為同一段，中間隔了一個或多個空行才算換段。如果你的文章沒有空行，段落數就會是 1。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "文字會被存下來嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會。統計全部在瀏覽器完成，內容不會送出，關掉分頁就沒了。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="count">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🔠</span>字數統計</h1>
+    <p class="lede">邊打邊算。中文字跟英文單字分開計算，投稿、作業、社群貼文有字數限制時最需要。</p>
+  </div>
+
+  <div class="panel">
+    <div class="field">
+      <label for="src">把文字貼進來</label>
+      <textarea id="src" rows="11" spellcheck="false" placeholder="在這裡輸入或貼上文字，下面的數字會即時更新"></textarea>
+    </div>
+
+    <div class="stat-row mb-1">
+      <div class="stat"><div class="stat__num" id="sChars">0</div><div class="stat__label">總字元（含空白）</div></div>
+      <div class="stat"><div class="stat__num" id="sNoSpace">0</div><div class="stat__label">不含空白</div></div>
+      <div class="stat"><div class="stat__num" id="sCjk">0</div><div class="stat__label">中文字</div></div>
+      <div class="stat"><div class="stat__num" id="sWords">0</div><div class="stat__label">英文單字</div></div>
+    </div>
+
+    <div class="stat-row mb-2">
+      <div class="stat"><div class="stat__num" id="sDigits">0</div><div class="stat__label">數字</div></div>
+      <div class="stat"><div class="stat__num" id="sPunct">0</div><div class="stat__label">標點符號</div></div>
+      <div class="stat"><div class="stat__num" id="sLines">0</div><div class="stat__label">行數</div></div>
+      <div class="stat"><div class="stat__num" id="sParas">0</div><div class="stat__label">段落數</div></div>
+    </div>
+
+    <div class="note mb-2">
+      <strong>估算閱讀時間：</strong><span id="readTime">—</span>
+      <strong>朗讀時間：</strong><span id="speakTime">—</span>
+      <div class="small mt-1" style="opacity:.8">以中文每分鐘默讀約 400 字、朗讀約 240 字估算，僅供參考。</div>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn btn--ghost btn--sm" type="button" id="copyBtn">複製文字</button>
+      <button class="btn btn--ghost btn--sm" type="button" id="copyStatBtn">複製統計結果</button>
+      <button class="btn btn--ghost btn--sm" type="button" id="clearBtn">清空</button>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>「總字數」到底該看哪一個</h2>
+    <p>中英文的算法不一樣，很容易搞混：</p>
+    <ul>
+      <li><strong>中文稿件</strong>（作文、投稿、報告）通常看「不含空白的字元數」，或是直接看「中文字」這一欄。</li>
+      <li><strong>英文稿件</strong>看的是「英文單字」數，這才是 word count 的意思。</li>
+      <li><strong>社群平台限制</strong>（例如推文長度）多半算「總字元」，空白跟標點都要計入。</li>
+    </ul>
+    <p>不確定的時候，回頭看一下對方的規定寫的是「字」「字元」還是「words」。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>Emoji 算幾個字？</summary>
+        <div class="a">這裡用的是實際的字元數計算，多數 Emoji 會算成 1 個，但部分組合型的 Emoji（例如有膚色或家庭組合的）在底層是由多個字元組成，可能被算成 2 個以上。不同平台的計算方式也不一致，有嚴格限制時建議保留一點餘裕。</div>
+      </details>
+      <details>
+        <summary>段落數怎麼算的？</summary>
+        <div class="a">以「空白行」為分隔。連續的文字視為同一段，中間隔了一個或多個空行才算換段。如果你的文章沒有空行，段落數就會是 1。</div>
+      </details>
+      <details>
+        <summary>文字會被存下來嗎？</summary>
+        <div class="a">不會。統計全部在瀏覽器完成，內容不會送出，關掉分頁就沒了。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $ } = window.U;
+
+  const src = $('#src');
+
+  /* 中日韓統一表意文字的主要區段 */
+  const CJK = /[一-鿿㐀-䶿豈-﫿]/g;
+  /* 英文單字：連續的英文字母（含撇號與連字號） */
+  const WORDS = /[A-Za-z]+(?:['-][A-Za-z]+)*/g;
+  const DIGITS = /\d/g;
+  /* 常見的中英文標點 */
+  const PUNCT = /[.,;:!?'"()\[\]{}<>\/\\|`~@#$%^&*_+=—–-]|[，。、；：！？「」『』（）【】《》〈〉…—～·]/g;
+
+  function fmtTime(seconds) {
+    if (seconds < 60) return Math.max(1, Math.round(seconds)) + ' 秒';
+    const m = Math.floor(seconds / 60);
+    const s = Math.round(seconds % 60);
+    return s ? `${m} 分 ${s} 秒` : `${m} 分鐘`;
+  }
+
+  function update() {
+    const text = src.value;
+
+    const chars = Array.from(text).length;         // 用 Array.from 正確處理 Emoji 等代理對
+    const noSpace = Array.from(text.replace(/\s/g, '')).length;
+    const cjk = (text.match(CJK) || []).length;
+    const words = (text.match(WORDS) || []).length;
+    const digits = (text.match(DIGITS) || []).length;
+    const punct = (text.match(PUNCT) || []).length;
+
+    const lines = text === '' ? 0 : text.split(/\r?\n/).length;
+    const paras = text.trim() === ''
+      ? 0
+      : text.trim().split(/(?:\r?\n\s*){2,}/).filter(p => p.trim()).length;
+
+    $('#sChars').textContent = chars.toLocaleString();
+    $('#sNoSpace').textContent = noSpace.toLocaleString();
+    $('#sCjk').textContent = cjk.toLocaleString();
+    $('#sWords').textContent = words.toLocaleString();
+    $('#sDigits').textContent = digits.toLocaleString();
+    $('#sPunct').textContent = punct.toLocaleString();
+    $('#sLines').textContent = lines.toLocaleString();
+    $('#sParas').textContent = paras.toLocaleString();
+
+    /* 中文以字計、英文以單字計，一起估算 */
+    const load = cjk + words;
+    if (load === 0) {
+      $('#readTime').textContent = '—';
+      $('#speakTime').textContent = '—';
+    } else {
+      $('#readTime').textContent = fmtTime(load / 400 * 60);
+      $('#speakTime').textContent = fmtTime(load / 240 * 60);
+    }
+  }
+
+  src.addEventListener('input', update);
+
+  $('#copyBtn').addEventListener('click', () => {
+    if (!src.value) { window.toast('還沒有內容'); return; }
+    window.copyText(src.value, '已複製全文');
+  });
+
+  $('#copyStatBtn').addEventListener('click', () => {
+    const rows = [
+      ['總字元（含空白）', '#sChars'], ['不含空白', '#sNoSpace'],
+      ['中文字', '#sCjk'], ['英文單字', '#sWords'],
+      ['數字', '#sDigits'], ['標點符號', '#sPunct'],
+      ['行數', '#sLines'], ['段落數', '#sParas']
+    ].map(([label, sel]) => `${label}：${$(sel).textContent}`).join('\n');
+    window.copyText(rows, '已複製統計結果');
+  });
+
+  $('#clearBtn').addEventListener('click', () => {
+    src.value = '';
+    update();
+    src.focus();
+  });
+
+  update();
+})();
+</script>
+</body>
+</html>

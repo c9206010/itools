@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>線上碼錶｜精準計時，支援分段記錄 - 順手工具箱</title>
+<meta name="description" content="免費線上碼錶，精確到百分之一秒，支援分段計時與單圈時間統計，可複製所有分段紀錄，跑步、練習、實驗計時都適用。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⏱️</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .sw-face { text-align: center; padding: 30px 10px; background: var(--bg-sunk); border-radius: var(--radius-lg); border: 1px solid var(--border); }
+  .sw-digits {
+    font-size: clamp(2.6rem, 1rem + 13vw, 6rem);
+    font-weight: 800; line-height: 1; letter-spacing: -.04em;
+    font-variant-numeric: tabular-nums;
+  }
+  .sw-digits small { font-size: .45em; color: var(--ink-3); font-weight: 700; margin-left: 4px; }
+  .lap-best td { color: var(--ok); font-weight: 700; }
+  .lap-worst td { color: var(--danger); font-weight: 700; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/stopwatch.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="碼錶, stopwatch, 計時, 分段, lap">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="線上碼錶｜精準計時，支援分段記錄 - 順手工具箱">
+<meta property="og:description" content="免費線上碼錶，精確到百分之一秒，支援分段計時與單圈時間統計，可複製所有分段紀錄，跑步、練習、實驗計時都適用。">
+<meta property="og:url" content="https://tools.luka-life.com/t/stopwatch.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="線上碼錶｜精準計時，支援分段記錄 - 順手工具箱">
+<meta name="twitter:description" content="免費線上碼錶，精確到百分之一秒，支援分段計時與單圈時間統計，可複製所有分段紀錄，跑步、練習、實驗計時都適用。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "線上碼錶",
+  "description": "免費線上碼錶，精確到百分之一秒，支援分段計時與單圈時間統計，可複製所有分段紀錄，跑步、練習、實驗計時都適用。",
+  "url": "https://tools.luka-life.com/t/stopwatch.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "時間計時",
+      "item": "https://tools.luka-life.com/#time"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "線上碼錶",
+      "item": "https://tools.luka-life.com/t/stopwatch.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "切到其他分頁還會繼續計時嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "會。計時是記錄開始的時間戳再跟現在比對，不受分頁是否在前景影響，切回來數字一樣準確。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "精確度有多高？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "顯示到百分之一秒。實際精度受限於瀏覽器的畫面更新頻率（一般每秒 60 次），拿來做運動或練習計時綽綽有餘，但不適合需要儀器等級精度的科學測量。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "紀錄可以匯出嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "按「複製紀錄」會把整張表格複製成純文字，貼到記事本或試算表都可以。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="stopwatch">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">⏱️</span>線上碼錶</h1>
+    <p class="lede">精確到百分之一秒。按分段可以記錄每一圈的時間，最快跟最慢的那圈會自動標色。</p>
+  </div>
+
+  <div class="panel">
+    <div class="sw-face mb-2">
+      <div class="sw-digits" id="digits">00:00<small>.00</small></div>
+      <div class="small muted mt-1" id="statusText">按開始計時</div>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn btn--lg" type="button" id="startBtn">開始</button>
+      <button class="btn btn--ghost btn--lg" type="button" id="lapBtn" disabled>分段</button>
+      <button class="btn btn--ghost btn--lg" type="button" id="resetBtn">歸零</button>
+    </div>
+    <p class="hint">空白鍵＝開始／暫停．<code>L</code> 鍵＝分段</p>
+
+    <div class="mt-2 hidden" id="lapsWrap">
+      <div class="panel__title">分段紀錄（<span id="lapCount">0</span>）</div>
+      <div class="table-scroll">
+        <table class="data">
+          <thead><tr><th>第幾段</th><th>單段時間</th><th>累計時間</th></tr></thead>
+          <tbody id="lapBody"></tbody>
+        </table>
+      </div>
+      <button class="btn btn--ghost btn--sm mt-1" type="button" id="copyBtn">複製紀錄</button>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>「單段時間」跟「累計時間」差在哪</h2>
+    <p><strong>單段時間</strong>是從上一次按分段到這一次按分段中間經過的時間，也就是這一圈跑多久；<strong>累計時間</strong>則是從開始計時到現在總共經過多久。練跑要看配速穩不穩，看單段；想知道總成績，看累計。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>切到其他分頁還會繼續計時嗎？</summary>
+        <div class="a">會。計時是記錄開始的時間戳再跟現在比對，不受分頁是否在前景影響，切回來數字一樣準確。</div>
+      </details>
+      <details>
+        <summary>精確度有多高？</summary>
+        <div class="a">顯示到百分之一秒。實際精度受限於瀏覽器的畫面更新頻率（一般每秒 60 次），拿來做運動或練習計時綽綽有餘，但不適合需要儀器等級精度的科學測量。</div>
+      </details>
+      <details>
+        <summary>紀錄可以匯出嗎？</summary>
+        <div class="a">按「複製紀錄」會把整張表格複製成純文字，貼到記事本或試算表都可以。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, pad } = window.U;
+
+  const digits = $('#digits');
+  const startBtn = $('#startBtn');
+  const lapBtn = $('#lapBtn');
+
+  let startAt = 0;      // 本次啟動的時間戳
+  let accumulated = 0;  // 暫停前累積的毫秒
+  let running = false;
+  let raf = null;
+  let laps = [];        // 每段的累計毫秒
+
+  function elapsed() {
+    return accumulated + (running ? Date.now() - startAt : 0);
+  }
+
+  function fmt(ms) {
+    const h = Math.floor(ms / 3600000);
+    const m = Math.floor(ms / 60000) % 60;
+    const s = Math.floor(ms / 1000) % 60;
+    const cs = Math.floor(ms / 10) % 100;
+    return {
+      main: (h > 0 ? pad(h) + ':' : '') + pad(m) + ':' + pad(s),
+      cs: pad(cs)
+    };
+  }
+
+  function paint() {
+    const f = fmt(elapsed());
+    digits.innerHTML = f.main + '<small>.' + f.cs + '</small>';
+  }
+
+  function loop() {
+    paint();
+    if (running) raf = requestAnimationFrame(loop);
+  }
+
+  function toggle() {
+    if (running) {
+      accumulated = elapsed();
+      running = false;
+      cancelAnimationFrame(raf);
+      startBtn.textContent = '繼續';
+      $('#statusText').textContent = '已暫停';
+      paint();
+    } else {
+      startAt = Date.now();
+      running = true;
+      startBtn.textContent = '暫停';
+      lapBtn.disabled = false;
+      $('#statusText').textContent = '計時中';
+      loop();
+    }
+  }
+
+  function addLap() {
+    if (!running && !accumulated) return;
+    laps.push(elapsed());
+    renderLaps();
+  }
+
+  function renderLaps() {
+    $('#lapsWrap').classList.toggle('hidden', laps.length === 0);
+    $('#lapCount').textContent = laps.length;
+
+    /* 算出每段的單段時間，再找出最快與最慢 */
+    const spans = laps.map((t, i) => t - (i ? laps[i - 1] : 0));
+    const fastest = spans.length > 1 ? Math.min(...spans) : null;
+    const slowest = spans.length > 1 ? Math.max(...spans) : null;
+
+    $('#lapBody').innerHTML = laps.map((total, i) => {
+      const span = spans[i];
+      let cls = '';
+      if (fastest !== null && span === fastest) cls = 'lap-best';
+      else if (slowest !== null && span === slowest) cls = 'lap-worst';
+      const a = fmt(span), b = fmt(total);
+      return `<tr class="${cls}">
+        <td>${i + 1}</td>
+        <td class="mono">${a.main}.${a.cs}</td>
+        <td class="mono">${b.main}.${b.cs}</td>
+      </tr>`;
+    }).reverse().join('');
+  }
+
+  function reset() {
+    running = false;
+    cancelAnimationFrame(raf);
+    accumulated = 0;
+    laps = [];
+    startBtn.textContent = '開始';
+    lapBtn.disabled = true;
+    $('#statusText').textContent = '按開始計時';
+    renderLaps();
+    paint();
+  }
+
+  startBtn.addEventListener('click', toggle);
+  lapBtn.addEventListener('click', addLap);
+  $('#resetBtn').addEventListener('click', reset);
+
+  $('#copyBtn').addEventListener('click', () => {
+    if (!laps.length) return;
+    const spans = laps.map((t, i) => t - (i ? laps[i - 1] : 0));
+    const text = ['第幾段\t單段時間\t累計時間'].concat(
+      laps.map((total, i) => {
+        const a = fmt(spans[i]), b = fmt(total);
+        return `${i + 1}\t${a.main}.${a.cs}\t${b.main}.${b.cs}`;
+      })
+    ).join('\n');
+    window.copyText(text, `已複製 ${laps.length} 段紀錄`);
+  });
+
+  document.addEventListener('keydown', e => {
+    if (/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+    if (e.code === 'Space') { e.preventDefault(); toggle(); }
+    if (e.key === 'l' || e.key === 'L') { e.preventDefault(); addLap(); }
+  });
+
+  paint();
+})();
+</script>
+</body>
+</html>

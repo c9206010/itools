@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>分隔線裝飾產生器｜貼文用的線條與外框 - 順手工具箱</title>
+<meta name="description" content="免費分隔線產生器，一鍵做出社群貼文用的線條、虛線、花邊與文字外框，可自訂長度與符號，點一下即可複製貼到 IG、FB 或部落格。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.85em' font-size='80'>〰</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .line-row {
+    display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center;
+    padding: 11px 13px; border: 1px solid var(--border);
+    border-radius: var(--radius-sm); background: var(--surface); margin-bottom: 7px;
+  }
+  .line-row__out {
+    font-family: var(--mono); font-size: .92rem; overflow-x: auto;
+    white-space: nowrap; scrollbar-width: none; min-width: 0;
+  }
+  .line-row__out::-webkit-scrollbar { display: none; }
+  .box-out {
+    font-family: var(--mono); font-size: .92rem; line-height: 1.5;
+    background: var(--bg-sunk); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 14px;
+    white-space: pre; overflow-x: auto;
+  }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/divider.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="分隔線, 裝飾, 線條, 貼文, 排版, 花邊">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="分隔線裝飾產生器｜貼文用的線條與外框 - 順手工具箱">
+<meta property="og:description" content="免費分隔線產生器，一鍵做出社群貼文用的線條、虛線、花邊與文字外框，可自訂長度與符號，點一下即可複製貼到 IG、FB 或部落格。">
+<meta property="og:url" content="https://tools.luka-life.com/t/divider.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="分隔線裝飾產生器｜貼文用的線條與外框 - 順手工具箱">
+<meta name="twitter:description" content="免費分隔線產生器，一鍵做出社群貼文用的線條、虛線、花邊與文字外框，可自訂長度與符號，點一下即可複製貼到 IG、FB 或部落格。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "分隔線裝飾產生器",
+  "description": "免費分隔線產生器，一鍵做出社群貼文用的線條、虛線、花邊與文字外框，可自訂長度與符號，點一下即可複製貼到 IG、FB 或部落格。",
+  "url": "https://tools.luka-life.com/t/divider.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "社群小幫手",
+      "item": "https://tools.luka-life.com/#social"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "分隔線裝飾產生器",
+      "item": "https://tools.luka-life.com/t/divider.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "為什麼有些符號顯示成方框？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "代表那台裝置沒有收錄該符號的字型。製表符號（框線那類）與常見的星號、圓點相容性都很好；比較冷門的裝飾符號在舊手機上風險較高。要給不特定多數人看的內容，挑簡單的比較保險。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "分隔線會影響貼文字數嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "會，每個符號都算一個字元。20 個字元的分隔線就吃掉 20 個額度，IG 貼文上限 2200 字元，放幾條沒問題，但別放太多。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "可以用在部落格文章嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以，不過網頁有正規的做法——用 CSS 畫真正的分隔線，排版才會隨螢幕寬度自動調整。文字符號做的線在手機上可能會被硬生生截斷或換行。社群平台不能寫 CSS 才需要這種做法。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="divider">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">〰️</span>分隔線裝飾產生器</h1>
+    <p class="lede">貼文太長想分段、想把重點框起來，這裡挑一條複製就好，不用自己一個一個符號慢慢打。</p>
+  </div>
+
+  <div class="panel">
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="len">線條長度：<strong id="lenLabel">20</strong> 個字元</label>
+        <input type="range" id="len" min="5" max="50" value="20">
+      </div>
+    </div>
+
+    <div class="panel__title">分隔線（點一下複製）</div>
+    <div id="lines"></div>
+
+    <div class="panel__title mt-2">自訂符號</div>
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="customChar">重複這個符號</label>
+        <input type="text" id="customChar" value="✦" maxlength="8">
+      </div>
+      <div class="field mb-0">
+        <label for="customGap">中間夾</label>
+        <input type="text" id="customGap" value="─" maxlength="8" placeholder="留空表示不夾">
+      </div>
+    </div>
+    <div class="line-row">
+      <div class="line-row__out" id="customOut"></div>
+      <button class="btn btn--ghost btn--sm" type="button" id="copyCustom">複製</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title">文字外框</div>
+    <div class="field">
+      <label for="boxText">要框起來的文字（一行一列）</label>
+      <textarea id="boxText" rows="4" spellcheck="false">本週營業時間
+週一至週五 11:00-20:00
+週六日 10:00-21:00</textarea>
+    </div>
+
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="boxStyle">框線樣式</label>
+        <select id="boxStyle">
+          <option value="single">細線框</option>
+          <option value="double">雙線框</option>
+          <option value="round">圓角框</option>
+          <option value="bold">粗線框</option>
+          <option value="star">星星框</option>
+          <option value="dot">點點框</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label for="boxAlign">文字對齊</label>
+        <select id="boxAlign">
+          <option value="left">靠左</option>
+          <option value="center">置中</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label for="boxPad">左右留白</label>
+        <input type="number" id="boxPad" value="1" min="0" max="6" step="1">
+      </div>
+    </div>
+
+    <div class="box-out mb-2" id="boxOut"></div>
+    <button class="btn" type="button" id="copyBox">複製外框</button>
+  </div>
+
+  <section class="prose">
+    <h2>貼上去對不齊怎麼辦</h2>
+    <p>文字外框在<strong>等寬字型</strong>下才會整齊——每個字元寬度一樣，線條才對得上。程式編輯器、終端機、部分記事本是等寬的，但 <strong>IG、FB、LINE 用的都是比例字型</strong>，中文字比英文字母寬，框線很容易歪掉。</p>
+    <p>實務上的建議：<strong>分隔線在哪裡都很安全</strong>，因為它只有一行；文字外框則建議只放在部落格的程式碼區塊，或是純中文、每行字數相同的短句，歪掉的機率才低。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>為什麼有些符號顯示成方框？</summary>
+        <div class="a">代表那台裝置沒有收錄該符號的字型。製表符號（框線那類）與常見的星號、圓點相容性都很好；比較冷門的裝飾符號在舊手機上風險較高。要給不特定多數人看的內容，挑簡單的比較保險。</div>
+      </details>
+      <details>
+        <summary>分隔線會影響貼文字數嗎？</summary>
+        <div class="a">會，每個符號都算一個字元。20 個字元的分隔線就吃掉 20 個額度，IG 貼文上限 2200 字元，放幾條沒問題，但別放太多。</div>
+      </details>
+      <details>
+        <summary>可以用在部落格文章嗎？</summary>
+        <div class="a">可以，不過網頁有正規的做法——用 CSS 畫真正的分隔線，排版才會隨螢幕寬度自動調整。文字符號做的線在手機上可能會被硬生生截斷或換行。社群平台不能寫 CSS 才需要這種做法。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc } = window.U;
+
+  /* pattern 會被重複到指定長度；cap 是兩端的收尾符號 */
+  const PATTERNS = [
+    { name: '細實線', pattern: '─' },
+    { name: '粗實線', pattern: '━' },
+    { name: '雙實線', pattern: '═' },
+    { name: '虛線', pattern: '┄' },
+    { name: '點線', pattern: '·' },
+    { name: '波浪', pattern: '〜' },
+    { name: '小圓點', pattern: '•' },
+    { name: '星號', pattern: '✦' },
+    { name: '雪花', pattern: '❉' },
+    { name: '菱形', pattern: '◆' },
+    { name: '線加星', pattern: '─✦', cap: '─' },
+    { name: '線加點', pattern: '─•', cap: '─' },
+    { name: '花邊', pattern: '✿ ', cap: '✿' },
+    { name: '愛心線', pattern: '─♥', cap: '─' },
+    { name: '箭頭', pattern: '➤' },
+    { name: '斜線', pattern: '╱' },
+    { name: '格紋', pattern: '▪▫' }
+  ];
+
+  const BOX_STYLES = {
+    single: { tl: '┌', tr: '┐', bl: '└', br: '┘', h: '─', v: '│' },
+    double: { tl: '╔', tr: '╗', bl: '╚', br: '╝', h: '═', v: '║' },
+    round:  { tl: '╭', tr: '╮', bl: '╰', br: '╯', h: '─', v: '│' },
+    bold:   { tl: '┏', tr: '┓', bl: '┗', br: '┛', h: '━', v: '┃' },
+    star:   { tl: '✦', tr: '✦', bl: '✦', br: '✦', h: '─', v: '│' },
+    dot:    { tl: '•', tr: '•', bl: '•', br: '•', h: '·', v: '⋮' }
+  };
+
+  /* 把 pattern 重複到剛好 len 個字元，尾端截齊 */
+  function makeLine(pattern, len, cap) {
+    if (!pattern) return '';
+    const unit = Array.from(pattern);
+    const chars = [];
+    while (chars.length < len) {
+      chars.push(unit[chars.length % unit.length]);
+    }
+    let line = chars.slice(0, len).join('');
+    if (cap) line = line + cap;
+    return line;
+  }
+
+  /* 中文字在多數環境佔兩個字元寬，算框寬時要分開計算 */
+  function displayWidth(str) {
+    let w = 0;
+    for (const ch of str) {
+      w += /[ᄀ-ᅟ⺀-꓏가-힣豈-﫿︰-﹏＀-｠￠-￦]/.test(ch) ? 2 : 1;
+    }
+    return w;
+  }
+
+  function renderLines() {
+    const len = Number($('#len').value);
+    $('#lenLabel').textContent = len;
+
+    $('#lines').innerHTML = PATTERNS.map(p => {
+      const line = makeLine(p.pattern, len, p.cap);
+      return `<div class="line-row">
+        <div class="line-row__out">${esc(line)}</div>
+        <button class="btn btn--ghost btn--sm" type="button" data-copy="${esc(line)}">複製</button>
+      </div>`;
+    }).join('');
+
+    renderCustom();
+  }
+
+  function renderCustom() {
+    const len = Number($('#len').value);
+    const ch = $('#customChar').value || '✦';
+    const gap = $('#customGap').value;
+    const pattern = gap ? ch + gap : ch;
+    const line = makeLine(pattern, len);
+    $('#customOut').textContent = line;
+    $('#copyCustom').dataset.line = line;
+  }
+
+  function renderBox() {
+    const style = BOX_STYLES[$('#boxStyle').value];
+    const pad = Math.max(0, Math.min(6, Number($('#boxPad').value) || 0));
+    const align = $('#boxAlign').value;
+
+    const lines = $('#boxText').value.split(/\r?\n/);
+    if (!lines.length || (lines.length === 1 && !lines[0])) {
+      $('#boxOut').textContent = '（請先輸入文字）';
+      return;
+    }
+
+    const inner = Math.max(...lines.map(displayWidth)) + pad * 2;
+
+    const top = style.tl + style.h.repeat(inner) + style.tr;
+    const bottom = style.bl + style.h.repeat(inner) + style.br;
+
+    const body = lines.map(line => {
+      const w = displayWidth(line);
+      const space = inner - w;
+      let left, right;
+      if (align === 'center') {
+        left = Math.floor(space / 2);
+        right = space - left;
+      } else {
+        left = pad;
+        right = space - pad;
+      }
+      return style.v + ' '.repeat(Math.max(0, left)) + line + ' '.repeat(Math.max(0, right)) + style.v;
+    });
+
+    $('#boxOut').textContent = [top, ...body, bottom].join('\n');
+  }
+
+  $('#len').addEventListener('input', renderLines);
+  $('#customChar').addEventListener('input', renderCustom);
+  $('#customGap').addEventListener('input', renderCustom);
+
+  $('#copyCustom').addEventListener('click', e => {
+    const line = e.currentTarget.dataset.line;
+    if (line) window.copyText(line, '已複製分隔線');
+  });
+
+  ['#boxText', '#boxStyle', '#boxAlign', '#boxPad'].forEach(s =>
+    $(s).addEventListener('input', renderBox));
+
+  $('#copyBox').addEventListener('click', () => {
+    const v = $('#boxOut').textContent;
+    if (!v || v.startsWith('（')) { window.toast('還沒有內容'); return; }
+    window.copyText(v, '已複製外框');
+  });
+
+  renderLines();
+  renderBox();
+})();
+</script>
+</body>
+</html>

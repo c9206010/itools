@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>麥克風與鏡頭測試｜開會前先確認收音與畫面 - 順手工具箱</title>
+<meta name="description" content="免費線上麥克風與視訊鏡頭測試，即時顯示音量波形與畫面預覽，可切換裝置並試錄回放，視訊會議或線上面試前先確認設備正常。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎙️</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .av-grid { display: grid; gap: 18px; grid-template-columns: 1fr 1fr; align-items: start; }
+  @media (max-width: 780px) { .av-grid { grid-template-columns: 1fr; } }
+  video {
+    width: 100%; aspect-ratio: 16/9; object-fit: cover;
+    background: #111; border-radius: var(--radius); display: block;
+  }
+  video.mirror { transform: scaleX(-1); }
+  .meter-wrap { background: var(--bg-sunk); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; }
+  .meter { height: 26px; border-radius: 6px; background: var(--border); overflow: hidden; }
+  .meter i { display: block; height: 100%; width: 0; background: var(--ok); transition: width .06s linear, background .1s ease; }
+  canvas.wave { width: 100%; height: 90px; display: block; margin-top: 10px; border-radius: 6px; background: var(--bg-sunk); }
+  .state {
+    padding: 11px 14px; border-radius: var(--radius-sm);
+    font-size: .9rem; margin-bottom: 12px;
+  }
+  .state.ok { background: rgba(47,125,79,.12); color: var(--ok); font-weight: 600; }
+  .state.err { background: var(--brand-wash); color: var(--danger); font-weight: 600; }
+  .state.idle { background: var(--surface-2); color: var(--ink-3); }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/av-test.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="麥克風, 鏡頭, 視訊, 測試, 收音, webcam">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="麥克風與鏡頭測試｜開會前先確認收音與畫面 - 順手工具箱">
+<meta property="og:description" content="免費線上麥克風與視訊鏡頭測試，即時顯示音量波形與畫面預覽，可切換裝置並試錄回放，視訊會議或線上面試前先確認設備正常。">
+<meta property="og:url" content="https://tools.luka-life.com/t/av-test.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="麥克風與鏡頭測試｜開會前先確認收音與畫面 - 順手工具箱">
+<meta name="twitter:description" content="免費線上麥克風與視訊鏡頭測試，即時顯示音量波形與畫面預覽，可切換裝置並試錄回放，視訊會議或線上面試前先確認設備正常。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "麥克風與鏡頭測試",
+  "description": "免費線上麥克風與視訊鏡頭測試，即時顯示音量波形與畫面預覽，可切換裝置並試錄回放，視訊會議或線上面試前先確認設備正常。",
+  "url": "https://tools.luka-life.com/t/av-test.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "裝置檢測",
+      "item": "https://tools.luka-life.com/#device"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "麥克風與鏡頭測試",
+      "item": "https://tools.luka-life.com/t/av-test.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "瀏覽器沒有跳出權限詢問？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可能是你之前按過「封鎖」。點網址列左邊的鎖頭圖示，找到攝影機與麥克風的權限改成「允許」，然後重新整理頁面。另外這個功能需要 HTTPS 連線，用 http 開啟的網頁不會有權限詢問。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "畫面是黑的但燈有亮？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "通常是鏡頭被其他程式佔用了。先把視訊會議軟體、相機 App 全部關掉再重試——很多軟體即使最小化也還佔著鏡頭。筆電也要確認實體的鏡頭遮蔽蓋有沒有推開。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "為什麼畫面是左右相反的？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "那是刻意的鏡像顯示，讓你看自己時像照鏡子一樣自然，視訊軟體也多半這樣做。對方看到的是正常方向，不用擔心。想看實際方向可以把「鏡像顯示」取消勾選。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "錄音檔可以下載嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "試錄的結果會出現在播放器上，可以在播放器上按右鍵選下載。這段錄音只存在這個分頁的記憶體裡，重新整理就沒了。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="av-test">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🎙️</span>麥克風與鏡頭測試</h1>
+    <p class="lede">視訊會議、線上面試開始前三十秒，先確認對方真的聽得到你、看得到你。</p>
+  </div>
+
+  <div class="note mb-2">
+    <strong>畫面與聲音不會外傳。</strong>影像與音訊只在你的瀏覽器裡處理與顯示，沒有送到任何伺服器，也不會被錄下來（除非你自己按「試錄」，而那段錄音一樣只存在這個分頁裡）。關掉頁面就全部消失。
+  </div>
+
+  <div class="panel">
+    <div class="btn-group mb-2">
+      <button class="btn btn--lg" type="button" id="startBtn">開始測試</button>
+      <button class="btn btn--ghost btn--lg" type="button" id="stopBtn" disabled>停止</button>
+    </div>
+
+    <div class="av-grid">
+      <!-- 鏡頭 -->
+      <div>
+        <div class="panel__title">📷 視訊鏡頭</div>
+        <div class="state idle" id="camState">尚未開始</div>
+        <video id="video" playsinline autoplay muted class="mirror"></video>
+
+        <div class="field mt-1">
+          <label for="camSelect">選擇鏡頭</label>
+          <select id="camSelect" disabled><option>尚未授權</option></select>
+        </div>
+        <label class="small" style="display:flex;align-items:center;gap:8px">
+          <input type="checkbox" id="mirrorChk" checked> 鏡像顯示（跟照鏡子一樣）
+        </label>
+        <p class="hint" id="camInfo"></p>
+      </div>
+
+      <!-- 麥克風 -->
+      <div>
+        <div class="panel__title">🎤 麥克風</div>
+        <div class="state idle" id="micState">尚未開始</div>
+
+        <div class="meter-wrap">
+          <div class="meter"><i id="meterBar"></i></div>
+          <canvas class="wave" id="wave" width="600" height="180"></canvas>
+          <div class="stat-row mt-1">
+            <div class="stat"><div class="stat__num" id="volNow">—</div><div class="stat__label">目前音量</div></div>
+            <div class="stat"><div class="stat__num" id="volPeak">—</div><div class="stat__label">最大音量</div></div>
+          </div>
+        </div>
+
+        <div class="field mt-1">
+          <label for="micSelect">選擇麥克風</label>
+          <select id="micSelect" disabled><option>尚未授權</option></select>
+        </div>
+
+        <div class="btn-group">
+          <button class="btn btn--sm" type="button" id="recBtn" disabled>試錄 5 秒</button>
+          <button class="btn btn--ghost btn--sm" type="button" id="resetPeak">重設最大值</button>
+        </div>
+        <audio id="playback" controls class="mt-1 hidden" style="width:100%"></audio>
+      </div>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>怎麼判斷麥克風正常</h2>
+    <p>正常說話時，音量條應該在<strong>四成到七成之間跳動</strong>，安靜時要掉回接近零。幾種不正常的狀況：</p>
+    <ul>
+      <li><strong>完全不動</strong>：麥克風沒被選到、被靜音，或是系統權限沒開。</li>
+      <li><strong>一直滿格</strong>：增益設太高，對方聽到的會是爆音破聲，到系統設定把麥克風音量調低。</li>
+      <li><strong>安靜時還一直跳</strong>：環境噪音太大或有電流雜訊，換個環境或改用耳麥。</li>
+      <li><strong>要很大聲才有反應</strong>：增益太低，或你離麥克風太遠。</li>
+    </ul>
+    <p>最可靠的驗證還是按「試錄 5 秒」，實際聽聽看自己的聲音是什麼樣子——這跟你自己在腦中聽到的通常差很多。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>瀏覽器沒有跳出權限詢問？</summary>
+        <div class="a">可能是你之前按過「封鎖」。點網址列左邊的鎖頭圖示，找到攝影機與麥克風的權限改成「允許」，然後重新整理頁面。另外這個功能需要 HTTPS 連線，用 http 開啟的網頁不會有權限詢問。</div>
+      </details>
+      <details>
+        <summary>畫面是黑的但燈有亮？</summary>
+        <div class="a">通常是鏡頭被其他程式佔用了。先把視訊會議軟體、相機 App 全部關掉再重試——很多軟體即使最小化也還佔著鏡頭。筆電也要確認實體的鏡頭遮蔽蓋有沒有推開。</div>
+      </details>
+      <details>
+        <summary>為什麼畫面是左右相反的？</summary>
+        <div class="a">那是刻意的鏡像顯示，讓你看自己時像照鏡子一樣自然，視訊軟體也多半這樣做。<strong>對方看到的是正常方向</strong>，不用擔心。想看實際方向可以把「鏡像顯示」取消勾選。</div>
+      </details>
+      <details>
+        <summary>錄音檔可以下載嗎？</summary>
+        <div class="a">試錄的結果會出現在播放器上，可以在播放器上按右鍵選下載。這段錄音只存在這個分頁的記憶體裡，重新整理就沒了。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc } = window.U;
+
+  let stream = null;
+  let audioCtx = null;
+  let analyser = null;
+  let raf = null;
+  let peak = 0;
+  let recorder = null;
+
+  const video = $('#video');
+  const wave = $('#wave');
+  const wctx = wave.getContext('2d');
+
+  function setState(el, cls, text) {
+    el.className = 'state ' + cls;
+    el.textContent = text;
+  }
+
+  async function start() {
+    stop();   // 重新開始前先關掉舊的
+
+    setState($('#camState'), 'idle', '等待授權…');
+    setState($('#micState'), 'idle', '等待授權…');
+
+    const camId = $('#camSelect').value;
+    const micId = $('#micSelect').value;
+
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: camId ? { deviceId: { exact: camId } } : true,
+        audio: micId ? { deviceId: { exact: micId } } : true
+      });
+    } catch (e) {
+      /* 影音一起要不到時，退而求其次分別嘗試，至少讓能用的那個動起來 */
+      const msg = e.name === 'NotAllowedError'
+        ? '你拒絕了權限，或瀏覽器封鎖了這個網站'
+        : e.name === 'NotFoundError'
+          ? '找不到裝置'
+          : '無法開啟：' + e.message;
+
+      setState($('#camState'), 'err', msg);
+      setState($('#micState'), 'err', msg);
+      return;
+    }
+
+    $('#startBtn').disabled = true;
+    $('#stopBtn').disabled = false;
+    $('#recBtn').disabled = false;
+
+    /* 影像 */
+    const vTrack = stream.getVideoTracks()[0];
+    if (vTrack) {
+      video.srcObject = stream;
+      const s = vTrack.getSettings();
+      setState($('#camState'), 'ok', '鏡頭運作中：' + (vTrack.label || '未知裝置'));
+      $('#camInfo').textContent =
+        `解析度 ${s.width || '?'}×${s.height || '?'}　更新率 ${s.frameRate ? Math.round(s.frameRate) + ' fps' : '未知'}`;
+    } else {
+      setState($('#camState'), 'err', '沒有取得視訊軌，鏡頭可能被其他程式佔用');
+    }
+
+    /* 聲音 */
+    const aTrack = stream.getAudioTracks()[0];
+    if (aTrack) {
+      setState($('#micState'), 'ok', '麥克風運作中：' + (aTrack.label || '未知裝置'));
+      setupAudio();
+    } else {
+      setState($('#micState'), 'err', '沒有取得音訊軌');
+    }
+
+    await listDevices();
+  }
+
+  function setupAudio() {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const source = audioCtx.createMediaStreamSource(stream);
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 2048;
+    source.connect(analyser);
+
+    const buf = new Uint8Array(analyser.fftSize);
+
+    function loop() {
+      analyser.getByteTimeDomainData(buf);
+
+      /* 用 RMS 算音量，比取最大值穩定 */
+      let sum = 0;
+      for (let i = 0; i < buf.length; i++) {
+        const v = (buf[i] - 128) / 128;
+        sum += v * v;
+      }
+      const rms = Math.sqrt(sum / buf.length);
+      const level = Math.min(100, rms * 260);      // 放大到比較好讀的範圍
+
+      peak = Math.max(peak, level);
+
+      $('#meterBar').style.width = level + '%';
+      $('#meterBar').style.background =
+        level > 88 ? 'var(--danger)' : level > 65 ? 'var(--warn)' : 'var(--ok)';
+      $('#volNow').textContent = Math.round(level) + '%';
+      $('#volPeak').textContent = Math.round(peak) + '%';
+
+      drawWave(buf);
+      raf = requestAnimationFrame(loop);
+    }
+    loop();
+  }
+
+  function drawWave(buf) {
+    const w = wave.width, h = wave.height;
+    const styles = getComputedStyle(document.body);
+
+    wctx.clearRect(0, 0, w, h);
+    wctx.lineWidth = 2;
+    wctx.strokeStyle = styles.getPropertyValue('--brand').trim() || '#e8562a';
+    wctx.beginPath();
+
+    const step = w / buf.length;
+    for (let i = 0; i < buf.length; i++) {
+      const y = (buf[i] / 128) * (h / 2);
+      const x = i * step;
+      if (i === 0) wctx.moveTo(x, y);
+      else wctx.lineTo(x, y);
+    }
+    wctx.stroke();
+  }
+
+  function stop() {
+    if (raf) cancelAnimationFrame(raf);
+    raf = null;
+
+    if (audioCtx) { audioCtx.close(); audioCtx = null; }
+    if (stream) {
+      stream.getTracks().forEach(t => t.stop());
+      stream = null;
+    }
+    video.srcObject = null;
+
+    $('#startBtn').disabled = false;
+    $('#stopBtn').disabled = true;
+    $('#recBtn').disabled = true;
+    $('#meterBar').style.width = '0';
+    wctx.clearRect(0, 0, wave.width, wave.height);
+  }
+
+  /* 授權後才拿得到裝置名稱，所以在 start 之後才列 */
+  async function listDevices() {
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+
+      const fill = (sel, kind, label) => {
+        const list = devices.filter(d => d.kind === kind);
+        const current = sel.value;
+        sel.innerHTML = list.length
+          ? list.map((d, i) =>
+              `<option value="${esc(d.deviceId)}">${esc(d.label || `${label} ${i + 1}`)}</option>`).join('')
+          : `<option value="">找不到${label}</option>`;
+        sel.disabled = list.length === 0;
+        if (current && list.some(d => d.deviceId === current)) sel.value = current;
+      };
+
+      fill($('#camSelect'), 'videoinput', '鏡頭');
+      fill($('#micSelect'), 'audioinput', '麥克風');
+    } catch (e) {
+      /* 列不出來不影響主要功能，靜默忽略 */
+    }
+  }
+
+  /* ---------- 試錄 ---------- */
+  $('#recBtn').addEventListener('click', () => {
+    if (!stream || !stream.getAudioTracks().length) return;
+
+    const chunks = [];
+    try {
+      recorder = new MediaRecorder(new MediaStream(stream.getAudioTracks()));
+    } catch (e) {
+      window.toast('這個瀏覽器不支援錄音');
+      return;
+    }
+
+    recorder.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+    recorder.onstop = () => {
+      const blob = new Blob(chunks, { type: recorder.mimeType || 'audio/webm' });
+      const el = $('#playback');
+      el.src = URL.createObjectURL(blob);
+      el.classList.remove('hidden');
+      $('#recBtn').textContent = '試錄 5 秒';
+      $('#recBtn').disabled = false;
+      window.toast('錄好了，按播放聽聽看');
+    };
+
+    recorder.start();
+    $('#recBtn').disabled = true;
+
+    let left = 5;
+    $('#recBtn').textContent = `錄音中… ${left}`;
+    const tick = setInterval(() => {
+      left--;
+      $('#recBtn').textContent = `錄音中… ${left}`;
+      if (left <= 0) {
+        clearInterval(tick);
+        recorder.stop();
+      }
+    }, 1000);
+  });
+
+  $('#startBtn').addEventListener('click', start);
+  $('#stopBtn').addEventListener('click', stop);
+  $('#resetPeak').addEventListener('click', () => { peak = 0; });
+
+  $('#mirrorChk').addEventListener('change', e => {
+    video.classList.toggle('mirror', e.target.checked);
+  });
+
+  /* 換裝置時重新取得串流 */
+  $('#camSelect').addEventListener('change', () => { if (stream) start(); });
+  $('#micSelect').addEventListener('change', () => { if (stream) start(); });
+
+  /* 離開頁面時確實關掉鏡頭，避免指示燈一直亮著 */
+  window.addEventListener('pagehide', stop);
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    setState($('#camState'), 'err', '這個瀏覽器不支援鏡頭存取');
+    setState($('#micState'), 'err', '這個瀏覽器不支援麥克風存取');
+    $('#startBtn').disabled = true;
+  }
+})();
+</script>
+</body>
+</html>

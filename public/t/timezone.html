@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>世界時區換算｜各國現在幾點，時差一次看 - 順手工具箱</title>
+<meta name="description" content="免費世界時鐘與時差換算，一次比較台灣、日本、美國、歐洲等主要城市的當地時間，也能指定某個時間點換算各地對應時刻，自動處理日光節約時間。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌏</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .tz-row td:first-child { font-weight: 600; }
+  .tz-time { font-family: var(--mono); font-size: 1.05rem; font-weight: 700; }
+  .tz-day { font-size: .78rem; margin-left: 6px; padding: 1px 7px; border-radius: 999px; }
+  .tz-day.prev { background: var(--accent-wash); color: var(--accent); }
+  .tz-day.next { background: var(--brand-wash); color: var(--brand-ink); }
+  .tz-home { background: var(--brand-wash); }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/timezone.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="時差, 時區, 世界時間, timezone, utc">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="世界時區換算｜各國現在幾點，時差一次看 - 順手工具箱">
+<meta property="og:description" content="免費世界時鐘與時差換算，一次比較台灣、日本、美國、歐洲等主要城市的當地時間，也能指定某個時間點換算各地對應時刻，自動處理日光節約時間。">
+<meta property="og:url" content="https://tools.luka-life.com/t/timezone.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="世界時區換算｜各國現在幾點，時差一次看 - 順手工具箱">
+<meta name="twitter:description" content="免費世界時鐘與時差換算，一次比較台灣、日本、美國、歐洲等主要城市的當地時間，也能指定某個時間點換算各地對應時刻，自動處理日光節約時間。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "世界時區換算",
+  "description": "免費世界時鐘與時差換算，一次比較台灣、日本、美國、歐洲等主要城市的當地時間，也能指定某個時間點換算各地對應時刻，自動處理日光節約時間。",
+  "url": "https://tools.luka-life.com/t/timezone.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "時間計時",
+      "item": "https://tools.luka-life.com/#time"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "世界時區換算",
+      "item": "https://tools.luka-life.com/t/timezone.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "可以加入沒列出來的城市嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "目前是固定清單，收錄了台灣人最常需要對時的城市。如果你要查的城市剛好跟清單中某個城市同一個時區（例如首爾跟東京都是 UTC+9），直接看那一列就可以。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "為什麼有些地方的時差不是整數？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不是每個時區都以一小時為單位。印度是 UTC+5:30、尼泊爾是 UTC+5:45，澳洲中部則是 UTC+9:30，這些都是各國自己決定的，工具會如實顯示成「+2.5 小時」這樣的形式。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "時間準確嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "基準時間來自你的裝置，換算規則來自瀏覽器的時區資料庫。只要你的裝置有正常自動校時，結果就是準的。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="timezone">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🌏</span>世界時區換算</h1>
+    <p class="lede">要跟國外開會、打電話回家、算航班落地時間，一次看清楚各地現在幾點、差幾小時。</p>
+  </div>
+
+  <div class="panel">
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="baseTime">以這個時間為基準</label>
+        <input type="datetime-local" id="baseTime">
+      </div>
+      <div class="field mb-0" style="flex:0 1 150px">
+        <label>&nbsp;</label>
+        <button class="btn btn--block" type="button" id="nowBtn">回到現在</button>
+      </div>
+    </div>
+    <p class="hint mb-2">基準時間是<strong>你所在時區</strong>（<span class="mono" id="myTz"></span>）的時間，下表會換算成各地的當地時刻。</p>
+
+    <div class="table-scroll">
+      <table class="data">
+        <thead>
+          <tr><th>城市</th><th>當地時間</th><th>日期</th><th>與你的時差</th></tr>
+        </thead>
+        <tbody id="tzBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>日光節約時間會自動算嗎</h2>
+    <p>會。換算是交給瀏覽器內建的時區資料庫處理，美國、歐洲、澳洲等地實施夏令時間的期間，時差會自動變動。這也是為什麼<strong>台灣跟美國的時差在一年當中不是固定的</strong>——夏天差 12 小時，冬天就變成 13 小時（以西岸為例）。</p>
+
+    <h2>「昨天／明天」標籤是什麼意思</h2>
+    <p>因為時差的關係，同一個瞬間在不同地方可能還沒到隔天，或是已經過了。表格裡出現「明天」代表那個城市的日期比你早一天，「昨天」則是晚一天，安排跨國會議時特別要注意這個，很容易約錯日子。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>可以加入沒列出來的城市嗎？</summary>
+        <div class="a">目前是固定清單，收錄了台灣人最常需要對時的城市。如果你要查的城市剛好跟清單中某個城市同一個時區（例如首爾跟東京都是 UTC+9），直接看那一列就可以。</div>
+      </details>
+      <details>
+        <summary>為什麼有些地方的時差不是整數？</summary>
+        <div class="a">不是每個時區都以一小時為單位。印度是 UTC+5:30、尼泊爾是 UTC+5:45，澳洲中部則是 UTC+9:30，這些都是各國自己決定的，工具會如實顯示成「+2.5 小時」這樣的形式。</div>
+      </details>
+      <details>
+        <summary>時間準確嗎？</summary>
+        <div class="a">基準時間來自你的裝置，換算規則來自瀏覽器的時區資料庫。只要你的裝置有正常自動校時，結果就是準的。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc, pad } = window.U;
+
+  const CITIES = [
+    ['台北', 'Asia/Taipei'],
+    ['東京・首爾', 'Asia/Tokyo'],
+    ['香港・新加坡', 'Asia/Hong_Kong'],
+    ['曼谷・胡志明市', 'Asia/Bangkok'],
+    ['雅加達', 'Asia/Jakarta'],
+    ['新德里', 'Asia/Kolkata'],
+    ['杜拜', 'Asia/Dubai'],
+    ['莫斯科', 'Europe/Moscow'],
+    ['巴黎・柏林・羅馬', 'Europe/Paris'],
+    ['倫敦', 'Europe/London'],
+    ['紐約・多倫多', 'America/New_York'],
+    ['芝加哥', 'America/Chicago'],
+    ['丹佛', 'America/Denver'],
+    ['洛杉磯・西雅圖', 'America/Los_Angeles'],
+    ['夏威夷', 'Pacific/Honolulu'],
+    ['雪梨', 'Australia/Sydney'],
+    ['奧克蘭', 'Pacific/Auckland']
+  ];
+
+  const myTz = (() => {
+    try { return Intl.DateTimeFormat().resolvedOptions().timeZone; }
+    catch (e) { return 'UTC'; }
+  })();
+  $('#myTz').textContent = myTz;
+
+  /* 取得某個瞬間在指定時區的「年月日時分」 */
+  function partsIn(date, tz) {
+    const fmt = new Intl.DateTimeFormat('en-CA', {
+      timeZone: tz, hour12: false,
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit'
+    });
+    const o = {};
+    fmt.formatToParts(date).forEach(p => { o[p.type] = p.value; });
+    // Intl 在午夜有機會回傳 24，統一收斂成 00
+    if (o.hour === '24') o.hour = '00';
+    return o;
+  }
+
+  /* 某個瞬間在指定時區相對 UTC 的位移（分鐘） */
+  function offsetMinutes(date, tz) {
+    const p = partsIn(date, tz);
+    const asUTC = Date.UTC(+p.year, +p.month - 1, +p.day, +p.hour, +p.minute);
+    // 秒以下無關緊要，四捨五入到分鐘
+    return Math.round((asUTC - date.getTime()) / 60000);
+  }
+
+  function setNow() {
+    const d = new Date();
+    d.setSeconds(0, 0);
+    $('#baseTime').value =
+      `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}` +
+      `T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  function render() {
+    const raw = $('#baseTime').value;
+    if (!raw) return;
+    const base = new Date(raw);
+    if (isNaN(base)) return;
+
+    const myOffset = offsetMinutes(base, myTz);
+    const myDay = partsIn(base, myTz).day;
+
+    $('#tzBody').innerHTML = CITIES.map(([name, tz]) => {
+      const p = partsIn(base, tz);
+      const diffMin = offsetMinutes(base, tz) - myOffset;
+      const diffH = diffMin / 60;
+
+      let diffText;
+      if (diffMin === 0) diffText = '相同';
+      else {
+        const sign = diffMin > 0 ? '+' : '−';
+        const abs = Math.abs(diffH);
+        diffText = sign + (Number.isInteger(abs) ? abs : abs.toFixed(2).replace(/0$/, '')) + ' 小時';
+      }
+
+      /* 跨日標籤：比較日期字串而非時間戳 */
+      let dayTag = '';
+      const dNum = +p.day, mNum = +myDay;
+      if (dNum !== mNum) {
+        // 跨月時日期數字會倒轉，用時差正負判斷比較可靠
+        const isNext = diffMin > 0;
+        dayTag = `<span class="tz-day ${isNext ? 'next' : 'prev'}">${isNext ? '明天' : '昨天'}</span>`;
+      }
+
+      const isHome = tz === myTz;
+      return `<tr class="tz-row ${isHome ? 'tz-home' : ''}">
+        <td>${esc(name)}${isHome ? ' <span class="small muted">你在這</span>' : ''}</td>
+        <td class="tz-time">${p.hour}:${p.minute}</td>
+        <td>${p.month}/${p.day}${dayTag}</td>
+        <td>${diffText}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  $('#nowBtn').addEventListener('click', () => { setNow(); render(); });
+  $('#baseTime').addEventListener('input', render);
+
+  setNow();
+  render();
+  /* 每分鐘自動跟上現在時間，除非使用者自己改過基準 */
+  let touched = false;
+  $('#baseTime').addEventListener('change', () => { touched = true; });
+  setInterval(() => { if (!touched) { setNow(); render(); } }, 30000);
+})();
+</script>
+</body>
+</html>

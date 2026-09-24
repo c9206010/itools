@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PDF 分割取頁｜抽出指定頁面或拆成單頁 - 順手工具箱</title>
+<meta name="description" content="免費線上 PDF 分割工具，指定頁碼範圍抽出需要的頁面，或一次拆成單頁檔案，全程在瀏覽器完成，文件不會上傳到伺服器。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✂️</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .drop {
+    border: 2px dashed var(--border-strong); border-radius: var(--radius-lg);
+    padding: 36px 20px; text-align: center; cursor: pointer;
+    background: var(--surface-2); transition: all .15s ease;
+  }
+  .drop:hover, .drop.is-over { border-color: var(--brand); background: var(--brand-wash); }
+  .drop strong { display: block; font-size: 1.05rem; margin-bottom: 4px; }
+  .page-grid { display: grid; gap: 6px; grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); }
+  .page-chip {
+    aspect-ratio: .78; border: 1px solid var(--border-strong);
+    border-radius: 6px; background: var(--surface); cursor: pointer;
+    display: grid; place-items: center; font-size: .82rem; font-weight: 600;
+    color: var(--ink-2); font-family: inherit; padding: 0;
+  }
+  .page-chip:hover { border-color: var(--brand); }
+  .page-chip.is-on { background: var(--brand); border-color: var(--brand); color: #fff; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/pdf-split.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="pdf, 分割, 拆頁, split, 抽出頁面">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="PDF 分割取頁｜抽出指定頁面或拆成單頁 - 順手工具箱">
+<meta property="og:description" content="免費線上 PDF 分割工具，指定頁碼範圍抽出需要的頁面，或一次拆成單頁檔案，全程在瀏覽器完成，文件不會上傳到伺服器。">
+<meta property="og:url" content="https://tools.luka-life.com/t/pdf-split.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="PDF 分割取頁｜抽出指定頁面或拆成單頁 - 順手工具箱">
+<meta name="twitter:description" content="免費線上 PDF 分割工具，指定頁碼範圍抽出需要的頁面，或一次拆成單頁檔案，全程在瀏覽器完成，文件不會上傳到伺服器。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "PDF 分割取頁",
+  "description": "免費線上 PDF 分割工具，指定頁碼範圍抽出需要的頁面，或一次拆成單頁檔案，全程在瀏覽器完成，文件不會上傳到伺服器。",
+  "url": "https://tools.luka-life.com/t/pdf-split.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "PDF 文件",
+      "item": "https://tools.luka-life.com/#pdf"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "PDF 分割取頁",
+      "item": "https://tools.luka-life.com/t/pdf-split.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "頁碼範圍怎麼寫？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "用逗號分隔，連續的用減號，例如 1-3, 7, 10-12 代表第 1 到 3 頁、第 7 頁、第 10 到 12 頁。空白會自動忽略，寫超出範圍的頁碼也會自動跳過不會出錯。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "抽出來的頁面順序是什麼？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "照原本的頁序，不是照你點選的順序。如果你需要重新排列頁面順序，請用「PDF 旋轉與刪頁」那個工具。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "一次下載很多檔會被瀏覽器擋嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "有可能。拆成很多檔時，瀏覽器可能會跳出「是否允許下載多個檔案」的詢問，按允許就會全部存下來。工具已經在每個檔案之間加了間隔來降低被擋的機率。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "有密碼的 PDF 呢？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "有開啟密碼的檔案沒辦法處理，請先用原本的閱讀軟體解除密碼另存一份。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="pdf-split">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">✂️</span>PDF 分割取頁</h1>
+    <p class="lede">只要其中幾頁、或想把一份拆成一頁一個檔，選好頁碼按一下就好。</p>
+  </div>
+
+  <div class="note mb-2">
+    <strong>檔案不會上傳。</strong>所有處理都在你的瀏覽器裡完成，這個網站沒有可以接收檔案的後端。
+  </div>
+
+  <div class="panel">
+    <div class="drop mb-2" id="drop" role="button" tabindex="0">
+      <strong>把 PDF 拖進來，或點這裡選檔案</strong>
+      <span class="muted small">一次處理一個檔案</span>
+      <input type="file" id="fileInput" accept="application/pdf,.pdf" hidden>
+    </div>
+
+    <div id="editor" class="hidden">
+      <p class="small mb-2" id="fileInfo"></p>
+
+      <div class="field">
+        <label for="mode">要怎麼分</label>
+        <select id="mode">
+          <option value="pick">抽出我選的頁面，合成一個檔</option>
+          <option value="each">把選的頁面各自存成一個檔</option>
+          <option value="all">整份拆開，一頁一個檔</option>
+          <option value="remove">刪掉我選的頁面，其餘保留</option>
+        </select>
+      </div>
+
+      <div id="pickArea">
+        <div class="field">
+          <label for="rangeInput">頁碼範圍</label>
+          <input type="text" id="rangeInput" placeholder="例如 1-3, 5, 8-10" spellcheck="false">
+          <p class="hint">用逗號分隔，連續頁用減號。也可以直接點下面的頁碼方塊選。</p>
+        </div>
+
+        <div class="btn-group mb-2">
+          <button class="btn btn--ghost btn--sm" type="button" id="selAll">全選</button>
+          <button class="btn btn--ghost btn--sm" type="button" id="selNone">全不選</button>
+          <button class="btn btn--ghost btn--sm" type="button" id="selOdd">只選單數頁</button>
+          <button class="btn btn--ghost btn--sm" type="button" id="selEven">只選雙數頁</button>
+          <button class="btn btn--ghost btn--sm" type="button" id="selInvert">反選</button>
+        </div>
+
+        <div class="page-grid mb-2" id="pageGrid"></div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn--lg" type="button" id="runBtn">處理並下載</button>
+        <button class="btn btn--ghost btn--lg" type="button" id="clearBtn">換一個檔案</button>
+      </div>
+
+      <p class="hint mt-1" id="statusText"></p>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>四種模式的差別</h2>
+    <ul>
+      <li><strong>抽出合成一個檔</strong>：選 1、3、5 頁，得到一個包含這三頁的 PDF。最常用。</li>
+      <li><strong>各自存成一個檔</strong>：選 1、3、5 頁，得到三個各一頁的 PDF。</li>
+      <li><strong>整份拆開</strong>：不用選頁碼，10 頁的檔案直接變成 10 個檔。</li>
+      <li><strong>刪掉選的頁面</strong>：反過來操作，適合只想拿掉封面或廣告頁的情況。</li>
+    </ul>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>頁碼範圍怎麼寫？</summary>
+        <div class="a">用逗號分隔，連續的用減號，例如 <code>1-3, 7, 10-12</code> 代表第 1 到 3 頁、第 7 頁、第 10 到 12 頁。空白會自動忽略，寫超出範圍的頁碼也會自動跳過不會出錯。</div>
+      </details>
+      <details>
+        <summary>抽出來的頁面順序是什麼？</summary>
+        <div class="a">照原本的頁序，不是照你點選的順序。如果你需要重新排列頁面順序，請用「PDF 旋轉與刪頁」那個工具。</div>
+      </details>
+      <details>
+        <summary>一次下載很多檔會被瀏覽器擋嗎？</summary>
+        <div class="a">有可能。拆成很多檔時，瀏覽器可能會跳出「是否允許下載多個檔案」的詢問，按允許就會全部存下來。工具已經在每個檔案之間加了間隔來降低被擋的機率。</div>
+      </details>
+      <details>
+        <summary>有密碼的 PDF 呢？</summary>
+        <div class="a">有開啟密碼的檔案沒辦法處理，請先用原本的閱讀軟體解除密碼另存一份。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, esc, bytes, download } = window.U;
+
+  let srcBytes = null;
+  let srcName = '';
+  let pageCount = 0;
+  let selected = new Set();   // 0-based 頁索引
+
+  /* ---------- 選檔 ---------- */
+  const drop = $('#drop');
+  const input = $('#fileInput');
+
+  drop.addEventListener('click', () => input.click());
+  drop.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); input.click(); }
+  });
+  ['dragenter', 'dragover'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add('is-over'); }));
+  ['dragleave', 'drop'].forEach(ev =>
+    drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove('is-over'); }));
+
+  drop.addEventListener('drop', e => loadFile(e.dataTransfer.files[0]));
+  input.addEventListener('change', e => loadFile(e.target.files[0]));
+
+  async function loadFile(file) {
+    if (!file) return;
+    if (file.type !== 'application/pdf' && !/\.pdf$/i.test(file.name)) {
+      window.toast('請選擇 PDF 檔');
+      return;
+    }
+
+    $('#statusText').textContent = '讀取中…';
+    try {
+      srcBytes = await file.arrayBuffer();
+      const doc = await PDFLib.PDFDocument.load(srcBytes);
+      pageCount = doc.getPageCount();
+      srcName = file.name.replace(/\.pdf$/i, '');
+
+      selected = new Set(Array.from({ length: pageCount }, (_, i) => i));
+
+      $('#fileInfo').innerHTML =
+        `<strong>${esc(file.name)}</strong>　共 ${pageCount} 頁．${bytes(file.size)}`;
+      $('#editor').classList.remove('hidden');
+      $('#statusText').textContent = '';
+      renderGrid();
+      syncRangeFromSelection();
+    } catch (e) {
+      $('#statusText').textContent =
+        /encrypt/i.test(e.message) ? '這個檔案有密碼保護，無法處理' : '讀取失敗：檔案可能損毀';
+      window.toast('讀取失敗');
+    }
+  }
+
+  /* ---------- 頁碼選擇 ---------- */
+  function renderGrid() {
+    $('#pageGrid').innerHTML = Array.from({ length: pageCount }, (_, i) =>
+      `<button class="page-chip ${selected.has(i) ? 'is-on' : ''}" type="button"
+               data-p="${i}" aria-pressed="${selected.has(i)}">${i + 1}</button>`).join('');
+  }
+
+  /* 把選取狀態壓縮成 1-3, 5 這種好讀的字串 */
+  function syncRangeFromSelection() {
+    const sorted = Array.from(selected).sort((a, b) => a - b);
+    const parts = [];
+    let start = null, prev = null;
+
+    for (const n of sorted) {
+      if (start === null) { start = prev = n; continue; }
+      if (n === prev + 1) { prev = n; continue; }
+      parts.push(start === prev ? `${start + 1}` : `${start + 1}-${prev + 1}`);
+      start = prev = n;
+    }
+    if (start !== null) {
+      parts.push(start === prev ? `${start + 1}` : `${start + 1}-${prev + 1}`);
+    }
+    $('#rangeInput').value = parts.join(', ');
+  }
+
+  function parseRange(text) {
+    const set = new Set();
+    text.split(',').forEach(chunk => {
+      const part = chunk.trim();
+      if (!part) return;
+      const m = part.match(/^(\d+)\s*-\s*(\d+)$/);
+      if (m) {
+        let a = +m[1], b = +m[2];
+        if (a > b) [a, b] = [b, a];
+        for (let i = a; i <= b; i++) {
+          if (i >= 1 && i <= pageCount) set.add(i - 1);
+        }
+      } else if (/^\d+$/.test(part)) {
+        const i = +part;
+        if (i >= 1 && i <= pageCount) set.add(i - 1);
+      }
+    });
+    return set;
+  }
+
+  $('#pageGrid').addEventListener('click', e => {
+    const btn = e.target.closest('.page-chip');
+    if (!btn) return;
+    const i = +btn.dataset.p;
+    if (selected.has(i)) selected.delete(i); else selected.add(i);
+    renderGrid();
+    syncRangeFromSelection();
+  });
+
+  $('#rangeInput').addEventListener('input', e => {
+    selected = parseRange(e.target.value);
+    renderGrid();
+  });
+
+  const setSel = fn => () => {
+    selected = new Set();
+    for (let i = 0; i < pageCount; i++) if (fn(i)) selected.add(i);
+    renderGrid();
+    syncRangeFromSelection();
+  };
+
+  $('#selAll').addEventListener('click', setSel(() => true));
+  $('#selNone').addEventListener('click', setSel(() => false));
+  $('#selOdd').addEventListener('click', setSel(i => i % 2 === 0));   // 第 1、3、5 頁
+  $('#selEven').addEventListener('click', setSel(i => i % 2 === 1));
+  $('#selInvert').addEventListener('click', () => {
+    const inv = new Set();
+    for (let i = 0; i < pageCount; i++) if (!selected.has(i)) inv.add(i);
+    selected = inv;
+    renderGrid();
+    syncRangeFromSelection();
+  });
+
+  $('#mode').addEventListener('change', () => {
+    /* 整份拆開不需要選頁，把選擇區收起來比較不會混淆 */
+    $('#pickArea').classList.toggle('hidden', $('#mode').value === 'all');
+  });
+
+  /* ---------- 執行 ---------- */
+  async function buildDoc(indices) {
+    const src = await PDFLib.PDFDocument.load(srcBytes);
+    const out = await PDFLib.PDFDocument.create();
+    const pages = await out.copyPages(src, indices);
+    pages.forEach(p => out.addPage(p));
+    out.setProducer('順手工具箱');
+    return out.save();
+  }
+
+  $('#runBtn').addEventListener('click', async () => {
+    if (!srcBytes) return;
+
+    const mode = $('#mode').value;
+    let indices = Array.from(selected).sort((a, b) => a - b);
+
+    if (mode === 'remove') {
+      const keep = [];
+      for (let i = 0; i < pageCount; i++) if (!selected.has(i)) keep.push(i);
+      indices = keep;
+    } else if (mode === 'all') {
+      indices = Array.from({ length: pageCount }, (_, i) => i);
+    }
+
+    if (!indices.length) {
+      window.toast(mode === 'remove' ? '不能把所有頁面都刪掉' : '請至少選一頁');
+      return;
+    }
+
+    $('#runBtn').disabled = true;
+    $('#statusText').textContent = '處理中…';
+
+    try {
+      if (mode === 'pick' || mode === 'remove') {
+        const data = await buildDoc(indices);
+        download(new Blob([data], { type: 'application/pdf' }),
+          `${srcName}_${mode === 'remove' ? '已刪頁' : '取頁'}.pdf`);
+        $('#statusText').textContent = `完成，輸出 ${indices.length} 頁`;
+      } else {
+        /* 逐頁輸出，中間留間隔避免瀏覽器把連續下載當成濫用擋掉 */
+        for (let k = 0; k < indices.length; k++) {
+          const data = await buildDoc([indices[k]]);
+          const pageNo = String(indices[k] + 1).padStart(String(pageCount).length, '0');
+          download(new Blob([data], { type: 'application/pdf' }), `${srcName}_p${pageNo}.pdf`);
+          $('#statusText').textContent = `輸出中… ${k + 1} / ${indices.length}`;
+          await new Promise(r => setTimeout(r, 320));
+        }
+        $('#statusText').textContent = `完成，共輸出 ${indices.length} 個檔案`;
+      }
+      window.toast('處理完成');
+    } catch (e) {
+      $('#statusText').textContent = '處理失敗：' + e.message;
+    }
+
+    $('#runBtn').disabled = false;
+  });
+
+  $('#clearBtn').addEventListener('click', () => {
+    srcBytes = null;
+    pageCount = 0;
+    selected = new Set();
+    input.value = '';
+    $('#editor').classList.add('hidden');
+    $('#statusText').textContent = '';
+  });
+})();
+</script>
+</body>
+</html>

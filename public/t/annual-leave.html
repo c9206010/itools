@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>特休天數計算｜依到職日算年資與應有特休 - 順手工具箱</title>
+<meta name="description" content="免費特休天數計算器，輸入到職日即可算出目前年資與勞基法應有的特別休假天數，並列出未來各年度的特休排程與未休折算工資試算。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏖️</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .big-num { font-size: clamp(1.8rem, 1rem + 3vw, 2.8rem); font-weight: 800; color: var(--brand); line-height: 1.2; }
+  td.num, th.num { text-align: right; font-family: var(--mono); }
+  tr.now td { background: var(--brand-wash); font-weight: 700; }
+  .sched-wrap { max-height: 420px; overflow: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); }
+  .sched-wrap thead th { position: sticky; top: 0; z-index: 1; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/annual-leave.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="特休, 年假, 特別休假, 年資, 勞基法, 天數">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="特休天數計算｜依到職日算年資與應有特休 - 順手工具箱">
+<meta property="og:description" content="免費特休天數計算器，輸入到職日即可算出目前年資與勞基法應有的特別休假天數，並列出未來各年度的特休排程與未休折算工資試算。">
+<meta property="og:url" content="https://tools.luka-life.com/t/annual-leave.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="特休天數計算｜依到職日算年資與應有特休 - 順手工具箱">
+<meta name="twitter:description" content="免費特休天數計算器，輸入到職日即可算出目前年資與勞基法應有的特別休假天數，並列出未來各年度的特休排程與未休折算工資試算。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "特休天數計算",
+  "description": "免費特休天數計算器，輸入到職日即可算出目前年資與勞基法應有的特別休假天數，並列出未來各年度的特休排程與未休折算工資試算。",
+  "url": "https://tools.luka-life.com/t/annual-leave.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "台灣生活",
+      "item": "https://tools.luka-life.com/#tw"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "特休天數計算",
+      "item": "https://tools.luka-life.com/t/annual-leave.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "特休沒休完會不見嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會。依勞基法第 38 條，年度終結未休完的特休，雇主應該折算工資發給。經勞雇雙方協商同意，也可以遞延到次年度，但遞延後仍未休完的，還是要折現。「不休就作廢」是違法的。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "離職時剩下的特休怎麼算？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "契約終止時尚未休完的特休，雇主必須全部折算工資發給，這跟離職原因無關，自請離職也一樣。如果是年度中途離職，該年度的特休會按在職比例計算。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "折算工資怎麼算？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "用「一日工資」乘以未休天數。一日工資通常是月薪除以 30。這個工具就是照這個方式算，如果你的薪資結構有津貼或變動獎金，實際金額可能更高，因為法定的工資定義包含經常性給與。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "試用期算年資嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "算。勞基法沒有「試用期不算年資」這回事，年資從到職日起算，試用期間一樣累計。所以只要做滿 6 個月，就有 3 天特休。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "特休可以被公司指定日期嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "原則上特休日期由勞工自己排定。雇主只有在企業經營上有急迫需求時，可以跟你協商調整，但那是協商，不是單方面指定。公司規定「特休只能在某幾天休」通常站不住腳。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="annual-leave">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🏖️</span>特休天數計算</h1>
+    <p class="lede">填到職日就算給你看。年資怎麼算、今年有幾天、明年變幾天，還有沒休完可以折多少錢。</p>
+  </div>
+
+  <div class="panel">
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="hireDate">到職日</label>
+        <input type="date" id="hireDate">
+      </div>
+      <div class="field mb-0">
+        <label for="refDate">計算基準日</label>
+        <input type="date" id="refDate">
+      </div>
+      <div class="field mb-0">
+        <label for="method">給假制度</label>
+        <select id="method">
+          <option value="anniversary">週年制（到職日起算）</option>
+          <option value="calendar">曆年制（每年 1 月 1 日）</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="tc mb-2">
+      <div class="big-num" id="daysOut">—</div>
+      <div class="small muted" id="daysSub">目前這個年度應有的特休天數</div>
+    </div>
+
+    <div class="stat-row mb-2">
+      <div class="stat"><div class="stat__num" id="seniority">—</div><div class="stat__label">目前年資</div></div>
+      <div class="stat"><div class="stat__num" id="periodLabel">—</div><div class="stat__label">目前休假年度</div></div>
+      <div class="stat"><div class="stat__num" id="nextChange">—</div><div class="stat__label">下次天數增加</div></div>
+      <div class="stat"><div class="stat__num" id="nextDays">—</div><div class="stat__label">屆時天數</div></div>
+    </div>
+
+    <div class="panel__title">未休折算工資</div>
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="salary">月薪（元）</label>
+        <input type="number" id="salary" value="45000" min="0" step="100">
+      </div>
+      <div class="field mb-0">
+        <label for="unused">未休天數</label>
+        <input type="number" id="unused" value="0" min="0" max="30" step="0.5">
+      </div>
+      <div class="field mb-0">
+        <label>&nbsp;</label>
+        <div class="out" id="payout" style="min-height:auto;padding:9px 12px">—</div>
+      </div>
+    </div>
+
+    <div class="panel__title">各年度特休排程</div>
+    <div class="sched-wrap">
+      <table class="data">
+        <thead>
+          <tr><th>年資階段</th><th>休假年度</th><th class="num">天數</th></tr>
+        </thead>
+        <tbody id="schedule"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="note note--warn">
+    <strong>這是依勞基法最低標準試算。</strong>公司如果給得比法定更優（很多公司會），以公司規定為準。
+    <strong>曆年制</strong>的比例分配方式各公司做法略有差異，這裡採最常見的按比例折算。
+    實際天數請以人資或勞動契約為準，有爭議可洽當地勞工局或勞動部。
+  </div>
+
+  <section class="prose">
+    <h2>勞基法的特休天數規定</h2>
+    <p>依勞動基準法第 38 條，特別休假天數隨年資遞增：</p>
+    <div class="table-scroll">
+      <table class="data">
+        <thead><tr><th>年資</th><th class="num">特休天數</th></tr></thead>
+        <tbody>
+          <tr><td>6 個月以上，未滿 1 年</td><td class="num">3 日</td></tr>
+          <tr><td>1 年以上，未滿 2 年</td><td class="num">7 日</td></tr>
+          <tr><td>2 年以上，未滿 3 年</td><td class="num">10 日</td></tr>
+          <tr><td>3 年以上，未滿 5 年</td><td class="num">14 日</td></tr>
+          <tr><td>5 年以上，未滿 10 年</td><td class="num">15 日</td></tr>
+          <tr><td>10 年以上</td><td class="num">每年加 1 日，加到 30 日為止</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small muted">所以年資滿 10 年是 16 日、11 年 17 日，依此類推，到 24 年時達到 30 日上限，之後不再增加。</p>
+
+    <h2>週年制跟曆年制差在哪</h2>
+    <ul>
+      <li><strong>週年制</strong>：以你的到職日為一個年度的起點。3 月 15 日到職，休假年度就是每年 3 月 15 日到隔年 3 月 14 日。這是勞基法的原始設計，最單純。</li>
+      <li><strong>曆年制</strong>：公司為了方便管理，統一以每年 1 月 1 日為起點。到職第一年跟制度轉換的那一年會<strong>按比例折算</strong>，所以天數常常出現小數。</li>
+    </ul>
+    <p>法律上兩種都可以，但<strong>公司採用的制度不能讓你拿到比法定更少的天數</strong>。如果你發現曆年制算下來比週年制少，可以請人資說明。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>特休沒休完會不見嗎？</summary>
+        <div class="a">不會。依勞基法第 38 條，年度終結未休完的特休，<strong>雇主應該折算工資發給</strong>。經勞雇雙方協商同意，也可以遞延到次年度，但遞延後仍未休完的，還是要折現。「不休就作廢」是違法的。</div>
+      </details>
+      <details>
+        <summary>離職時剩下的特休怎麼算？</summary>
+        <div class="a">契約終止時尚未休完的特休，雇主必須全部折算工資發給，這跟離職原因無關，自請離職也一樣。如果是年度中途離職，該年度的特休會按在職比例計算。</div>
+      </details>
+      <details>
+        <summary>折算工資怎麼算？</summary>
+        <div class="a">用「一日工資」乘以未休天數。一日工資通常是月薪除以 30。這個工具就是照這個方式算，如果你的薪資結構有津貼或變動獎金，實際金額可能更高，因為法定的工資定義包含經常性給與。</div>
+      </details>
+      <details>
+        <summary>試用期算年資嗎？</summary>
+        <div class="a">算。勞基法沒有「試用期不算年資」這回事，年資從到職日起算，試用期間一樣累計。所以只要做滿 6 個月，就有 3 天特休。</div>
+      </details>
+      <details>
+        <summary>特休可以被公司指定日期嗎？</summary>
+        <div class="a">原則上<strong>特休日期由勞工自己排定</strong>。雇主只有在企業經營上有急迫需求時，可以跟你協商調整，但那是協商，不是單方面指定。公司規定「特休只能在某幾天休」通常站不住腳。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, esc, pad } = window.U;
+
+  const DAY = 86400000;
+
+  /** 依勞基法第 38 條，給年資（年）回傳該年度特休天數。
+   *  months 為到職起算的完整月數，用月數判斷才處理得了「滿 6 個月」這一級。 */
+  function daysFor(years) {
+    if (years < 0.5) return 0;      // 未滿 6 個月
+    if (years < 1) return 3;
+    if (years < 2) return 7;
+    if (years < 3) return 10;
+    if (years < 5) return 14;
+    if (years < 10) return 15;
+    // 10 年起每年加 1 日，上限 30 日
+    return Math.min(30, 15 + (Math.floor(years) - 9));
+  }
+
+  /** 每個休假年度的起始年資（年），用來產生排程表 */
+  const STAGES = [
+    { at: 0.5, label: '滿 6 個月' },
+    { at: 1, label: '滿 1 年' },
+    { at: 2, label: '滿 2 年' },
+    { at: 3, label: '滿 3 年' },
+    { at: 4, label: '滿 4 年' },
+    { at: 5, label: '滿 5 年' }
+  ];
+  for (let y = 6; y <= 25; y++) STAGES.push({ at: y, label: `滿 ${y} 年` });
+
+  function parseDate(str) {
+    if (!str) return null;
+    const [y, m, d] = str.split('-').map(Number);
+    if (!y || !m || !d) return null;
+    return new Date(y, m - 1, d, 12, 0, 0, 0);
+  }
+
+  function toInput(d) {
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  }
+
+  const fmt = d => `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}`;
+
+  /** 把日期往後加 n 年，遇到 2/29 這種會自動收斂 */
+  function addYears(d, n) {
+    const out = new Date(d);
+    const day = out.getDate();
+    out.setDate(1);
+    out.setFullYear(out.getFullYear() + n);
+    const last = new Date(out.getFullYear(), out.getMonth() + 1, 0).getDate();
+    out.setDate(Math.min(day, last));
+    return out;
+  }
+
+  function addMonths(d, n) {
+    const out = new Date(d);
+    const day = out.getDate();
+    out.setDate(1);
+    out.setMonth(out.getMonth() + n);
+    const last = new Date(out.getFullYear(), out.getMonth() + 1, 0).getDate();
+    out.setDate(Math.min(day, last));
+    return out;
+  }
+
+  /** 精確年資（年，含小數） */
+  function seniorityYears(hire, ref) {
+    return (ref - hire) / (365.2425 * DAY);
+  }
+
+  function calc() {
+    const hire = parseDate($('#hireDate').value);
+    const ref = parseDate($('#refDate').value);
+
+    if (!hire || !ref) {
+      $('#daysOut').textContent = '請選擇到職日';
+      $('#schedule').innerHTML = '';
+      return;
+    }
+    if (hire > ref) {
+      $('#daysOut').textContent = '到職日不能晚於基準日';
+      $('#schedule').innerHTML = '';
+      return;
+    }
+
+    const years = seniorityYears(hire, ref);
+
+    /* 年資文字：用逐級借位算出幾年幾個月幾天 */
+    let yy = ref.getFullYear() - hire.getFullYear();
+    let mm = ref.getMonth() - hire.getMonth();
+    let dd = ref.getDate() - hire.getDate();
+    if (dd < 0) {
+      mm--;
+      dd += new Date(ref.getFullYear(), ref.getMonth(), 0).getDate();
+    }
+    if (mm < 0) { yy--; mm += 12; }
+    $('#seniority').textContent = `${yy} 年 ${mm} 個月`;
+
+    const isCalendar = $('#method').value === 'calendar';
+
+    /* ---------- 目前年度的天數 ---------- */
+    let currentDays, periodText;
+
+    if (!isCalendar) {
+      /* 週年制：找出目前落在哪一個週年區間 */
+      currentDays = daysFor(years);
+      if (years < 0.5) {
+        const at6 = addMonths(hire, 6);
+        periodText = '尚未滿 6 個月';
+        $('#daysSub').textContent = `還沒有特休，${fmt(at6)} 起才會有 3 天`;
+      } else {
+        const stageStart = years < 1 ? addMonths(hire, 6) : addYears(hire, Math.floor(years));
+        const stageEnd = years < 1 ? addYears(hire, 1) : addYears(hire, Math.floor(years) + 1);
+        periodText = `${fmt(stageStart)} 起`;
+        $('#daysSub').textContent = `休假年度 ${fmt(stageStart)} 至 ${fmt(new Date(stageEnd - DAY))}`;
+      }
+    } else {
+      /* 曆年制：當年度按在職比例折算 */
+      const yearStart = new Date(ref.getFullYear(), 0, 1, 12);
+      const yearEnd = new Date(ref.getFullYear(), 11, 31, 12);
+      const from = hire > yearStart ? hire : yearStart;
+
+      /* 當年度內年資會跨級時，以年底的年資級距為基準再按比例折算，
+         這是最常見的做法，實務上各公司細節略有不同。 */
+      const yearsAtEnd = seniorityYears(hire, yearEnd);
+      const full = daysFor(yearsAtEnd);
+      const ratio = (yearEnd - from) / (yearEnd - yearStart);
+      currentDays = Math.round(full * Math.min(1, ratio) * 2) / 2;   // 取到 0.5 天
+
+      periodText = `${ref.getFullYear()} 年`;
+      $('#daysSub').textContent = hire > yearStart
+        ? `${ref.getFullYear()} 年度（到職當年按比例折算）`
+        : `${ref.getFullYear()} 年度`;
+    }
+
+    $('#daysOut').textContent = currentDays + ' 天';
+    $('#periodLabel').textContent = periodText;
+
+    /* ---------- 下次增加 ---------- */
+    const nextStage = STAGES.find(s => s.at > years && daysFor(s.at) > daysFor(years));
+    if (nextStage) {
+      const when = nextStage.at === 0.5 ? addMonths(hire, 6) : addYears(hire, nextStage.at);
+      const left = Math.max(0, Math.ceil((when - ref) / DAY));
+      $('#nextChange').textContent = left + ' 天後';
+      $('#nextDays').textContent = daysFor(nextStage.at) + ' 天';
+    } else {
+      $('#nextChange').textContent = '已達上限';
+      $('#nextDays').textContent = '30 天';
+    }
+
+    /* ---------- 排程表 ---------- */
+    $('#schedule').innerHTML = STAGES.map(s => {
+      const start = s.at === 0.5 ? addMonths(hire, 6) : addYears(hire, s.at);
+      const end = new Date((s.at === 0.5 ? addYears(hire, 1) : addYears(hire, s.at + 1)) - DAY);
+      const d = daysFor(s.at);
+      const isNow = ref >= start && ref <= end;
+      return `<tr class="${isNow ? 'now' : ''}">
+        <td>${esc(s.label)}${isNow ? ' <span class="small muted">目前</span>' : ''}</td>
+        <td class="small">${fmt(start)} ～ ${fmt(end)}</td>
+        <td class="num">${d} 天</td>
+      </tr>`;
+    }).join('');
+
+    /* 順便把未休天數的上限對齊目前天數 */
+    $('#unused').max = Math.max(30, currentDays);
+    calcPayout();
+  }
+
+  function calcPayout() {
+    const salary = Math.max(0, Number($('#salary').value) || 0);
+    const unused = Math.max(0, Number($('#unused').value) || 0);
+    const daily = salary / 30;
+    const amount = daily * unused;
+
+    $('#payout').innerHTML = unused > 0
+      ? `<strong>${Math.round(amount).toLocaleString('zh-TW')} 元</strong>` +
+        `<span class="small muted">（日薪 ${Math.round(daily).toLocaleString('zh-TW')} × ${unused} 天）</span>`
+      : '<span class="muted small">填入未休天數即可試算</span>';
+  }
+
+  $('#refDate').value = toInput(new Date());
+
+  $$('input, select').forEach(el => el.addEventListener('input', () => {
+    if (el.id === 'salary' || el.id === 'unused') calcPayout();
+    else calc();
+  }));
+
+  calc();
+})();
+</script>
+</body>
+</html>

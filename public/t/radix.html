@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>進位轉換｜二進位、八進位、十六進位互轉 - 順手工具箱</title>
+<meta name="description" content="免費線上進位轉換工具，二進位、八進位、十進位、十六進位即時互轉，支援任意 2 到 36 進位與大數字，並顯示位元組成與常見用途說明。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.85em' font-size='80'>⇄</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css">
+<style>
+  .radix-row {
+    display: grid; grid-template-columns: 110px 1fr auto; gap: 10px; align-items: center;
+    padding: 10px 12px; border: 1px solid var(--border);
+    border-radius: var(--radius-sm); background: var(--surface); margin-bottom: 7px;
+  }
+  @media (max-width: 560px) { .radix-row { grid-template-columns: 1fr auto; } .radix-row label { grid-column: 1 / -1; } }
+  .radix-row label { font-size: .84rem; font-weight: 600; color: var(--ink-2); margin: 0; }
+  .radix-row label small { display: block; font-weight: 400; color: var(--ink-3); font-size: .74rem; }
+  .radix-row input { font-family: var(--mono); }
+  .bits { display: flex; flex-wrap: wrap; gap: 3px; }
+  .bits b {
+    width: 26px; height: 30px; display: grid; place-items: center;
+    border-radius: 4px; font-family: var(--mono); font-size: .85rem;
+    background: var(--bg-sunk); border: 1px solid var(--border);
+  }
+  .bits b.on { background: var(--brand); color: #fff; border-color: var(--brand); }
+  .bits .gap { width: 8px; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/radix.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="進位, 二進位, 十六進位, binary, hex">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="進位轉換｜二進位、八進位、十六進位互轉 - 順手工具箱">
+<meta property="og:description" content="免費線上進位轉換工具，二進位、八進位、十進位、十六進位即時互轉，支援任意 2 到 36 進位與大數字，並顯示位元組成與常見用途說明。">
+<meta property="og:url" content="https://tools.luka-life.com/t/radix.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="進位轉換｜二進位、八進位、十六進位互轉 - 順手工具箱">
+<meta name="twitter:description" content="免費線上進位轉換工具，二進位、八進位、十進位、十六進位即時互轉，支援任意 2 到 36 進位與大數字，並顯示位元組成與常見用途說明。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "進位轉換",
+  "description": "免費線上進位轉換工具，二進位、八進位、十進位、十六進位即時互轉，支援任意 2 到 36 進位與大數字，並顯示位元組成與常見用途說明。",
+  "url": "https://tools.luka-life.com/t/radix.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "計算換算",
+      "item": "https://tools.luka-life.com/#calc"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "進位轉換",
+      "item": "https://tools.luka-life.com/t/radix.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "可以轉換很大的數字嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以。工具使用 BigInt 處理整數，長度不受一般數字精度限制，幾十位數的十六進位也能正確轉換。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "支援小數或負數嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "支援負整數，前面加減號即可。小數目前不支援——非十進位的小數換算規則比較特殊，而且實務上用到的場合不多。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "輸入框變紅色是什麼意思？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "代表你輸入了該進位不存在的數字，例如在二進位欄位輸入 2，或在十六進位欄位輸入 g。把不合法的字元刪掉就會恢復。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="radix">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">⇄</span>進位轉換</h1>
+    <p class="lede">任何一格打字，其他格同步換算。十六進位的色碼、二進位的旗標值，來回對照很方便。</p>
+  </div>
+
+  <div class="panel">
+    <div id="rows"></div>
+
+    <div class="field mt-2">
+      <label for="customBase">自訂進位（2 到 36）</label>
+      <div class="row row--tight">
+        <input type="number" id="customBase" value="36" min="2" max="36" step="1" style="max-width:120px;flex:0 0 auto">
+        <input type="text" id="customVal" spellcheck="false" style="font-family:var(--mono)">
+      </div>
+      <p class="hint">超過 10 進位時，會用 a 到 z 代表 10 到 35。</p>
+    </div>
+
+    <div class="panel__title mt-2">二進位位元圖</div>
+    <div class="bits" id="bits"></div>
+    <p class="hint" id="bitInfo"></p>
+  </div>
+
+  <section class="prose">
+    <h2>為什麼工程上常用十六進位</h2>
+    <p>因為<strong>一個十六進位數字剛好等於四個二進位位元</strong>，換算時一位對四位，不必計算就能心算轉換。一個位元組（8 位元）正好寫成兩位十六進位數，所以記憶體位址、顏色色碼、檔案內容都習慣用十六進位表示——<code>#FF6B4A</code> 這種色碼就是三組位元組，分別代表紅、綠、藍。</p>
+
+    <h2>各種進位的常見用途</h2>
+    <ul>
+      <li><strong>二進位</strong>：權限旗標、位元運算、硬體訊號。</li>
+      <li><strong>八進位</strong>：Linux 的檔案權限（<code>chmod 755</code> 就是八進位）。</li>
+      <li><strong>十進位</strong>：日常生活。</li>
+      <li><strong>十六進位</strong>：顏色、記憶體位址、雜湊值、MAC 位址。</li>
+    </ul>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>可以轉換很大的數字嗎？</summary>
+        <div class="a">可以。工具使用 BigInt 處理整數，長度不受一般數字精度限制，幾十位數的十六進位也能正確轉換。</div>
+      </details>
+      <details>
+        <summary>支援小數或負數嗎？</summary>
+        <div class="a">支援負整數，前面加減號即可。小數目前不支援——非十進位的小數換算規則比較特殊，而且實務上用到的場合不多。</div>
+      </details>
+      <details>
+        <summary>輸入框變紅色是什麼意思？</summary>
+        <div class="a">代表你輸入了該進位不存在的數字，例如在二進位欄位輸入 2，或在十六進位欄位輸入 g。把不合法的字元刪掉就會恢復。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js"></script>
+<script src="../assets/js/layout.js"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, esc } = window.U;
+
+  const BASES = [
+    { base: 2,  name: '二進位',   note: 'Binary．0-1' },
+    { base: 8,  name: '八進位',   note: 'Octal．0-7' },
+    { base: 10, name: '十進位',   note: 'Decimal．日常使用' },
+    { base: 16, name: '十六進位', note: 'Hex．0-9 a-f' }
+  ];
+
+  $('#rows').innerHTML = BASES.map(b => `
+    <div class="radix-row">
+      <label for="r${b.base}">${esc(b.name)}<small>${esc(b.note)}</small></label>
+      <input type="text" id="r${b.base}" data-base="${b.base}" spellcheck="false" autocomplete="off">
+      <button class="btn btn--ghost btn--sm" type="button" data-copy-from="r${b.base}">複製</button>
+    </div>`).join('');
+
+  let updating = false;
+
+  /* 用 BigInt 逐位累加，才能處理超過 Number 精度的大數 */
+  function parseBig(str, base) {
+    const s = str.trim().toLowerCase().replace(/[\s_]/g, '');
+    if (!s) return null;
+
+    let neg = false;
+    let body = s;
+    if (body[0] === '-') { neg = true; body = body.slice(1); }
+    if (!body) return null;
+
+    const B = BigInt(base);
+    let acc = 0n;
+
+    for (const ch of body) {
+      const d = parseInt(ch, 36);
+      if (isNaN(d) || d >= base) return NaN;   // 這個進位不允許的字元
+      acc = acc * B + BigInt(d);
+    }
+    return neg ? -acc : acc;
+  }
+
+  function renderBits(value) {
+    if (value === null || value === undefined || typeof value !== 'bigint') {
+      $('#bits').innerHTML = '';
+      $('#bitInfo').textContent = '';
+      return;
+    }
+
+    const neg = value < 0n;
+    const abs = neg ? -value : value;
+    let bin = abs.toString(2);
+
+    if (bin.length > 64) {
+      $('#bits').innerHTML = '';
+      $('#bitInfo').textContent = `位元數 ${bin.length} 位，太長不顯示圖示。`;
+      return;
+    }
+
+    /* 補到 4 的倍數，視覺上分組比較好讀 */
+    const pad = (4 - bin.length % 4) % 4;
+    bin = '0'.repeat(pad) + bin;
+
+    let html = '';
+    for (let i = 0; i < bin.length; i++) {
+      if (i > 0 && i % 4 === 0) html += '<span class="gap"></span>';
+      html += `<b class="${bin[i] === '1' ? 'on' : ''}">${bin[i]}</b>`;
+    }
+    $('#bits').innerHTML = html;
+
+    const bytes = Math.ceil(bin.length / 8);
+    $('#bitInfo').textContent =
+      `${neg ? '負數（此圖顯示絕對值）．' : ''}實際 ${abs.toString(2).length} 個位元，` +
+      `至少需要 ${bytes} 個位元組儲存。`;
+  }
+
+  function syncFrom(sourceEl) {
+    if (updating) return;
+    updating = true;
+
+    const base = Number(sourceEl.dataset.base) || Number($('#customBase').value);
+    const parsed = parseBig(sourceEl.value, base);
+
+    if (parsed === null) {
+      /* 清空時把其他欄位一起清掉 */
+      $$('[data-base]').forEach(el => { if (el !== sourceEl) el.value = ''; });
+      if (sourceEl.id !== 'customVal') $('#customVal').value = '';
+      sourceEl.style.borderColor = '';
+      renderBits(null);
+      updating = false;
+      return;
+    }
+
+    if (Number.isNaN(parsed)) {
+      sourceEl.style.borderColor = 'var(--danger)';
+      updating = false;
+      return;
+    }
+
+    sourceEl.style.borderColor = '';
+
+    $$('[data-base]').forEach(el => {
+      if (el === sourceEl) return;
+      el.value = parsed.toString(Number(el.dataset.base));
+      el.style.borderColor = '';
+    });
+
+    const cb = Math.max(2, Math.min(36, Number($('#customBase').value) || 36));
+    if (sourceEl.id !== 'customVal') {
+      $('#customVal').value = parsed.toString(cb);
+    }
+
+    renderBits(parsed);
+    updating = false;
+  }
+
+  $('#rows').addEventListener('input', e => {
+    if (e.target.dataset.base) syncFrom(e.target);
+  });
+
+  $('#customVal').addEventListener('input', () => syncFrom($('#customVal')));
+  $('#customBase').addEventListener('input', () => {
+    const dec = $('#r10');
+    if (dec.value) syncFrom(dec);
+  });
+
+  $('#rows').addEventListener('click', e => {
+    const btn = e.target.closest('[data-copy-from]');
+    if (!btn) return;
+    const v = document.getElementById(btn.dataset.copyFrom).value;
+    if (!v) return window.toast('這格是空的');
+    window.copyText(v);
+  });
+
+  $('#r10').value = '255';
+  syncFrom($('#r10'));
+})();
+</script>
+</body>
+</html>
