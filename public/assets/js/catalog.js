@@ -94,6 +94,8 @@ const TOOLS = [
     desc: '一次換掉全部，支援正規表示式', kw: '取代 replace 尋找 批次 regex' },
   { slug: 'fancy', cat: 'text', icon: '🅵', name: '酷炫字體產生器',
     desc: '英數轉花體、圓圈、粗體字', kw: '特殊字體 花體字 酷文字 fancy text' },
+  { slug: 'zh-convert', cat: 'text', icon: '繁', name: '繁簡轉換',
+    desc: '詞彙級判斷，台灣用語一併轉', kw: '繁簡 簡體 繁體 轉換 简体 繁體字 台灣正體 大陸用語' },
 
   /* ---------- 符號表情 ---------- */
   { slug: 'symbols', cat: 'symbol', icon: '★', name: '特殊符號大全',
@@ -120,6 +122,8 @@ const TOOLS = [
     desc: '自訂長度與字元，附強度檢測', kw: '密碼 產生 隨機密碼 password 強度' },
   { slug: 'color', cat: 'dev', icon: '🎨', name: '色碼轉換器',
     desc: 'HEX / RGB / HSL 互轉與配色', kw: '色碼 顏色 hex rgb hsl 調色' },
+  { slug: 'timestamp', cat: 'dev', icon: '⌛', name: 'Unix 時間戳轉換',
+    desc: '時間戳與日期互轉，自動辨識秒毫秒', kw: 'timestamp 時間戳 unix epoch 毫秒 時區 日期轉換 2038' },
 
   /* ---------- 計算換算 ---------- */
   { slug: 'unit', cat: 'calc', icon: '📏', name: '單位換算',
@@ -188,6 +192,10 @@ const TOOLS = [
     desc: '估算扣手續費後實拿多少', kw: '退稅 免稅 tax refund 消費稅 日本 歐洲 機場' },
   { slug: 'luggage', cat: 'travel', icon: '🧳', name: '行李重量尺寸檢查',
     desc: '算線性尺寸，比對手提託運上限', kw: '行李 尺寸 重量 手提 託運 登機箱 幾吋 限制' },
+  { slug: 'plug', cat: 'travel', icon: '🔌', name: '各國插頭電壓查詢',
+    desc: '附插頭圖，判斷要帶轉接頭還是變壓器', kw: '插頭 插座 電壓 轉接頭 變壓器 110v 220v 萬用 出國 充電' },
+  { slug: 'passport', cat: 'travel', icon: '🛂', name: '護照效期檢查',
+    desc: '六個月規定一秒判斷能不能出國', kw: '護照 效期 六個月 到期 換發 申根 入境 有效期' },
 
   /* ---------- 台灣生活 ---------- */
   { slug: 'mortgage', cat: 'tw', icon: '🏠', name: '房貸試算',
@@ -224,10 +232,18 @@ const TOOLS = [
     desc: '手續費、證交稅與損益兩平價', kw: '股票 手續費 證交稅 台股 損益 折扣' },
   { slug: 'tax-id', cat: 'tw', icon: '🏢', name: '統一編號驗證',
     desc: '檢查公司統編格式是否正確', kw: '統編 統一編號 公司行號 驗證 檢查碼' },
+  { slug: 'car-tax', cat: 'tw', icon: '🚗', name: '牌照稅燃料費試算',
+    desc: '按排氣量算車稅，附級距懸崖提醒', kw: '牌照稅 燃料稅 汽燃費 公路養管費 車稅 排氣量 cc 機車 電動車' },
+  { slug: 'nhi-supplement', cat: 'tw', icon: '🏥', name: '二代健保補充保費',
+    desc: '股利租金兼職獎金要扣多少', kw: '二代健保 補充保費 健保 股利 租金 兼職 獎金 利息 2.11' },
 
   /* ---------- 計算換算（續） ---------- */
   { slug: 'compound', cat: 'calc', icon: '📊', name: '複利與定存試算',
-    desc: '單筆與定期定額的本利和', kw: '複利 定存 利息 年化 報酬 存錢 試算' }
+    desc: '單筆與定期定額的本利和', kw: '複利 定存 利息 年化 報酬 存錢 試算' },
+  { slug: 'tdee', cat: 'calc', icon: '🔥', name: 'TDEE 基礎代謝計算',
+    desc: '算 BMR 與每日總消耗，附熱量目標', kw: 'tdee bmr 基礎代謝 熱量 減脂 增肌 卡路里 每日消耗' },
+  { slug: 'discount', cat: 'calc', icon: '🏷️', name: '折扣比價計算機',
+    desc: '促銷換算成折數，每單位價格比一比', kw: '折扣 打折 幾折 第二件 買一送一 滿額 比價 每單位 便宜' }
 ];
 
 /* 便利查詢 */

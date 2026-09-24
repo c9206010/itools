@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>折扣比價計算機｜第二件六折等於打幾折 - 順手工具箱</title>
+<meta name="description" content="免費折扣計算與比價工具，可算折後價、反推打幾折，把買一送一、第二件折扣、滿額折抵換算成實際折數，還能用每單位價格比較不同容量的商品哪個划算。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏷️</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css?v=35ffc45a">
+<style>
+  .board { border: 2px solid var(--border-strong); border-radius: var(--radius-lg);
+           background: var(--surface-2); padding: 18px 16px; }
+  .board__row { display: flex; justify-content: space-between; align-items: baseline;
+                gap: 12px; padding: 9px 0; border-bottom: 1px dashed var(--border); }
+  .board__row:last-of-type { border-bottom: 0; }
+  .board__row b { font-family: var(--mono); font-size: 1.1rem; font-weight: 700; }
+  .board__row.main b { color: var(--brand); font-size: 1.7rem; }
+  .board__row.muted-row, .board__row.muted-row b { color: var(--ink-3); font-weight: 400; }
+
+  .big-tag { text-align: center; padding: 16px 14px; border-radius: var(--radius-lg);
+             border: 2px solid var(--brand); background: var(--brand-wash); }
+  .big-tag__k { display: block; font-size: .86rem; color: var(--ink-2); }
+  .big-tag__v { display: block; font-family: var(--mono); font-size: 2.5rem;
+                font-weight: 700; color: var(--brand); line-height: 1.2; margin: 3px 0; }
+  .big-tag__d { display: block; font-size: .85rem; color: var(--ink-2); line-height: 1.65; }
+
+  .cmp-row { display: grid; gap: 8px; align-items: end; margin-bottom: 9px;
+             grid-template-columns: 1.4fr 1fr 1fr 1.1fr auto; }
+  @media (max-width: 720px) { .cmp-row { grid-template-columns: 1fr 1fr; } }
+  .cmp-row input, .cmp-row select { width: 100%; }
+  .cmp-row .del { border: 0; background: none; color: var(--danger); cursor: pointer;
+                  font: inherit; font-size: 1.2rem; padding: 8px 6px; line-height: 1; }
+  .cmp-row .del:hover { opacity: .6; }
+
+  .rank { margin-top: 14px; }
+  tr.best { background: rgba(47,125,79,.1); }
+  tr.best td { font-weight: 700; }
+  .badge { display: inline-block; font-size: .75rem; padding: 2px 7px; border-radius: 99px;
+           background: var(--ok); color: #fff; margin-left: 6px; vertical-align: middle; }
+
+  th.num, td.num { text-align: right; font-family: var(--mono); }
+  .hint b { font-family: var(--mono); color: var(--ink-2); }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/discount.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="折扣, 打折, 幾折, 第二件, 買一送一, 滿額, 比價, 每單位, 便宜">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="折扣比價計算機｜第二件六折等於打幾折 - 順手工具箱">
+<meta property="og:description" content="免費折扣計算與比價工具，可算折後價、反推打幾折，把買一送一、第二件折扣、滿額折抵換算成實際折數，還能用每單位價格比較不同容量的商品哪個划算。">
+<meta property="og:url" content="https://tools.luka-life.com/t/discount.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="折扣比價計算機｜第二件六折等於打幾折 - 順手工具箱">
+<meta name="twitter:description" content="免費折扣計算與比價工具，可算折後價、反推打幾折，把買一送一、第二件折扣、滿額折抵換算成實際折數，還能用每單位價格比較不同容量的商品哪個划算。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "折扣比價計算機",
+  "description": "免費折扣計算與比價工具，可算折後價、反推打幾折，把買一送一、第二件折扣、滿額折抵換算成實際折數，還能用每單位價格比較不同容量的商品哪個划算。",
+  "url": "https://tools.luka-life.com/t/discount.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "計算換算",
+      "item": "https://tools.luka-life.com/#calc"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "折扣比價計算機",
+      "item": "https://tools.luka-life.com/t/discount.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "台灣的「折」跟國外的「％ off」怎麼換算？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "方向剛好相反。台灣說的八折是「付原價的 80%」，國外標的 20% off 是「少付 20%」，兩個講的是同一件事。換算方式是「10 減去折數，乘以 10」——七九折就是 21% off。上面的工具兩種都會顯示。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "折扣跟折價券可以一起用嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "要看店家規定，很多活動會寫明不得合併使用。可以合併的話，先後順序會影響金額：先打折再扣券，跟先扣券再打折，結果不一樣，後者對消費者比較有利。實務上多數是前者。結帳前看一下明細最準。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "買一送一送的是比較便宜的那件嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "通常是。多數店家的規則是以價低者為贈品，所以如果你買的兩件價格不同，實際折數會比五折差一些。要湊買一送一的話，挑價格相近的兩件最划算。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "運費要算進去嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "要，尤其是網購。一筆 500 元的訂單加上 80 元運費，等於多付了 16%，很容易把折扣吃掉。在上面第四個工具比較網購商品時，把運費平均分攤到價格裡再比，會比較接近實際情況。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="discount">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🏷️</span>折扣比價計算機</h1>
+    <p class="lede">「第二件六折」聽起來很划算，換算下來其實是八折。促銷換成實際折數，比較才有意義。</p>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title">一、算折後價</div>
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="price">原價</label>
+        <input type="number" id="price" value="1280" min="0" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="off">折數<span class="muted">（8.5 就是八五折）</span></label>
+        <input type="number" id="off" value="7.9" min="0" max="10" step="0.1">
+      </div>
+      <div class="field mb-0">
+        <label for="extra">再折抵金額<span class="muted">（折價券）</span></label>
+        <input type="number" id="extra" value="0" min="0" step="10">
+      </div>
+    </div>
+    <div class="board" id="board1"></div>
+    <p class="hint mb-0" style="margin-top:10px">
+      折價券通常是折完折扣後才扣。如果店家的算法是先扣券再打折，結果會不一樣，以結帳畫面為準。
+    </p>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title">二、反推打幾折</div>
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="rOrig">原價</label>
+        <input type="number" id="rOrig" value="1280" min="0" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="rSale">實際售價</label>
+        <input type="number" id="rSale" value="899" min="0" step="1">
+      </div>
+    </div>
+    <div class="board" id="board2"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title">三、促銷方案換算成折數</div>
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="promo">促銷方式</label>
+        <select id="promo"></select>
+      </div>
+      <div class="field mb-0" id="pAWrap">
+        <label for="pA" id="pALabel">數值 A</label>
+        <input type="number" id="pA" value="2" min="0" step="1">
+      </div>
+      <div class="field mb-0" id="pBWrap">
+        <label for="pB" id="pBLabel">數值 B</label>
+        <input type="number" id="pB" value="6" min="0" step="0.1">
+      </div>
+    </div>
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="unitPrice">單件原價</label>
+        <input type="number" id="unitPrice" value="500" min="0" step="1">
+      </div>
+      <div class="field mb-0" id="cartWrap" hidden>
+        <label for="cartAmount">打算買多少錢</label>
+        <input type="number" id="cartAmount" value="2400" min="0" step="100">
+      </div>
+    </div>
+
+    <div class="big-tag" id="promoTag"></div>
+    <div class="board" id="board3" style="margin-top:14px"></div>
+    <p class="hint mb-0" id="promoNote" style="margin-top:10px"></p>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title">四、每單位多少錢</div>
+    <p class="hint">不同容量、不同價格，換算成同一個單位才知道哪個划算。加幾個品項進來比一比。</p>
+    <div id="cmpRows"></div>
+    <div class="btn-group">
+      <button type="button" class="btn btn--sm" id="addRow">再加一項</button>
+      <button type="button" class="btn btn--sm btn--ghost" id="resetRows">重設</button>
+    </div>
+    <div class="rank" id="rank"></div>
+  </div>
+
+  <section class="prose">
+    <h2>為什麼「第二件六折」不是六折</h2>
+    <p>因為折扣只套用在<strong>其中一件</strong>。買兩件的時候，第一件是原價、第二件才打六折，加起來是 1.0 ＋ 0.6 ＝ 1.6 件的錢買到 2 件，平均下來是<strong>八折</strong>。</p>
+    <p>同樣的道理，買一送一是五折、買二送一約六七折、買三送一是七五折。把它們都換算成折數，才能跟「全面八折」這種活動直接比較。</p>
+
+    <h2>滿額折抵的陷阱</h2>
+    <p>「滿 1000 折 100」看起來是九折，但只有在你剛好買 1000 元的時候才是。買 1990 元一樣只折 100，實際只有九五折。</p>
+    <p>這類活動會讓人為了湊到下一個門檻而多買，最後花的錢比原本打算的多。判斷的標準很簡單：<strong>湊單買的東西，是不是你本來就要買的</strong>。如果不是，省下的折扣沒有意義。</p>
+
+    <h2>比價要看每單位價格</h2>
+    <p>大包裝不一定比較便宜，這是賣場常見的反直覺現象。唯一可靠的比法是換算成<strong>每毫升、每公克、每張多少錢</strong>，也就是上面第四個工具在做的事。</p>
+    <p>但便宜不等於划算。用不完會過期的東西、佔空間的東西、或是你其實沒那麼喜歡的東西，買大包只是把浪費放大。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>台灣的「折」跟國外的「％ off」怎麼換算？</summary>
+        <div class="a">方向剛好相反。台灣說的<strong>八折</strong>是「付原價的 80%」，國外標的 <strong>20% off</strong> 是「少付 20%」，兩個講的是同一件事。換算方式是「10 減去折數，乘以 10」——七九折就是 21% off。上面的工具兩種都會顯示。</div>
+      </details>
+      <details>
+        <summary>折扣跟折價券可以一起用嗎？</summary>
+        <div class="a">要看店家規定，很多活動會寫明不得合併使用。可以合併的話，<strong>先後順序會影響金額</strong>：先打折再扣券，跟先扣券再打折，結果不一樣，後者對消費者比較有利。實務上多數是前者。結帳前看一下明細最準。</div>
+      </details>
+      <details>
+        <summary>買一送一送的是比較便宜的那件嗎？</summary>
+        <div class="a">通常是。多數店家的規則是<strong>以價低者為贈品</strong>，所以如果你買的兩件價格不同，實際折數會比五折差一些。要湊買一送一的話，挑價格相近的兩件最划算。</div>
+      </details>
+      <details>
+        <summary>運費要算進去嗎？</summary>
+        <div class="a">要，尤其是網購。一筆 500 元的訂單加上 80 元運費，等於多付了 16%，很容易把折扣吃掉。在上面第四個工具比較網購商品時，把運費平均分攤到價格裡再比，會比較接近實際情況。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js?v=02ac63f3"></script>
+<script src="../assets/js/layout.js?v=483231ca"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc } = window.U;
+
+  const money = n => 'NT$ ' + Math.round(n).toLocaleString('zh-TW');
+  const fmt2 = n => (Math.round(n * 100) / 100).toLocaleString('zh-TW');
+
+  /** 比例換成台灣說法的折數。0.8 → 「8 折」 */
+  const toOff = ratio => {
+    const d = ratio * 10;
+    /* 剛好整數就不顯示小數點，9 折比 9.0 折自然 */
+    return (Math.abs(d - Math.round(d)) < 0.05 ? Math.round(d) : d.toFixed(1)) + ' 折';
+  };
+  const toPctOff = ratio => (100 - ratio * 100).toFixed(1).replace(/\.0$/, '') + '% off';
+
+  /* ==========================================================================
+     一、算折後價
+     ========================================================================== */
+  function calc1() {
+    const price = Math.max(0, Number($('#price').value) || 0);
+    const off = Math.min(10, Math.max(0, Number($('#off').value) || 0));
+    const extra = Math.max(0, Number($('#extra').value) || 0);
+
+    const afterOff = price * off / 10;
+    const final = Math.max(0, afterOff - extra);
+    const saved = price - final;
+    const ratio = price ? final / price : 0;
+
+    $('#board1').innerHTML = `
+      <div class="board__row muted-row"><span>原價</span><b>${money(price)}</b></div>
+      <div class="board__row"><span>打 ${fmt2(off)} 折後</span><b>${money(afterOff)}</b></div>
+      ${extra ? `<div class="board__row muted-row">
+        <span>再折抵</span><b>−${money(extra)}</b></div>` : ''}
+      <div class="board__row main"><span>實付</span><b>${money(final)}</b></div>
+      <div class="board__row"><span>總共省下</span><b>${money(saved)}</b></div>
+      <div class="board__row muted-row">
+        <span>相當於</span><b>${price ? toOff(ratio) + '（' + toPctOff(ratio) + '）' : '—'}</b>
+      </div>`;
+  }
+
+  /* ==========================================================================
+     二、反推折數
+     ========================================================================== */
+  function calc2() {
+    const orig = Math.max(0, Number($('#rOrig').value) || 0);
+    const sale = Math.max(0, Number($('#rSale').value) || 0);
+    const ratio = orig ? sale / orig : 0;
+    const saved = orig - sale;
+
+    const note = !orig ? '請先填原價。'
+      : sale > orig ? '售價比原價高，這不是折扣。'
+      : '';
+
+    $('#board2').innerHTML = `
+      <div class="board__row main">
+        <span>打幾折</span>
+        <b>${orig && sale <= orig ? toOff(ratio) : '—'}</b>
+      </div>
+      <div class="board__row">
+        <span>國外標示法</span>
+        <b>${orig && sale <= orig ? toPctOff(ratio) : '—'}</b>
+      </div>
+      <div class="board__row"><span>省下金額</span>
+        <b>${saved > 0 ? money(saved) : '—'}</b></div>
+      ${note ? `<div class="board__row muted-row"><span>${esc(note)}</span><b></b></div>` : ''}`;
+  }
+
+  /* ==========================================================================
+     三、促銷換算
+     每一種都換算成「平均一件付原價的幾成」，才能互相比較。
+     ========================================================================== */
+  const PROMOS = [
+    { id: 'bogo', name: '買一送一',
+      calc: () => ({ ratio: 0.5, qty: 2, pay: 1 }),
+      note: '付一件的錢拿兩件。要注意多數店家是以價低者為贈品，兩件價差越大，實際折數越不划算。' },
+    { id: 'nm', name: '買 N 送 M', a: '買幾件', b: '送幾件',
+      calc: (a, b) => ({ ratio: a / (a + b), qty: a + b, pay: a }),
+      note: '付 N 件的錢拿到 N＋M 件，平均折數就是 N 除以 N＋M。' },
+    { id: 'second', name: '第二件 X 折', b: '第二件打幾折',
+      calc: (a, b) => ({ ratio: (1 + b / 10) / 2, qty: 2, pay: 1 + b / 10 }),
+      note: '折扣只套用在第二件，所以平均折數會落在原價與該折數的正中間。' },
+    { id: 'nth', name: '第 N 件 X 折', a: '第幾件開始打折', b: '打幾折',
+      calc: (a, b) => {
+        const n = Math.max(2, Math.round(a));
+        const pay = (n - 1) + b / 10;
+        return { ratio: pay / n, qty: n, pay };
+      },
+      note: '前面幾件都是原價，只有指定的那一件有折扣，件數越多攤下來越便宜。' },
+    { id: 'bundle', name: 'N 件 X 元', a: '幾件', b: '合計多少錢',
+      calc: (a, b, unit) => ({ ratio: unit ? b / (a * unit) : 0, qty: a, pay: unit ? b / unit : 0 }),
+      note: '直接指定一組的總價。跟單件原價相比才知道是不是真的便宜。' },
+    { id: 'threshold', name: '滿 X 折 Y', a: '滿多少元', b: '折多少元', cart: true,
+      note: '折抵是整數次的，買 1,990 元跟買 1,000 元折的一樣多。想清楚有沒有為了湊門檻多花錢。' }
+  ];
+
+  $('#promo').innerHTML = PROMOS.map(p =>
+    `<option value="${p.id}">${esc(p.name)}</option>`).join('');
+
+  function currentPromo() {
+    return PROMOS.find(p => p.id === $('#promo').value);
+  }
+
+  function applyPromoFields() {
+    const p = currentPromo();
+    $('#pAWrap').hidden = !p.a;
+    $('#pBWrap').hidden = !p.b;
+    $('#cartWrap').hidden = !p.cart;
+    if (p.a) $('#pALabel').textContent = p.a;
+    if (p.b) $('#pBLabel').textContent = p.b;
+    $('#promoNote').textContent = p.note;
+  }
+
+  function calc3() {
+    const p = currentPromo();
+    const a = Number($('#pA').value) || 0;
+    const b = Number($('#pB').value) || 0;
+    const unit = Math.max(0, Number($('#unitPrice').value) || 0);
+
+    /* 滿額折抵要看實際買多少，跟件數無關，另外處理 */
+    if (p.cart) {
+      const cart = Math.max(0, Number($('#cartAmount').value) || 0);
+      const times = a > 0 ? Math.floor(cart / a) : 0;
+      const cut = times * b;
+      const pay = Math.max(0, cart - cut);
+      const ratio = cart ? pay / cart : 1;
+      const nextGap = a > 0 ? a - (cart % a) : 0;
+
+      $('#promoTag').innerHTML = `
+        <span class="big-tag__k">實際等於</span>
+        <span class="big-tag__v">${cart ? toOff(ratio) : '—'}</span>
+        <span class="big-tag__d">${cart ? toPctOff(ratio) : ''}</span>`;
+
+      $('#board3').innerHTML = `
+        <div class="board__row muted-row"><span>購買金額</span><b>${money(cart)}</b></div>
+        <div class="board__row"><span>折抵次數</span><b>${times} 次</b></div>
+        <div class="board__row"><span>共折抵</span><b>−${money(cut)}</b></div>
+        <div class="board__row main"><span>實付</span><b>${money(pay)}</b></div>
+        ${times > 0 && nextGap > 0 && nextGap < a ? `
+        <div class="board__row muted-row">
+          <span>再買 ${money(nextGap)} 可多折 ${money(b)}</span>
+          <b>${(b / nextGap * 100).toFixed(0)}% 划算度</b>
+        </div>` : ''}`;
+      return;
+    }
+
+    const r = p.calc(a, b, unit);
+    const ratio = Math.max(0, r.ratio || 0);
+    const total = r.pay * unit;
+    const avg = r.qty ? total / r.qty : 0;
+
+    $('#promoTag').innerHTML = `
+      <span class="big-tag__k">實際等於</span>
+      <span class="big-tag__v">${ratio ? toOff(ratio) : '—'}</span>
+      <span class="big-tag__d">${ratio ? toPctOff(ratio) : ''}</span>`;
+
+    $('#board3').innerHTML = `
+      <div class="board__row muted-row"><span>單件原價</span><b>${money(unit)}</b></div>
+      <div class="board__row"><span>拿到幾件</span><b>${fmt2(r.qty)} 件</b></div>
+      <div class="board__row"><span>實付總額</span><b>${money(total)}</b></div>
+      <div class="board__row main"><span>平均一件</span><b>${money(avg)}</b></div>
+      <div class="board__row"><span>比原價省</span>
+        <b>${money(unit * r.qty - total)}</b></div>`;
+  }
+
+  /* ==========================================================================
+     四、每單位價格比較
+     ========================================================================== */
+  const UNITS = ['ml', 'g', '入', '片', '包', '次'];
+  const DEFAULT_ROWS = [
+    { name: '小包裝', price: 89, qty: 300, unit: 'ml' },
+    { name: '大包裝', price: 199, qty: 750, unit: 'ml' }
+  ];
+  let rows = DEFAULT_ROWS.map(r => ({ ...r }));
+
+  function renderRows() {
+    $('#cmpRows').innerHTML = rows.map((r, i) => `
+      <div class="cmp-row" data-i="${i}">
+        <div class="field mb-0">
+          ${i === 0 ? '<label>品項</label>' : ''}
+          <input type="text" data-f="name" value="${esc(r.name)}" placeholder="名稱">
+        </div>
+        <div class="field mb-0">
+          ${i === 0 ? '<label>價格</label>' : ''}
+          <input type="number" data-f="price" value="${r.price}" min="0" step="1">
+        </div>
+        <div class="field mb-0">
+          ${i === 0 ? '<label>容量／數量</label>' : ''}
+          <input type="number" data-f="qty" value="${r.qty}" min="0" step="1">
+        </div>
+        <div class="field mb-0">
+          ${i === 0 ? '<label>單位</label>' : ''}
+          <select data-f="unit">
+            ${UNITS.map(u => `<option${u === r.unit ? ' selected' : ''}>${u}</option>`).join('')}
+          </select>
+        </div>
+        <button type="button" class="del" data-del="${i}"
+                aria-label="刪除這一列">✕</button>
+      </div>`).join('');
+    renderRank();
+  }
+
+  function renderRank() {
+    const valid = rows
+      .map((r, i) => ({ ...r, i, per: r.qty > 0 ? r.price / r.qty : Infinity }))
+      .filter(r => r.price > 0 && r.qty > 0);
+
+    if (valid.length < 2) {
+      $('#rank').innerHTML = '<p class="hint mb-0">填兩個以上的品項就會自動排出哪個划算。</p>';
+      return;
+    }
+
+    /* 單位不同就不能直接比，先提醒 */
+    const units = [...new Set(valid.map(r => r.unit))];
+    const mixed = units.length > 1;
+
+    const sorted = valid.slice().sort((a, b) => a.per - b.per);
+    const best = sorted[0];
+
+    $('#rank').innerHTML = `
+      ${mixed ? `<p class="hint"><strong>注意：</strong>你用了不同的單位（${units.join('、')}），
+        數字無法直接比較。請先換算成同一個單位。</p>` : ''}
+      <div class="table-scroll">
+        <table class="data">
+          <thead>
+            <tr><th>品項</th><th class="num">價格</th><th class="num">容量</th>
+            <th class="num">每單位</th><th class="num">比最便宜的貴</th></tr>
+          </thead>
+          <tbody>
+            ${sorted.map(r => `
+              <tr class="${r === best ? 'best' : ''}">
+                <td>${esc(r.name || '未命名')}${r === best && !mixed
+                  ? '<span class="badge">最划算</span>' : ''}</td>
+                <td class="num">${money(r.price)}</td>
+                <td class="num">${r.qty.toLocaleString('zh-TW')} ${esc(r.unit)}</td>
+                <td class="num">${fmt2(r.per)} 元／${esc(r.unit)}</td>
+                <td class="num">${r === best ? '—'
+                  : '+' + ((r.per / best.per - 1) * 100).toFixed(1) + '%'}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  }
+
+  $('#cmpRows').addEventListener('input', e => {
+    const wrap = e.target.closest('.cmp-row');
+    if (!wrap) return;
+    const i = +wrap.dataset.i;
+    const f = e.target.dataset.f;
+    if (!f) return;
+    rows[i][f] = f === 'name' || f === 'unit' ? e.target.value : Number(e.target.value) || 0;
+    renderRank();
+  });
+
+  $('#cmpRows').addEventListener('change', e => {
+    if (e.target.dataset.f === 'unit') {
+      rows[+e.target.closest('.cmp-row').dataset.i].unit = e.target.value;
+      renderRank();
+    }
+  });
+
+  $('#cmpRows').addEventListener('click', e => {
+    const btn = e.target.closest('[data-del]');
+    if (!btn) return;
+    if (rows.length <= 1) { window.toast('至少要留一列'); return; }
+    rows.splice(+btn.dataset.del, 1);
+    renderRows();
+  });
+
+  $('#addRow').addEventListener('click', () => {
+    rows.push({ name: '', price: 0, qty: 0, unit: rows[0] ? rows[0].unit : 'ml' });
+    renderRows();
+  });
+
+  $('#resetRows').addEventListener('click', () => {
+    rows = DEFAULT_ROWS.map(r => ({ ...r }));
+    renderRows();
+  });
+
+  /* ---------- 綁定 ---------- */
+  ['#price', '#off', '#extra'].forEach(s => $(s).addEventListener('input', calc1));
+  ['#rOrig', '#rSale'].forEach(s => $(s).addEventListener('input', calc2));
+  ['#pA', '#pB', '#unitPrice', '#cartAmount'].forEach(s =>
+    $(s).addEventListener('input', calc3));
+  $('#promo').addEventListener('change', () => { applyPromoFields(); calc3(); });
+
+  calc1();
+  calc2();
+  applyPromoFields();
+  calc3();
+  renderRows();
+})();
+</script>
+</body>
+</html>

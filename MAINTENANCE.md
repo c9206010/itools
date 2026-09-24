@@ -67,9 +67,12 @@ git push
 - 把 canonical、OG、Twitter Card、JSON-LD 注入每一頁的 `<!-- SEO:START -->` 區塊
 - 從頁面裡的 `<details>` 自動抓出 FAQ 產生 FAQPage 結構化資料
 - 重新產生 `sitemap.xml`
-- 幫 `main.css`、`layout.js`、`catalog.js`、`cities.js` 加上內容雜湊版本號
+- 幫共用資源加上內容雜湊版本號
   （**這是對抗 Cloudflare 快取的關鍵**，沒有它使用者會載到舊檔）
 - 把首頁文案裡的「N 種免費線上」自動對齊實際工具數量
+
+新增一個共用的 js 或 css 檔時，記得加進 `build-seo.mjs` 最上面的
+`SHARED_ASSETS` 陣列，否則那個檔案不會有版本號，改了也推不出去。
 
 ---
 
@@ -128,6 +131,17 @@ OG、Twitter Card 跟 JSON-LD，不用手動改七個地方。
 `public/assets/js/cities.js` 是世界城市與時區資料，
 `世界時區換算` 跟 `航班時間轉機計算` 共用同一份。
 
+`public/assets/js/zh-dict.js` 是繁簡轉換的字典，只有 `繁簡轉換` 在用。
+**這個檔案是自動產生的，不要手動改**。要更新字典內容時跑：
+
+```bash
+node build-zh-dict.mjs      # 需要網路，會從 OpenCC 重新抓一次
+node build-seo.mjs          # 字典換了，版本號也要跟著換
+```
+
+那支腳本只留「逐字轉換會轉錯」的詞條（例如 头发 → 頭發 是錯的，要靠詞庫修成 頭髮），
+所以體積從 OpenCC 原始的 1MB 降到 360KB 左右。平常不用跑，產出的檔案已經在 repo 裡。
+
 ---
 
 ## 測試
@@ -152,6 +166,9 @@ OG、Twitter Card 跟 JSON-LD，不用手動改七個地方。
 | `geocoding-api.open-meteo.com` | 天氣工具的城市搜尋 | 不用 |
 | `cdnjs.cloudflare.com` | pdf-lib、qrcode 函式庫 | 不用 |
 | Google AdSense | 每個工具頁一個版位 | 設定在 `catalog.js` 的 `SITE.adsense` |
+
+繁簡轉換用的 OpenCC 字典（Apache-2.0）是**打包成靜態檔**的，
+只有跑 `build-zh-dict.mjs` 時才會連網，使用者端不會對外連線。
 
 **整個專案沒有任何 API 金鑰或密碼**，所以 repo 可以公開。
 發票對獎的中獎號碼是靠 GitHub Actions（`.github/workflows/invoice.yml`）
@@ -178,4 +195,4 @@ OG、Twitter Card 跟 JSON-LD，不用手動改七個地方。
 
 ---
 
-最後更新：2026-09-24
+最後更新：2026-09-24（新增八個工具、繁簡轉換字典）

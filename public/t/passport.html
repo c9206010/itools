@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>護照效期檢查｜六個月規定一秒判斷能不能出國 - 順手工具箱</title>
+<meta name="description" content="免費護照效期檢查工具，輸入到期日與出發日就能判斷是否符合六個月規定，支援申根區的三個月與十年內核發規則，並算出最晚該在哪天前辦好換發。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛂</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css?v=35ffc45a">
+<style>
+  .verdict-box { border: 2px solid var(--border-strong); border-radius: var(--radius-lg);
+                 padding: 20px 18px; text-align: center; }
+  .verdict-box.ok   { border-color: var(--ok);     background: rgba(47,125,79,.08); }
+  .verdict-box.bad  { border-color: var(--danger); background: rgba(192,57,43,.07); }
+  .verdict-box.edge { border-color: var(--warn);   background: rgba(184,134,11,.08); }
+
+  .verdict-box__icon { font-size: 2.4rem; line-height: 1; display: block; }
+  .verdict-box__head { font-size: 1.5rem; font-weight: 700; margin: 10px 0 6px; }
+  .verdict-box.ok   .verdict-box__head { color: var(--ok); }
+  .verdict-box.bad  .verdict-box__head { color: var(--danger); }
+  .verdict-box.edge .verdict-box__head { color: var(--warn); }
+  .verdict-box__sub { color: var(--ink-2); font-size: .95rem; margin: 0; line-height: 1.75; }
+
+  .facts { display: grid; gap: 10px; margin-top: 16px;
+           grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  .fact { border: 1px solid var(--border); border-radius: var(--radius);
+          background: var(--surface); padding: 12px 13px; }
+  .fact__k { display: block; font-size: .8rem; color: var(--ink-3); margin-bottom: 4px; }
+  .fact__v { display: block; font-family: var(--mono); font-size: 1.2rem; font-weight: 700; }
+  .fact__v small { font-size: .78rem; font-weight: 400; color: var(--ink-3); }
+  .fact.alert .fact__v { color: var(--danger); }
+
+  .checks { list-style: none; padding: 0; margin: 16px 0 0; }
+  .checks li { display: flex; gap: 10px; align-items: flex-start;
+               padding: 9px 0; border-top: 1px dashed var(--border); font-size: .92rem; }
+  .checks li:first-child { border-top: 0; }
+  .checks .mark { flex: none; font-family: var(--mono); font-weight: 700; width: 1.4em;
+                  text-align: center; }
+  .checks .pass .mark { color: var(--ok); }
+  .checks .fail .mark { color: var(--danger); }
+  .checks .skip { color: var(--ink-3); }
+
+  .warn-box { border: 1px solid var(--warn); border-radius: var(--radius);
+              background: rgba(184,134,11,.08); padding: 13px 15px;
+              font-size: .89rem; margin-bottom: 16px; }
+  .warn-box strong { color: var(--warn); }
+
+  td.num, th.num { text-align: right; font-family: var(--mono); }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/passport.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="護照, 效期, 六個月, 到期, 換發, 申根, 入境, 有效期">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="護照效期檢查｜六個月規定一秒判斷能不能出國 - 順手工具箱">
+<meta property="og:description" content="免費護照效期檢查工具，輸入到期日與出發日就能判斷是否符合六個月規定，支援申根區的三個月與十年內核發規則，並算出最晚該在哪天前辦好換發。">
+<meta property="og:url" content="https://tools.luka-life.com/t/passport.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="護照效期檢查｜六個月規定一秒判斷能不能出國 - 順手工具箱">
+<meta name="twitter:description" content="免費護照效期檢查工具，輸入到期日與出發日就能判斷是否符合六個月規定，支援申根區的三個月與十年內核發規則，並算出最晚該在哪天前辦好換發。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "護照效期檢查",
+  "description": "免費護照效期檢查工具，輸入到期日與出發日就能判斷是否符合六個月規定，支援申根區的三個月與十年內核發規則，並算出最晚該在哪天前辦好換發。",
+  "url": "https://tools.luka-life.com/t/passport.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "旅遊出行",
+      "item": "https://tools.luka-life.com/#travel"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "護照效期檢查",
+      "item": "https://tools.luka-life.com/t/passport.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "六個月是從出發日算還是回國日算？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "絕大多數國家是從入境當天起算。也就是你抵達的那一天，護照還要有六個月以上的效期。申根區是少數例外，它算的是你離開申根區的那天之後還要有三個月。上面的工具兩種都會幫你判斷。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "差幾天而已，可以賭賭看嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "非常不建議。你要賭的不是一關而是兩關：航空公司的報到櫃檯，以及目的地的移民官。第一關通常更嚴格，因為被拒絕入境的遣返成本是算在航空公司頭上的。差幾天的狀況上面會標成黃色提醒，意思是「規則上可能過，但風險自負」，不是「沒問題」。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "轉機的國家也要算嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "要。如果你在某國入境轉機、或是停留時間長到需要過海關，那個國家的效期規定一樣適用。只在機場管制區內轉機不入境的話通常不用，但各機場規定不同，長時間轉機或需要換航廈的行程請先確認。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "小孩的護照效期跟大人一樣嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不一樣。台灣未滿十四歲的護照效期是五年，大人是十年。所以帶小孩出國的家庭很常發生大人的還很久、小孩的快到期了。全家出門前每一本都要各自檢查一次。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "護照還沒到期但簽證頁用完了怎麼辦？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "台灣的普通護照不能加頁，簽證頁用完就要換一本新的。如果你常跑需要貼簽證的國家，出發前也順便翻一下還剩幾頁空白，這個狀況一樣會在櫃檯被擋。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="passport">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🛂</span>護照效期檢查</h1>
+    <p class="lede">機票都訂好了才發現護照剩不到半年，是最冤枉的一種取消。花十秒鐘先確認一次。</p>
+  </div>
+
+  <div class="warn-box">
+    <strong>先說清楚：</strong>各國的入境規定會變，而且<strong>航空公司在報到櫃檯就會先擋人</strong>，不會等你到當地才被拒絕。
+    這個工具算的是效期夠不夠，不是入境許可。出發前請以
+    <a href="https://www.boca.gov.tw/" target="_blank" rel="noopener">外交部領事事務局</a>
+    與航空公司的公告為準。
+  </div>
+
+  <div class="panel">
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="expiry">護照到期日</label>
+        <input type="date" id="expiry">
+      </div>
+      <div class="field mb-0">
+        <label for="depart">出發日期（入境當天）</label>
+        <input type="date" id="depart">
+      </div>
+      <div class="field mb-0">
+        <label for="back">回程日期<span class="muted">（可留白）</span></label>
+        <input type="date" id="back">
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="rule">目的地的效期規定</label>
+        <select id="rule"></select>
+      </div>
+      <div class="field mb-0" id="customWrap" hidden>
+        <label for="months">自訂需要幾個月</label>
+        <input type="number" id="months" value="6" min="0" max="24" step="1">
+      </div>
+      <div class="field mb-0" id="issueWrap" hidden>
+        <label for="issue">護照核發日<span class="muted">（申根要用）</span></label>
+        <input type="date" id="issue">
+      </div>
+    </div>
+
+    <p class="hint mb-2" id="ruleNote"></p>
+
+    <div class="verdict-box edge" id="verdict"></div>
+    <div class="facts" id="facts"></div>
+    <ul class="checks" id="checks"></ul>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title">常見目的地的效期要求</div>
+    <div class="table-scroll">
+      <table class="data">
+        <thead>
+          <tr><th>目的地</th><th class="num">建議效期</th><th>備註</th></tr>
+        </thead>
+        <tbody id="refTable"></tbody>
+      </table>
+    </div>
+    <p class="hint mb-0">
+      外交部領事事務局的說法是「依照國際慣例，絕大部分國家規定入境旅客所持護照效期須在六個月以上」。
+      有些國家實際上更寬鬆，但<strong>留六個月是最不會出事的作法</strong>，這張表就是照這個原則整理的。
+    </p>
+  </div>
+
+  <section class="prose">
+    <h2>為什麼只去十天也要留六個月</h2>
+    <p>因為那不是給你旅行用的，是<strong>給意外用的</strong>。萬一你在當地生病、班機大規模停飛、或是被迫延長停留，入境國希望你的護照還有足夠效期可以處理後續，不會變成一個沒有身分文件的人卡在他們境內。</p>
+    <p>實務上真正會攔你的是<strong>航空公司</strong>。旅客被拒絕入境時，把人載回來的成本由航空公司承擔，所以他們在報到櫃檯就會先檢查，寧可不讓你上飛機。到了那一步，機票錢跟訂房通常都拿不回來。</p>
+
+    <h2>申根區的規定跟別人不一樣</h2>
+    <p>去歐洲的話要看兩件事，不是只看一件：</p>
+    <ul>
+      <li>護照在<strong>離開申根區之後還要有三個月</strong>的效期</li>
+      <li>護照的<strong>核發日距離入境當天不能超過十年</strong></li>
+    </ul>
+    <p>第二點是很多人不知道的。台灣的護照效期本來就是十年，一般不會踩到，但如果你當初是在效期上做過延期或換補發的特殊情況，值得確認一下核發日期那一欄。</p>
+
+    <h2>要換發的話要留多少時間</h2>
+    <p>台灣的普通護照，年滿十四歲效期十年、未滿十四歲五年。<strong>所剩效期不足一年時就可以申請換發</strong>，不必等到過期。</p>
+    <p>一般件從繳費的次半日起算約十個工作天，遇到寒暑假與過年前的旺季會更久。要用的話請抓寬一點，上面的工具會直接告訴你最晚該在哪一天之前送件。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>六個月是從出發日算還是回國日算？</summary>
+        <div class="a">絕大多數國家是從<strong>入境當天</strong>起算。也就是你抵達的那一天，護照還要有六個月以上的效期。申根區是少數例外，它算的是你<strong>離開申根區的那天</strong>之後還要有三個月。上面的工具兩種都會幫你判斷。</div>
+      </details>
+      <details>
+        <summary>差幾天而已，可以賭賭看嗎？</summary>
+        <div class="a">非常不建議。你要賭的不是一關而是兩關：航空公司的報到櫃檯，以及目的地的移民官。第一關通常更嚴格，因為被拒絕入境的遣返成本是算在航空公司頭上的。差幾天的狀況上面會標成黃色提醒，意思是「規則上可能過，但風險自負」，不是「沒問題」。</div>
+      </details>
+      <details>
+        <summary>轉機的國家也要算嗎？</summary>
+        <div class="a">要。如果你在某國入境轉機、或是停留時間長到需要過海關，那個國家的效期規定一樣適用。只在機場管制區內轉機不入境的話通常不用，但各機場規定不同，長時間轉機或需要換航廈的行程請先確認。</div>
+      </details>
+      <details>
+        <summary>小孩的護照效期跟大人一樣嗎？</summary>
+        <div class="a">不一樣。台灣未滿十四歲的護照效期是<strong>五年</strong>，大人是十年。所以帶小孩出國的家庭很常發生大人的還很久、小孩的快到期了。全家出門前每一本都要各自檢查一次。</div>
+      </details>
+      <details>
+        <summary>護照還沒到期但簽證頁用完了怎麼辦？</summary>
+        <div class="a">台灣的普通護照不能加頁，簽證頁用完就要換一本新的。如果你常跑需要貼簽證的國家，出發前也順便翻一下還剩幾頁空白，這個狀況一樣會在櫃檯被擋。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js?v=02ac63f3"></script>
+<script src="../assets/js/layout.js?v=483231ca"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc } = window.U;
+
+  const DAY = 86400000;
+
+  /* ==========================================================================
+     規則
+     kind: 'entry' 從入境日起算、'exit' 從離境日起算、'stay' 只要涵蓋停留期間
+     schengen 為真時額外檢查「核發日距入境未滿十年」
+     ========================================================================== */
+  const RULES = [
+    { id: 'six', name: '六個月（多數國家的通則）', months: 6, kind: 'entry',
+      note: '外交部領事事務局的建議：依國際慣例，絕大部分國家要求入境旅客的護照效期在六個月以上。不確定要選哪個的時候，選這個最安全。' },
+    { id: 'schengen', name: '申根區（歐洲多國）', months: 3, kind: 'exit', schengen: true,
+      note: '申根區看的是離開當天之後還要有三個月效期，另外護照的核發日距離入境不能超過十年。兩個條件都要過。' },
+    { id: 'three', name: '三個月', months: 3, kind: 'entry',
+      note: '部分國家只要求三個月。不過航空公司的櫃檯人員未必熟悉每一國的細則，留六個月還是比較省事。' },
+    { id: 'stay', name: '只需涵蓋停留期間', months: 0, kind: 'stay',
+      note: '有些國家只要求護照效期涵蓋你的停留期間。這是最寬鬆的一種，但請務必先確認目的地真的適用，不要自己假設。' },
+    { id: 'custom', name: '自訂月數', months: 6, kind: 'entry', custom: true,
+      note: '查到目的地的確切規定之後，把月數填進去。' }
+  ];
+
+  /* 常見目的地。一律以六個月原則整理，例外的另外註明。 */
+  const REF = [
+    { n: '日本', m: '6 個月', note: '實務上的要求較寬鬆，但留六個月不會有爭議。' },
+    { n: '韓國', m: '6 個月', note: '' },
+    { n: '中國', m: '6 個月', note: '需另辦台胞證，台胞證本身也有效期要注意。' },
+    { n: '香港、澳門', m: '6 個月', note: '' },
+    { n: '泰國、越南、菲律賓', m: '6 個月', note: '東南亞多數國家對六個月的規定執行得相當嚴格。' },
+    { n: '新加坡、馬來西亞', m: '6 個月', note: '' },
+    { n: '印尼、柬埔寨', m: '6 個月', note: '落地簽通常也要求六個月。' },
+    { n: '申根區（法德義西荷等）', m: '離境後 3 個月', note: '另外要求護照核發日距入境未滿十年。' },
+    { n: '英國', m: '6 個月', note: '與申根區規定不同，英國不屬於申根區。' },
+    { n: '美國', m: '6 個月', note: '部分國家的護照適用效期豁免，但規定會調整，建議仍留六個月。' },
+    { n: '加拿大', m: '6 個月', note: '' },
+    { n: '澳洲、紐西蘭', m: '6 個月', note: '' },
+    { n: '土耳其、印度', m: '6 個月', note: '需事先申請電子簽證。' }
+  ];
+
+  /* ---------- 日期工具 ---------- */
+  const toDate = v => { const d = new Date(v + 'T00:00:00'); return isNaN(d) ? null : d; };
+  const fmtDate = d => `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}`;
+
+  /** 加 N 個月。遇到 8/31 加 6 個月這種沒有對應日的情況，退回當月最後一天 */
+  function addMonths(d, n) {
+    const r = new Date(d.getTime());
+    const day = r.getDate();
+    r.setDate(1);
+    r.setMonth(r.getMonth() + n);
+    r.setDate(Math.min(day, new Date(r.getFullYear(), r.getMonth() + 1, 0).getDate()));
+    return r;
+  }
+  const addYears = (d, n) => addMonths(d, n * 12);
+  const diffDays = (a, b) => Math.round((a - b) / DAY);
+
+  /** 天數換成「X 年 Y 個月」的說法，給人看的 */
+  function humanSpan(days) {
+    if (days < 0) return '已過期';
+    if (days < 31) return days + ' 天';
+    const m = Math.floor(days / 30.44);
+    if (m < 12) return '約 ' + m + ' 個月';
+    return '約 ' + Math.floor(m / 12) + ' 年 ' + (m % 12) + ' 個月';
+  }
+
+  /* ---------- 初始值 ---------- */
+  const iso = d => d.toISOString().slice(0, 10);
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+
+  $('#rule').innerHTML = RULES.map(r =>
+    `<option value="${r.id}">${esc(r.name)}</option>`).join('');
+  $('#depart').value = iso(addMonths(today, 1));
+  $('#expiry').value = iso(addMonths(today, 8));
+
+  $('#refTable').innerHTML = REF.map(r => `
+    <tr>
+      <td>${esc(r.n)}</td>
+      <td class="num">${esc(r.m)}</td>
+      <td class="small">${esc(r.note) || '—'}</td>
+    </tr>`).join('');
+
+  /* ---------- 主判定 ---------- */
+  function render() {
+    const rule = RULES.find(r => r.id === $('#rule').value);
+    $('#customWrap').hidden = !rule.custom;
+    $('#issueWrap').hidden = !rule.schengen;
+    $('#ruleNote').textContent = rule.note;
+
+    const expiry = toDate($('#expiry').value);
+    const depart = toDate($('#depart').value);
+    const back = toDate($('#back').value);
+    const issue = toDate($('#issue').value);
+    const months = rule.custom ? Math.max(0, Number($('#months').value) || 0) : rule.months;
+
+    const box = $('#verdict');
+
+    if (!expiry || !depart) {
+      box.className = 'verdict-box edge';
+      box.innerHTML = `<span class="verdict-box__icon" aria-hidden="true">📝</span>
+        <p class="verdict-box__head">還差一點資料</p>
+        <p class="verdict-box__sub">請填入護照到期日與出發日期。</p>`;
+      $('#facts').innerHTML = '';
+      $('#checks').innerHTML = '';
+      return;
+    }
+
+    /* 基準日：申根看離境、其他看入境 */
+    const baseDate = rule.kind === 'exit' ? (back || depart) : depart;
+    const baseLabel = rule.kind === 'exit' ? '離開當天' : '入境當天';
+
+    /* 需要的最低到期日 */
+    const needBy = rule.kind === 'stay'
+      ? (back || depart)
+      : addMonths(baseDate, months);
+
+    const checks = [];
+    let allPass = true;
+
+    /* 檢查一：護照本身還沒過期 */
+    const notExpired = expiry >= today;
+    checks.push({
+      pass: notExpired,
+      text: notExpired
+        ? `護照目前仍在效期內，${fmtDate(expiry)} 到期`
+        : `護照已經在 ${fmtDate(expiry)} 過期了，必須先換發`
+    });
+    if (!notExpired) allPass = false;
+
+    /* 檢查二：出發當天還沒過期 */
+    const validOnDepart = expiry >= depart;
+    checks.push({
+      pass: validOnDepart,
+      text: validOnDepart
+        ? `出發日 ${fmtDate(depart)} 當天護照仍有效`
+        : `出發日 ${fmtDate(depart)} 時護照已經過期`
+    });
+    if (!validOnDepart) allPass = false;
+
+    /* 檢查三：主要的效期規定 */
+    const mainPass = expiry >= needBy;
+    checks.push({
+      pass: mainPass,
+      text: rule.kind === 'stay'
+        ? (mainPass
+          ? `效期涵蓋整趟行程（需撐到 ${fmtDate(needBy)}）`
+          : `效期沒有涵蓋整趟行程，需撐到 ${fmtDate(needBy)}`)
+        : (mainPass
+          ? `符合 ${months} 個月規定（${baseLabel}起算，需撐到 ${fmtDate(needBy)}）`
+          : `不符合 ${months} 個月規定，護照要到 ${fmtDate(needBy)} 之後才到期才行`)
+    });
+    if (!mainPass) allPass = false;
+
+    /* 檢查四：申根的十年核發規則 */
+    if (rule.schengen) {
+      if (issue) {
+        const tenYear = addYears(issue, 10);
+        const tenPass = tenYear > depart;
+        checks.push({
+          pass: tenPass,
+          text: tenPass
+            ? `核發日距入境未滿十年（核發於 ${fmtDate(issue)}）`
+            : `核發日已超過十年（核發於 ${fmtDate(issue)}，十年期限到 ${fmtDate(tenYear)}）`
+        });
+        if (!tenPass) allPass = false;
+      } else {
+        checks.push({ skip: true, text: '尚未填核發日，無法檢查「十年內核發」這一項' });
+      }
+    }
+
+    /* 剩餘天數 */
+    const daysAtBase = diffDays(expiry, baseDate);
+    const daysNow = diffDays(expiry, today);
+    const buffer = diffDays(expiry, needBy);   // 比規定多出幾天
+
+    /* --- 結論 --- */
+    let cls, icon, head, sub;
+    if (!allPass) {
+      cls = 'bad'; icon = '✕';
+      head = '效期不足，先去換發';
+      sub = rule.kind === 'stay'
+        ? `照這個行程，護照撐不到回國。`
+        : `護照最晚要在 <b>${fmtDate(needBy)}</b> 之後才到期，現在是 ${fmtDate(expiry)}，
+           還差 <b>${Math.abs(buffer)}</b> 天。`;
+    } else if (buffer <= 14) {
+      cls = 'edge'; icon = '⚠';
+      head = '剛好壓線，建議先換發';
+      sub = `規則上過得去，但只多出 <b>${buffer}</b> 天。
+             航空公司櫃檯與移民官都有裁量空間，這種距離不值得賭。`;
+    } else if (buffer <= 45) {
+      cls = 'edge'; icon = '⚠';
+      head = '夠用，但沒什麼餘裕';
+      sub = `比規定多出 <b>${buffer}</b> 天。這趟沒問題，
+             但如果近期還有其他出國計畫，順手換一本會比較省事。`;
+    } else {
+      cls = 'ok'; icon = '✓';
+      head = '可以出發';
+      sub = `比規定多出 <b>${buffer}</b> 天的餘裕，效期充足。`;
+    }
+
+    box.className = 'verdict-box ' + cls;
+    box.innerHTML = `
+      <span class="verdict-box__icon" aria-hidden="true">${icon}</span>
+      <p class="verdict-box__head">${head}</p>
+      <p class="verdict-box__sub">${sub}</p>`;
+
+    /* --- 數字卡 --- */
+    /* 效期不足一年即可申請換發，一般件約十個工作天，抓兩週的日曆天比較保險 */
+    const canRenew = addYears(expiry, -1);
+    const renewDeadline = new Date(depart.getTime() - 14 * DAY);
+
+    $('#facts').innerHTML = `
+      <div class="fact${daysAtBase < 0 ? ' alert' : ''}">
+        <span class="fact__k">${esc(baseLabel)}還剩</span>
+        <span class="fact__v">${daysAtBase < 0 ? '已過期' : daysAtBase + ' 天'}
+          <small>${daysAtBase >= 0 ? humanSpan(daysAtBase) : ''}</small></span>
+      </div>
+      <div class="fact${daysNow < 0 ? ' alert' : ''}">
+        <span class="fact__k">從今天算還剩</span>
+        <span class="fact__v">${daysNow < 0 ? '已過期' : daysNow + ' 天'}
+          <small>${daysNow >= 0 ? humanSpan(daysNow) : ''}</small></span>
+      </div>
+      <div class="fact">
+        <span class="fact__k">護照最晚要撐到</span>
+        <span class="fact__v">${fmtDate(needBy)}</span>
+      </div>
+      <div class="fact">
+        <span class="fact__k">${allPass ? '可提前換發日' : '最晚送件日'}</span>
+        <span class="fact__v">${allPass ? fmtDate(canRenew) : fmtDate(renewDeadline)}
+          <small>${allPass ? '效期剩一年內即可換' : '抓十個工作天'}</small></span>
+      </div>`;
+
+    /* --- 逐條檢查 --- */
+    $('#checks').innerHTML = checks.map(c => {
+      if (c.skip) return `<li class="skip"><span class="mark">–</span><span>${esc(c.text)}</span></li>`;
+      return `<li class="${c.pass ? 'pass' : 'fail'}">
+        <span class="mark">${c.pass ? '✓' : '✕'}</span><span>${esc(c.text)}</span></li>`;
+    }).join('');
+  }
+
+  ['#expiry', '#depart', '#back', '#months', '#issue'].forEach(s =>
+    $(s).addEventListener('input', render));
+  $('#rule').addEventListener('change', render);
+
+  render();
+})();
+</script>
+</body>
+</html>

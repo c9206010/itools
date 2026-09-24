@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>牌照稅燃料費試算｜汽機車一年要繳多少車稅 - 順手工具箱</title>
+<meta name="description" content="免費試算使用牌照稅與公路養管費（原汽車燃料使用費），輸入排氣量就知道一年要繳多少。附完整級距對照表，並提醒你離下一個級距還差幾 cc、降一級能省多少。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚗</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css?v=35ffc45a">
+<style>
+  .board { border: 2px solid var(--border-strong); border-radius: var(--radius-lg);
+           background: var(--surface-2); padding: 18px 16px; }
+  .board__row { display: flex; justify-content: space-between; align-items: baseline;
+                gap: 12px; padding: 10px 0; border-bottom: 1px dashed var(--border); }
+  .board__row:last-of-type { border-bottom: 0; }
+  .board__row b { font-family: var(--mono); font-size: 1.15rem; font-weight: 700; }
+  .board__row .when { display: block; font-size: .78rem; color: var(--ink-3);
+                      font-weight: 400; font-family: var(--font); margin-top: 2px; }
+  .board__row.main { border-top: 2px solid var(--border-strong); margin-top: 4px;
+                     padding-top: 13px; }
+  .board__row.main b { color: var(--brand); font-size: 1.7rem; }
+  .board__row.muted-row, .board__row.muted-row b { color: var(--ink-3); font-weight: 400; }
+
+  .cliff { border: 1px solid var(--warn); border-radius: var(--radius);
+           background: rgba(184,134,11,.08); padding: 13px 15px;
+           font-size: .9rem; margin-top: 14px; line-height: 1.8; }
+  .cliff strong { color: var(--warn); }
+  .cliff b { font-family: var(--mono); }
+  .cliff.free { border-color: var(--ok); background: rgba(47,125,79,.09); }
+  .cliff.free strong { color: var(--ok); }
+
+  .seg { display: flex; flex-wrap: wrap; gap: 8px; }
+  .seg button { flex: 1 1 auto; min-width: 104px; padding: 10px 12px; cursor: pointer;
+                border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+                background: var(--surface); color: var(--ink); font: inherit;
+                font-size: .92rem; transition: .15s; }
+  .seg button:hover { border-color: var(--brand); }
+  .seg button[aria-pressed="true"] { background: var(--brand); border-color: var(--brand);
+                                     color: #fff; font-weight: 700; }
+
+  th.num, td.num { text-align: right; font-family: var(--mono); }
+  tr.is-here { background: var(--brand-wash); }
+  tr.is-here td { font-weight: 700; }
+
+  .warn-box { border: 1px solid var(--border-strong); border-radius: var(--radius);
+              background: var(--bg-sunk); padding: 13px 15px;
+              font-size: .89rem; margin-bottom: 16px; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/car-tax.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="牌照稅, 燃料稅, 汽燃費, 公路養管費, 車稅, 排氣量, cc, 機車, 電動車">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="牌照稅燃料費試算｜汽機車一年要繳多少車稅 - 順手工具箱">
+<meta property="og:description" content="免費試算使用牌照稅與公路養管費（原汽車燃料使用費），輸入排氣量就知道一年要繳多少。附完整級距對照表，並提醒你離下一個級距還差幾 cc、降一級能省多少。">
+<meta property="og:url" content="https://tools.luka-life.com/t/car-tax.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="牌照稅燃料費試算｜汽機車一年要繳多少車稅 - 順手工具箱">
+<meta name="twitter:description" content="免費試算使用牌照稅與公路養管費（原汽車燃料使用費），輸入排氣量就知道一年要繳多少。附完整級距對照表，並提醒你離下一個級距還差幾 cc、降一級能省多少。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "牌照稅燃料費試算",
+  "description": "免費試算使用牌照稅與公路養管費（原汽車燃料使用費），輸入排氣量就知道一年要繳多少。附完整級距對照表，並提醒你離下一個級距還差幾 cc、降一級能省多少。",
+  "url": "https://tools.luka-life.com/t/car-tax.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "台灣生活",
+      "item": "https://tools.luka-life.com/#tw"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "牌照稅燃料費試算",
+      "item": "https://tools.luka-life.com/t/car-tax.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "燃料稅改名了，是不是漲價了？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "沒有。名稱從「汽車燃料使用費」改成「公路使用養護安全管理費」，但金額與級距沒有變動。改名主要是讓這筆錢的用途更名副其實——它一直都是拿去養護公路的，不是真的在課燃料的稅。繳費方式與時間也一樣。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "電動車到底要不要繳？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "完全以電能為動力的電動汽車與電動機車，免徵使用牌照稅至民國 119 年（西元 2030 年）12 月 31 日，這項優惠在 2025 年底經立法院三讀通過延長。公路養管費目前也不對電動車徵收。要注意的是油電混合車（Hybrid）不算電動車，仍然要按排氣量繳稅。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "柴油車為什麼比較便宜？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "公路養管費的計算公式裡，汽油是每單位 2.5 元、柴油是 1.5 元，所以柴油車的費額大約是汽油車的六成。但這只是這一筆而已，使用牌照稅的部分兩者完全相同，而且柴油車還有排放檢驗等其他成本要考慮。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "忘記繳會怎樣？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "會加徵滯納金，而且拖越久加越多，逾期太久還會被移送強制執行。另外欠稅的車輛驗車時會被擋下來，也可能影響過戶。如果稅單弄丟了，可以到各縣市稅捐處或監理服務網補印，別因為沒收到單子就以為不用繳。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "車子很久沒開，可以不繳嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不行，只要車籍還在就要繳，跟你有沒有開沒有關係。真的長期不用的話可以辦停駛，停駛期間免徵牌照稅，要用的時候再辦復駛。車子報廢或繳銷牌照也是同樣道理，手續辦掉才會停止計算。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="car-tax">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🚗</span>牌照稅燃料費試算</h1>
+    <p class="lede">車稅是照排氣量跳級收的，多 1 cc 可能就多繳好幾千。買車前先看清楚自己落在哪一格。</p>
+  </div>
+
+  <div class="warn-box">
+    稅額依<strong>使用牌照稅法</strong>與公路主管機關公告的費額表整理。
+    「汽車燃料使用費」自 2026 年起更名為<strong>公路使用養護安全管理費</strong>（簡稱公路養管費），
+    金額計算方式不變。實際應繳金額請以你收到的稅單為準。
+  </div>
+
+  <div class="panel">
+    <div class="field mb-2">
+      <label>車輛種類</label>
+      <div class="seg" id="kindSeg">
+        <button type="button" data-kind="car" aria-pressed="true">自用小客車</button>
+        <button type="button" data-kind="biz" aria-pressed="false">營業用小客車</button>
+        <button type="button" data-kind="moto" aria-pressed="false">機車</button>
+        <button type="button" data-kind="ev" aria-pressed="false">電動車</button>
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="cc">汽缸總排氣量（cc）</label>
+        <input type="number" id="cc" value="1798" min="1" max="9000" step="1">
+      </div>
+      <div class="field mb-0" id="fuelWrap">
+        <label for="fuel">使用燃料</label>
+        <select id="fuel">
+          <option value="gas">汽油</option>
+          <option value="diesel">柴油</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label for="months">持有月數<span class="muted">（新車當年用）</span></label>
+        <input type="number" id="months" value="12" min="1" max="12" step="1">
+      </div>
+    </div>
+
+    <p class="hint mb-2" id="kindNote"></p>
+
+    <div class="board" id="board"></div>
+    <div id="cliffBox"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title">級距對照表</div>
+    <p class="hint" id="tableNote"></p>
+    <div class="table-scroll">
+      <table class="data">
+        <thead id="tableHead"></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>兩筆錢是分開繳的</h2>
+    <p>很多人以為車稅是一年繳一次，其實是<strong>兩筆不同的錢、兩個不同的機關、兩個不同的月份</strong>：</p>
+    <ul>
+      <li><strong>使用牌照稅</strong>在每年<strong>四月</strong>開徵，收的是地方稅，歸各縣市稅捐處管。</li>
+      <li><strong>公路養管費</strong>（就是以前講的燃料稅、汽燃費）在每年<strong>七月</strong>開徵，歸公路監理機關管。</li>
+    </ul>
+    <p>兩張單子長得不一樣，也不會互相提醒。四月繳過了不代表七月沒事，這是最常見的漏繳原因。</p>
+
+    <h2>為什麼差 1 cc 差那麼多</h2>
+    <p>因為車稅是<strong>級距制</strong>，不是按比例算的。同一格裡面不管 1,201 還是 1,800，繳的錢一模一樣；但只要跨過 1,800 進到下一格，稅額整個往上跳。</p>
+    <p>這就是為什麼市面上很多車的排氣量會刻意停在 1,798cc、2,393cc 這種數字——差那幾 cc 的動力沒什麼感覺，差的稅金卻是每年都要繳的。上面的工具會直接告訴你離下一格還剩多少空間。</p>
+
+    <h2>新車與中古車怎麼算</h2>
+    <p>牌照稅是<strong>按月計算</strong>的。年中才領牌的新車，當年只需要繳從領牌月份到年底的部分，不是整年。中古車過戶也一樣，賣方與買方各自負擔自己持有的期間。</p>
+    <p>把上面的「持有月數」改成實際的月份數就能算出來。真正的稅單會依照監理機關的登記日期計算，可能跟估算差一點點。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>燃料稅改名了，是不是漲價了？</summary>
+        <div class="a">沒有。名稱從「汽車燃料使用費」改成「公路使用養護安全管理費」，但<strong>金額與級距沒有變動</strong>。改名主要是讓這筆錢的用途更名副其實——它一直都是拿去養護公路的，不是真的在課燃料的稅。繳費方式與時間也一樣。</div>
+      </details>
+      <details>
+        <summary>電動車到底要不要繳？</summary>
+        <div class="a">完全以電能為動力的電動汽車與電動機車，<strong>免徵使用牌照稅至民國 119 年（西元 2030 年）12 月 31 日</strong>，這項優惠在 2025 年底經立法院三讀通過延長。公路養管費目前也不對電動車徵收。要注意的是油電混合車（Hybrid）<strong>不算</strong>電動車，仍然要按排氣量繳稅。</div>
+      </details>
+      <details>
+        <summary>柴油車為什麼比較便宜？</summary>
+        <div class="a">公路養管費的計算公式裡，汽油是每單位 2.5 元、柴油是 1.5 元，所以柴油車的費額大約是汽油車的六成。但這只是這一筆而已，使用牌照稅的部分兩者完全相同，而且柴油車還有排放檢驗等其他成本要考慮。</div>
+      </details>
+      <details>
+        <summary>忘記繳會怎樣？</summary>
+        <div class="a">會加徵滯納金，而且拖越久加越多，逾期太久還會被移送強制執行。另外<strong>欠稅的車輛驗車時會被擋下來</strong>，也可能影響過戶。如果稅單弄丟了，可以到各縣市稅捐處或監理服務網補印，別因為沒收到單子就以為不用繳。</div>
+      </details>
+      <details>
+        <summary>車子很久沒開，可以不繳嗎？</summary>
+        <div class="a">不行，只要車籍還在就要繳，跟你有沒有開沒有關係。真的長期不用的話可以辦<strong>停駛</strong>，停駛期間免徵牌照稅，要用的時候再辦復駛。車子報廢或繳銷牌照也是同樣道理，手續辦掉才會停止計算。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js?v=02ac63f3"></script>
+<script src="../assets/js/layout.js?v=483231ca"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, esc } = window.U;
+
+  /* ==========================================================================
+     稅額與費額表
+     使用牌照稅：依使用牌照稅法第 6 條附表一。
+     公路養管費：依公路主管機關公告費額表，原名「汽車燃料使用費」。
+                 柴油車為汽油車的 0.6 倍（公式為汽油 2.5 元、柴油 1.5 元）。
+     每一格的 max 是該級距的排氣量上限（含）。
+     ========================================================================== */
+
+  /* 小客車使用牌照稅（乘人座位 9 人以下） */
+  const LICENSE_CAR = [
+    { max: 500,      self: 1620,   biz: 900 },
+    { max: 600,      self: 2160,   biz: 1260 },
+    { max: 1200,     self: 4320,   biz: 2160 },
+    { max: 1800,     self: 7120,   biz: 3060 },
+    { max: 2400,     self: 11230,  biz: 6480 },
+    { max: 3000,     self: 15210,  biz: 9900 },
+    { max: 4200,     self: 28220,  biz: 16380 },
+    { max: 5400,     self: 46170,  biz: 24300 },
+    { max: 6600,     self: 69690,  biz: 33660 },
+    { max: 7800,     self: 117000, biz: 44460 },
+    { max: Infinity, self: 151200, biz: 56700 }
+  ];
+
+  /* 小客車公路養管費（汽油，全年） */
+  const FUEL_CAR = [
+    { max: 500,      amt: 2160 },
+    { max: 600,      amt: 2880 },
+    { max: 1200,     amt: 4320 },
+    { max: 1800,     amt: 4800 },
+    { max: 2400,     amt: 6180 },
+    { max: 3000,     amt: 7200 },
+    { max: 3600,     amt: 8640 },
+    { max: 4200,     amt: 9810 },
+    { max: 4800,     amt: 11220 },
+    { max: 5400,     amt: 12180 },
+    { max: 6000,     amt: 13080 },
+    { max: 6600,     amt: 13950 },
+    { max: 7200,     amt: 14910 },
+    { max: Infinity, amt: 15720 }
+  ];
+
+  /* 機器腳踏車使用牌照稅，150cc 以下免徵 */
+  const LICENSE_MOTO = [
+    { max: 150,      amt: 0 },
+    { max: 250,      amt: 800 },
+    { max: 500,      amt: 1620 },
+    { max: 600,      amt: 2160 },
+    { max: 1200,     amt: 4320 },
+    { max: 1800,     amt: 7120 },
+    { max: Infinity, amt: 11230 }
+  ];
+
+  /* 機器腳踏車公路養管費（全年） */
+  const FUEL_MOTO = [
+    { max: 50,       amt: 300 },
+    { max: 125,      amt: 450 },
+    { max: 250,      amt: 600 },
+    { max: 500,      amt: 900 },
+    { max: 600,      amt: 1200 },
+    { max: 1200,     amt: 1800 },
+    { max: Infinity, amt: 2010 }
+  ];
+
+  const DIESEL_RATIO = 0.6;
+
+  const NOTES = {
+    car:  '一般自用轎車、休旅車都選這個。小客貨兩用車的牌照稅也是按自用小客車課徵。',
+    biz:  '計程車、租賃車等營業用車輛，牌照稅較低，但公路養管費另有營業用費額，這裡以自用費額估算供參考。',
+    moto: '150cc 以下的機車免徵使用牌照稅，但公路養管費照樣要繳。大型重機跨過 250cc 之後兩筆都要繳。',
+    ev:   '指完全以電能為動力的車輛。油電混合車（Hybrid）不適用，請改選自用小客車並填入實際排氣量。'
+  };
+
+  let kind = 'car';
+
+  const fmt = n => n.toLocaleString('zh-TW');
+  const find = (table, cc) => table.find(b => cc <= b.max);
+
+  /** 找出目前級距的下限，也就是「上一格的 max + 1」 */
+  function lowerBound(table, cc) {
+    const i = table.findIndex(b => cc <= b.max);
+    return i <= 0 ? 1 : table[i - 1].max + 1;
+  }
+
+  /* ---------- 切換車種 ---------- */
+  $$('#kindSeg button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      kind = btn.dataset.kind;
+      $$('#kindSeg button').forEach(b =>
+        b.setAttribute('aria-pressed', String(b === btn)));
+      $('#fuelWrap').hidden = (kind === 'moto' || kind === 'ev');
+      $('#kindNote').textContent = NOTES[kind];
+      /* 換車種時把排氣量帶到合理的預設值 */
+      if (kind === 'moto' && Number($('#cc').value) > 1800) $('#cc').value = 125;
+      if (kind !== 'moto' && Number($('#cc').value) < 400) $('#cc').value = 1798;
+      render();
+    });
+  });
+
+  /* ---------- 計算 ---------- */
+  function compute() {
+    const cc = Math.max(1, Number($('#cc').value) || 0);
+    const months = Math.min(12, Math.max(1, Number($('#months').value) || 12));
+    const ratio = months / 12;
+    const diesel = $('#fuel').value === 'diesel';
+
+    if (kind === 'ev') {
+      return { cc, months, license: 0, fuel: 0, ev: true };
+    }
+
+    if (kind === 'moto') {
+      const lic = find(LICENSE_MOTO, cc).amt;
+      const fu = find(FUEL_MOTO, cc).amt;
+      return {
+        cc, months,
+        license: Math.round(lic * ratio),
+        fuel: Math.round(fu * ratio),
+        licenseFull: lic, fuelFull: fu
+      };
+    }
+
+    const lb = find(LICENSE_CAR, cc);
+    const lic = kind === 'biz' ? lb.biz : lb.self;
+    const fu = Math.round(find(FUEL_CAR, cc).amt * (diesel ? DIESEL_RATIO : 1));
+    return {
+      cc, months,
+      license: Math.round(lic * ratio),
+      fuel: Math.round(fu * ratio),
+      licenseFull: lic, fuelFull: fu
+    };
+  }
+
+  /* ---------- 級距提醒 ---------- */
+  function cliffHtml(cc) {
+    if (kind === 'ev') {
+      return `<div class="cliff free">
+        <strong>電動車目前兩筆都免繳。</strong>
+        完全以電能為動力的電動汽車與電動機車，免徵使用牌照稅至
+        <b>民國 119 年（2030 年）12 月 31 日</b>，公路養管費目前也不對電動車徵收。
+        優惠到期後的課徵方式，屆時請再確認主管機關公告。</div>`;
+    }
+
+    const licTable = kind === 'moto' ? LICENSE_MOTO : LICENSE_CAR;
+    const getLic = b => kind === 'moto' ? b.amt : (kind === 'biz' ? b.biz : b.self);
+    const fuelTable = kind === 'moto' ? FUEL_MOTO : FUEL_CAR;
+    const diesel = kind !== 'moto' && $('#fuel').value === 'diesel';
+    const fuelOf = b => Math.round(b.amt * (diesel ? DIESEL_RATIO : 1));
+
+    /* 往下降一個級距能省多少 */
+    const lbLic = lowerBound(licTable, cc);
+    const lbFuel = lowerBound(fuelTable, cc);
+    const downAt = Math.max(lbLic, lbFuel) - 1;   // 降到這個 cc 就會掉一格
+
+    /* 往上跨一格要多付多少 */
+    const curLic = find(licTable, cc);
+    const curFuel = find(fuelTable, cc);
+    const nextCc = Math.min(curLic.max, curFuel.max) + 1;
+    const room = Math.min(curLic.max, curFuel.max) - cc;
+
+    const parts = [];
+
+    if (isFinite(nextCc)) {
+      const jump =
+        (getLic(find(licTable, nextCc)) - getLic(curLic)) +
+        (fuelOf(find(fuelTable, nextCc)) - fuelOf(curFuel));
+      if (jump > 0) {
+        parts.push(`離下一個級距還有 <b>${fmt(room)}</b> cc 的空間
+          （${fmt(cc)} → ${fmt(nextCc)} cc）。一旦跨過去，一年要多繳
+          <strong>${fmt(jump)} 元</strong>。`);
+      }
+    }
+
+    if (downAt >= 1) {
+      const save =
+        (getLic(curLic) - getLic(find(licTable, downAt))) +
+        (fuelOf(curFuel) - fuelOf(find(fuelTable, downAt)));
+      if (save > 0) {
+        parts.push(`如果選擇 <b>${fmt(downAt)}</b> cc 以下的車款，
+          一年可以少繳 <strong>${fmt(save)} 元</strong>，十年就是
+          <strong>${fmt(save * 10)} 元</strong>。`);
+      }
+    }
+
+    if (kind === 'moto' && cc <= 150) {
+      parts.push(`這個排氣量<strong>免徵使用牌照稅</strong>，但公路養管費仍然要繳。`);
+    }
+
+    return parts.length
+      ? `<div class="cliff"><strong>級距提醒：</strong>${parts.join('<br>')}</div>`
+      : '';
+  }
+
+  /* ---------- 畫面 ---------- */
+  function render() {
+    const r = compute();
+    const partial = r.months < 12;
+
+    $('#board').innerHTML = `
+      <div class="board__row">
+        <span>使用牌照稅<span class="when">每年 4 月開徵，向縣市稅捐處繳納</span></span>
+        <b>${r.license === 0 ? '免徵' : 'NT$ ' + fmt(r.license)}</b>
+      </div>
+      <div class="board__row">
+        <span>公路養管費<span class="when">每年 7 月開徵，原名汽車燃料使用費</span></span>
+        <b>${r.fuel === 0 ? '免徵' : 'NT$ ' + fmt(r.fuel)}</b>
+      </div>
+      ${partial ? `
+      <div class="board__row muted-row">
+        <span>已按 ${r.months} 個月比例折算</span>
+        <b>全年為 NT$ ${fmt((r.licenseFull || 0) + (r.fuelFull || 0))}</b>
+      </div>` : ''}
+      <div class="board__row main">
+        <span>${partial ? r.months + ' 個月合計' : '一年合計'}</span>
+        <b>${r.license + r.fuel === 0 ? '免繳' : 'NT$ ' + fmt(r.license + r.fuel)}</b>
+      </div>
+      <div class="board__row muted-row">
+        <span>平均每個月</span>
+        <b>NT$ ${fmt(Math.round((r.license + r.fuel) / r.months))}</b>
+      </div>`;
+
+    $('#cliffBox').innerHTML = cliffHtml(r.cc);
+    renderTable(r.cc);
+  }
+
+  /* ---------- 級距對照表 ---------- */
+  function renderTable(cc) {
+    const isMoto = kind === 'moto';
+    const diesel = !isMoto && $('#fuel').value === 'diesel';
+
+    if (kind === 'ev') {
+      $('#tableNote').textContent = '電動車免徵使用牌照稅至 2030 年底，以下為一般車輛的級距供對照。';
+    } else {
+      $('#tableNote').textContent = isMoto
+        ? '機車的牌照稅與養管費級距不同，兩張表的分界點並不一致。'
+        : '牌照稅與養管費的級距分界點不完全相同，所以同一台車可能一筆跳級、另一筆沒跳。';
+    }
+
+    /* 兩張表的分界點不同，合併所有分界點才能正確呈現 */
+    const licTable = isMoto ? LICENSE_MOTO : LICENSE_CAR;
+    const fuelTable = isMoto ? FUEL_MOTO : FUEL_CAR;
+    const bounds = [...new Set(
+      licTable.map(b => b.max).concat(fuelTable.map(b => b.max))
+    )].sort((a, b) => a - b);
+
+    const getLic = b => isMoto ? b.amt : (kind === 'biz' ? b.biz : b.self);
+
+    $('#tableHead').innerHTML = `
+      <tr><th>排氣量（cc）</th><th class="num">牌照稅</th>
+      <th class="num">養管費${diesel ? '（柴油）' : ''}</th><th class="num">合計</th></tr>`;
+
+    let prev = 0;
+    $('#tableBody').innerHTML = bounds.map(max => {
+      const mid = isFinite(max) ? max : prev + 1;
+      const lic = kind === 'ev' ? 0 : getLic(find(licTable, mid));
+      const fu = kind === 'ev' ? 0
+        : Math.round(find(fuelTable, mid).amt * (diesel ? DIESEL_RATIO : 1));
+      const range = isFinite(max)
+        ? `${fmt(prev + 1)} – ${fmt(max)}`
+        : `${fmt(prev + 1)} 以上`;
+      const here = cc > prev && cc <= max;
+      prev = isFinite(max) ? max : prev;
+      return `<tr class="${here ? 'is-here' : ''}">
+        <td>${range}</td>
+        <td class="num">${lic === 0 ? '免徵' : fmt(lic)}</td>
+        <td class="num">${fu === 0 ? '免徵' : fmt(fu)}</td>
+        <td class="num">${lic + fu === 0 ? '—' : fmt(lic + fu)}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  ['#cc', '#months'].forEach(s => $(s).addEventListener('input', render));
+  $('#fuel').addEventListener('change', render);
+
+  $('#kindNote').textContent = NOTES.car;
+  render();
+})();
+</script>
+</body>
+</html>

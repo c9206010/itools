@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>各國插頭電壓查詢｜出國要帶哪種轉接頭 - 順手工具箱</title>
+<meta name="description" content="免費查詢各國插座類型、電壓與頻率，附插頭形狀圖示。自動判斷從台灣出發需不需要帶轉接頭或變壓器，涵蓋日韓、東南亞、歐洲、美加與紐澳五十多個國家。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔌</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css?v=35ffc45a">
+<style>
+  /* ---- 插頭圖示 ---- */
+  .plug-art { color: var(--accent); display: block; }
+  .plug-art svg { display: block; width: 100%; height: auto; }
+
+  .types { display: grid; gap: 12px;
+           grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); }
+  .type-card { border: 1px solid var(--border); border-radius: var(--radius);
+               background: var(--surface); padding: 12px; text-align: center; }
+  .type-card .plug-art { width: 72px; margin: 0 auto 8px; }
+  .type-card b { display: block; font-family: var(--mono); font-size: 1.05rem; }
+  .type-card span { display: block; font-size: .8rem; color: var(--ink-3);
+                    margin-top: 3px; line-height: 1.5; }
+
+  /* ---- 查詢結果 ---- */
+  .result { border: 2px solid var(--border-strong); border-radius: var(--radius-lg);
+            background: var(--surface-2); padding: 18px 16px; }
+  .result__top { display: flex; flex-wrap: wrap; gap: 18px 26px;
+                 align-items: center; padding-bottom: 15px;
+                 border-bottom: 1px dashed var(--border); }
+  .spec { min-width: 84px; }
+  .spec__k { display: block; font-size: .8rem; color: var(--ink-3); }
+  .spec__v { display: block; font-family: var(--mono); font-size: 1.5rem;
+             font-weight: 700; line-height: 1.25; }
+  .spec__v.hot { color: var(--danger); }
+
+  .plug-row { display: flex; flex-wrap: wrap; gap: 14px; margin: 15px 0 0; }
+  .plug-row figure { margin: 0; width: 80px; text-align: center; }
+  .plug-row figcaption { font-family: var(--mono); font-size: .88rem;
+                         margin-top: 5px; font-weight: 700; }
+  .plug-row .sub { display: block; font-size: .74rem; color: var(--ink-3);
+                   font-weight: 400; font-family: var(--font); }
+
+  /* ---- 帶什麼的結論 ---- */
+  .verdict { display: flex; gap: 11px; align-items: flex-start;
+             padding: 12px 14px; border-radius: var(--radius);
+             border: 1px solid transparent; margin-top: 12px; font-size: .92rem; }
+  .verdict__icon { font-size: 1.3rem; line-height: 1.2; flex: none; }
+  .verdict.need { background: rgba(192,57,43,.08); border-color: var(--danger); }
+  .verdict.warn { background: rgba(184,134,11,.09); border-color: var(--warn); }
+  .verdict.fine { background: rgba(47,125,79,.09); border-color: var(--ok); }
+  .verdict b { font-weight: 700; }
+  .verdict.need b { color: var(--danger); }
+  .verdict.warn b { color: var(--warn); }
+  .verdict.fine b { color: var(--ok); }
+
+  td.types-cell { font-family: var(--mono); letter-spacing: .04em; }
+  th.num, td.num { text-align: right; font-family: var(--mono); }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/plug.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="插頭, 插座, 電壓, 轉接頭, 變壓器, 110v, 220v, 萬用, 出國, 充電">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="各國插頭電壓查詢｜出國要帶哪種轉接頭 - 順手工具箱">
+<meta property="og:description" content="免費查詢各國插座類型、電壓與頻率，附插頭形狀圖示。自動判斷從台灣出發需不需要帶轉接頭或變壓器，涵蓋日韓、東南亞、歐洲、美加與紐澳五十多個國家。">
+<meta property="og:url" content="https://tools.luka-life.com/t/plug.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="各國插頭電壓查詢｜出國要帶哪種轉接頭 - 順手工具箱">
+<meta name="twitter:description" content="免費查詢各國插座類型、電壓與頻率，附插頭形狀圖示。自動判斷從台灣出發需不需要帶轉接頭或變壓器，涵蓋日韓、東南亞、歐洲、美加與紐澳五十多個國家。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "各國插頭電壓查詢",
+  "description": "免費查詢各國插座類型、電壓與頻率，附插頭形狀圖示。自動判斷從台灣出發需不需要帶轉接頭或變壓器，涵蓋日韓、東南亞、歐洲、美加與紐澳五十多個國家。",
+  "url": "https://tools.luka-life.com/t/plug.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "旅遊出行",
+      "item": "https://tools.luka-life.com/#travel"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "各國插頭電壓查詢",
+      "item": "https://tools.luka-life.com/t/plug.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "買一個萬用轉接頭就好了嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "大部分情況可以，但要注意兩點。一是很多萬用轉接頭不含接地，只轉兩個腳，帶接地的三腳插頭插不進去。二是它只轉形狀不轉電壓，別因為插得進去就以為安全。另外英國、愛爾蘭、香港、新加坡用的 G 型特別大顆，有些便宜的萬用頭在那邊會鬆動接觸不良。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "台灣的插頭可以直接插日本嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以。日本跟台灣同樣是 A 型扁腳、100V 左右、電壓相近，兩腳的插頭直接插就能用。要注意的是日本很多老插座沒有接地孔，如果你的插頭是三腳（B 型）可能插不進去，帶一個三轉二的小轉接頭比較保險。日本是 100V，台灣是 110V，這個差距對一般電器沒有影響。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "飯店房間常常插座不夠用怎麼辦？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "帶一條台灣的延長線，搭配一個轉接頭插在牆上，等於一個轉接頭就能同時充好幾台。這是老經驗旅人的標準作法，比帶好幾個轉接頭輕也便宜。但延長線本身要確認耐得住當地電壓，而且插在上面的東西全部都得是支援 100–240V 的。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "為什麼同一個國家列了好幾種插座類型？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "因為規格會換代，舊的不會一夕消失。像泰國同時存在 A、B、C、O 型，新蓋的飯店跟老公寓可能完全不同。中國的插座則常見一個孔位同時吃 A 型跟 I 型。列出多種代表你在當地可能遇到其中任何一種，帶萬用型的會比較保險。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "機場或飯店可以借到轉接頭嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "多數國際連鎖飯店的櫃檯可以借，但數量有限，旺季常常借光。機場也買得到，只是價格通常是市區的兩三倍。真的忘了帶也不必慌，但事先準備一個絕對比較省事。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="plug">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🔌</span>各國插頭電壓查詢</h1>
+    <p class="lede">轉接頭跟變壓器是兩回事。選個國家，下面會直接告訴你該帶哪一種，還是兩種都不用帶。</p>
+  </div>
+
+  <div class="panel">
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="country">要去哪個國家或地區</label>
+        <select id="country"></select>
+      </div>
+      <div class="field mb-0">
+        <label for="fromCountry">從哪裡出發</label>
+        <select id="fromCountry"></select>
+      </div>
+    </div>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title">插座類型對照圖</div>
+    <p class="hint">全世界的插座大致分成這幾種。看形狀比記字母快。</p>
+    <div class="types" id="typeGrid"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title">全部國家一覽</div>
+    <div class="field mb-2">
+      <label for="filter">篩選國家</label>
+      <input type="search" id="filter" placeholder="輸入國名或插座類型，例如「德國」或「G」">
+    </div>
+    <div class="table-scroll">
+      <table class="data">
+        <thead>
+          <tr><th>國家／地區</th><th class="num">電壓</th><th class="num">頻率</th><th>插座類型</th></tr>
+        </thead>
+        <tbody id="allTable"></tbody>
+      </table>
+    </div>
+    <p class="hint mb-0">整理自各國公開的電力規格資訊。同一個國家可能同時存在新舊規格，老房子或郊區遇到表上沒有的插座是常有的事。</p>
+  </div>
+
+  <section class="prose">
+    <h2>轉接頭跟變壓器差在哪</h2>
+    <p>這是出國最常搞混的一件事，帶錯了輕則不能用，重則燒掉。</p>
+    <ul>
+      <li><strong>轉接頭（轉換插頭）</strong>只改變插頭的<em>形狀</em>，讓你的插頭插得進當地的孔。它完全不動電壓，便宜、輕、體積小。</li>
+      <li><strong>變壓器</strong>改變的是<em>電壓</em>，把當地的 220V 降成你的電器要的 110V。又重又貴，而且有瓦數上限。</li>
+    </ul>
+    <p>絕大多數人只需要轉接頭。原因是手機充電器、筆電變壓器、相機充電器這類東西早就做成<strong>全球通用</strong>了。</p>
+
+    <h2>怎麼確認電器能不能直接用</h2>
+    <p>翻過來看充電器或電器本體上印的那行小字，找 <code>INPUT</code> 開頭那段：</p>
+    <ul>
+      <li>寫 <strong>100–240V</strong> 的，全世界都能用，只要帶轉接頭。手機、筆電、相機、電動牙刷幾乎都是這種。</li>
+      <li>只寫 <strong>110V</strong> 或 <strong>100–120V</strong> 的，到 220V 的國家會燒掉，需要變壓器，或乾脆別帶。</li>
+    </ul>
+    <p>會出問題的通常是<strong>發熱與馬達類</strong>：吹風機、電棒、電湯匙、除濕機。這些瓦數高，變壓器也未必撐得住，買一台當地的或用飯店提供的比較實際。</p>
+
+    <h2>50Hz 與 60Hz 要不要在意</h2>
+    <p>台灣是 60Hz，歐洲、中國、東南亞多半是 50Hz。對支援全球電壓的 3C 產品來說沒有影響，那類電源供應器本來就吃得下兩種頻率。</p>
+    <p>會受影響的是<strong>靠頻率決定轉速的馬達</strong>，例如某些老式時鐘、唱盤、部分小家電，到了 50Hz 的地方會變慢。現代電器大多已經不吃這套，一般旅行不需要擔心。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>買一個萬用轉接頭就好了嗎？</summary>
+        <div class="a">大部分情況可以，但要注意兩點。一是很多萬用轉接頭<strong>不含接地</strong>，只轉兩個腳，帶接地的三腳插頭插不進去。二是它只轉形狀不轉電壓，別因為插得進去就以為安全。另外英國、愛爾蘭、香港、新加坡用的 G 型特別大顆，有些便宜的萬用頭在那邊會鬆動接觸不良。</div>
+      </details>
+      <details>
+        <summary>台灣的插頭可以直接插日本嗎？</summary>
+        <div class="a">可以。日本跟台灣同樣是 A 型扁腳、100V 左右、電壓相近，兩腳的插頭直接插就能用。要注意的是日本很多老插座<strong>沒有接地孔</strong>，如果你的插頭是三腳（B 型）可能插不進去，帶一個三轉二的小轉接頭比較保險。日本是 100V，台灣是 110V，這個差距對一般電器沒有影響。</div>
+      </details>
+      <details>
+        <summary>飯店房間常常插座不夠用怎麼辦？</summary>
+        <div class="a">帶一條<strong>台灣的延長線</strong>，搭配一個轉接頭插在牆上，等於一個轉接頭就能同時充好幾台。這是老經驗旅人的標準作法，比帶好幾個轉接頭輕也便宜。但延長線本身要確認耐得住當地電壓，而且插在上面的東西全部都得是支援 100–240V 的。</div>
+      </details>
+      <details>
+        <summary>為什麼同一個國家列了好幾種插座類型？</summary>
+        <div class="a">因為規格會換代，舊的不會一夕消失。像泰國同時存在 A、B、C、O 型，新蓋的飯店跟老公寓可能完全不同。中國的插座則常見一個孔位同時吃 A 型跟 I 型。列出多種代表你在當地<strong>可能遇到其中任何一種</strong>，帶萬用型的會比較保險。</div>
+      </details>
+      <details>
+        <summary>機場或飯店可以借到轉接頭嗎？</summary>
+        <div class="a">多數國際連鎖飯店的櫃檯可以借，但數量有限，旺季常常借光。機場也買得到，只是價格通常是市區的兩三倍。真的忘了帶也不必慌，但事先準備一個絕對比較省事。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js?v=02ac63f3"></script>
+<script src="../assets/js/layout.js?v=483231ca"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc } = window.U;
+
+  /* ==========================================================================
+     插座類型
+     svg 用 currentColor 畫，所以會自動跟著深淺色模式走，不需要準備圖檔。
+     viewBox 統一 100×100，外框是插座面板，實心的是插頭的腳。
+     ========================================================================== */
+  const TYPES = {
+    A: { name: '兩腳扁平', note: '台灣、日本、美國',
+         svg: `<rect x="12" y="12" width="76" height="76" rx="16" fill="none" stroke="currentColor" stroke-width="3"/>
+               <rect x="35" y="33" width="8" height="34" rx="2" fill="currentColor"/>
+               <rect x="57" y="33" width="8" height="34" rx="2" fill="currentColor"/>` },
+    B: { name: '兩扁一圓（含接地）', note: 'A 型多一根接地腳',
+         svg: `<rect x="12" y="12" width="76" height="76" rx="16" fill="none" stroke="currentColor" stroke-width="3"/>
+               <rect x="35" y="25" width="8" height="31" rx="2" fill="currentColor"/>
+               <rect x="57" y="25" width="8" height="31" rx="2" fill="currentColor"/>
+               <circle cx="50" cy="71" r="7" fill="currentColor"/>` },
+    C: { name: '兩腳圓形', note: '歐洲通用，最常見',
+         svg: `<circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="3"/>
+               <circle cx="36" cy="50" r="7.5" fill="currentColor"/>
+               <circle cx="64" cy="50" r="7.5" fill="currentColor"/>` },
+    D: { name: '三腳圓形（小）', note: '印度、尼泊爾',
+         svg: `<circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="3"/>
+               <circle cx="50" cy="29" r="8" fill="currentColor"/>
+               <circle cx="34" cy="63" r="7" fill="currentColor"/>
+               <circle cx="66" cy="63" r="7" fill="currentColor"/>` },
+    E: { name: '兩圓＋接地孔', note: '法國、比利時、波蘭',
+         svg: `<circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="3"/>
+               <circle cx="50" cy="27" r="6.5" fill="none" stroke="currentColor" stroke-width="3"/>
+               <circle cx="36" cy="57" r="7.5" fill="currentColor"/>
+               <circle cx="64" cy="57" r="7.5" fill="currentColor"/>` },
+    F: { name: '兩圓＋側邊接地', note: '德規 Schuko，歐洲最普遍',
+         svg: `<circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="3"/>
+               <rect x="39" y="9" width="22" height="7" rx="3.5" fill="currentColor"/>
+               <rect x="39" y="84" width="22" height="7" rx="3.5" fill="currentColor"/>
+               <circle cx="36" cy="50" r="7.5" fill="currentColor"/>
+               <circle cx="64" cy="50" r="7.5" fill="currentColor"/>` },
+    G: { name: '三腳方形', note: '英國、香港、新加坡',
+         svg: `<rect x="12" y="12" width="76" height="76" rx="14" fill="none" stroke="currentColor" stroke-width="3"/>
+               <rect x="45" y="23" width="10" height="24" rx="2" fill="currentColor"/>
+               <rect x="24" y="58" width="24" height="10" rx="2" fill="currentColor"/>
+               <rect x="52" y="58" width="24" height="10" rx="2" fill="currentColor"/>` },
+    H: { name: '三腳扁圓（以色列）', note: '只有以色列在用',
+         svg: `<rect x="12" y="12" width="76" height="76" rx="20" fill="none" stroke="currentColor" stroke-width="3"/>
+               <circle cx="50" cy="29" r="6.5" fill="currentColor"/>
+               <circle cx="31" cy="60" r="6.5" fill="currentColor"/>
+               <circle cx="69" cy="60" r="6.5" fill="currentColor"/>` },
+    I: { name: '八字形斜腳', note: '澳洲、紐西蘭、中國',
+         svg: `<rect x="12" y="12" width="76" height="76" rx="16" fill="none" stroke="currentColor" stroke-width="3"/>
+               <rect x="29" y="26" width="8" height="27" rx="2" fill="currentColor" transform="rotate(30 33 39)"/>
+               <rect x="63" y="26" width="8" height="27" rx="2" fill="currentColor" transform="rotate(-30 67 39)"/>
+               <rect x="46" y="58" width="8" height="24" rx="2" fill="currentColor"/>` },
+    J: { name: '三腳圓形（瑞士）', note: '孔位是六角形，瑞士專用',
+         svg: `<path d="M50 11 86 30.5 86 69.5 50 89 14 69.5 14 30.5Z" fill="none" stroke="currentColor" stroke-width="3"/>
+               <circle cx="50" cy="32" r="6.5" fill="currentColor"/>
+               <circle cx="35" cy="59" r="6.5" fill="currentColor"/>
+               <circle cx="65" cy="59" r="6.5" fill="currentColor"/>` },
+    K: { name: '兩圓＋U 形接地', note: '丹麥，長得像笑臉',
+         svg: `<circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="3"/>
+               <circle cx="36" cy="41" r="7.5" fill="currentColor"/>
+               <circle cx="64" cy="41" r="7.5" fill="currentColor"/>
+               <path d="M37 65q13 14 26 0" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>` },
+    L: { name: '三腳一直線', note: '義大利、智利',
+         svg: `<circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="3"/>
+               <circle cx="27" cy="50" r="6.5" fill="currentColor"/>
+               <circle cx="50" cy="50" r="6.5" fill="currentColor"/>
+               <circle cx="73" cy="50" r="6.5" fill="currentColor"/>` },
+    M: { name: '三腳圓形（大）', note: '南非、印度大電流',
+         svg: `<circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="3"/>
+               <circle cx="50" cy="27" r="10" fill="currentColor"/>
+               <circle cx="32" cy="64" r="9" fill="currentColor"/>
+               <circle cx="68" cy="64" r="9" fill="currentColor"/>` },
+    N: { name: '三腳圓形（巴西）', note: '巴西、南非新制',
+         svg: `<circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="3"/>
+               <circle cx="33" cy="43" r="7" fill="currentColor"/>
+               <circle cx="67" cy="43" r="7" fill="currentColor"/>
+               <circle cx="50" cy="70" r="7" fill="currentColor"/>` },
+    O: { name: '三腳圓形（泰國）', note: '泰國自訂規格',
+         svg: `<circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="3"/>
+               <circle cx="34" cy="45" r="7" fill="currentColor"/>
+               <circle cx="66" cy="45" r="7" fill="currentColor"/>
+               <circle cx="50" cy="71" r="7" fill="currentColor"/>` }
+  };
+
+  /* ==========================================================================
+     各國電力規格
+     v 電壓、hz 頻率、t 插座類型、r 區域、note 當地特別要注意的事
+     同一國列多種類型，代表當地新舊規格並存，遇到哪一種都有可能。
+     ========================================================================== */
+  const DATA = [
+    /* ---- 東亞 ---- */
+    { n: '台灣', r: '東亞', v: 110, hz: 60, t: ['A', 'B'] },
+    { n: '日本', r: '東亞', v: 100, hz: '50/60', t: ['A', 'B'],
+      note: '東日本 50Hz、西日本 60Hz，以富士川與糸魚川為界。老旅館的插座常常沒有接地孔，三腳插頭可能插不進去。' },
+    { n: '韓國', r: '東亞', v: 220, hz: 60, t: ['C', 'F'],
+      note: '已全面改為歐規 220V 圓孔，台灣插頭一定插不進去。老建築偶爾還留有 110V 的舊插座，但不能預期。' },
+    { n: '中國', r: '東亞', v: 220, hz: 50, t: ['A', 'C', 'I'],
+      note: '常見的是上方八字（I 型）、下方兩扁孔（A 型）的複合插座，台灣兩腳插頭多半插得進去，但電壓是 220V，務必先確認電器支援。' },
+    { n: '香港', r: '東亞', v: 220, hz: 50, t: ['G'],
+      note: '沿用英規三方腳，插頭特別大顆。' },
+    { n: '澳門', r: '東亞', v: 220, hz: 50, t: ['D', 'F', 'G', 'M'],
+      note: '葡治時期留下的歐規與後來的英規並存，同一間飯店不同房型可能不一樣。' },
+    { n: '蒙古', r: '東亞', v: 230, hz: 50, t: ['C', 'E'] },
+
+    /* ---- 東南亞與南亞 ---- */
+    { n: '泰國', r: '東南亞', v: 230, hz: 50, t: ['A', 'B', 'C', 'O'],
+      note: '插座常做成同時吃扁腳與圓腳的複合孔，台灣插頭多半插得進去，但電壓是 230V。' },
+    { n: '越南', r: '東南亞', v: 220, hz: 50, t: ['A', 'C', 'F'],
+      note: '扁腳與圓腳都常見，台灣插頭通常插得進去，但一樣是 220V。' },
+    { n: '新加坡', r: '東南亞', v: 230, hz: 50, t: ['G'] },
+    { n: '馬來西亞', r: '東南亞', v: 240, hz: 50, t: ['G'] },
+    { n: '印尼', r: '東南亞', v: 230, hz: 50, t: ['C', 'F'] },
+    { n: '菲律賓', r: '東南亞', v: 220, hz: 60, t: ['A', 'B', 'C'],
+      note: '插座形狀跟台灣一樣是扁腳，插得進去，但電壓是 220V。這是最容易燒掉電器的組合，一定要先確認。' },
+    { n: '柬埔寨', r: '東南亞', v: 230, hz: 50, t: ['A', 'C', 'G'] },
+    { n: '寮國', r: '東南亞', v: 230, hz: 50, t: ['A', 'B', 'C', 'E', 'F'] },
+    { n: '緬甸', r: '東南亞', v: 230, hz: 50, t: ['C', 'D', 'F', 'G'] },
+    { n: '汶萊', r: '東南亞', v: 240, hz: 50, t: ['G'] },
+    { n: '印度', r: '南亞', v: 230, hz: 50, t: ['C', 'D', 'M'] },
+    { n: '尼泊爾', r: '南亞', v: 230, hz: 50, t: ['C', 'D', 'M'] },
+    { n: '斯里蘭卡', r: '南亞', v: 230, hz: 50, t: ['D', 'G', 'M'] },
+    { n: '馬爾地夫', r: '南亞', v: 230, hz: 50, t: ['A', 'D', 'G', 'J', 'K', 'L'],
+      note: '度假島嶼多由各自的業者施工，規格非常混亂，帶萬用轉接頭最保險。' },
+
+    /* ---- 中東 ---- */
+    { n: '阿拉伯聯合大公國（杜拜）', r: '中東', v: 230, hz: 50, t: ['C', 'D', 'G'],
+      note: '主要是英規 G 型。' },
+    { n: '卡達', r: '中東', v: 240, hz: 50, t: ['D', 'G'] },
+    { n: '以色列', r: '中東', v: 230, hz: 50, t: ['C', 'H', 'M'] },
+    { n: '土耳其', r: '中東', v: 230, hz: 50, t: ['C', 'F'] },
+
+    /* ---- 歐洲 ---- */
+    { n: '英國', r: '歐洲', v: 230, hz: 50, t: ['G'] },
+    { n: '愛爾蘭', r: '歐洲', v: 230, hz: 50, t: ['G'] },
+    { n: '法國', r: '歐洲', v: 230, hz: 50, t: ['C', 'E'] },
+    { n: '德國', r: '歐洲', v: 230, hz: 50, t: ['C', 'F'] },
+    { n: '義大利', r: '歐洲', v: 230, hz: 50, t: ['C', 'F', 'L'],
+      note: '義大利特有的 L 型是三腳一直線，一般歐規兩圓腳的轉接頭多半仍可插入，但某些老插座只吃 L 型。' },
+    { n: '西班牙', r: '歐洲', v: 230, hz: 50, t: ['C', 'F'] },
+    { n: '葡萄牙', r: '歐洲', v: 230, hz: 50, t: ['C', 'F'] },
+    { n: '荷蘭', r: '歐洲', v: 230, hz: 50, t: ['C', 'F'] },
+    { n: '比利時', r: '歐洲', v: 230, hz: 50, t: ['C', 'E'] },
+    { n: '瑞士', r: '歐洲', v: 230, hz: 50, t: ['C', 'J'],
+      note: '瑞士的孔位是六角形，一般歐規兩圓腳（C 型）插得進去，但較粗的德規 F 型插頭可能卡住。' },
+    { n: '奧地利', r: '歐洲', v: 230, hz: 50, t: ['C', 'F'] },
+    { n: '捷克', r: '歐洲', v: 230, hz: 50, t: ['C', 'E'] },
+    { n: '波蘭', r: '歐洲', v: 230, hz: 50, t: ['C', 'E'] },
+    { n: '匈牙利', r: '歐洲', v: 230, hz: 50, t: ['C', 'F'] },
+    { n: '希臘', r: '歐洲', v: 230, hz: 50, t: ['C', 'F'] },
+    { n: '克羅埃西亞', r: '歐洲', v: 230, hz: 50, t: ['C', 'F'] },
+    { n: '丹麥', r: '歐洲', v: 230, hz: 50, t: ['C', 'E', 'F', 'K'] },
+    { n: '瑞典', r: '歐洲', v: 230, hz: 50, t: ['C', 'F'] },
+    { n: '挪威', r: '歐洲', v: 230, hz: 50, t: ['C', 'F'] },
+    { n: '芬蘭', r: '歐洲', v: 230, hz: 50, t: ['C', 'F'] },
+    { n: '冰島', r: '歐洲', v: 230, hz: 50, t: ['C', 'F'] },
+    { n: '俄羅斯', r: '歐洲', v: 220, hz: 50, t: ['C', 'F'] },
+
+    /* ---- 美洲 ---- */
+    { n: '美國', r: '美洲', v: 120, hz: 60, t: ['A', 'B'] },
+    { n: '加拿大', r: '美洲', v: 120, hz: 60, t: ['A', 'B'] },
+    { n: '墨西哥', r: '美洲', v: 127, hz: 60, t: ['A', 'B'] },
+    { n: '巴西', r: '美洲', v: '127/220', hz: 60, t: ['C', 'N'],
+      note: '同一個國家內兩種電壓並存，有些地區是 127V、有些是 220V，連飯店房間的不同插座都可能不同，插之前請看插座旁的標示。' },
+    { n: '阿根廷', r: '美洲', v: 220, hz: 50, t: ['C', 'I'] },
+    { n: '智利', r: '美洲', v: 220, hz: 50, t: ['C', 'L'] },
+    { n: '秘魯', r: '美洲', v: 220, hz: 60, t: ['A', 'B', 'C'],
+      note: '插座吃扁腳，形狀跟台灣一樣，但電壓是 220V。' },
+    { n: '古巴', r: '美洲', v: '110/220', hz: 60, t: ['A', 'B', 'C', 'L'] },
+
+    /* ---- 大洋洲 ---- */
+    { n: '澳洲', r: '大洋洲', v: 230, hz: 50, t: ['I'] },
+    { n: '紐西蘭', r: '大洋洲', v: 230, hz: 50, t: ['I'] },
+    { n: '斐濟', r: '大洋洲', v: 240, hz: 50, t: ['I'] },
+    { n: '關島', r: '大洋洲', v: 110, hz: 60, t: ['A', 'B'] },
+    { n: '帛琉', r: '大洋洲', v: 115, hz: 60, t: ['A', 'B'] },
+
+    /* ---- 非洲 ---- */
+    { n: '南非', r: '非洲', v: 230, hz: 50, t: ['C', 'D', 'M', 'N'] },
+    { n: '埃及', r: '非洲', v: 220, hz: 50, t: ['C', 'F'] },
+    { n: '摩洛哥', r: '非洲', v: 220, hz: 50, t: ['C', 'E'] },
+    { n: '肯亞', r: '非洲', v: 240, hz: 50, t: ['G'] },
+    { n: '模里西斯', r: '非洲', v: 230, hz: 50, t: ['C', 'G'] }
+  ];
+
+  /* 「110/220」這種寫法取較高的那個來判斷風險，寧可提醒過頭 */
+  const maxVolt = v => Math.max(...String(v).split('/').map(Number));
+
+  const svgOf = code => {
+    const t = TYPES[code];
+    return t ? `<span class="plug-art"><svg viewBox="0 0 100 100" role="img"
+      aria-label="${esc(code)} 型插座，${esc(t.name)}">${t.svg}</svg></span>` : '';
+  };
+
+  /* ---------- 建立選單 ---------- */
+  const REGIONS = [...new Set(DATA.map(d => d.r))];
+  const options = REGIONS.map(r => {
+    const items = DATA.filter(d => d.r === r)
+      .map(d => `<option value="${esc(d.n)}">${esc(d.n)}</option>`).join('');
+    return `<optgroup label="${esc(r)}">${items}</optgroup>`;
+  }).join('');
+
+  $('#country').innerHTML = options;
+  $('#fromCountry').innerHTML = options;
+  $('#country').value = '日本';
+  $('#fromCountry').value = '台灣';
+
+  /* ---------- 插座類型對照圖 ---------- */
+  $('#typeGrid').innerHTML = Object.entries(TYPES).map(([code, t]) => `
+    <div class="type-card">
+      ${svgOf(code)}
+      <b>${code} 型</b>
+      <span>${esc(t.name)}<br>${esc(t.note)}</span>
+    </div>`).join('');
+
+  /* ---------- 全部國家一覽 ---------- */
+  function renderTable(q) {
+    const key = (q || '').trim().toLowerCase();
+    const rows = DATA.filter(d =>
+      !key || d.n.toLowerCase().includes(key) || d.r.toLowerCase().includes(key) ||
+      d.t.some(t => t.toLowerCase() === key)
+    );
+    $('#allTable').innerHTML = rows.length
+      ? rows.map(d => `
+        <tr>
+          <td>${esc(d.n)}</td>
+          <td class="num">${esc(String(d.v))}V</td>
+          <td class="num">${esc(String(d.hz))}Hz</td>
+          <td class="types-cell">${d.t.join(' · ')}</td>
+        </tr>`).join('')
+      : '<tr><td colspan="4" class="tc">找不到符合的國家</td></tr>';
+  }
+
+  /* ---------- 查詢結果 ---------- */
+  function render() {
+    const to = DATA.find(d => d.n === $('#country').value);
+    const from = DATA.find(d => d.n === $('#fromCountry').value);
+    if (!to || !from) return;
+
+    const vTo = maxVolt(to.v);
+    const vFrom = maxVolt(from.v);
+
+    /* 形狀判定：出發地任何一種插頭能插進目的地的孔就算相容。
+       A 型插頭可以插進 B 型的孔（少接地而已），反過來不行。 */
+    const fits = from.t.some(ft =>
+      to.t.includes(ft) || (ft === 'A' && to.t.includes('B')));
+
+    /* 電壓判定：差距超過 15% 就視為不同電壓系統 */
+    const sameVolt = Math.abs(vTo - vFrom) / vFrom <= 0.15;
+    const sameHz = String(to.hz) === String(from.hz) ||
+      String(to.hz).includes(String(from.hz));
+
+    const plugs = to.t.map(code => `
+      <figure>
+        ${svgOf(code)}
+        <figcaption>${code} 型<span class="sub">${esc(TYPES[code] ? TYPES[code].name : '')}</span></figcaption>
+      </figure>`).join('');
+
+    /* --- 三個結論框 --- */
+    const adapter = fits
+      ? `<div class="verdict fine"><span class="verdict__icon" aria-hidden="true">✓</span>
+         <div><b>轉接頭可以不用帶。</b>${esc(from.n)}的插頭形狀插得進${esc(to.n)}的插座。
+         不過當地也可能遇到其他型號的插座，帶一個還是比較保險。</div></div>`
+      : `<div class="verdict need"><span class="verdict__icon" aria-hidden="true">✕</span>
+         <div><b>一定要帶轉接頭。</b>${esc(from.n)}的插頭（${from.t.join('、')} 型）
+         插不進${esc(to.n)}的插座（${to.t.join('、')} 型），形狀完全不同。</div></div>`;
+
+    const power = sameVolt
+      ? `<div class="verdict fine"><span class="verdict__icon" aria-hidden="true">✓</span>
+         <div><b>電壓相近，變壓器不用帶。</b>${esc(to.n)}是 ${esc(String(to.v))}V，
+         跟${esc(from.n)}的 ${esc(String(from.v))}V 差不多，電器可以直接用。</div></div>`
+      : `<div class="verdict ${fits ? 'need' : 'warn'}">
+         <span class="verdict__icon" aria-hidden="true">${fits ? '⚠' : '!'}</span>
+         <div><b>電壓不同，先檢查電器標示。</b>${esc(to.n)}是 ${esc(String(to.v))}V，
+         ${esc(from.n)}是 ${esc(String(from.v))}V。
+         充電器上印著 <code>100-240V</code> 的可以直接用，只寫 <code>${esc(String(vFrom))}V</code>
+         的會燒掉，需要變壓器。
+         ${fits ? '<strong>特別注意：這裡的插座形狀跟你家一樣，插得進去不代表安全，這是最容易出事的組合。</strong>' : ''}</div></div>`;
+
+    const freq = sameHz
+      ? ''
+      : `<div class="verdict warn"><span class="verdict__icon" aria-hidden="true">≈</span>
+         <div><b>頻率不同（${esc(String(to.hz))}Hz）。</b>
+         手機、筆電、相機這類電源供應器不受影響。
+         靠馬達轉速運作的小家電可能會變慢，一般旅行不必擔心。</div></div>`;
+
+    $('#result').innerHTML = `
+      <div class="result__top">
+        <div class="spec">
+          <span class="spec__k">電壓</span>
+          <span class="spec__v ${vTo > vFrom * 1.15 ? 'hot' : ''}">${esc(String(to.v))}<small>V</small></span>
+        </div>
+        <div class="spec">
+          <span class="spec__k">頻率</span>
+          <span class="spec__v">${esc(String(to.hz))}<small>Hz</small></span>
+        </div>
+        <div class="spec">
+          <span class="spec__k">插座類型</span>
+          <span class="spec__v">${to.t.join(' · ')}</span>
+        </div>
+      </div>
+
+      <div class="plug-row">${plugs}</div>
+
+      ${adapter}${power}${freq}
+
+      ${to.note ? `<p class="hint mt-0" style="margin-top:12px">
+        <strong>${esc(to.n)}要注意：</strong>${esc(to.note)}</p>` : ''}`;
+  }
+
+  $('#country').addEventListener('change', render);
+  $('#fromCountry').addEventListener('change', render);
+  $('#filter').addEventListener('input', e => renderTable(e.target.value));
+
+  render();
+  renderTable('');
+})();
+</script>
+</body>
+</html>

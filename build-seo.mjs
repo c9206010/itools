@@ -47,21 +47,26 @@ function hashOf(...segments) {
   return createHash('sha1').update(buf).digest('hex').slice(0, 8);
 }
 
-const V = {
-  catalog: hashOf('assets', 'js', 'catalog.js'),
-  layout: hashOf('assets', 'js', 'layout.js'),
-  cities: hashOf('assets', 'js', 'cities.js'),
-  css: hashOf('assets', 'css', 'main.css')
-};
+/* 需要加版本號的共用資源。新增一個共用的 js 或 css 檔時，在這裡加一行就好。 */
+const SHARED_ASSETS = [
+  'assets/js/catalog.js',
+  'assets/js/layout.js',
+  'assets/js/cities.js',
+  'assets/js/zh-dict.js',
+  'assets/css/main.css'
+];
+
+const V = Object.fromEntries(
+  SHARED_ASSETS.map(p => [p, hashOf(...p.split('/'))])
+);
 
 /** 幫共用資源的網址加上版本查詢字串，既有的版本號會被覆蓋。
  *  取代一律用函式形式，字串形式會把 $ 當成特殊符號。 */
 function versionAssets(html) {
-  return html
-    .replace(/((?:\.\.\/)?assets\/js\/catalog\.js)(\?v=[0-9a-f]+)?/g, (m, p) => `${p}?v=${V.catalog}`)
-    .replace(/((?:\.\.\/)?assets\/js\/layout\.js)(\?v=[0-9a-f]+)?/g, (m, p) => `${p}?v=${V.layout}`)
-    .replace(/((?:\.\.\/)?assets\/js\/cities\.js)(\?v=[0-9a-f]+)?/g, (m, p) => `${p}?v=${V.cities}`)
-    .replace(/((?:\.\.\/)?assets\/css\/main\.css)(\?v=[0-9a-f]+)?/g, (m, p) => `${p}?v=${V.css}`);
+  return SHARED_ASSETS.reduce((out, p) => {
+    const re = new RegExp(`((?:\\.\\./)?${p.replace(/[./]/g, m => '\\' + m)})(\\?v=[0-9a-f]+)?`, 'g');
+    return out.replace(re, (m, hit) => `${hit}?v=${V[p]}`);
+  }, html);
 }
 
 /* ---------- 小工具 ---------- */

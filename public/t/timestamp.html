@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Unix 時間戳轉換｜timestamp 與日期互轉 - 順手工具箱</title>
+<meta name="description" content="免費 Unix timestamp 轉換工具，時間戳與日期雙向互轉，自動辨識秒與毫秒，支援台北時間與 UTC，同時輸出 ISO 8601、RFC 2822 與相對時間，點一下即可複製。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⌛</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css?v=35ffc45a">
+<style>
+  .now { border: 2px solid var(--border-strong); border-radius: var(--radius-lg);
+         background: var(--surface-2); padding: 16px; display: flex;
+         flex-wrap: wrap; align-items: center; gap: 12px 20px; }
+  .now__k { font-size: .82rem; color: var(--ink-3); display: block; }
+  .now__v { font-family: var(--mono); font-size: 1.7rem; font-weight: 700;
+            color: var(--brand); letter-spacing: -.01em; cursor: pointer; }
+  .now__v:hover { opacity: .75; }
+  .now__side { font-family: var(--mono); font-size: .95rem; color: var(--ink-2); }
+  .now__btns { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .out-list { border: 1px solid var(--border); border-radius: var(--radius);
+              overflow: hidden; }
+  .out-row { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline;
+             padding: 11px 14px; border-top: 1px solid var(--border);
+             background: var(--surface); }
+  .out-row:first-child { border-top: 0; }
+  .out-row__k { flex: none; width: 128px; font-size: .84rem; color: var(--ink-3); }
+  .out-row__v { flex: 1 1 200px; font-family: var(--mono); font-size: 1.02rem;
+                word-break: break-all; cursor: pointer; }
+  .out-row__v:hover { color: var(--brand); }
+  .out-row.hi { background: var(--brand-wash); }
+  .out-row.hi .out-row__v { font-weight: 700; font-size: 1.15rem; }
+
+  .bad { border: 1px solid var(--danger); border-radius: var(--radius);
+         background: rgba(192,57,43,.07); color: var(--danger);
+         padding: 12px 14px; font-size: .92rem; }
+
+  .unit-hint { font-size: .85rem; color: var(--ink-3); margin: 8px 0 0; }
+  .unit-hint b { font-family: var(--mono); color: var(--ink-2); }
+
+  th.num, td.num { text-align: right; font-family: var(--mono); }
+  td.mono-cell { font-family: var(--mono); }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/timestamp.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="timestamp, 時間戳, unix, epoch, 毫秒, 時區, 日期轉換, 2038">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="Unix 時間戳轉換｜timestamp 與日期互轉 - 順手工具箱">
+<meta property="og:description" content="免費 Unix timestamp 轉換工具，時間戳與日期雙向互轉，自動辨識秒與毫秒，支援台北時間與 UTC，同時輸出 ISO 8601、RFC 2822 與相對時間，點一下即可複製。">
+<meta property="og:url" content="https://tools.luka-life.com/t/timestamp.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Unix 時間戳轉換｜timestamp 與日期互轉 - 順手工具箱">
+<meta name="twitter:description" content="免費 Unix timestamp 轉換工具，時間戳與日期雙向互轉，自動辨識秒與毫秒，支援台北時間與 UTC，同時輸出 ISO 8601、RFC 2822 與相對時間，點一下即可複製。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Unix 時間戳轉換",
+  "description": "免費 Unix timestamp 轉換工具，時間戳與日期雙向互轉，自動辨識秒與毫秒，支援台北時間與 UTC，同時輸出 ISO 8601、RFC 2822 與相對時間，點一下即可複製。",
+  "url": "https://tools.luka-life.com/t/timestamp.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "開發編碼",
+      "item": "https://tools.luka-life.com/#dev"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Unix 時間戳轉換",
+      "item": "https://tools.luka-life.com/t/timestamp.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "為什麼我算出來的時間差了八小時？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "幾乎都是時區問題。時間戳本身是 UTC 基準，如果你把台北時間當成 UTC 去反推，就會差八小時。上面的工具兩個方向都讓你明確指定時區，轉換前先確認那個下拉選單選對了。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "時間戳可以是負數嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以。負數代表 1970 年之前的時間，例如 -86400 就是 1969 年 12 月 31 日。不過很多系統與函式庫對負數時間戳的支援並不完整，處理歷史資料時建議實際測過再用。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "閏秒會影響時間戳嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Unix 時間戳刻意忽略閏秒，它假設每一天都剛好是 86400 秒。所以嚴格來說它不是真正的「經過秒數」，而是一種約定。對一般應用沒有影響，只有在需要極高精度的場合才要另外處理。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "資料都會送到伺服器嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會。整個轉換在你的瀏覽器裡完成，貼進去的時間戳不會離開這台裝置。關掉分頁就什麼都不剩。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="timestamp">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">⌛</span>Unix 時間戳轉換</h1>
+    <p class="lede">看到一串 1750000000 不知道是哪一天，或是需要一個時間戳丟進 API。兩個方向都能轉。</p>
+  </div>
+
+  <div class="panel">
+    <div class="now">
+      <div>
+        <span class="now__k">現在的時間戳（秒）</span>
+        <span class="now__v" id="nowSec" title="點一下複製">—</span>
+      </div>
+      <div>
+        <span class="now__k">毫秒</span>
+        <span class="now__side" id="nowMs" style="cursor:pointer" title="點一下複製">—</span>
+      </div>
+      <div class="now__btns">
+        <button type="button" class="btn btn--sm" id="useNowBtn">帶入下面</button>
+        <button type="button" class="btn btn--sm btn--ghost" id="pauseBtn"
+                aria-pressed="false">暫停</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title">時間戳 → 日期</div>
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="tsInput">貼上時間戳</label>
+        <input type="text" id="tsInput" inputmode="numeric" placeholder="例如 1750000000"
+               autocomplete="off">
+      </div>
+      <div class="field mb-0">
+        <label for="tsUnit">單位</label>
+        <select id="tsUnit">
+          <option value="auto">自動判斷</option>
+          <option value="s">秒（10 位）</option>
+          <option value="ms">毫秒（13 位）</option>
+          <option value="us">微秒（16 位）</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label for="tsZone">用哪個時區顯示</label>
+        <select id="tsZone">
+          <option value="Asia/Taipei">台北時間（UTC+8）</option>
+          <option value="local">這台裝置的時區</option>
+          <option value="UTC">UTC</option>
+        </select>
+      </div>
+    </div>
+    <p class="unit-hint" id="unitHint"></p>
+    <div id="tsOut"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title">日期 → 時間戳</div>
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="dtInput">選一個時間</label>
+        <input type="datetime-local" id="dtInput" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="dtZone">這個時間屬於</label>
+        <select id="dtZone">
+          <option value="Asia/Taipei">台北時間（UTC+8）</option>
+          <option value="local">這台裝置的時區</option>
+          <option value="UTC">UTC</option>
+        </select>
+      </div>
+    </div>
+    <div id="dtOut"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title">幾個值得記住的時間點</div>
+    <div class="table-scroll">
+      <table class="data">
+        <thead>
+          <tr><th>時間點</th><th class="num">時間戳（秒）</th><th>意義</th></tr>
+        </thead>
+        <tbody id="landmarks"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <section class="prose">
+    <h2>時間戳是什麼</h2>
+    <p>Unix 時間戳是<strong>從 1970 年 1 月 1 日 00:00:00 UTC 算起經過的秒數</strong>。它是一個單純的數字，沒有時區、沒有格式、沒有語言的問題，所以程式之間交換時間幾乎都用它。</p>
+    <p>同一個時間戳在台北是下午三點、在倫敦是早上七點，但數字完全相同。時區是<strong>顯示的時候</strong>才套上去的，不在時間戳本身。</p>
+
+    <h2>秒還是毫秒，看位數</h2>
+    <p>這是最常踩的坑。兩種單位都很常見，差 1000 倍：</p>
+    <ul>
+      <li><strong>10 位數</strong>是秒。多數後端、資料庫、Linux 指令用這個。</li>
+      <li><strong>13 位數</strong>是毫秒。JavaScript 的 <code>Date.now()</code>、Java、Android 用這個。</li>
+      <li><strong>16 位數</strong>是微秒，比較少見，某些資料庫與追蹤系統會用。</li>
+    </ul>
+    <p>把毫秒當成秒來解讀，會得到西元五萬多年的日期；反過來則會落在 1970 年 1 月那幾天。看到這兩種結果就知道單位搞錯了。上面的工具會自動判斷，也可以手動指定。</p>
+
+    <h2>2038 年問題</h2>
+    <p>舊系統用 32 位元有號整數存時間戳，能表示的最大值是 2147483647，也就是 <strong>2038 年 1 月 19 日</strong>。超過之後會溢位變成負數，時間倒退回 1901 年。</p>
+    <p>現代系統大多已經改用 64 位元，實務上不太會遇到，但在處理老舊嵌入式裝置或古早的資料庫欄位時還是要留意。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>為什麼我算出來的時間差了八小時？</summary>
+        <div class="a">幾乎都是時區問題。時間戳本身是 UTC 基準，如果你把台北時間當成 UTC 去反推，就會差八小時。上面的工具兩個方向都讓你明確指定時區，轉換前先確認那個下拉選單選對了。</div>
+      </details>
+      <details>
+        <summary>時間戳可以是負數嗎？</summary>
+        <div class="a">可以。負數代表 1970 年之前的時間，例如 -86400 就是 1969 年 12 月 31 日。不過很多系統與函式庫對負數時間戳的支援並不完整，處理歷史資料時建議實際測過再用。</div>
+      </details>
+      <details>
+        <summary>閏秒會影響時間戳嗎？</summary>
+        <div class="a">Unix 時間戳<strong>刻意忽略閏秒</strong>，它假設每一天都剛好是 86400 秒。所以嚴格來說它不是真正的「經過秒數」，而是一種約定。對一般應用沒有影響，只有在需要極高精度的場合才要另外處理。</div>
+      </details>
+      <details>
+        <summary>資料都會送到伺服器嗎？</summary>
+        <div class="a">不會。整個轉換在你的瀏覽器裡完成，貼進去的時間戳不會離開這台裝置。關掉分頁就什麼都不剩。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js?v=02ac63f3"></script>
+<script src="../assets/js/layout.js?v=483231ca"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc, pad } = window.U;
+
+  const TAIPEI_OFFSET = 8 * 60;   // 分鐘
+
+  /* ==========================================================================
+     時區處理
+     只支援三種：台北、UTC、裝置本機。前兩者的位移是固定的，
+     本機則交給瀏覽器自己算，這樣不必引入整套時區資料庫。
+     ========================================================================== */
+  function offsetMinutes(zone, date) {
+    if (zone === 'UTC') return 0;
+    if (zone === 'Asia/Taipei') return TAIPEI_OFFSET;
+    return -date.getTimezoneOffset();   // 本機，注意 JS 的正負號是反的
+  }
+
+  /** 把 Date 依指定時區拆成年月日時分秒 */
+  function partsIn(date, zone) {
+    const shifted = new Date(date.getTime() + offsetMinutes(zone, date) * 60000);
+    return {
+      y: shifted.getUTCFullYear(), mo: shifted.getUTCMonth() + 1, d: shifted.getUTCDate(),
+      h: shifted.getUTCHours(), mi: shifted.getUTCMinutes(), s: shifted.getUTCSeconds(),
+      wd: shifted.getUTCDay()
+    };
+  }
+
+  const WEEK = ['日', '一', '二', '三', '四', '五', '六'];
+
+  function fmtFull(date, zone) {
+    const p = partsIn(date, zone);
+    return `${p.y}/${pad(p.mo)}/${pad(p.d)} ${pad(p.h)}:${pad(p.mi)}:${pad(p.s)}（週${WEEK[p.wd]}）`;
+  }
+
+  function fmtOffsetLabel(zone, date) {
+    const off = offsetMinutes(zone, date);
+    if (off === 0) return 'UTC+00:00';
+    const sign = off >= 0 ? '+' : '−';
+    const a = Math.abs(off);
+    return `UTC${sign}${pad(Math.floor(a / 60))}:${pad(a % 60)}`;
+  }
+
+  /** 相對現在多久 */
+  function relative(date) {
+    const diff = date.getTime() - Date.now();
+    const abs = Math.abs(diff);
+    const units = [
+      [31557600000, '年'], [2629800000, '個月'], [86400000, '天'],
+      [3600000, '小時'], [60000, '分鐘'], [1000, '秒']
+    ];
+    for (const [ms, name] of units) {
+      if (abs >= ms) {
+        const n = Math.floor(abs / ms);
+        return diff < 0 ? `${n} ${name}前` : `${n} ${name}後`;
+      }
+    }
+    return '就是現在';
+  }
+
+  /* ---------- 現在時間 ---------- */
+  let paused = false;
+  function tickNow() {
+    if (paused) return;
+    const ms = Date.now();
+    $('#nowSec').textContent = Math.floor(ms / 1000);
+    $('#nowMs').textContent = ms;
+  }
+  setInterval(tickNow, 1000);
+  tickNow();
+
+  $('#nowSec').addEventListener('click', e =>
+    window.copyText(e.target.textContent, '已複製時間戳'));
+  $('#nowMs').addEventListener('click', e =>
+    window.copyText(e.target.textContent, '已複製時間戳'));
+
+  $('#pauseBtn').addEventListener('click', e => {
+    paused = !paused;
+    e.target.textContent = paused ? '繼續' : '暫停';
+    e.target.setAttribute('aria-pressed', String(paused));
+    if (!paused) tickNow();
+  });
+
+  $('#useNowBtn').addEventListener('click', () => {
+    $('#tsInput').value = Math.floor(Date.now() / 1000);
+    renderTs();
+    window.toast('已帶入現在的時間戳');
+  });
+
+  /* ---------- 時間戳 → 日期 ---------- */
+  /** 依位數猜單位。秒是 10 位、毫秒 13 位、微秒 16 位，
+      負數與短數字一律當成秒處理。 */
+  function guessUnit(raw) {
+    const digits = raw.replace(/^-/, '').length;
+    if (digits >= 16) return 'us';
+    if (digits >= 14) return 'ms';
+    if (digits >= 12) return 'ms';
+    return 's';
+  }
+
+  const UNIT_MS = { s: 1000, ms: 1, us: 0.001 };
+  const UNIT_NAME = { s: '秒', ms: '毫秒', us: '微秒' };
+
+  function renderTs() {
+    const raw = $('#tsInput').value.trim().replace(/[,\s_]/g, '');
+    const host = $('#tsOut');
+    const hint = $('#unitHint');
+
+    if (!raw) {
+      host.innerHTML = '';
+      hint.textContent = '';
+      return;
+    }
+    if (!/^-?\d+$/.test(raw)) {
+      host.innerHTML = '<div class="bad">看起來不是純數字的時間戳。請只填數字，逗號與空白會自動忽略。</div>';
+      hint.textContent = '';
+      return;
+    }
+
+    const chosen = $('#tsUnit').value;
+    const unit = chosen === 'auto' ? guessUnit(raw) : chosen;
+    const date = new Date(Number(raw) * UNIT_MS[unit]);
+
+    if (isNaN(date.getTime())) {
+      host.innerHTML = '<div class="bad">這個數字超出可以表示的日期範圍。</div>';
+      hint.textContent = '';
+      return;
+    }
+
+    hint.innerHTML = chosen === 'auto'
+      ? `依位數判斷為 <b>${UNIT_NAME[unit]}</b>（${raw.replace(/^-/, '').length} 位數）。判斷錯的話可以自己指定。`
+      : `已指定為 <b>${UNIT_NAME[unit]}</b>。`;
+
+    const zone = $('#tsZone').value;
+    const rows = [
+      { k: '日期時間', v: fmtFull(date, zone), hi: true },
+      { k: '距離現在', v: relative(date) },
+      { k: 'ISO 8601', v: date.toISOString() },
+      { k: 'RFC 2822', v: date.toUTCString() },
+      { k: '時間戳（秒）', v: String(Math.floor(date.getTime() / 1000)) },
+      { k: '時間戳（毫秒）', v: String(date.getTime()) },
+      { k: '時區位移', v: fmtOffsetLabel(zone, date) }
+    ];
+    host.innerHTML = rowsHtml(rows);
+  }
+
+  /* ---------- 日期 → 時間戳 ---------- */
+  function renderDt() {
+    const raw = $('#dtInput').value;
+    const host = $('#dtOut');
+    if (!raw) { host.innerHTML = ''; return; }
+
+    /* datetime-local 沒有時區資訊，先當成 UTC 解析，再依使用者選的時區往回推 */
+    const m = raw.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/);
+    if (!m) { host.innerHTML = '<div class="bad">日期格式無法解析。</div>'; return; }
+
+    const asUtc = Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +(m[6] || 0));
+    const zone = $('#dtZone').value;
+    /* 本機時區要用該時刻自己的位移，夏令時間才不會算錯 */
+    const probe = new Date(asUtc);
+    const date = new Date(asUtc - offsetMinutes(zone, probe) * 60000);
+
+    const sec = Math.floor(date.getTime() / 1000);
+    host.innerHTML = rowsHtml([
+      { k: '時間戳（秒）', v: String(sec), hi: true },
+      { k: '時間戳（毫秒）', v: String(date.getTime()) },
+      { k: 'ISO 8601', v: date.toISOString() },
+      { k: '距離現在', v: relative(date) },
+      { k: '換算台北時間', v: fmtFull(date, 'Asia/Taipei') },
+      { k: '換算 UTC', v: fmtFull(date, 'UTC') }
+    ]);
+  }
+
+  function rowsHtml(rows) {
+    return `<div class="out-list">${rows.map(r => `
+      <div class="out-row${r.hi ? ' hi' : ''}">
+        <span class="out-row__k">${esc(r.k)}</span>
+        <span class="out-row__v" data-copy="${esc(r.v)}" title="點一下複製">${esc(r.v)}</span>
+      </div>`).join('')}</div>`;
+  }
+
+  /* ---------- 重要時間點 ---------- */
+  const LANDMARKS = [
+    { ts: 0, name: 'Unix 紀元起點', why: '1970/01/01 00:00:00 UTC，一切的起算點' },
+    { ts: 1000000000, name: '十億秒', why: '2001 年 9 月，當年工程師圈的小節日' },
+    { ts: 1234567890, name: '1234567890', why: '2009 年 2 月，湊數字的巧合' },
+    { ts: 2147483647, name: '32 位元上限', why: '2038 年 1 月 19 日，溢位後會跳回 1901 年' },
+    { ts: 4102444800, name: '2100 年', why: '2100/01/01 00:00:00 UTC' }
+  ];
+
+  $('#landmarks').innerHTML = LANDMARKS.map(l => `
+    <tr>
+      <td>${esc(l.name)}<br><span class="small muted">${fmtFull(new Date(l.ts * 1000), 'Asia/Taipei')}</span></td>
+      <td class="num"><span data-copy="${l.ts}" style="cursor:pointer"
+          title="點一下複製">${l.ts}</span></td>
+      <td class="small">${esc(l.why)}</td>
+    </tr>`).join('');
+
+  /* ---------- 綁定 ---------- */
+  ['#tsInput', '#tsUnit', '#tsZone'].forEach(s =>
+    $(s).addEventListener('input', renderTs));
+  ['#dtInput', '#dtZone'].forEach(s =>
+    $(s).addEventListener('input', renderDt));
+
+  /* 預設帶入現在，讓使用者一進來就看得到東西 */
+  const now = new Date();
+  $('#tsInput').value = Math.floor(now.getTime() / 1000);
+  const tp = partsIn(now, 'Asia/Taipei');
+  $('#dtInput').value =
+    `${tp.y}-${pad(tp.mo)}-${pad(tp.d)}T${pad(tp.h)}:${pad(tp.mi)}:${pad(tp.s)}`;
+
+  renderTs();
+  renderDt();
+})();
+</script>
+</body>
+</html>

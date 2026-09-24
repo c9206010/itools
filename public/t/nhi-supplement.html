@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>二代健保補充保費計算｜股利、租金、兼職要扣多少 - 順手工具箱</title>
+<meta name="description" content="免費試算二代健保補充保險費，涵蓋高額獎金、兼職薪資、執行業務、股利、利息與租金六種所得，自動判斷是否達到扣取門檻，可累加多筆估算全年總額。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css?v=35ffc45a">
+<style>
+  .board { border: 2px solid var(--border-strong); border-radius: var(--radius-lg);
+           background: var(--surface-2); padding: 18px 16px; }
+  .board__row { display: flex; justify-content: space-between; align-items: baseline;
+                gap: 12px; padding: 9px 0; border-bottom: 1px dashed var(--border); }
+  .board__row:last-of-type { border-bottom: 0; }
+  .board__row b { font-family: var(--mono); font-size: 1.1rem; font-weight: 700; }
+  .board__row.main { border-top: 2px solid var(--border-strong); margin-top: 4px;
+                     padding-top: 13px; }
+  .board__row.main b { color: var(--brand); font-size: 1.7rem; }
+  .board__row.muted-row, .board__row.muted-row b { color: var(--ink-3); font-weight: 400; }
+
+  .gate { padding: 11px 14px; border-radius: var(--radius); font-size: .9rem;
+          margin-bottom: 14px; border: 1px solid transparent; line-height: 1.75; }
+  .gate.hit  { background: rgba(192,57,43,.08); border-color: var(--danger); }
+  .gate.safe { background: rgba(47,125,79,.1);  border-color: var(--ok); }
+  .gate.hit strong  { color: var(--danger); }
+  .gate.safe strong { color: var(--ok); }
+  .gate b { font-family: var(--mono); }
+
+  .cart { margin-top: 18px; }
+  .cart__empty { color: var(--ink-3); font-size: .9rem; padding: 14px 0; text-align: center; }
+  .cart table { width: 100%; }
+  .cart .del { border: 0; background: none; color: var(--danger); cursor: pointer;
+               font: inherit; font-size: 1.1rem; line-height: 1; padding: 2px 6px; }
+  .cart .del:hover { opacity: .6; }
+  tfoot td { font-weight: 700; border-top: 2px solid var(--border-strong); }
+
+  th.num, td.num { text-align: right; font-family: var(--mono); }
+  .warn-box { border: 1px solid var(--border-strong); border-radius: var(--radius);
+              background: var(--bg-sunk); padding: 13px 15px;
+              font-size: .89rem; margin-bottom: 16px; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/nhi-supplement.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="二代健保, 補充保費, 健保, 股利, 租金, 兼職, 獎金, 利息, 2.11">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="二代健保補充保費計算｜股利、租金、兼職要扣多少 - 順手工具箱">
+<meta property="og:description" content="免費試算二代健保補充保險費，涵蓋高額獎金、兼職薪資、執行業務、股利、利息與租金六種所得，自動判斷是否達到扣取門檻，可累加多筆估算全年總額。">
+<meta property="og:url" content="https://tools.luka-life.com/t/nhi-supplement.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="二代健保補充保費計算｜股利、租金、兼職要扣多少 - 順手工具箱">
+<meta name="twitter:description" content="免費試算二代健保補充保險費，涵蓋高額獎金、兼職薪資、執行業務、股利、利息與租金六種所得，自動判斷是否達到扣取門檻，可累加多筆估算全年總額。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "二代健保補充保費",
+  "description": "免費試算二代健保補充保險費，涵蓋高額獎金、兼職薪資、執行業務、股利、利息與租金六種所得，自動判斷是否達到扣取門檻，可累加多筆估算全年總額。",
+  "url": "https://tools.luka-life.com/t/nhi-supplement.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "台灣生活",
+      "item": "https://tools.luka-life.com/#tw"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "二代健保補充保費",
+      "item": "https://tools.luka-life.com/t/nhi-supplement.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "股利分好幾次領就能少扣嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "在現行按次計算的制度下，理論上確實會有差別，因為每一筆都是各自判斷有沒有達到門檻。但配息次數是由發行公司決定的，一般投資人沒辦法自己指定。與其想辦法閃，不如把這筆成本直接算進殖利率裡面評估，比較實際。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "房租收入房東一定會被扣嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "要看承租方是誰。如果是公司行號或機關團體承租，它們是扣繳單位，達到門檻就必須依規定扣取。如果是租給個人自住，個人不是扣繳義務人，實務上就不會有這道手續。這是很多房東搞不清楚為什麼有時扣有時不扣的原因。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "兼職的門檻為什麼跟別人不一樣？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "因為兼職薪資的門檻是綁最低工資，不是固定的兩萬元。2026 年每月最低工資是 29,500 元，所以單次兼職薪資要達到這個數字才會起扣。最低工資每年調整，這個門檻也會跟著變動。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "年終獎金為什麼有人扣有人不扣？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "因為獎金看的是全年累計超過當月投保金額四倍的部分。投保金額高的人，可以扣抵的額度也高。舉例來說投保金額四萬多的人，全年獎金要累積超過十八萬左右才會開始計費，只領一兩個月薪水的年終通常不會碰到。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "被扣了可以退嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "補充保費是就源扣繳的保險費，不是預繳的稅，原則上不會因為年度所得低而退還。如果是扣繳單位算錯或重複扣取，那是另一回事，可以檢附憑單向健保署申請更正。保留每一張扣繳憑單是必要的。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="nhi-supplement">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🏥</span>二代健保補充保費計算</h1>
+    <p class="lede">股利、租金、兼職、年終，這幾筆錢進帳之前會先被扣一筆。先算清楚實際能入袋多少。</p>
+  </div>
+
+  <div class="warn-box">
+    補充保費是<strong>單筆計算、給付時就先扣</strong>，不是年度結算才補繳。
+    費率與門檻由主管機關公告，會隨政策調整，下面的欄位都可以自己改。
+    實際扣繳金額以給付單位開立的憑單為準。
+  </div>
+
+  <div class="panel">
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="type">所得類別</label>
+        <select id="type"></select>
+      </div>
+      <div class="field mb-0">
+        <label for="amount">這一筆金額（元）</label>
+        <input type="number" id="amount" value="50000" min="0" step="1000">
+      </div>
+    </div>
+
+    <div class="row mb-2" id="bonusWrap" hidden>
+      <div class="field mb-0">
+        <label for="insured">當月投保金額（元）</label>
+        <input type="number" id="insured" value="45800" min="0" step="100">
+      </div>
+      <div class="field mb-0">
+        <label for="usedBonus">今年已領獎金累計（元）</label>
+        <input type="number" id="usedBonus" value="0" min="0" step="1000">
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="rate">費率（％）</label>
+        <input type="number" id="rate" value="2.11" min="0" max="10" step="0.01">
+      </div>
+      <div class="field mb-0">
+        <label for="cap">單次計費上限（元）</label>
+        <input type="number" id="cap" value="10000000" min="0" step="100000">
+      </div>
+    </div>
+
+    <p class="hint mb-2" id="typeNote"></p>
+
+    <div class="gate safe" id="gateBox"></div>
+    <div class="board" id="board"></div>
+
+    <div class="btn-group mt-0" style="margin-top:14px">
+      <button type="button" class="btn" id="addBtn">加入清單累計</button>
+      <button type="button" class="btn btn--ghost" id="clearBtn">清空清單</button>
+    </div>
+
+    <div class="cart" id="cart"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title">六種所得的扣取門檻</div>
+    <div class="table-scroll">
+      <table class="data">
+        <thead>
+          <tr><th>所得類別</th><th>起扣門檻</th><th>說明</th></tr>
+        </thead>
+        <tbody id="refTable"></tbody>
+      </table>
+    </div>
+    <p class="hint mb-0">
+      門檻與費率依中央健康保險署公告為準。兼職薪資的門檻綁定當年度最低工資，
+      所以每年調薪時這個數字也會跟著動。
+    </p>
+  </div>
+
+  <section class="prose">
+    <h2>補充保費跟一般健保費是兩回事</h2>
+    <p>每個月從薪水扣的那筆是<strong>一般保險費</strong>，按投保金額計算，公司跟政府也各出一部分。</p>
+    <p>補充保費則是針對<strong>薪水以外的收入</strong>另外收的，在給付當下就由給付單位直接扣走，扣完才把餘額給你。所以你看到帳戶入帳的數字，通常已經是扣過的了。</p>
+
+    <h2>為什麼是「單筆」而不是「全年」</h2>
+    <p>現行制度是<strong>按次計算</strong>：每一筆給付各自判斷有沒有超過門檻，超過才扣，沒超過就不扣，彼此不累加。</p>
+    <p>這造成一個結果——同樣是領十萬元股利，一次領會被扣，分五次各領兩萬元以下就不會。這個制度設計曾被提出要改成年度歸戶，但相關規劃<strong>目前已暫緩</strong>，實際規定仍以健保署公告為準。</p>
+    <p>高額獎金是唯一的例外，它是<strong>全年累計</strong>超過當月投保金額四倍的部分才計費。</p>
+
+    <h2>哪些情況不用扣</h2>
+    <ul>
+      <li>單筆金額<strong>未達門檻</strong>的，直接不扣。</li>
+      <li>單筆超過計費上限的部分不計入，也就是上限以上的金額不再加收。</li>
+      <li>已經以雇主或自營業主身分投保的人，其營利所得的計費方式與一般受僱者不同。</li>
+    </ul>
+    <p>另外提醒，扣了補充保費<strong>不會因此多一層保障</strong>，它就是健保財源的一部分，跟你的醫療給付權利沒有關係。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>股利分好幾次領就能少扣嗎？</summary>
+        <div class="a">在現行按次計算的制度下，理論上確實會有差別，因為每一筆都是各自判斷有沒有達到門檻。但配息次數是<strong>由發行公司決定的</strong>，一般投資人沒辦法自己指定。與其想辦法閃，不如把這筆成本直接算進殖利率裡面評估，比較實際。</div>
+      </details>
+      <details>
+        <summary>房租收入房東一定會被扣嗎？</summary>
+        <div class="a">要看承租方是誰。如果是<strong>公司行號或機關團體</strong>承租，它們是扣繳單位，達到門檻就必須依規定扣取。如果是租給個人自住，個人不是扣繳義務人，實務上就不會有這道手續。這是很多房東搞不清楚為什麼有時扣有時不扣的原因。</div>
+      </details>
+      <details>
+        <summary>兼職的門檻為什麼跟別人不一樣？</summary>
+        <div class="a">因為兼職薪資的門檻是綁<strong>最低工資</strong>，不是固定的兩萬元。2026 年每月最低工資是 29,500 元，所以單次兼職薪資要達到這個數字才會起扣。最低工資每年調整，這個門檻也會跟著變動。</div>
+      </details>
+      <details>
+        <summary>年終獎金為什麼有人扣有人不扣？</summary>
+        <div class="a">因為獎金看的是<strong>全年累計超過當月投保金額四倍</strong>的部分。投保金額高的人，可以扣抵的額度也高。舉例來說投保金額四萬多的人，全年獎金要累積超過十八萬左右才會開始計費，只領一兩個月薪水的年終通常不會碰到。</div>
+      </details>
+      <details>
+        <summary>被扣了可以退嗎？</summary>
+        <div class="a">補充保費是就源扣繳的保險費，不是預繳的稅，<strong>原則上不會因為年度所得低而退還</strong>。如果是扣繳單位算錯或重複扣取，那是另一回事，可以檢附憑單向健保署申請更正。保留每一張扣繳憑單是必要的。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js?v=02ac63f3"></script>
+<script src="../assets/js/layout.js?v=483231ca"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc } = window.U;
+
+  /* 2026 年每月最低工資，兼職薪資的起扣門檻綁定這個數字 */
+  const MIN_WAGE = 29500;
+  const BASE_GATE = 20000;
+
+  /* ==========================================================================
+     六種應計費所得
+     gate  起扣門檻（單次給付達到才計費）
+     kind  'once' 單次判斷、'bonus' 全年累計超過投保金額倍數的部分
+     ========================================================================== */
+  const TYPES = [
+    { id: 'dividend', name: '股利所得', gate: BASE_GATE, kind: 'once',
+      gateText: '單次 2 萬元',
+      desc: '現金股利與股票股利都算。以雇主或自營業主身分投保者，計費方式另有規定。',
+      note: '單次領取的股利達 2 萬元就會被扣。發放時由發行公司或集保單位代為扣取，入帳的已經是扣完的金額。' },
+    { id: 'rent', name: '租金收入', gate: BASE_GATE, kind: 'once',
+      gateText: '單次 2 萬元',
+      desc: '承租方為公司行號或機關團體時才有扣繳義務，租給個人自住通常不會扣。',
+      note: '要看承租的是誰。公司行號承租才會依規定扣取，個人承租不是扣繳義務人。' },
+    { id: 'interest', name: '利息所得', gate: BASE_GATE, kind: 'once',
+      gateText: '單次 2 萬元',
+      desc: '存款利息、債券利息等。一般人的活存利息很難單筆達到門檻。',
+      note: '單筆利息要達 2 萬元才扣。一般存款戶不容易碰到，定存大額或債券配息才比較有機會。' },
+    { id: 'practice', name: '執行業務收入', gate: BASE_GATE, kind: 'once',
+      gateText: '單次 2 萬元',
+      desc: '稿費、演講費、設計費、技師與律師等專業報酬。',
+      note: '接案、寫稿、演講這類收入都算。單筆達 2 萬元由給付單位扣取，跟所得稅的扣繳是兩筆不同的錢。' },
+    { id: 'parttime', name: '兼職薪資所得', gate: MIN_WAGE, kind: 'once',
+      gateText: '單次達最低工資',
+      desc: '非投保單位給付的薪資。門檻綁定當年度最低工資，2026 年為 29,500 元。',
+      note: '指你投保的那家公司以外的地方領到的薪水。門檻是當年度最低工資，不是 2 萬元，這點常被搞混。' },
+    { id: 'bonus', name: '高額獎金', gate: 0, kind: 'bonus',
+      gateText: '全年累計超過投保金額 4 倍',
+      desc: '年終獎金、三節獎金、績效獎金等非經常性給與，由投保單位計算。',
+      note: '這一類是全年累計計算的。把今年之前已經領過的獎金填進去，才能正確判斷這次會扣多少。' }
+  ];
+
+  const fmt = n => Math.round(n).toLocaleString('zh-TW');
+
+  /* ---------- 初始化 ---------- */
+  $('#type').innerHTML = TYPES.map(t =>
+    `<option value="${t.id}">${esc(t.name)}</option>`).join('');
+
+  $('#refTable').innerHTML = TYPES.map(t => `
+    <tr>
+      <td>${esc(t.name)}</td>
+      <td class="nowrap">${esc(t.gateText)}</td>
+      <td class="small">${esc(t.desc)}</td>
+    </tr>`).join('');
+
+  /* ---------- 計算 ---------- */
+  function compute() {
+    const type = TYPES.find(t => t.id === $('#type').value);
+    const amount = Math.max(0, Number($('#amount').value) || 0);
+    const rate = Math.max(0, Number($('#rate').value) || 0) / 100;
+    const cap = Math.max(0, Number($('#cap').value) || 0);
+
+    if (type.kind === 'bonus') {
+      const insured = Math.max(0, Number($('#insured').value) || 0);
+      const used = Math.max(0, Number($('#usedBonus').value) || 0);
+      const allowance = insured * 4;              // 全年免計費額度
+      const left = Math.max(0, allowance - used); // 這次還能扣抵多少
+      const taxable = Math.max(0, amount - left);
+      const billed = Math.min(taxable, cap);
+      return { type, amount, rate, cap, allowance, left, taxable, billed,
+               fee: billed * rate, hit: taxable > 0 };
+    }
+
+    const hit = amount >= type.gate;
+    const billed = hit ? Math.min(amount, cap) : 0;
+    return { type, amount, rate, cap, taxable: hit ? amount : 0, billed,
+             fee: billed * rate, hit };
+  }
+
+  /* ---------- 畫面 ---------- */
+  function render() {
+    const type = TYPES.find(t => t.id === $('#type').value);
+    $('#bonusWrap').hidden = type.kind !== 'bonus';
+    $('#typeNote').textContent = type.note;
+
+    const r = compute();
+    const box = $('#gateBox');
+
+    if (r.type.kind === 'bonus') {
+      box.className = 'gate ' + (r.hit ? 'hit' : 'safe');
+      box.innerHTML = r.hit
+        ? `全年免計費額度是投保金額的四倍，也就是 <b>${fmt(r.allowance)}</b> 元。
+           扣掉已領的部分還剩 <b>${fmt(r.left)}</b> 元，
+           所以這次有 <strong>${fmt(r.taxable)} 元</strong>要計費。`
+        : `全年免計費額度 <b>${fmt(r.allowance)}</b> 元還沒用完，
+           這次<strong>不需要扣補充保費</strong>。
+           今年還可以再領 <b>${fmt(r.left - r.amount)}</b> 元的獎金才會開始計費。`;
+    } else {
+      box.className = 'gate ' + (r.hit ? 'hit' : 'safe');
+      box.innerHTML = r.hit
+        ? `這筆金額已達 <b>${fmt(r.type.gate)}</b> 元的起扣門檻，
+           <strong>需要扣取補充保費</strong>。`
+        : `未達 <b>${fmt(r.type.gate)}</b> 元的起扣門檻，還差
+           <b>${fmt(r.type.gate - r.amount)}</b> 元，<strong>這筆不用扣</strong>。`;
+    }
+
+    const capped = r.billed < r.taxable;
+
+    $('#board').innerHTML = `
+      <div class="board__row">
+        <span>給付金額</span><b>NT$ ${fmt(r.amount)}</b>
+      </div>
+      <div class="board__row${r.taxable ? '' : ' muted-row'}">
+        <span>應計費金額</span><b>NT$ ${fmt(r.taxable)}</b>
+      </div>
+      ${capped ? `
+      <div class="board__row muted-row">
+        <span>超過計費上限不計</span><b>−NT$ ${fmt(r.taxable - r.billed)}</b>
+      </div>` : ''}
+      <div class="board__row muted-row">
+        <span>費率</span><b>${(r.rate * 100).toFixed(2)}%</b>
+      </div>
+      <div class="board__row main">
+        <span>應扣補充保費</span><b>NT$ ${fmt(r.fee)}</b>
+      </div>
+      <div class="board__row">
+        <span>實際入袋</span><b>NT$ ${fmt(r.amount - r.fee)}</b>
+      </div>
+      <div class="board__row muted-row">
+        <span>相當於給付金額的</span>
+        <b>${r.amount ? (r.fee / r.amount * 100).toFixed(2) : '0.00'}%</b>
+      </div>`;
+  }
+
+  /* ---------- 累計清單 ---------- */
+  const cart = [];
+
+  function renderCart() {
+    const host = $('#cart');
+    if (!cart.length) {
+      host.innerHTML = '<p class="cart__empty">把多筆收入加進來，可以估算全年被扣的總額。</p>';
+      return;
+    }
+    const totalAmount = cart.reduce((s, r) => s + r.amount, 0);
+    const totalFee = cart.reduce((s, r) => s + r.fee, 0);
+
+    host.innerHTML = `
+      <div class="table-scroll">
+        <table class="data">
+          <thead>
+            <tr><th>類別</th><th class="num">金額</th><th class="num">補充保費</th><th></th></tr>
+          </thead>
+          <tbody>
+            ${cart.map((r, i) => `
+              <tr>
+                <td>${esc(r.name)}</td>
+                <td class="num">${fmt(r.amount)}</td>
+                <td class="num">${r.fee ? fmt(r.fee) : '免扣'}</td>
+                <td><button type="button" class="del" data-i="${i}"
+                    aria-label="刪除這一筆">✕</button></td>
+              </tr>`).join('')}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td>合計 ${cart.length} 筆</td>
+              <td class="num">${fmt(totalAmount)}</td>
+              <td class="num">${fmt(totalFee)}</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>實際入袋</td>
+              <td class="num" colspan="2">${fmt(totalAmount - totalFee)}</td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>`;
+  }
+
+  $('#addBtn').addEventListener('click', () => {
+    const r = compute();
+    if (r.amount <= 0) { window.toast('請先填入金額'); return; }
+    cart.push({ name: r.type.name, amount: r.amount, fee: r.fee });
+    renderCart();
+    window.toast('已加入清單');
+  });
+
+  $('#clearBtn').addEventListener('click', () => {
+    cart.length = 0;
+    renderCart();
+  });
+
+  $('#cart').addEventListener('click', e => {
+    const btn = e.target.closest('.del');
+    if (!btn) return;
+    cart.splice(Number(btn.dataset.i), 1);
+    renderCart();
+  });
+
+  ['#amount', '#rate', '#cap', '#insured', '#usedBonus'].forEach(s =>
+    $(s).addEventListener('input', render));
+  $('#type').addEventListener('change', render);
+
+  render();
+  renderCart();
+})();
+</script>
+</body>
+</html>

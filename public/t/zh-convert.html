@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>繁簡轉換｜簡體轉繁體、台灣用語一併轉換 - 順手工具箱</title>
+<meta name="description" content="免費線上繁簡轉換工具，支援簡體轉繁體與繁體轉簡體，具備詞彙級判斷，不會把「頭髮」轉成「頭發」。可一併轉換台灣慣用語，例如軟件轉軟體、鼠標轉滑鼠。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='72'>繁</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css?v=35ffc45a">
+<style>
+  .seg { display: flex; flex-wrap: wrap; gap: 8px; }
+  .seg button { flex: 1 1 auto; min-width: 150px; padding: 11px 12px; cursor: pointer;
+                border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+                background: var(--surface); color: var(--ink); font: inherit;
+                font-size: .95rem; transition: .15s; }
+  .seg button:hover { border-color: var(--brand); }
+  .seg button[aria-pressed="true"] { background: var(--brand); border-color: var(--brand);
+                                     color: #fff; font-weight: 700; }
+
+  .panes { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; align-items: start; }
+  @media (max-width: 760px) { .panes { grid-template-columns: 1fr; } }
+
+  .pane__head { display: flex; justify-content: space-between; align-items: baseline;
+                gap: 10px; margin-bottom: 6px; }
+  .pane__head label { font-weight: 700; font-size: .93rem; }
+  .pane__count { font-family: var(--mono); font-size: .8rem; color: var(--ink-3); }
+  .panes textarea { width: 100%; min-height: 260px; resize: vertical;
+                    font-size: 1rem; line-height: 1.85; }
+  .panes textarea[readonly] { background: var(--surface-2); }
+
+  .toggle { display: flex; align-items: flex-start; gap: 10px; cursor: pointer;
+            border: 1px solid var(--border); border-radius: var(--radius);
+            background: var(--surface-2); padding: 12px 14px; font-size: .92rem; }
+  .toggle input { margin-top: 3px; flex: none; }
+  .toggle .t { display: block; font-weight: 700; }
+  .toggle .d { display: block; color: var(--ink-3); font-size: .85rem; margin-top: 2px;
+               line-height: 1.6; }
+
+  .loading { color: var(--ink-3); font-size: .9rem; text-align: center; padding: 10px 0; }
+
+  .pairs { display: grid; gap: 8px;
+           grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+  .pair { border: 1px solid var(--border); border-radius: var(--radius-sm);
+          background: var(--surface); padding: 9px 11px; font-size: .92rem;
+          display: flex; align-items: center; gap: 8px; }
+  .pair .from { color: var(--ink-3); }
+  .pair .arrow { color: var(--brand); font-family: var(--mono); }
+  .pair .to { font-weight: 700; }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/zh-convert.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="繁簡, 簡體, 繁體, 轉換, 简体, 繁體字, 台灣正體, 大陸用語">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="繁簡轉換｜簡體轉繁體、台灣用語一併轉換 - 順手工具箱">
+<meta property="og:description" content="免費線上繁簡轉換工具，支援簡體轉繁體與繁體轉簡體，具備詞彙級判斷，不會把「頭髮」轉成「頭發」。可一併轉換台灣慣用語，例如軟件轉軟體、鼠標轉滑鼠。">
+<meta property="og:url" content="https://tools.luka-life.com/t/zh-convert.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="繁簡轉換｜簡體轉繁體、台灣用語一併轉換 - 順手工具箱">
+<meta name="twitter:description" content="免費線上繁簡轉換工具，支援簡體轉繁體與繁體轉簡體，具備詞彙級判斷，不會把「頭髮」轉成「頭發」。可一併轉換台灣慣用語，例如軟件轉軟體、鼠標轉滑鼠。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "繁簡轉換",
+  "description": "免費線上繁簡轉換工具，支援簡體轉繁體與繁體轉簡體，具備詞彙級判斷，不會把「頭髮」轉成「頭發」。可一併轉換台灣慣用語，例如軟件轉軟體、鼠標轉滑鼠。",
+  "url": "https://tools.luka-life.com/t/zh-convert.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "文字處理",
+      "item": "https://tools.luka-life.com/#text"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "繁簡轉換",
+      "item": "https://tools.luka-life.com/t/zh-convert.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "轉出來的結果可以直接用嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "大部分可以，但建議還是看過一遍。中文的歧義沒辦法百分之百自動解決，尤其是人名、地名、商品名這類專有名詞，還有刻意使用的古文或方言。文件越正式，越值得花那幾分鐘檢查。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "為什麼有些字轉過去又轉回來會不一樣？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "因為繁轉簡是多對一的。「發」和「髮」都會變成「发」，但反過來的時候只能靠上下文猜，猜不到就只能挑常用的那個。這種來回轉換的資訊損失是中文簡化本身造成的，不是工具的問題。重要的文件請保留原始檔。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "可以處理多長的文章？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "一般文章、報告的長度都沒問題，幾萬字也能跑。真的很長的話畫面可能會頓一下，那是瀏覽器在處理，不是當掉了。如果要轉整本書的份量，建議分成幾段貼。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "字典是哪裡來的？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "使用 OpenCC 的開源字典，這是繁簡轉換領域最通用的一套資料，以 Apache-2.0 授權釋出。我們把它處理成靜態檔案跟網頁一起載入，所以執行時不需要連到任何外部服務。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "會轉換標點符號嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不會主動改標點。簡體中文常用的直角引號「」與彎引號的差異、全形半形的問題，都會維持原樣。這是刻意的——標點的偏好因文件而異，自動改動反而容易造成困擾。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="zh-convert">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">繁</span>繁簡轉換</h1>
+    <p class="lede">不是逐字換掉就好。「头发」要轉成「頭髮」不是「頭發」，這個工具看的是詞不是字。</p>
+  </div>
+
+  <div class="panel">
+    <div class="field mb-2">
+      <label>轉換方向</label>
+      <div class="seg" id="dirSeg">
+        <button type="button" data-dir="s2t" aria-pressed="true">簡體 → 繁體（台灣正體）</button>
+        <button type="button" data-dir="t2s" aria-pressed="false">繁體 → 簡體</button>
+      </div>
+    </div>
+
+    <label class="toggle mb-2">
+      <input type="checkbox" id="useTw" checked>
+      <span>
+        <span class="t" id="twTitle">同時轉換台灣慣用語</span>
+        <span class="d" id="twDesc">除了字體，連用詞也一起換。例如「软件」會變成「軟體」、「鼠标」變成「滑鼠」。
+          只想換字不想動用詞的話，把這個取消勾選。</span>
+      </span>
+    </label>
+
+    <div class="panes">
+      <div class="pane">
+        <div class="pane__head">
+          <label for="input" id="inLabel">貼上簡體字</label>
+          <span class="pane__count" id="inCount">0 字</span>
+        </div>
+        <textarea id="input" placeholder="把要轉換的文字貼進來，右邊會即時出現結果。"></textarea>
+      </div>
+      <div class="pane">
+        <div class="pane__head">
+          <label for="output" id="outLabel">轉換結果</label>
+          <span class="pane__count" id="outCount">0 字</span>
+        </div>
+        <textarea id="output" readonly placeholder="結果會顯示在這裡"></textarea>
+      </div>
+    </div>
+
+    <p class="loading" id="status">字典載入中…</p>
+
+    <div class="btn-group">
+      <button type="button" class="btn" id="copyBtn">複製結果</button>
+      <button type="button" class="btn btn--ghost" id="swapBtn">結果貼回左邊</button>
+      <button type="button" class="btn btn--ghost" id="sampleBtn">放入範例</button>
+      <button type="button" class="btn btn--ghost" id="clearBtn">清空</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title">常見的兩岸用詞差異</div>
+    <p class="hint">下面這些是勾選「同時轉換台灣慣用語」時會一併處理的例子，直接取自工具使用的同一份字典。</p>
+    <div class="pairs" id="pairs"></div>
+  </div>
+
+  <section class="prose">
+    <h2>為什麼逐字轉換會出錯</h2>
+    <p>因為簡體字合併了很多本來不同的繁體字。同一個簡體字，在不同的詞裡面要對應到不同的繁體字：</p>
+    <ul>
+      <li><strong>发</strong>：头发是「頭<strong>髮</strong>」，发现是「<strong>發</strong>現」</li>
+      <li><strong>干</strong>：干净是「<strong>乾</strong>淨」，干部是「<strong>幹</strong>部」，干涉還是「干涉」</li>
+      <li><strong>里</strong>：这里是「這<strong>裡</strong>」，公里還是「公<strong>里</strong>」</li>
+      <li><strong>后</strong>：以后是「以<strong>後</strong>」，皇后還是「皇<strong>后</strong>」</li>
+    </ul>
+    <p>只做單字對照的工具在這些地方一定會錯。這個工具會<strong>先比對詞、再處理落單的字</strong>，遇到上面這些情況能選對。</p>
+
+    <h2>字體跟用詞是兩件事</h2>
+    <p>把「软件」轉成「軟件」，字是對的，但台灣人不這樣講。把它轉成「軟體」才是真正能用的結果。</p>
+    <p>這兩層處理在工具裡是分開的，用上面的勾選框控制。如果你是在處理引文、書名或是需要保留原文用詞的場合，記得把它取消，只換字體就好。</p>
+
+    <h2>資料都留在你的瀏覽器</h2>
+    <p>轉換完全在本機完成，字典檔案跟著網頁一起載入，文字<strong>不會送到任何伺服器</strong>。處理合約、內部文件或還沒發表的稿子都不用擔心。關掉分頁之後什麼都不會留下。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>轉出來的結果可以直接用嗎？</summary>
+        <div class="a">大部分可以，但<strong>建議還是看過一遍</strong>。中文的歧義沒辦法百分之百自動解決，尤其是人名、地名、商品名這類專有名詞，還有刻意使用的古文或方言。文件越正式，越值得花那幾分鐘檢查。</div>
+      </details>
+      <details>
+        <summary>為什麼有些字轉過去又轉回來會不一樣？</summary>
+        <div class="a">因為繁轉簡是<strong>多對一</strong>的。「發」和「髮」都會變成「发」，但反過來的時候只能靠上下文猜，猜不到就只能挑常用的那個。這種來回轉換的資訊損失是中文簡化本身造成的，不是工具的問題。重要的文件請保留原始檔。</div>
+      </details>
+      <details>
+        <summary>可以處理多長的文章？</summary>
+        <div class="a">一般文章、報告的長度都沒問題，幾萬字也能跑。真的很長的話畫面可能會頓一下，那是瀏覽器在處理，不是當掉了。如果要轉整本書的份量，建議分成幾段貼。</div>
+      </details>
+      <details>
+        <summary>字典是哪裡來的？</summary>
+        <div class="a">使用 <strong>OpenCC</strong> 的開源字典，這是繁簡轉換領域最通用的一套資料，以 Apache-2.0 授權釋出。我們把它處理成靜態檔案跟網頁一起載入，所以執行時不需要連到任何外部服務。</div>
+      </details>
+      <details>
+        <summary>會轉換標點符號嗎？</summary>
+        <div class="a">不會主動改標點。簡體中文常用的直角引號「」與彎引號的差異、全形半形的問題，都會維持原樣。這是刻意的——標點的偏好因文件而異，自動改動反而容易造成困擾。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js?v=02ac63f3"></script>
+<script src="../assets/js/layout.js?v=483231ca"></script>
+<script src="../assets/js/zh-dict.js?v=81eb0a61"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, esc } = window.U;
+
+  const SAMPLE = '这个周末我们打算开车去台北，顺便看看新开的书店。\n' +
+    '她剪了头发，说是想换个心情。干净利落，看起来精神很多。\n' +
+    '软件更新之后，鼠标的反应快了不少，视频也不会卡了。\n' +
+    '记得把资料备份到硬盘里，别只存在网络上。';
+
+  /* ==========================================================================
+     字典
+     每個區塊都是 "來源\t目標" 的多行字串，載入時才拆成 Map。
+     轉換採最長匹配：先試長詞再退回單字，所以「头发」會比「发」優先命中。
+     ========================================================================== */
+  function buildMap(...blocks) {
+    const map = new Map();
+    let maxLen = 1;
+    for (const block of blocks) {
+      if (!block) continue;
+      for (const line of block.split('\n')) {
+        const tab = line.indexOf('\t');
+        if (tab < 1) continue;
+        const key = line.slice(0, tab);
+        map.set(key, line.slice(tab + 1));
+        if (key.length > maxLen) maxLen = key.length;
+      }
+    }
+    return { map, maxLen };
+  }
+
+  /** 用最長匹配把整段文字掃過一次 */
+  function pass(text, dict) {
+    const { map, maxLen } = dict;
+    let out = '';
+    let i = 0;
+    while (i < text.length) {
+      let hit, len = 0;
+      const max = Math.min(maxLen, text.length - i);
+      for (let l = max; l >= 1; l--) {
+        const v = map.get(text.slice(i, i + l));
+        if (v !== undefined) { hit = v; len = l; break; }
+      }
+      if (len) { out += hit; i += len; }
+      else { out += text[i]; i++; }
+    }
+    return out;
+  }
+
+  const D = window.ZH_DICT;
+  if (!D) {
+    $('#status').textContent = '字典載入失敗，請重新整理頁面。';
+    return;
+  }
+
+  /* 分成幾組，因為「字體轉換」與「用語轉換」要能各自開關 */
+  const DICTS = {
+    s2t:       buildMap(D.s2tChar, D.s2tPhrase),   // 簡→繁，詞優先於字
+    s2tTw:     buildMap(D.twVariant),              // 異體字統一成台灣寫法
+    s2tTwWord: buildMap(D.twVariant, D.twPhrase),  // 連用詞一起換
+    t2s:       buildMap(D.t2sChar, D.t2sPhrase),   // 繁→簡
+    t2sTwWord: buildMap(D.twPhraseRev, D.twVariantRev)  // 台灣用語先還原成通用詞
+  };
+
+  let dir = 's2t';
+
+  const LABELS = {
+    s2t: { in: '貼上簡體字', out: '繁體結果（台灣正體）',
+           twTitle: '同時轉換台灣慣用語',
+           twDesc: '除了字體，連用詞也一起換。例如「软件」會變成「軟體」、「鼠标」變成「滑鼠」。只想換字不想動用詞的話，把這個取消勾選。' },
+    t2s: { in: '貼上繁體字', out: '簡體結果',
+           twTitle: '同時把台灣用語換成通用詞',
+           twDesc: '例如「軟體」會變成「软件」、「滑鼠」變成「鼠标」。取消勾選的話只轉字體，用詞維持原樣。' }
+  };
+
+  function convert(text) {
+    if (!text) return '';
+    const tw = $('#useTw').checked;
+    if (dir === 's2t') {
+      return pass(pass(text, DICTS.s2t), tw ? DICTS.s2tTwWord : DICTS.s2tTw);
+    }
+    /* 繁→簡：先把台灣特有用語還原，再做字體轉換 */
+    const pre = tw ? pass(text, DICTS.t2sTwWord) : text;
+    return pass(pre, DICTS.t2s);
+  }
+
+  /* ---------- 畫面 ---------- */
+  const countOf = s => s.replace(/\s/g, '').length;
+
+  let timer;
+  function run() {
+    clearTimeout(timer);
+    /* 長文用延遲，邊打字邊全文轉換會卡 */
+    const text = $('#input').value;
+    const delay = text.length > 4000 ? 220 : 0;
+    timer = setTimeout(() => {
+      const out = convert(text);
+      $('#output').value = out;
+      $('#inCount').textContent = countOf(text).toLocaleString('zh-TW') + ' 字';
+      $('#outCount').textContent = countOf(out).toLocaleString('zh-TW') + ' 字';
+    }, delay);
+  }
+
+  function applyDir() {
+    const L = LABELS[dir];
+    $('#inLabel').textContent = L.in;
+    $('#outLabel').textContent = L.out;
+    $('#twTitle').textContent = L.twTitle;
+    $('#twDesc').textContent = L.twDesc;
+    run();
+  }
+
+  $$('#dirSeg button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      dir = btn.dataset.dir;
+      $$('#dirSeg button').forEach(b =>
+        b.setAttribute('aria-pressed', String(b === btn)));
+      applyDir();
+    });
+  });
+
+  $('#input').addEventListener('input', run);
+  $('#useTw').addEventListener('change', run);
+
+  $('#copyBtn').addEventListener('click', () => {
+    const v = $('#output').value;
+    if (!v) { window.toast('還沒有結果可以複製'); return; }
+    window.copyText(v, '已複製轉換結果');
+  });
+
+  $('#swapBtn').addEventListener('click', () => {
+    const v = $('#output').value;
+    if (!v) { window.toast('還沒有結果'); return; }
+    $('#input').value = v;
+    /* 貼回去通常是為了轉回原來的方向 */
+    const other = dir === 's2t' ? 't2s' : 's2t';
+    $$('#dirSeg button').forEach(b =>
+      b.setAttribute('aria-pressed', String(b.dataset.dir === other)));
+    dir = other;
+    applyDir();
+  });
+
+  $('#sampleBtn').addEventListener('click', () => {
+    if (dir !== 's2t') {
+      dir = 's2t';
+      $$('#dirSeg button').forEach(b =>
+        b.setAttribute('aria-pressed', String(b.dataset.dir === 's2t')));
+    }
+    $('#input').value = SAMPLE;
+    applyDir();
+  });
+
+  $('#clearBtn').addEventListener('click', () => {
+    $('#input').value = '';
+    run();
+    $('#input').focus();
+  });
+
+  /* ---------- 用詞對照表 ----------
+     直接從工具使用的同一份字典查，確保表上寫的就是實際會轉出來的結果。 */
+  const SHOWCASE = ['軟件', '鼠標', '視頻', '網絡', '打印機', '博客', '硬盤', '內存',
+    '屏幕', '激光', '信息', '數據庫', '筆記本電腦', '出租車', '自行車', '短信',
+    '服務器', '程序', '互聯網', '網吧', '光盤', '菜單'];
+
+  const twMap = buildMap(D.twPhrase).map;
+
+  $('#pairs').innerHTML = SHOWCASE
+    .map(k => ({ k, v: twMap.get(k) }))
+    .filter(p => p.v)
+    .map(p => `<div class="pair">
+      <span class="from">${esc(p.k)}</span>
+      <span class="arrow" aria-hidden="true">→</span>
+      <span class="to">${esc(p.v)}</span>
+    </div>`).join('');
+
+  $('#status').hidden = true;
+  applyDir();
+})();
+</script>
+</body>
+</html>

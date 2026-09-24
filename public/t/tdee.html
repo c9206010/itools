@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TDEE 基礎代謝計算｜一天該吃多少熱量 - 順手工具箱</title>
+<meta name="description" content="免費 TDEE 與 BMR 基礎代謝率計算器，採用 Mifflin-St Jeor 公式，依活動量算出每日總消耗熱量，並提供減脂、維持、增肌三種目標的熱量區間與營養素分配參考。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>">
+<link rel="stylesheet" href="../assets/css/main.css?v=35ffc45a">
+<style>
+  .hero-nums { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 560px) { .hero-nums { grid-template-columns: 1fr; } }
+  .hero-num { border: 2px solid var(--border-strong); border-radius: var(--radius-lg);
+              background: var(--surface-2); padding: 18px 16px; text-align: center; }
+  .hero-num.main { border-color: var(--brand); background: var(--brand-wash); }
+  .hero-num__k { display: block; font-size: .86rem; color: var(--ink-3); }
+  .hero-num__v { display: block; font-family: var(--mono); font-size: 2.3rem;
+                 font-weight: 700; line-height: 1.2; margin: 4px 0 2px; }
+  .hero-num.main .hero-num__v { color: var(--brand); }
+  .hero-num__d { display: block; font-size: .82rem; color: var(--ink-3); line-height: 1.6; }
+
+  .goals { display: grid; gap: 10px; margin-top: 14px;
+           grid-template-columns: repeat(auto-fit, minmax(178px, 1fr)); }
+  .goal { border: 1px solid var(--border); border-radius: var(--radius);
+          background: var(--surface); padding: 13px 14px; }
+  .goal__t { font-weight: 700; font-size: .95rem; display: block; }
+  .goal__v { font-family: var(--mono); font-size: 1.35rem; font-weight: 700;
+             display: block; margin: 5px 0 3px; }
+  .goal__d { font-size: .82rem; color: var(--ink-3); line-height: 1.65; }
+  .goal.cut .goal__v  { color: var(--accent); }
+  .goal.keep .goal__v { color: var(--ok); }
+  .goal.gain .goal__v { color: var(--warn); }
+
+  .macro-row { display: flex; align-items: center; gap: 10px; padding: 10px 0;
+               border-top: 1px dashed var(--border); }
+  .macro-row:first-child { border-top: 0; }
+  .macro-row__n { flex: none; width: 76px; font-weight: 700; font-size: .93rem; }
+  .macro-row__bar { flex: 1; height: 9px; border-radius: 5px; background: var(--bg-sunk);
+                    overflow: hidden; }
+  .macro-row__fill { height: 100%; border-radius: 5px; }
+  .macro-row__v { flex: none; width: 118px; text-align: right;
+                  font-family: var(--mono); font-size: .93rem; }
+
+  .alert { border: 1px solid var(--danger); border-radius: var(--radius);
+           background: rgba(192,57,43,.07); padding: 12px 14px;
+           font-size: .9rem; margin-top: 14px; line-height: 1.75; }
+  .alert strong { color: var(--danger); }
+
+  .warn-box { border: 1px solid var(--border-strong); border-radius: var(--radius);
+              background: var(--bg-sunk); padding: 13px 15px;
+              font-size: .89rem; margin-bottom: 16px; }
+
+  .seg { display: flex; flex-wrap: wrap; gap: 8px; }
+  .seg button { flex: 1 1 auto; min-width: 92px; padding: 10px 12px; cursor: pointer;
+                border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+                background: var(--surface); color: var(--ink); font: inherit;
+                font-size: .93rem; transition: .15s; }
+  .seg button:hover { border-color: var(--brand); }
+  .seg button[aria-pressed="true"] { background: var(--brand); border-color: var(--brand);
+                                     color: #fff; font-weight: 700; }
+  th.num, td.num { text-align: right; font-family: var(--mono); }
+</style>
+<!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
+<link rel="canonical" href="https://tools.luka-life.com/t/tdee.html">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="keywords" content="tdee, bmr, 基礎代謝, 熱量, 減脂, 增肌, 卡路里, 每日消耗">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="順手工具箱">
+<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="TDEE 基礎代謝計算｜一天該吃多少熱量 - 順手工具箱">
+<meta property="og:description" content="免費 TDEE 與 BMR 基礎代謝率計算器，採用 Mifflin-St Jeor 公式，依活動量算出每日總消耗熱量，並提供減脂、維持、增肌三種目標的熱量區間與營養素分配參考。">
+<meta property="og:url" content="https://tools.luka-life.com/t/tdee.html">
+<meta property="og:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TDEE 基礎代謝計算｜一天該吃多少熱量 - 順手工具箱">
+<meta name="twitter:description" content="免費 TDEE 與 BMR 基礎代謝率計算器，採用 Mifflin-St Jeor 公式，依活動量算出每日總消耗熱量，並提供減脂、維持、增肌三種目標的熱量區間與營養素分配參考。">
+<meta name="twitter:image" content="https://tools.luka-life.com/assets/og.svg">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "TDEE 基礎代謝計算",
+  "description": "免費 TDEE 與 BMR 基礎代謝率計算器，採用 Mifflin-St Jeor 公式，依活動量算出每日總消耗熱量，並提供減脂、維持、增肌三種目標的熱量區間與營養素分配參考。",
+  "url": "https://tools.luka-life.com/t/tdee.html",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "任何支援現代瀏覽器的系統",
+  "browserRequirements": "需要啟用 JavaScript",
+  "inLanguage": "zh-Hant",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "TWD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "順手工具箱",
+    "url": "https://tools.luka-life.com/"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "https://tools.luka-life.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "計算換算",
+      "item": "https://tools.luka-life.com/#calc"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "TDEE 基礎代謝計算",
+      "item": "https://tools.luka-life.com/t/tdee.html"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "吃低於基礎代謝會怎樣？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "長期把熱量壓在 BMR 以下，身體容易出現疲倦、掉髮、經期紊亂、注意力下降等狀況，肌肉流失的比例也會提高，反而讓之後更難維持。這個工具在你設定的目標低於 BMR 時會直接跳出提醒。想更積極一點的話，增加活動量比繼續砍食物來得安全。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "為什麼我照著吃還是沒瘦？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "最常見的原因是實際吃的比記錄的多——料理用油、醬料、飲料、試吃，這些很容易漏掉。其次是活動量選太高，很多人把「每天走路上下班」當成中度運動。先把活動量降一級試兩週，通常就會有變化。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "減脂一定要一天少 500 大卡嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "那是個常被引用的起點，換算下來大約每週減半公斤左右，但它不是規定。體重基數較大的人可以抓多一點，接近目標的人則應該縮小到兩三百大卡，慢慢來才留得住肌肉。用百分比來看通常比固定數字合理，這個工具兩種都有列出來。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "運動當天要另外加熱量嗎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "如果你的活動量係數已經把規律運動算進去了，就不用再重複加。重複計算是熱量赤字消失的常見原因。只有在那天有額外的、非常態的大量運動時才需要另外考慮，而且運動手錶估的消耗通常偏高，別全額補回去。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "這個數字要多久重算一次？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "體重每變動三到五公斤就值得重算一次。體重下降後，維持身體所需的熱量也會跟著下降，這是減重中後期容易卡關的原因之一。訓練習慣或工作型態有明顯改變時也要重新評估。"
+      }
+    }
+  ]
+}
+</script>
+<!-- SEO:END -->
+</head>
+<body data-root="../" data-tool="tdee">
+
+<main id="main" class="wrap">
+  <nav class="crumb" id="crumb"></nav>
+
+  <div class="tool-head">
+    <h1><span class="emoji" aria-hidden="true">🔥</span>TDEE 基礎代謝計算</h1>
+    <p class="lede">先知道自己一天燒掉多少，才知道要吃多少。減脂跟增肌的差別，就在這個數字加減多少。</p>
+  </div>
+
+  <div class="warn-box">
+    這是<strong>依公式推算的估計值</strong>，不是實際測量。每個人的代謝速率有個別差異，
+    公式只能給你一個起點。有慢性疾病、懷孕哺乳、或正在接受治療的話，
+    請依照醫療專業人員的建議，不要拿這個數字當標準。
+  </div>
+
+  <div class="panel">
+    <div class="field mb-2">
+      <label>生理性別<span class="muted">（公式需要，影響基礎代謝的估算）</span></label>
+      <div class="seg" id="sexSeg">
+        <button type="button" data-sex="male" aria-pressed="true">男性</button>
+        <button type="button" data-sex="female" aria-pressed="false">女性</button>
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="age">年齡</label>
+        <input type="number" id="age" value="35" min="10" max="100" step="1">
+      </div>
+      <div class="field mb-0">
+        <label for="height">身高（公分）</label>
+        <input type="number" id="height" value="172" min="100" max="230" step="0.5">
+      </div>
+      <div class="field mb-0">
+        <label for="weight">體重（公斤）</label>
+        <input type="number" id="weight" value="70" min="25" max="250" step="0.1">
+      </div>
+    </div>
+
+    <div class="field mb-2">
+      <label for="activity">活動量</label>
+      <select id="activity"></select>
+      <p class="hint mb-0" id="actNote"></p>
+    </div>
+
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="formula">計算公式</label>
+        <select id="formula">
+          <option value="mifflin">Mifflin-St Jeor（建議）</option>
+          <option value="harris">Harris-Benedict 修訂版</option>
+          <option value="katch">Katch-McArdle（需體脂率）</option>
+        </select>
+      </div>
+      <div class="field mb-0" id="bfWrap" hidden>
+        <label for="bodyfat">體脂率（％）</label>
+        <input type="number" id="bodyfat" value="20" min="3" max="60" step="0.5">
+      </div>
+    </div>
+
+    <div class="hero-nums">
+      <div class="hero-num">
+        <span class="hero-num__k">BMR 基礎代謝率</span>
+        <span class="hero-num__v" id="bmr">—</span>
+        <span class="hero-num__d">整天躺著不動也會消耗的熱量</span>
+      </div>
+      <div class="hero-num main">
+        <span class="hero-num__k">TDEE 每日總消耗</span>
+        <span class="hero-num__v" id="tdee">—</span>
+        <span class="hero-num__d">加上日常活動之後的實際消耗</span>
+      </div>
+    </div>
+
+    <div class="goals" id="goals"></div>
+    <div id="alertBox"></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title">三大營養素參考分配</div>
+    <div class="row mb-2">
+      <div class="field mb-0">
+        <label for="target">以哪個目標計算</label>
+        <select id="target">
+          <option value="cut">減脂</option>
+          <option value="keep" selected>維持體重</option>
+          <option value="gain">增肌</option>
+        </select>
+      </div>
+      <div class="field mb-0">
+        <label for="protein">蛋白質（每公斤體重幾克）</label>
+        <input type="number" id="protein" value="1.6" min="0.8" max="3" step="0.1">
+      </div>
+      <div class="field mb-0">
+        <label for="fatPct">脂肪佔總熱量（％）</label>
+        <input type="number" id="fatPct" value="25" min="15" max="45" step="1">
+      </div>
+    </div>
+    <div id="macros"></div>
+    <p class="hint mb-0">
+      蛋白質與脂肪先抓好，剩下的熱量分給碳水化合物。這是常見的分配方式，
+      不是唯一解，實際比例可以依個人狀況與運動型態調整。
+    </p>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title">活動量係數對照</div>
+    <div class="table-scroll">
+      <table class="data">
+        <thead>
+          <tr><th>活動量</th><th class="num">係數</th><th>你的 TDEE</th></tr>
+        </thead>
+        <tbody id="actTable"></tbody>
+      </table>
+    </div>
+    <p class="hint mb-0">大部分人會高估自己的活動量。不確定的話往低的選，過幾週再依實際體重變化調整。</p>
+  </div>
+
+  <section class="prose">
+    <h2>BMR 跟 TDEE 差在哪</h2>
+    <p><strong>BMR（基礎代謝率）</strong>是你完全躺著不動、什麼都不做，光是維持心跳、呼吸、體溫就會消耗的熱量。它通常佔一天消耗的六到七成。</p>
+    <p><strong>TDEE（每日總消耗熱量）</strong>則是 BMR 再加上你走路、工作、運動、甚至消化食物所花的能量。這才是你真正每天燒掉的總量，也是決定吃多少的依據。</p>
+
+    <h2>公式怎麼選</h2>
+    <ul>
+      <li><strong>Mifflin-St Jeor</strong>：目前最被廣泛採用的一套，對一般體型的準確度較好，不知道選什麼就用這個。</li>
+      <li><strong>Harris-Benedict 修訂版</strong>：比較早期的公式，結果通常略高一些，很多舊資料與網站還在用。</li>
+      <li><strong>Katch-McArdle</strong>：從<strong>除脂體重</strong>下去算，需要知道體脂率。如果你有可靠的體脂數據，而且肌肉量偏高或偏低，這個會比前兩者準。</li>
+    </ul>
+
+    <h2>算完之後怎麼用</h2>
+    <p>把它當<strong>起點而不是答案</strong>。照著這個熱量吃兩到三週，同時固定時間量體重，然後看趨勢：</p>
+    <ul>
+      <li>體重照你預期的方向變動 → 數字抓對了，繼續。</li>
+      <li>完全沒動 → 實際消耗跟估算有落差，調整兩三百大卡再觀察。</li>
+      <li>掉太快 → 減太多了。體重掉得快不見得是好事，流失的可能是肌肉跟水分。</li>
+    </ul>
+    <p>單日的體重波動意義不大，水分、鹽分、排便都會影響。看的是<strong>一到兩週的平均趨勢</strong>。</p>
+
+    <h2>常見問題</h2>
+    <div class="faq">
+      <details>
+        <summary>吃低於基礎代謝會怎樣？</summary>
+        <div class="a">長期把熱量壓在 BMR 以下，身體容易出現疲倦、掉髮、經期紊亂、注意力下降等狀況，肌肉流失的比例也會提高，反而讓之後更難維持。這個工具在你設定的目標低於 BMR 時會直接跳出提醒。想更積極一點的話，增加活動量比繼續砍食物來得安全。</div>
+      </details>
+      <details>
+        <summary>為什麼我照著吃還是沒瘦？</summary>
+        <div class="a">最常見的原因是<strong>實際吃的比記錄的多</strong>——料理用油、醬料、飲料、試吃，這些很容易漏掉。其次是活動量選太高，很多人把「每天走路上下班」當成中度運動。先把活動量降一級試兩週，通常就會有變化。</div>
+      </details>
+      <details>
+        <summary>減脂一定要一天少 500 大卡嗎？</summary>
+        <div class="a">那是個常被引用的起點，換算下來大約每週減半公斤左右，但它不是規定。體重基數較大的人可以抓多一點，接近目標的人則應該縮小到兩三百大卡，慢慢來才留得住肌肉。用<strong>百分比</strong>來看通常比固定數字合理，這個工具兩種都有列出來。</div>
+      </details>
+      <details>
+        <summary>運動當天要另外加熱量嗎？</summary>
+        <div class="a">如果你的活動量係數已經把規律運動算進去了，就不用再重複加。重複計算是熱量赤字消失的常見原因。只有在那天有<strong>額外的、非常態的大量運動</strong>時才需要另外考慮，而且運動手錶估的消耗通常偏高，別全額補回去。</div>
+      </details>
+      <details>
+        <summary>這個數字要多久重算一次？</summary>
+        <div class="a">體重每變動三到五公斤就值得重算一次。體重下降後，維持身體所需的熱量也會跟著下降，這是減重中後期容易卡關的原因之一。訓練習慣或工作型態有明顯改變時也要重新評估。</div>
+      </details>
+    </div>
+  </section>
+
+  <section class="related" id="relatedTools"></section>
+</main>
+
+<script src="../assets/js/catalog.js?v=02ac63f3"></script>
+<script src="../assets/js/layout.js?v=483231ca"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, $$, esc } = window.U;
+
+  /* ==========================================================================
+     活動量係數。這組數字是營養學界長期沿用的通用係數，
+     用來把 BMR 放大成一天的總消耗。
+     ========================================================================== */
+  const ACTIVITY = [
+    { v: 1.2,   name: '久坐（幾乎不運動）',
+      note: '辦公室工作，下班後以靜態活動為主，一週運動不到一次。' },
+    { v: 1.375, name: '輕度活動（每週運動 1–3 天）',
+      note: '有運動習慣但頻率不高，或工作需要走動但不費力。' },
+    { v: 1.55,  name: '中度活動（每週運動 3–5 天）',
+      note: '規律運動，每次三十分鐘以上會流汗的強度。' },
+    { v: 1.725, name: '高度活動（每週運動 6–7 天）',
+      note: '幾乎天天練，或工作本身需要大量體力。' },
+    { v: 1.9,   name: '非常高（體力勞動或一天兩練）',
+      note: '運動員等級的訓練量，或整天都在搬重物的工作。' }
+  ];
+
+  const kcal = n => Math.round(n).toLocaleString('zh-TW');
+
+  let sex = 'male';
+
+  /* ---------- 初始化 ---------- */
+  $('#activity').innerHTML = ACTIVITY.map((a, i) =>
+    `<option value="${i}"${i === 1 ? ' selected' : ''}>${esc(a.name)}</option>`).join('');
+
+  $$('#sexSeg button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      sex = btn.dataset.sex;
+      $$('#sexSeg button').forEach(b =>
+        b.setAttribute('aria-pressed', String(b === btn)));
+      render();
+    });
+  });
+
+  /* ---------- 公式 ---------- */
+  function calcBmr(w, h, age, bodyfat) {
+    switch ($('#formula').value) {
+      case 'harris':
+        /* Harris-Benedict 修訂版（Roza & Shizgal, 1984） */
+        return sex === 'male'
+          ? 88.362 + 13.397 * w + 4.799 * h - 5.677 * age
+          : 447.593 + 9.247 * w + 3.098 * h - 4.330 * age;
+      case 'katch': {
+        /* Katch-McArdle：以除脂體重計算，不分性別 */
+        const lean = w * (1 - bodyfat / 100);
+        return 370 + 21.6 * lean;
+      }
+      default:
+        /* Mifflin-St Jeor */
+        return sex === 'male'
+          ? 10 * w + 6.25 * h - 5 * age + 5
+          : 10 * w + 6.25 * h - 5 * age - 161;
+    }
+  }
+
+  function readInputs() {
+    return {
+      w: Math.max(1, Number($('#weight').value) || 0),
+      h: Math.max(1, Number($('#height').value) || 0),
+      age: Math.max(1, Number($('#age').value) || 0),
+      bf: Math.min(60, Math.max(3, Number($('#bodyfat').value) || 20)),
+      act: ACTIVITY[+$('#activity').value]
+    };
+  }
+
+  /* ---------- 主畫面 ---------- */
+  function render() {
+    $('#bfWrap').hidden = $('#formula').value !== 'katch';
+
+    const { w, h, age, bf, act } = readInputs();
+    const bmr = calcBmr(w, h, age, bf);
+    const tdee = bmr * act.v;
+
+    $('#bmr').textContent = kcal(bmr);
+    $('#tdee').textContent = kcal(tdee);
+    $('#actNote').textContent = act.note;
+
+    /* 三個目標。減脂用百分比而非固定數字，對體重基數小的人比較合理 */
+    const cut = tdee * 0.8;
+    const gain = tdee * 1.1;
+
+    $('#goals').innerHTML = `
+      <div class="goal cut">
+        <span class="goal__t">減脂</span>
+        <span class="goal__v">${kcal(cut)} 大卡</span>
+        <span class="goal__d">比維持量少 20%（約少 ${kcal(tdee - cut)} 大卡），
+          大致相當於每週減 0.5 公斤。</span>
+      </div>
+      <div class="goal keep">
+        <span class="goal__t">維持體重</span>
+        <span class="goal__v">${kcal(tdee)} 大卡</span>
+        <span class="goal__d">吃到這個量，體重理論上不動。這是所有調整的基準線。</span>
+      </div>
+      <div class="goal gain">
+        <span class="goal__t">增肌</span>
+        <span class="goal__v">${kcal(gain)} 大卡</span>
+        <span class="goal__d">比維持量多 10%（約多 ${kcal(gain - tdee)} 大卡），
+          搭配阻力訓練才有意義。</span>
+      </div>`;
+
+    /* 低於基礎代謝就提醒 */
+    const floor = sex === 'male' ? 1500 : 1200;
+    const warn = [];
+    if (cut < bmr) {
+      warn.push(`減脂目標 <strong>${kcal(cut)} 大卡</strong>已經低於你的基礎代謝
+        <strong>${kcal(bmr)} 大卡</strong>。建議把赤字縮小，或改用增加活動量的方式製造消耗。`);
+    }
+    if (cut < floor) {
+      warn.push(`這個熱量也低於一般建議的每日下限（約 ${floor} 大卡），
+        長期這樣吃不容易補足必要的營養素。`);
+    }
+    $('#alertBox').innerHTML = warn.length
+      ? `<div class="alert">${warn.join('<br>')}</div>` : '';
+
+    renderMacros(tdee, cut, gain, w);
+    renderActTable(bmr);
+  }
+
+  /* ---------- 營養素 ---------- */
+  function renderMacros(tdee, cut, gain, w) {
+    const target = { cut, keep: tdee, gain }[$('#target').value];
+    const pPerKg = Math.max(0.8, Number($('#protein').value) || 1.6);
+    const fatPct = Math.min(45, Math.max(15, Number($('#fatPct').value) || 25));
+
+    const pG = w * pPerKg;
+    const pKcal = pG * 4;
+    const fKcal = target * (fatPct / 100);
+    const fG = fKcal / 9;
+    const cKcal = Math.max(0, target - pKcal - fKcal);
+    const cG = cKcal / 4;
+
+    const rows = [
+      { n: '蛋白質', g: pG, k: pKcal, color: 'var(--accent)' },
+      { n: '脂肪',   g: fG, k: fKcal, color: 'var(--warn)' },
+      { n: '碳水',   g: cG, k: cKcal, color: 'var(--brand)' }
+    ];
+
+    const over = pKcal + fKcal > target;
+
+    $('#macros').innerHTML = `
+      <div>${rows.map(r => `
+        <div class="macro-row">
+          <span class="macro-row__n">${r.n}</span>
+          <span class="macro-row__bar">
+            <span class="macro-row__fill" style="width:${target ? (r.k / target * 100).toFixed(1) : 0}%;
+              background:${r.color}"></span>
+          </span>
+          <span class="macro-row__v">${Math.round(r.g)} g
+            <span class="muted">${target ? (r.k / target * 100).toFixed(0) : 0}%</span></span>
+        </div>`).join('')}
+      </div>
+      <p class="hint" style="margin-top:10px">
+        目標熱量 <strong>${kcal(target)} 大卡</strong>，
+        蛋白質以每公斤體重 ${pPerKg} 克計算。
+        ${over ? '<strong style="color:var(--danger)">蛋白質與脂肪加起來已經超過目標熱量，碳水沒有空間了，請調低其中一項。</strong>' : ''}
+      </p>`;
+  }
+
+  /* ---------- 活動量對照 ---------- */
+  function renderActTable(bmr) {
+    const cur = +$('#activity').value;
+    $('#actTable').innerHTML = ACTIVITY.map((a, i) => `
+      <tr${i === cur ? ' style="background:var(--brand-wash);font-weight:700"' : ''}>
+        <td>${esc(a.name)}</td>
+        <td class="num">${a.v}</td>
+        <td class="num">${kcal(bmr * a.v)} 大卡</td>
+      </tr>`).join('');
+  }
+
+  ['#age', '#height', '#weight', '#bodyfat', '#protein', '#fatPct'].forEach(s =>
+    $(s).addEventListener('input', render));
+  ['#activity', '#formula', '#target'].forEach(s =>
+    $(s).addEventListener('change', render));
+
+  render();
+})();
+</script>
+</body>
+</html>
