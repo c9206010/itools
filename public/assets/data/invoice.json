@@ -16,6 +16,19 @@
   "sourceUrl": "https://invoice.etax.nat.gov.tw/",
   "periods": [
     {
+      "period": "115年07-08月",
+      "prizes": {
+        "special": "89996565",
+        "grand": "91098182",
+        "first": [
+          "54348835",
+          "44991397",
+          "06595111"
+        ],
+        "additional6": []
+      }
+    },
+    {
       "period": "115年05-06月",
       "prizes": {
         "special": "38548029",
