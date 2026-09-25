@@ -11,7 +11,7 @@
     "periods[].prizes.first": "頭獎陣列，通常 3 組 8 碼字串（二至六獎由此推算末幾碼）",
     "periods[].prizes.additional6": "增開六獎陣列，3 碼字串，可為空陣列"
   },
-  "updatedAt": "2026-09-24",
+  "updatedAt": "2026-09-25",
   "source": "財政部稅務入口網 中獎號碼單",
   "sourceUrl": "https://invoice.etax.nat.gov.tw/",
   "periods": [
