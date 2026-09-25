@@ -184,10 +184,21 @@ const periods = Array.from(merged.values())
 
 const dropped = merged.size - periods.length;
 
+/* 台北時間的日期。這支腳本跑在 UTC 的機器上，直接用 UTC 會讓
+   台灣早上八點以前的執行標成前一天。 */
+const today = new Date(Date.now() + 8 * 3600 * 1000).toISOString().slice(0, 10);
+
+/* updatedAt 只在號碼真的變動時才前進。
+   以前每跑一次就蓋成今天，結果是明明秀著兩個月前的號碼，
+   頁面上卻寫「更新於今天」——使用者會以為這就是最新一期。
+   checkedAt 才是「最後檢查時間」，兩者分開才誠實。 */
+const changed = JSON.stringify(existing.periods || []) !== JSON.stringify(periods);
+
 const output = {
   _說明: '本檔由 .github/workflows/invoice.yml 自動更新，請勿手動編輯。',
   _格式: existing._格式,
-  updatedAt: new Date().toISOString().slice(0, 10),
+  updatedAt: changed ? today : (existing.updatedAt || today),
+  checkedAt: today,
   source: '財政部稅務入口網 中獎號碼單',
   sourceUrl: BASE + '/',
   periods
@@ -196,4 +207,6 @@ const output = {
 writeFileSync(OUT, JSON.stringify(output, null, 2) + '\n', 'utf8');
 
 console.log(`\n寫入成功，保留 ${periods.length} 期：${periods.map(p => p.period).join('、')}`);
+console.log(changed ? '號碼有變動，updatedAt 前進到 ' + today
+                    : '號碼與上次相同，updatedAt 維持 ' + output.updatedAt);
 if (dropped > 0) console.log(`（超過 ${KEEP} 期，已淘汰最舊的 ${dropped} 期）`);
