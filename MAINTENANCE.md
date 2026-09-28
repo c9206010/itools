@@ -101,6 +101,16 @@ git push
 
 3. 跑 `node build-seo.mjs`，然後 commit、push。
 
+4. **如果這個工具適合放進部落格文章**，到 `build-tool-index.mjs` 的
+   `CONTEXTS` 加一筆（寫清楚適用國內或出國、什麼時候放、建議帶入句），
+   再跑 `node build-tool-index.mjs`。
+
+   產出的 `tool-index.md` 是寫文章時的技能
+   （`travel-affiliate-optimizer` 第 9 個模組）會去讀的對照表。
+   漏跑的話，寫新文章時不會知道有這個工具，等於白做。
+   不適合放進文章的工具（例如開發編碼類）不必處理，
+   它們會自動被列在對照表的「尚未歸類」區。
+
 ---
 
 ## 情境二：改文案或修 bug
