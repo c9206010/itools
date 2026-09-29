@@ -301,6 +301,41 @@ p { margin: 0 0 1em; }
   .stats__list { gap: 4px 14px; }
 }
 
+/* ---------- 隨便看看 ----------
+   刻意做得比工具卡片低一階：一整條、窄、沒有陰影，
+   它是輔助入口，不該跟下面真正的工具清單搶注意力。 */
+.lucky {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 10px;
+  border: 1px dashed var(--border-strong); border-radius: var(--radius);
+  background: var(--surface-2); padding: 10px 14px; margin-bottom: 22px;
+}
+.lucky__dice { font-size: 1.2rem; line-height: 1; flex: none; }
+.lucky__label { font-size: .88rem; color: var(--ink-2); flex: none; }
+.lucky__card {
+  flex: 1 1 240px; min-width: 0;
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 12px; border-radius: var(--radius-sm);
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--ink); text-decoration: none; transition: .15s;
+}
+.lucky__card:hover {
+  border-color: var(--brand); text-decoration: none;
+  transform: translateX(2px);
+}
+.lucky__icon { font-size: 1.15rem; line-height: 1; flex: none; }
+.lucky__meta { flex: 1; min-width: 0; }
+.lucky__name { display: block; font-weight: 700; font-size: .94rem; }
+.lucky__desc {
+  display: block; font-size: .8rem; color: var(--ink-3); line-height: 1.5;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.lucky__go { flex: none; color: var(--brand); font-family: var(--mono); }
+@media (prefers-reduced-motion: reduce) { .lucky__card { transition: none; } }
+@media (max-width: 520px) {
+  .lucky { padding: 10px 12px; }
+  .lucky__label { font-size: .84rem; }
+}
+
 /* ---------- 我的工具（收藏星星） ----------
    卡片本身是一個 <a>，星星疊在裡面，所以要自己處理點擊：
    JS 那邊有 preventDefault，這裡只負責讓它看起來可以按。 */
