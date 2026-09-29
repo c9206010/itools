@@ -306,10 +306,13 @@ p { margin: 0 0 1em; }
    JS 那邊有 preventDefault，這裡只負責讓它看起來可以按。 */
 .fav {
   border: 0; background: none; cursor: pointer; padding: 2px 4px;
-  font-size: 1.25rem; line-height: 1; color: var(--ink-3);
+  font-size: 1.3rem; line-height: 1;
+  /* 原本用 --ink-3 太淡，實測有人整頁看完都沒注意到有這顆星 */
+  color: var(--border-strong);
   transition: color .15s, transform .15s;
   flex: none; margin-left: auto;
 }
+.card:hover .fav { color: var(--warn); }
 .fav:hover { color: var(--warn); transform: scale(1.15); }
 .fav[aria-pressed="true"] { color: var(--warn); }
 .fav--sm { font-size: 1.05rem; }
@@ -323,6 +326,24 @@ p { margin: 0 0 1em; }
   .fav { padding: 8px 10px; }      /* 手指按得到 */
   .fav--sm { padding: 6px 8px; }
 }
+
+/* 收藏功能的第一次提示，只對新訪客出現一次 */
+.fav-hint {
+  display: flex; align-items: center; gap: 10px;
+  border: 1px dashed var(--border-strong); border-radius: var(--radius);
+  background: var(--surface-2); padding: 11px 14px; margin-bottom: 20px;
+  font-size: .88rem; color: var(--ink-2); line-height: 1.7;
+}
+.fav-hint__star { color: var(--warn); font-size: 1.25rem; flex: none; line-height: 1; }
+.fav-hint__text { flex: 1; }
+.fav-hint__close {
+  border: 0; background: none; cursor: pointer; flex: none;
+  color: var(--ink-3); font-size: 1rem; line-height: 1; padding: 6px 8px;
+  border-radius: var(--radius-sm);
+}
+.fav-hint__close:hover { color: var(--danger); background: var(--bg-sunk); }
+@media (pointer: coarse) { .fav-hint__close { padding: 10px 12px; } }
+@media (max-width: 520px) { .fav-hint { font-size: .84rem; padding: 10px 12px; } }
 
 /* 這個工具被使用過幾次 */
 .use-count {
@@ -626,6 +647,12 @@ table.data th { color: var(--ink-2); font-weight: 600; background: var(--surface
 .small { font-size: .85rem; }
 .mono { font-family: var(--mono); }
 .hidden { display: none !important; }
+
+/* hidden 屬性的 display:none 來自瀏覽器預設樣式，
+   任何自己寫的 display 都會蓋掉它——.stats 與 .fav-hint 都設了 display:flex，
+   結果就是 el.hidden = true 了畫面上還看得到。
+   這一行讓 hidden 屬性恢復該有的行為，也防止之後再踩同一個坑。 */
+[hidden] { display: none !important; }
 .nowrap { white-space: nowrap; }
 
 @media (max-width: 640px) {

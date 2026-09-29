@@ -10,7 +10,7 @@
 <meta property="og:title" content="順手工具箱｜87 種免費線上小工具">
 <meta property="og:description" content="抽籤、計時、文字處理、符號表情、編碼轉換、圖片壓縮，打開就能用，資料不離開你的瀏覽器。">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
-<link rel="stylesheet" href="assets/css/main.css?v=7774f99c">
+<link rel="stylesheet" href="assets/css/main.css?v=0b897498">
 <!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
 <link rel="canonical" href="https://tools.luka-life.com/">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
@@ -698,6 +698,15 @@
     <!-- 使用者收藏的工具，沒收藏時整區隱藏 -->
     <section class="group" id="myTools" hidden></section>
 
+    <!-- 只對還沒收藏過任何工具的新訪客顯示一次，收藏或關掉之後就不再出現 -->
+    <div class="fav-hint" id="favHint" hidden>
+      <span class="fav-hint__star" aria-hidden="true">☆</span>
+      <span class="fav-hint__text">工具太多找不到？點卡片右上角的星號就能收藏，
+        收藏過的會固定出現在最上方</span>
+      <button type="button" class="fav-hint__close" id="favHintClose"
+              aria-label="不再顯示這個提示">✕</button>
+    </div>
+
     <div id="groups"></div>
     <div class="no-result hidden" id="noResult">
       <p>找不到符合「<strong id="noResultQ"></strong>」的工具</p>
@@ -783,6 +792,31 @@
   /* 任何地方按了星星都會發這個事件，這區跟著更新 */
   document.addEventListener('favschange', renderFavs);
 
+  /* ---------- 收藏功能的第一次提示 ----------
+     星號做得低調，不講的話多數人不會注意到。
+     但提示只該出現在「還沒用過這個功能」的人面前，
+     所以收藏過任何工具、或自己關掉之後，就永遠不再顯示。 */
+  const HINT_KEY = 'sst-favhint-off';
+
+  function hintDismissed() {
+    try { return localStorage.getItem(HINT_KEY) === '1'; } catch (e) { return false; }
+  }
+  function dismissHint() {
+    try { localStorage.setItem(HINT_KEY, '1'); } catch (e) { /* 無痕模式就算了 */ }
+    $('#favHint').hidden = true;
+  }
+
+  function maybeShowHint() {
+    /* 已經有收藏的人不用教，關過的人也不要再煩 */
+    $('#favHint').hidden = hintDismissed() || window.Favs.all().length > 0;
+  }
+
+  $('#favHintClose').addEventListener('click', dismissHint);
+  /* 收藏了第一個工具，代表已經學會，提示功成身退 */
+  document.addEventListener('favschange', () => {
+    if (window.Favs.all().length > 0) dismissHint();
+  });
+
   function render(filter) {
     const q = (filter || '').trim().toLowerCase();
     let shown = 0;
@@ -810,6 +844,7 @@
 
   render('');
   renderFavs();
+  maybeShowHint();
 
   /* 首頁專屬：頂部搜尋框同步過濾卡片，讓使用者也能直接在頁面上篩 */
   const search = $('#siteSearch');
