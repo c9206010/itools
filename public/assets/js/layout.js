@@ -176,6 +176,8 @@
   function initRelated() {
     const host = $('#relatedTools');
     if (!host || !CURRENT) return;
+    /* 建置時已經填好了就不用再畫，內容一樣 */
+    if (host.children.length) return;
     const me = getTool(CURRENT);
     if (!me) return;
 
@@ -198,6 +200,7 @@
   function initCrumb() {
     const host = $('#crumb');
     if (!host || !CURRENT) return;
+    if (host.textContent.trim()) return;   // 建置時已填好
     const me = getTool(CURRENT);
     if (!me) return;
     const c = getCat(me.cat);
@@ -507,13 +510,19 @@
 
   /* ---------- 啟動 ---------- */
   function boot() {
-    const h = document.createElement('div');
-    h.innerHTML = buildHeader();
-    document.body.insertBefore(h, document.body.firstChild);
-
-    const f = document.createElement('div');
-    f.innerHTML = buildFooter();
-    document.body.appendChild(f);
+    /* build-seo.mjs 會在建置時把頁首頁尾寫進靜態 HTML，
+       讓不執行 JS 的爬蟲也看得到完整的站內連結。
+       已經有了就不要再畫一次，否則畫面會出現兩組。 */
+    if (!document.querySelector('[data-static-nav]')) {
+      const h = document.createElement('div');
+      h.innerHTML = buildHeader();
+      document.body.insertBefore(h, document.body.firstChild);
+    }
+    if (!document.querySelector('[data-static-foot]')) {
+      const f = document.createElement('div');
+      f.innerHTML = buildFooter();
+      document.body.appendChild(f);
+    }
 
     $('#themeToggle').addEventListener('click', () => {
       const next = currentTheme() === 'dark' ? 'light' : 'dark';

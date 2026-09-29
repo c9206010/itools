@@ -16,7 +16,7 @@
  * 新增工具時：先在 catalog.js 加一筆 → 寫好 t/<slug>.html → 重跑這支腳本。
  */
 
-import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { createHash } from 'node:crypto';
@@ -67,6 +67,145 @@ function versionAssets(html) {
     const re = new RegExp(`((?:\\.\\./)?${p.replace(/[./]/g, m => '\\' + m)})(\\?v=[0-9a-f]+)?`, 'g');
     return out.replace(re, (m, hit) => `${hit}?v=${V[p]}`);
   }, html);
+}
+
+/* ==========================================================================
+   靜態骨架（給不執行 JavaScript 的爬蟲看的）
+   --------------------------------------------------------------------------
+   頁首、頁尾、麵包屑、相關工具原本都是 layout.js 執行後才生出來的，
+   結果是：關掉 JS 之後整個站一條連結都沒有，首頁只剩 72 個字元。
+
+   Google 雖然會執行 JS，但那是另一條延遲很久的佇列，新站優先度最低；
+   AI 爬蟲（GPTBot、ClaudeBot、PerplexityBot）則根本不執行 JS。
+   等於 87 個工具頁是沒有任何連結指向的孤島。
+
+   所以改成建置時就把骨架寫進 HTML，layout.js 偵測到已經存在就不再重畫。
+   這是漸進增強：沒有 JS 也看得到完整結構，有 JS 則接手變成互動版。
+
+   這裡產生的 HTML 必須跟 layout.js 的輸出一致，否則樣式會跑掉。
+   改其中一邊記得兩邊都要改。
+   ========================================================================== */
+const NAV_MARK = 'data-static-nav';
+const FOOT_MARK = 'data-static-foot';
+
+function staticHeader(SITE, CATEGORIES, root) {
+  const cats = CATEGORIES.map(c =>
+    `<a href="${root}index.html#${c.id}">${attrEsc(c.name)}</a>`).join('');
+  return `<div ${NAV_MARK}>
+<a class="skip-link" href="#main">跳到主要內容</a>
+<header class="site-header">
+  <div class="wrap site-header__bar">
+    <a class="brand" href="${root}index.html">
+      <span class="brand__mark">${SITE.mark}</span>
+      <span>${attrEsc(SITE.name)}</span>
+    </a>
+    <div class="hsearch">
+      <span class="hsearch__icon" aria-hidden="true">🔍</span>
+      <input type="search" id="siteSearch" placeholder="搜尋工具…（按 / 快速聚焦）"
+             autocomplete="off" role="combobox" aria-expanded="false"
+             aria-controls="searchResults" aria-label="搜尋工具">
+      <div class="hsearch__results hidden" id="searchResults" role="listbox"></div>
+    </div>
+    <button class="theme-toggle" id="themeToggle" type="button"
+            aria-label="切換深色或淺色模式" title="切換深淺色">🌓</button>
+  </div>
+  <nav class="catnav" aria-label="工具分類">
+    <div class="wrap catnav__inner">
+      <a href="${root}index.html">全部</a>${cats}
+    </div>
+  </nav>
+</header></div>`;
+}
+
+function staticFooter(SITE, CATEGORIES, TOOLS, root) {
+  const cols = CATEGORIES.map(c => {
+    const items = TOOLS.filter(t => t.cat === c.id).slice(0, 6)
+      .map(t => `<li><a href="${root}t/${t.slug}.html">${attrEsc(t.name)}</a></li>`).join('');
+    return `<div><h4>${c.icon} ${attrEsc(c.name)}</h4><ul>${items}</ul></div>`;
+  }).join('');
+  return `<div ${FOOT_MARK}>
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="site-footer__cols">${cols}</div>
+    <div class="site-footer__base">
+      <span>© ${new Date().getFullYear()} ${attrEsc(SITE.name)}．${attrEsc(SITE.tagline)}</span>
+      <span>所有運算都在你的瀏覽器完成，輸入的內容不會上傳</span>
+      <span><a href="${root}privacy.html">隱私權政策</a></span>
+    </div>
+  </div>
+</footer></div>`;
+}
+
+/** 一張工具卡片。跟 index.html 的 cardHTML 與 layout.js 的相關工具卡一致。
+ *  收藏星星是互動元素，靜態版不放，JS 接手時會補上。 */
+function card(t, root) {
+  return `<a class="card" href="${root}t/${t.slug}.html">` +
+    `<span class="card__top">` +
+    `<span class="card__icon" aria-hidden="true">${t.icon}</span>` +
+    `<span class="card__title">${attrEsc(t.name)}</span>` +
+    `</span>` +
+    `<span class="card__desc">${attrEsc(t.desc)}</span></a>`;
+}
+
+/** 首頁：把分類與工具卡片預先寫進 #groups。
+ *  載入後 index.html 的 render() 會覆蓋掉，內容一樣，使用者看不出差別，
+ *  但爬蟲在不執行 JS 的情況下就能看到全部 87 條連結。 */
+function prefillGroups(html, CATEGORIES, TOOLS) {
+  const groups = CATEGORIES.map(c => {
+    const list = TOOLS.filter(t => t.cat === c.id);
+    if (!list.length) return '';
+    return `<section class="group" id="${c.id}">` +
+      `<div class="group__head">` +
+      `<h2><span class="stamp" aria-hidden="true">${c.icon}</span>${attrEsc(c.name)}</h2>` +
+      `<span>${attrEsc(c.desc)}．${list.length} 種</span>` +
+      `</div>` +
+      `<div class="grid">${list.map(t => card(t, '')).join('')}</div>` +
+      `</section>`;
+  }).join('');
+  return html.replace(/<div id="groups">[\s\S]*?<\/div>/, `<div id="groups">${groups}</div>`);
+}
+
+/** 工具頁：預填麵包屑與相關工具。
+ *  layout.js 偵測到已經有內容就不會重畫。 */
+function prefillToolPage(html, tool, cat, TOOLS) {
+  const crumb = `<a href="../index.html">首頁</a><span>›</span>` +
+    `<a href="../index.html#${cat.id}">${attrEsc(cat.name)}</a><span>›</span>` +
+    attrEsc(tool.name);
+
+  let pool = TOOLS.filter(t => t.cat === tool.cat && t.slug !== tool.slug);
+  if (pool.length < 4) {
+    pool = pool.concat(TOOLS.filter(t => t.cat !== tool.cat && t.slug !== tool.slug)
+      .slice(0, 4 - pool.length));
+  }
+  const related = `<h2>相關工具</h2><div class="grid">` +
+    pool.slice(0, 4).map(t => card(t, '../')).join('') + `</div>`;
+
+  return html
+    .replace(/<nav class="crumb" id="crumb">[\s\S]*?<\/nav>/,
+      `<nav class="crumb" id="crumb">${crumb}</nav>`)
+    .replace(/<section class="related" id="relatedTools">[\s\S]*?<\/section>/,
+      `<section class="related" id="relatedTools">${related}</section>`);
+}
+
+/** 把骨架塞進頁面。已經有的話先換掉，避免重複執行時越長越多。 */
+function injectSkeleton(html, header, footer) {
+  let out = html
+    .replace(new RegExp(`<div ${NAV_MARK}>[\\s\\S]*?</div>\\s*(?=<main|<!--)`, ''), '')
+    .replace(new RegExp(`<div ${FOOT_MARK}>[\\s\\S]*?</footer></div>`, ''), '');
+
+  out = out.replace(/(<body[^>]*>)/, `$1\n${header}\n`);
+  out = out.replace(/([\s\S]*)<\/body>/, (m, before) => `${before}${footer}\n</body>`);
+  return out;
+}
+
+/** 檔案的最後修改日期（YYYY-MM-DD）。
+ *  拿不到就退回今天，不要因為這個讓建置失敗。 */
+function fileDate(file) {
+  try {
+    return statSync(file).mtime.toISOString().slice(0, 10);
+  } catch (e) {
+    return new Date().toISOString().slice(0, 10);
+  }
 }
 
 /* ---------- 小工具 ---------- */
@@ -224,7 +363,12 @@ const sitemapEntries = [];
     })
   ].join('\n');
 
-  writeFileSync(file, versionAssets(inject(html, block)), 'utf8');
+  const withSkeleton = injectSkeleton(
+    inject(html, block),
+    staticHeader(SITE, CATEGORIES, ''),
+    staticFooter(SITE, CATEGORIES, TOOLS, '')
+  );
+  writeFileSync(file, versionAssets(prefillGroups(withSkeleton, CATEGORIES, TOOLS)), 'utf8');
   sitemapEntries.push({ loc: url, priority: '1.0', changefreq: 'weekly' });
   count++;
 }
@@ -274,6 +418,9 @@ for (const tool of TOOLS) {
       browserRequirements: '需要啟用 JavaScript',
       inLanguage: 'zh-Hant',
       isAccessibleForFree: true,
+      /* AI 引用時會看新舊，沒有日期的內容容易被當成過期資料跳過。
+         用檔案的實際修改時間，不是建置時間，否則每次建置全站都變「今天更新」。 */
+      dateModified: fileDate(file),
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'TWD' },
       publisher: { '@type': 'Organization', name: SITE.name, url: `${ORIGIN}/` }
     }),
@@ -302,7 +449,12 @@ for (const tool of TOOLS) {
     }));
   }
 
-  writeFileSync(file, versionAssets(inject(html, blocks.join('\n'))), 'utf8');
+  const withSkeleton = injectSkeleton(
+    inject(html, blocks.join('\n')),
+    staticHeader(SITE, CATEGORIES, '../'),
+    staticFooter(SITE, CATEGORIES, TOOLS, '../')
+  );
+  writeFileSync(file, versionAssets(prefillToolPage(withSkeleton, tool, cat, TOOLS)), 'utf8');
   sitemapEntries.push({ loc: url, priority: '0.8', changefreq: 'monthly' });
   count++;
 
@@ -394,6 +546,48 @@ const robots =
   `Sitemap: ${ORIGIN}/sitemap.xml\n`;
 
 writeFileSync(join(ROOT, 'robots.txt'), robots, 'utf8');
+
+/* ---------- llms.txt ----------
+   給 AI 引擎看的站台說明。它們在決定要不要引用、怎麼描述一個站的時候
+   會找這個檔案，格式是 Markdown，目前是社群慣例還不是正式標準。
+   內容要能讓 AI 一眼看懂「這個站有什麼、適合回答什麼問題」。 */
+{
+  const byCat = CATEGORIES.map(c => {
+    const list = TOOLS.filter(t => t.cat === c.id);
+    if (!list.length) return '';
+    return `### ${c.name}\n\n${c.desc}\n\n` +
+      list.map(t => `- [${t.name}](${ORIGIN}/t/${t.slug}.html)：${t.desc}`).join('\n');
+  }).filter(Boolean).join('\n\n');
+
+  const llms = `# ${SITE.name}
+
+> ${SITE.desc}
+
+${SITE.name}（${ORIGIN}）收錄 ${TOOLS.length} 個免費線上小工具，分成 ${CATEGORIES.length} 個分類。
+
+## 這個站的特點
+
+- **不需要安裝或註冊**，打開網頁就能用
+- **所有運算都在使用者的瀏覽器裡完成**，輸入的文字、上傳的圖片與 PDF 不會傳到伺服器
+- 專為**台灣使用者**設計，稅務、勞健保、電費等工具皆依台灣現行法規與費率計算
+- 內容為繁體中文
+
+## 引用這個站時請注意
+
+- 稅率、費率、法規門檻等數字會隨政策調整，頁面上標有適用年度，引用時請一併說明
+- 工具提供的是試算與參考，不能取代專業意見或官方公告
+
+## 全部工具
+
+${byCat}
+
+---
+
+最後更新：${today}
+`;
+  writeFileSync(join(ROOT, 'llms.txt'), llms, 'utf8');
+  console.log(`✓ llms.txt        已產生（${TOOLS.length} 個工具）`);
+}
 
 console.log(`\n完成：處理 ${count} 個頁面，sitemap 收錄 ${sitemapEntries.length} 筆。`);
 if (isPlaceholder) {
