@@ -10,7 +10,7 @@
 <meta property="og:title" content="順手工具箱｜87 種免費線上小工具">
 <meta property="og:description" content="抽籤、計時、文字處理、符號表情、編碼轉換、圖片壓縮，打開就能用，資料不離開你的瀏覽器。">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
-<link rel="stylesheet" href="assets/css/main.css?v=c379ca1e">
+<link rel="stylesheet" href="assets/css/main.css?v=8d580c78">
 <!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
 <link rel="canonical" href="https://tools.luka-life.com/">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
@@ -718,7 +718,7 @@
   </div>
 </main>
 
-<script src="assets/js/catalog.js?v=8680c321"></script>
+<script src="assets/js/catalog.js?v=d1c0e87c"></script>
 <script src="assets/js/layout.js?v=40e177f4"></script>
 <script>
 (function () {
@@ -830,23 +830,25 @@
       const d = await res.json();
       if (!d.ok || !Array.isArray(d.tools)) return;
 
-      /* 達到門檻、而且在 catalog 裡還存在的工具才列 */
+      /* 達到門檻、而且在 catalog 裡還存在的工具才列。
+         最後自己截斷一次——不要假設後端一定只回傳 count 筆，
+         中間多一層快取或改了預設值都可能回更多。 */
       const list = d.tools
         .filter(t => t.views >= (cfg.min || 50))
         .map(t => ({ tool: getTool(t.slug), views: t.views }))
-        .filter(x => x.tool);
+        .filter(x => x.tool)
+        .slice(0, cfg.count || 5);
 
       if (list.length < (cfg.least || 4)) return;   // 榜太短就不要放
 
       host.hidden = false;
       host.innerHTML = `
         <div class="group__head">
-          <h2><span class="stamp" aria-hidden="true">🔥</span>大家最常用的工具</h2>
-          <span>依實際使用次數排序．每小時更新</span>
+          <h2><span class="stamp" aria-hidden="true">👋</span>大家常用的工具</h2>
+          <span>不知道從哪開始的話，先看這幾個</span>
         </div>
-        <div class="grid">${list.map(({ tool, views }, i) => `
-          <a class="card card--rank" href="t/${tool.slug}.html">
-            <span class="rank-badge" aria-label="第 ${i + 1} 名">${i + 1}</span>
+        <div class="grid">${list.map(({ tool, views }) => `
+          <a class="card" href="t/${tool.slug}.html">
             <span class="card__top">
               <span class="card__icon" aria-hidden="true">${tool.icon}</span>
               <span class="card__title">${esc(tool.name)}</span>
