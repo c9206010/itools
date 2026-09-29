@@ -162,7 +162,22 @@ function prefillGroups(html, CATEGORIES, TOOLS) {
       `<div class="grid">${list.map(t => card(t, '')).join('')}</div>` +
       `</section>`;
   }).join('');
-  return html.replace(/<div id="groups">[\s\S]*?<\/div>/, `<div id="groups">${groups}</div>`);
+  /* 用明確的標記包住，不要靠「配對到某個 </div>」來猜結尾——
+     卡片與分類裡面本來就有 div，非貪婪比對會在第一個 </div> 就切斷，
+     舊內容留在原地，每跑一次建置就多疊一份。
+     （踩過：87 張卡片變成 263 張。） */
+  const START_MARK = '<!--GROUPS:START-->';
+  const END_MARK = '<!--GROUPS:END-->';
+  const filled = `<div id="groups">${START_MARK}${groups}${END_MARK}</div>`;
+
+  if (html.includes(START_MARK)) {
+    return html.replace(
+      new RegExp(`<div id="groups">${START_MARK}[\\s\\S]*?${END_MARK}</div>`),
+      filled
+    );
+  }
+  /* 第一次跑：頁面上還是空的 <div id="groups"></div> */
+  return html.replace(/<div id="groups">\s*<\/div>/, filled);
 }
 
 /** 工具頁：預填麵包屑與相關工具。

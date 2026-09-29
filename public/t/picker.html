@@ -198,6 +198,20 @@
 吳雅婷
 劉承翰</textarea>
       <p class="hint">剩餘 <strong id="remain">0</strong> 人可抽</p>
+
+      <div class="btn-group">
+        <button class="btn btn--ghost btn--sm" type="button" id="shareBtn">複製分享連結</button>
+      </div>
+
+      <!-- 名單儲存，跟輪盤、隨機分組共用同一份 -->
+      <div class="lists">
+        <div class="lists__row">
+          <input type="text" id="listName" maxlength="30" autocomplete="off"
+                 placeholder="幫這份名單取個名字，例如「五年三班」">
+          <button class="btn btn--sm" type="button" id="saveListBtn">存起來</button>
+        </div>
+        <div class="lists__saved" id="savedLists"></div>
+      </div>
     </div>
 
     <div class="hidden" id="wonWrap">
@@ -232,7 +246,7 @@
 </main>
 
 <script src="../assets/js/catalog.js?v=d1c0e87c"></script>
-<script src="../assets/js/layout.js?v=6b0c1a21"></script>
+<script src="../assets/js/layout.js?v=971b856d"></script>
 <script>
 (function () {
   'use strict';
@@ -330,6 +344,13 @@
   refresh();
 })();
 </script>
+
+
+
+
+
+
+
 
 
 <div data-static-foot>

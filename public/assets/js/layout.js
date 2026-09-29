@@ -452,6 +452,100 @@
     }
   };
 
+  /** 把「分享連結 + 名單儲存」的 UI 一次接好。
+   *  輪盤、抽籤點名、隨機分組都吃名單，邏輯完全一樣，
+   *  寫三份只會變成改一個地方要記得改三次。
+   *
+   *  頁面上要有這幾個 id：
+   *    shareBtn / listName / saveListBtn / savedLists
+   *
+   *  opts.input   放名單的 textarea 選擇器
+   *  opts.onChange 名單被載入後要做什麼（重畫轉盤、更新計數之類）
+   *  opts.hint    給使用者的命名提示
+   */
+  window.setupListTools = function (opts) {
+    const input = $(opts.input);
+    if (!input) return;
+    const toLines = v => window.U.lines(v);
+
+    /* ---- 分享連結 ---- */
+    const shareBtn = $('#shareBtn');
+    if (shareBtn) {
+      shareBtn.addEventListener('click', () => {
+        const items = toLines(input.value);
+        if (!items.length) { window.toast('清單是空的，沒東西可以分享'); return; }
+        const url = window.ShareList.url(items);
+        if (!url) { window.toast('產生連結失敗'); return; }
+        /* 網址太長在某些聊天軟體會被截斷，寧可先擋下來 */
+        if (url.length > 1800) { window.toast('項目太多，連結會過長，建議精簡一點'); return; }
+        window.copyText(url, '已複製分享連結，貼到群組就能一起用');
+      });
+    }
+
+    /* ---- 名單儲存 ---- */
+    const saved = $('#savedLists');
+    function renderSaved() {
+      if (!saved) return;
+      const all = window.NameLists.all();
+      if (!all.length) {
+        saved.innerHTML = '<p class="hint mb-0">存起來的名單會出現在這裡，' +
+          '輪盤、抽籤點名、隨機分組共用同一份。</p>';
+        return;
+      }
+      saved.innerHTML = all.map(l => `
+        <span class="chip chip--list">
+          <button type="button" data-load="${esc(l.name)}"
+                  title="載入這份名單（${l.items.length} 項）">${esc(l.name)}
+            <span class="chip__n">${l.items.length}</span></button>
+          <button type="button" class="chip__x" data-del="${esc(l.name)}"
+                  aria-label="刪除名單 ${esc(l.name)}">✕</button>
+        </span>`).join('');
+    }
+
+    const saveBtn = $('#saveListBtn');
+    if (saveBtn) {
+      saveBtn.addEventListener('click', () => {
+        const nameEl = $('#listName');
+        const r = window.NameLists.save(nameEl ? nameEl.value : '', toLines(input.value));
+        if (!r.ok) { window.toast(r.msg); return; }
+        if (nameEl) nameEl.value = '';
+        renderSaved();
+        window.toast('名單已存到這台裝置');
+      });
+    }
+
+    if (saved) {
+      saved.addEventListener('click', e => {
+        const load = e.target.closest('[data-load]');
+        if (load) {
+          const l = window.NameLists.get(load.dataset.load);
+          if (l) {
+            input.value = l.items.join('\n');
+            if (opts.onChange) opts.onChange();
+            window.toast('已載入「' + l.name + '」');
+          }
+          return;
+        }
+        const del = e.target.closest('[data-del]');
+        if (del) { window.NameLists.remove(del.dataset.del); renderSaved(); }
+      });
+    }
+
+    /* ---- 從分享連結帶進來 ----
+       別人給的資料一律只寫進 textarea.value，絕不碰 innerHTML。 */
+    const shared = window.ShareList.fromUrl();
+    if (shared.length) {
+      input.value = shared.join('\n');
+      const note = document.createElement('p');
+      note.className = 'hint';
+      note.textContent = '這份清單是從分享連結帶進來的，共 ' + shared.length + ' 項。';
+      input.parentNode.appendChild(note);
+      if (opts.onChange) opts.onChange();
+    }
+
+    renderSaved();
+  };
+
   /* ---------- 這個工具被用過幾次 ----------
      數字太小的時候不顯示。工具剛上線只有個位數，
      寫「已使用 3 次」反而讓人覺得沒人用，不如先不寫。 */
