@@ -6,7 +6,7 @@
 <title>隱私權政策 - 順手工具箱</title>
 <meta name="description" content="順手工具箱的隱私權政策：工具運算全在瀏覽器完成不上傳資料，說明瀏覽器本機儲存、Google AdSense 廣告 Cookie、Google Analytics 流量統計、首頁瀏覽計數器與第三方服務的使用方式。">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
-<link rel="stylesheet" href="assets/css/main.css?v=06c7bc5d">
+<link rel="stylesheet" href="assets/css/main.css?v=7774f99c">
 <style>
   .policy { max-width: 72ch; }
   .policy h2 { margin-top: 1.9em; }
@@ -84,6 +84,7 @@
         <thead><tr><th>項目</th><th>用途</th></tr></thead>
         <tbody>
           <tr><td>深色／淺色模式</td><td>記住你選的顯示模式</td></tr>
+          <tr><td><strong>我的工具</strong></td><td>你收藏的工具清單，只存在這台裝置，我們讀不到也不會同步</td></tr>
           <tr><td>打字速度最佳紀錄</td><td>讓你跟自己的成績比較</td></tr>
         </tbody>
       </table>
@@ -147,6 +148,7 @@
         <tbody>
           <tr><td>累計瀏覽數</td><td>一個數字</td><td>顯示總瀏覽</td></tr>
           <tr><td>每日瀏覽數</td><td>日期與一個數字</td><td>算今日、本週、本月</td></tr>
+          <tr><td>各工具累計次數</td><td>工具名稱與一個數字</td><td>在工具頁顯示「已被使用幾次」</td></tr>
           <tr><td>近期訪客足跡</td><td>一串代碼與時間</td><td>算線上人數，十五分鐘後刪除</td></tr>
         </tbody>
       </table>
@@ -161,8 +163,12 @@
       <li>因為摻了日期，<strong>同一個人隔天就是完全不同的代碼</strong>，無法用來長期追蹤</li>
       <li>這串代碼<strong>十五分鐘後就會被刪掉</strong></li>
     </ul>
-    <p>我們沒有存你看了哪一頁、從哪裡來、待了多久——那些是上一節 Google Analytics 在做的事，
-    這個計數器<strong>只負責數數字</strong>。</p>
+    <p>計數器會記錄<strong>哪一個工具的累計使用次數 +1</strong>，例如「BMI 計算器被用過 320 次」。
+    但它<strong>不會把這筆數字跟任何人綁在一起</strong>——
+    資料庫裡只有「這個工具總共幾次」，沒有「誰用了這個工具」，
+    也沒有存你從哪裡來、待了多久、接著又看了什麼。
+    這些數字加總起來無法還原出任何一個人的瀏覽軌跡。</p>
+    <p>上一節的 Google Analytics 才是做行為分析的那一個，兩者的用途與細緻度完全不同。</p>
 
     <h3>不會記錄的東西</h3>
     <p>跟前面幾節一樣，而且這點特別重要：
@@ -223,7 +229,7 @@
   </section>
 </main>
 
-<script src="assets/js/catalog.js?v=79689e88"></script>
-<script src="assets/js/layout.js?v=fd660671"></script>
+<script src="assets/js/catalog.js?v=c79d2e66"></script>
+<script src="assets/js/layout.js?v=40e177f4"></script>
 </body>
 </html>

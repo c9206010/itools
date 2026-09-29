@@ -186,7 +186,8 @@
     const cards = pool.slice(0, 4).map(t => `
       <a class="card" href="${ROOT}t/${t.slug}.html">
         <span class="card__top"><span class="card__icon">${t.icon}</span>
-        <span class="card__title">${esc(t.name)}</span></span>
+        <span class="card__title">${esc(t.name)}</span>
+        ${favButton(t.slug, 'sm')}</span>
         <span class="card__desc">${esc(t.desc)}</span>
       </a>`).join('');
 
@@ -204,6 +205,17 @@
       `<a href="${ROOT}index.html">首頁</a><span>›</span>` +
       `<a href="${ROOT}index.html#${c.id}">${esc(c.name)}</a><span>›</span>` +
       esc(me.name);
+  }
+
+  /* ---------- 工具頁標題旁的收藏星星 ---------- */
+  function initFavOnTool() {
+    if (!CURRENT || !getTool(CURRENT)) return;
+    const h1 = $('.tool-head h1');
+    if (!h1) return;
+    const wrap = document.createElement('span');
+    wrap.className = 'fav-wrap';
+    wrap.innerHTML = favButton(CURRENT);
+    h1.appendChild(wrap);
   }
 
   /* ---------- 廣告版位 ----------
@@ -272,12 +284,110 @@
     gtag('config', cfg.id);
   }
 
+  /* ---------- 我的工具（收藏） ----------
+     只存在使用者自己的瀏覽器裡，沒有帳號、不同步、我們也讀不到。
+     無痕模式或封鎖網站資料時 localStorage 會拋錯，所以每次存取都要包起來，
+     失敗就當作沒有收藏，其他功能照常運作。 */
+  const FAV_KEY = 'sst-favs';
+
+  function readFavs() {
+    try {
+      const raw = localStorage.getItem(FAV_KEY);
+      const arr = raw ? JSON.parse(raw) : [];
+      /* 存壞掉或被手動改過就當成空的，不要讓爛資料炸掉整頁 */
+      return Array.isArray(arr) ? arr.filter(s => typeof s === 'string') : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function writeFavs(list) {
+    try {
+      localStorage.setItem(FAV_KEY, JSON.stringify(list));
+      return true;
+    } catch (e) {
+      return false;   // 無痕模式或空間滿了
+    }
+  }
+
+  window.Favs = {
+    all: readFavs,
+    has(slug) { return readFavs().includes(slug); },
+    toggle(slug) {
+      const list = readFavs();
+      const i = list.indexOf(slug);
+      if (i >= 0) list.splice(i, 1); else list.unshift(slug);
+      const ok = writeFavs(list);
+      if (!ok) {
+        window.toast('瀏覽器不允許儲存，收藏功能無法使用');
+        return null;
+      }
+      /* 讓首頁那類有多個星星的畫面可以一起更新 */
+      document.dispatchEvent(new CustomEvent('favschange', { detail: { list } }));
+      return i < 0;   // true 代表剛加入
+    }
+  };
+
+  /** 產生一顆收藏星星。slug 必填，size 給 'sm' 會小一點 */
+  function favButton(slug, size) {
+    const on = window.Favs.has(slug);
+    return `<button type="button" class="fav${size === 'sm' ? ' fav--sm' : ''}"
+      data-fav="${esc(slug)}" aria-pressed="${on}"
+      aria-label="${on ? '從我的工具移除' : '加入我的工具'}"
+      title="${on ? '從我的工具移除' : '加入我的工具'}">${on ? '★' : '☆'}</button>`;
+  }
+  window.favButton = favButton;
+
+  /* 整頁共用一個監聽，不管星星是什麼時候被畫出來的都管得到 */
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('[data-fav]');
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const slug = btn.dataset.fav;
+    const added = window.Favs.toggle(slug);
+    if (added === null) return;
+    document.querySelectorAll(`[data-fav="${CSS.escape(slug)}"]`).forEach(el => {
+      el.textContent = added ? '★' : '☆';
+      el.setAttribute('aria-pressed', String(added));
+      const label = added ? '從我的工具移除' : '加入我的工具';
+      el.setAttribute('aria-label', label);
+      el.setAttribute('title', label);
+    });
+    window.toast(added ? '已加入我的工具' : '已從我的工具移除');
+  });
+
+  /* ---------- 這個工具被用過幾次 ----------
+     數字太小的時候不顯示。工具剛上線只有個位數，
+     寫「已使用 3 次」反而讓人覺得沒人用，不如先不寫。 */
+  function initUseCount() {
+    if (!CURRENT) return;
+    const cfg = SITE.useCount;
+    if (!cfg || !cfg.enabled) return;
+
+    const head = $('.tool-head');
+    if (!head) return;
+
+    fetch(ROOT + 'api/stats?t=' + encodeURIComponent(CURRENT), { cache: 'no-cache' })
+      .then(r => r.ok ? r.json() : null)
+      .then(d => {
+        if (!d || !d.ok || d.views < (cfg.min || 50)) return;
+        const el = document.createElement('p');
+        el.className = 'use-count';
+        el.innerHTML = `<span aria-hidden="true">🔧</span> 這個工具已經被使用 `
+          + `<b>${d.views.toLocaleString('zh-TW')}</b> 次`;
+        head.appendChild(el);
+      })
+      .catch(() => { /* 拿不到就不顯示，不影響工具本身 */ });
+  }
+
   /* ---------- 瀏覽計數 ----------
      打給自家的 /api/hit，用來算首頁顯示的瀏覽數與線上人數。
      送出的只有這個請求本身，不含頁面內容，也不含你在工具裡填的任何東西。
      後端沒接好或請求失敗都無所謂，這裡完全不影響頁面功能。 */
   function initHitCount() {
-    const url = ROOT + 'api/hit';
+    /* 帶上工具代號，才能算出每個工具各被用過幾次。首頁不帶。 */
+    const url = ROOT + 'api/hit' + (CURRENT ? '?t=' + encodeURIComponent(CURRENT) : '');
     try {
       /* sendBeacon 不會拖慢頁面，瀏覽器會在閒置時送出 */
       if (navigator.sendBeacon && navigator.sendBeacon(url, new Blob())) return;
@@ -413,10 +523,12 @@
 
     initSearch();
     initCrumb();
+    initFavOnTool();
     initRelated();
     initAd();
     initAnalytics();
     initHitCount();
+    initUseCount();
 
     /* canonical、OG 與結構化資料改由 build-seo.mjs 靜態寫進 HTML，
        這裡不再動態插入，避免正式網域設定後出現兩組 canonical。 */

@@ -301,6 +301,38 @@ p { margin: 0 0 1em; }
   .stats__list { gap: 4px 14px; }
 }
 
+/* ---------- 我的工具（收藏星星） ----------
+   卡片本身是一個 <a>，星星疊在裡面，所以要自己處理點擊：
+   JS 那邊有 preventDefault，這裡只負責讓它看起來可以按。 */
+.fav {
+  border: 0; background: none; cursor: pointer; padding: 2px 4px;
+  font-size: 1.25rem; line-height: 1; color: var(--ink-3);
+  transition: color .15s, transform .15s;
+  flex: none; margin-left: auto;
+}
+.fav:hover { color: var(--warn); transform: scale(1.15); }
+.fav[aria-pressed="true"] { color: var(--warn); }
+.fav--sm { font-size: 1.05rem; }
+.fav:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 4px; }
+
+/* 工具頁標題旁的那顆 */
+.fav-wrap { display: inline-flex; vertical-align: middle; margin-left: 10px; }
+.fav-wrap .fav { font-size: 1.4rem; margin-left: 0; }
+
+@media (pointer: coarse) {
+  .fav { padding: 8px 10px; }      /* 手指按得到 */
+  .fav--sm { padding: 6px 8px; }
+}
+
+/* 這個工具被使用過幾次 */
+.use-count {
+  display: inline-block; margin-top: 8px;
+  background: var(--bg-sunk); color: var(--ink-3);
+  padding: 4px 12px; border-radius: 999px;
+  font-size: .82rem;
+}
+.use-count b { font-family: var(--mono); color: var(--ink-2); }
+
 /* ---------- tool grid ---------- */
 .group { margin-bottom: 44px; scroll-margin-top: calc(var(--header-h) + 60px); }
 .group__head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; }

@@ -10,7 +10,7 @@
 <meta property="og:title" content="順手工具箱｜87 種免費線上小工具">
 <meta property="og:description" content="抽籤、計時、文字處理、符號表情、編碼轉換、圖片壓縮，打開就能用，資料不離開你的瀏覽器。">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
-<link rel="stylesheet" href="assets/css/main.css?v=06c7bc5d">
+<link rel="stylesheet" href="assets/css/main.css?v=7774f99c">
 <!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
 <link rel="canonical" href="https://tools.luka-life.com/">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
@@ -695,6 +695,9 @@
   </section>
 
   <div class="wrap">
+    <!-- 使用者收藏的工具，沒收藏時整區隱藏 -->
+    <section class="group" id="myTools" hidden></section>
+
     <div id="groups"></div>
     <div class="no-result hidden" id="noResult">
       <p>找不到符合「<strong id="noResultQ"></strong>」的工具</p>
@@ -703,8 +706,8 @@
   </div>
 </main>
 
-<script src="assets/js/catalog.js?v=79689e88"></script>
-<script src="assets/js/layout.js?v=fd660671"></script>
+<script src="assets/js/catalog.js?v=c79d2e66"></script>
+<script src="assets/js/layout.js?v=40e177f4"></script>
 <script>
 (function () {
   'use strict';
@@ -751,10 +754,34 @@
       <span class="card__top">
         <span class="card__icon" aria-hidden="true">${t.icon}</span>
         <span class="card__title">${esc(t.name)}</span>
+        ${window.favButton(t.slug, 'sm')}
       </span>
       <span class="card__desc">${esc(t.desc)}</span>
     </a>`;
   }
+
+  /* ---------- 我的工具 ----------
+     使用者自己收藏的清單，只存在這台裝置的瀏覽器裡。
+     沒收藏任何東西時整區不顯示，不要放一塊空的佔版面。 */
+  function renderFavs() {
+    const host = $('#myTools');
+    if (!host) return;
+    /* 收藏的 slug 可能對應到已經下架的工具，過濾掉才不會出現壞掉的卡片 */
+    const list = window.Favs.all().map(getTool).filter(Boolean);
+
+    if (!list.length) { host.innerHTML = ''; host.hidden = true; return; }
+
+    host.hidden = false;
+    host.innerHTML = `
+      <div class="group__head">
+        <h2><span class="stamp" aria-hidden="true">⭐</span>我的工具</h2>
+        <span>點工具卡片上的星星就會收在這裡．${list.length} 種</span>
+      </div>
+      <div class="grid">${list.map(cardHTML).join('')}</div>`;
+  }
+
+  /* 任何地方按了星星都會發這個事件，這區跟著更新 */
+  document.addEventListener('favschange', renderFavs);
 
   function render(filter) {
     const q = (filter || '').trim().toLowerCase();
@@ -782,6 +809,7 @@
   }
 
   render('');
+  renderFavs();
 
   /* 首頁專屬：頂部搜尋框同步過濾卡片，讓使用者也能直接在頁面上篩 */
   const search = $('#siteSearch');

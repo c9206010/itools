@@ -14,9 +14,25 @@
 import { taipeiDay, dayBefore, json, ONLINE_WINDOW } from './_shared.js';
 
 const EMPTY = { ok: false, online: 0, total: 0, today: 0, week: 0, month: 0 };
+const SLUG_RE = /^[a-z0-9][a-z0-9-]{0,39}$/;
 
-export async function onRequestGet({ env }) {
+export async function onRequestGet({ request, env }) {
   if (!env.DB) return json(EMPTY);
+
+  /* 帶 ?t=<slug> 就只回那個工具的次數，工具頁用這個，
+     比每次把 87 個工具的數字全部送過去省得多。 */
+  const slug = new URL(request.url).searchParams.get('t');
+  if (slug) {
+    if (!SLUG_RE.test(slug)) return json({ ok: false, views: 0 });
+    try {
+      const row = await env.DB.prepare('SELECT views FROM pages WHERE slug = ?')
+        .bind(slug).first();
+      return json({ ok: true, slug, views: row ? row.views : 0 }, 120);
+    } catch (err) {
+      console.error('單一工具次數查詢失敗:', err.message);
+      return json({ ok: false, views: 0 });
+    }
+  }
 
   try {
     const now = Math.floor(Date.now() / 1000);
