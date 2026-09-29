@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>使用統計 - 順手工具箱</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="站長自用的使用統計頁。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+<link rel="stylesheet" href="assets/css/main.css?v=c379ca1e">
+<style>
+  .note-box { border: 1px dashed var(--border-strong); border-radius: var(--radius);
+              background: var(--surface-2); padding: 13px 15px;
+              font-size: .88rem; line-height: 1.8; margin-bottom: 18px; }
+
+  .sum { display: grid; gap: 10px; margin-bottom: 20px;
+         grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); }
+  .sum div { border: 1px solid var(--border); border-radius: var(--radius);
+             background: var(--surface); padding: 12px 13px; }
+  .sum dt { font-size: .78rem; color: var(--ink-3); margin: 0; }
+  .sum dd { margin: 3px 0 0; font-family: var(--mono);
+            font-size: 1.35rem; font-weight: 700; }
+
+  th.num, td.num { text-align: right; font-family: var(--mono); white-space: nowrap; }
+  tr.zero td { color: var(--ink-3); }
+  .bar { display: block; height: 4px; border-radius: 2px;
+         background: var(--brand); margin-top: 4px; min-width: 2px; }
+  .cat-tag { font-size: .75rem; color: var(--ink-3); }
+  .state { text-align: center; color: var(--ink-3); padding: 28px 0; }
+</style>
+</head>
+<body data-root="">
+
+<main id="main" class="wrap">
+  <div class="tool-head" style="padding-top:26px">
+    <h1><span class="emoji" aria-hidden="true">📊</span>使用統計</h1>
+    <p class="lede">站長自用。這頁沒有放在任何選單裡，也不會被搜尋引擎收錄。</p>
+  </div>
+
+  <div class="note-box">
+    數字來自站上自己的計數器，<strong>跟 Google Analytics 的算法不同</strong>，
+    兩邊對不起來是正常的——GA 算的是工作階段與瀏覽量、有自己的爬蟲過濾；
+    這裡算的是「頁面載入了幾次」，用的是我們自己的爬蟲清單。
+    裝了廣告攔截器的訪客可能兩邊都擋掉。<br>
+    這頁看的是<strong>相對高低與哪些工具沒人用</strong>，不是絕對精確的流量報表。
+  </div>
+
+  <div class="sum">
+    <div><dt>全站累計瀏覽</dt><dd id="sTotal">—</dd></div>
+    <div><dt>今日</dt><dd id="sToday">—</dd></div>
+    <div><dt>本週</dt><dd id="sWeek">—</dd></div>
+    <div><dt>目前線上</dt><dd id="sOnline">—</dd></div>
+    <div><dt>有人用過的工具</dt><dd id="sUsed">—</dd></div>
+    <div><dt>完全沒人用</dt><dd id="sZero">—</dd></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__title">各工具使用次數</div>
+    <p class="hint">次數為零的排在最後，那是最值得看的一群——可能是沒人需要，也可能是沒被搜尋引擎找到。</p>
+    <div id="table"><p class="state">載入中…</p></div>
+  </div>
+
+  <p class="mt-2"><a class="btn btn--ghost" href="index.html">← 回到工具首頁</a></p>
+</main>
+
+<script src="assets/js/catalog.js?v=8680c321"></script>
+<script src="assets/js/layout.js?v=40e177f4"></script>
+<script>
+(function () {
+  'use strict';
+  const { $, esc } = window.U;
+  const n = v => Number(v || 0).toLocaleString('zh-TW');
+
+  (async function load() {
+    let overall = null, top = null;
+    try {
+      /* 一次把整體與各工具都拿回來。top 給 200 等於全部，
+         工具總數遠小於這個數字。 */
+      const [a, b] = await Promise.all([
+        fetch('api/stats', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null),
+        fetch('api/stats?top=200', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null)
+      ]);
+      overall = a; top = b;
+    } catch (e) { /* 下面會顯示錯誤狀態 */ }
+
+    if (!overall || !overall.ok) {
+      $('#table').innerHTML = '<p class="state">拿不到統計資料。'
+        + '可能是 D1 資料庫還沒綁定，或暫時連不上。</p>';
+      return;
+    }
+
+    $('#sTotal').textContent = n(overall.total);
+    $('#sToday').textContent = n(overall.today);
+    $('#sWeek').textContent = n(overall.week);
+    $('#sOnline').textContent = n(overall.online);
+
+    /* 把有次數的併回完整工具清單，沒出現在結果裡的就是 0 次 */
+    const counts = new Map((top && top.tools ? top.tools : []).map(t => [t.slug, t.views]));
+    const rows = TOOLS.map(t => ({ t, views: counts.get(t.slug) || 0 }))
+      .sort((a, b) => b.views - a.views || a.t.name.localeCompare(b.t.name, 'zh-Hant'));
+
+    const used = rows.filter(r => r.views > 0).length;
+    $('#sUsed').textContent = used + ' / ' + TOOLS.length;
+    $('#sZero').textContent = n(TOOLS.length - used);
+
+    const max = rows.length ? rows[0].views : 0;
+    const sum = rows.reduce((s, r) => s + r.views, 0);
+
+    $('#table').innerHTML = `
+      <div class="table-scroll">
+        <table class="data">
+          <thead><tr>
+            <th>#</th><th>工具</th><th>分類</th>
+            <th class="num">次數</th><th class="num">佔比</th>
+          </tr></thead>
+          <tbody>
+            ${rows.map((r, i) => `
+              <tr class="${r.views ? '' : 'zero'}">
+                <td class="num">${r.views ? i + 1 : '—'}</td>
+                <td>
+                  <a href="t/${r.t.slug}.html">${r.t.icon} ${esc(r.t.name)}</a>
+                  ${r.views ? `<span class="bar" style="width:${
+                    Math.max(2, r.views / max * 100).toFixed(1)}%"></span>` : ''}
+                </td>
+                <td class="cat-tag">${esc((getCat(r.t.cat) || {}).name || r.t.cat)}</td>
+                <td class="num">${r.views ? n(r.views) : '0'}</td>
+                <td class="num">${sum && r.views
+                  ? (r.views / sum * 100).toFixed(1) + '%' : '—'}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>`;
+  })();
+})();
+</script>
+</body>
+</html>

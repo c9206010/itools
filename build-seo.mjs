@@ -320,6 +320,17 @@ for (const tool of TOOLS) {
   }
 }
 
+/* ---------- 後台統計頁 ----------
+   給站長自己看的，不放連結、不進 sitemap、頁面本身帶 noindex。
+   跟 404 一樣只需要資源版本號。 */
+{
+  const file = join(ROOT, 'stats.html');
+  if (existsSync(file)) {
+    writeFileSync(file, versionAssets(readFileSync(file, 'utf8')), 'utf8');
+    console.log('✓ stats.html      已套用資源版本號（不收錄）');
+  }
+}
+
 /* ---------- 隱私權政策 ----------
    不是工具頁，但需要被索引（AdSense 要求政策可公開存取），
    所以加上 canonical 與基本的 OG，並列入 sitemap。 */

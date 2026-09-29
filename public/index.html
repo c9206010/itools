@@ -10,7 +10,7 @@
 <meta property="og:title" content="順手工具箱｜87 種免費線上小工具">
 <meta property="og:description" content="抽籤、計時、文字處理、符號表情、編碼轉換、圖片壓縮，打開就能用，資料不離開你的瀏覽器。">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
-<link rel="stylesheet" href="assets/css/main.css?v=0b897498">
+<link rel="stylesheet" href="assets/css/main.css?v=c379ca1e">
 <!-- SEO:START 由 build-seo.mjs 產生，請勿手動編輯 -->
 <link rel="canonical" href="https://tools.luka-life.com/">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
@@ -698,6 +698,9 @@
     <!-- 使用者收藏的工具，沒收藏時整區隱藏 -->
     <section class="group" id="myTools" hidden></section>
 
+    <!-- 熱門工具排行，累計次數還不夠好看時整區隱藏，達標會自己出現 -->
+    <section class="group" id="topTools" hidden></section>
+
     <!-- 只對還沒收藏過任何工具的新訪客顯示一次，收藏或關掉之後就不再出現 -->
     <div class="fav-hint" id="favHint" hidden>
       <span class="fav-hint__star" aria-hidden="true">☆</span>
@@ -715,7 +718,7 @@
   </div>
 </main>
 
-<script src="assets/js/catalog.js?v=c79d2e66"></script>
+<script src="assets/js/catalog.js?v=8680c321"></script>
 <script src="assets/js/layout.js?v=40e177f4"></script>
 <script>
 (function () {
@@ -810,6 +813,52 @@
     /* 已經有收藏的人不用教，關過的人也不要再煩 */
     $('#favHint').hidden = hintDismissed() || window.Favs.all().length > 0;
   }
+
+  /* ---------- 熱門工具排行 ----------
+     資料來自我們自己的計數器。刻意設了兩道門檻：
+     單一工具要夠多次才上榜，而且要有夠多個工具達標整區才顯示。
+     否則會變成「第一名 5 次」，等於告訴訪客這裡沒人用，反效果。
+     門檻在 catalog.js 的 SITE.topTools，達標會自己出現，不用改程式。 */
+  (async function loadTopTools() {
+    const cfg = SITE.topTools;
+    const host = $('#topTools');
+    if (!cfg || !cfg.enabled || !host) return;
+
+    try {
+      const res = await fetch('api/stats?top=' + cfg.count, { cache: 'no-cache' });
+      if (!res.ok) return;
+      const d = await res.json();
+      if (!d.ok || !Array.isArray(d.tools)) return;
+
+      /* 達到門檻、而且在 catalog 裡還存在的工具才列 */
+      const list = d.tools
+        .filter(t => t.views >= (cfg.min || 50))
+        .map(t => ({ tool: getTool(t.slug), views: t.views }))
+        .filter(x => x.tool);
+
+      if (list.length < (cfg.least || 4)) return;   // 榜太短就不要放
+
+      host.hidden = false;
+      host.innerHTML = `
+        <div class="group__head">
+          <h2><span class="stamp" aria-hidden="true">🔥</span>大家最常用的工具</h2>
+          <span>依實際使用次數排序．每小時更新</span>
+        </div>
+        <div class="grid">${list.map(({ tool, views }, i) => `
+          <a class="card card--rank" href="t/${tool.slug}.html">
+            <span class="rank-badge" aria-label="第 ${i + 1} 名">${i + 1}</span>
+            <span class="card__top">
+              <span class="card__icon" aria-hidden="true">${tool.icon}</span>
+              <span class="card__title">${esc(tool.name)}</span>
+              ${window.favButton(tool.slug, 'sm')}
+            </span>
+            <span class="card__desc">${esc(tool.desc)}</span>
+            <span class="card__uses">已被使用 ${views.toLocaleString('zh-TW')} 次</span>
+          </a>`).join('')}</div>`;
+    } catch (e) {
+      /* 拿不到就不顯示，首頁其他部分照常 */
+    }
+  })();
 
   $('#favHintClose').addEventListener('click', dismissHint);
   /* 收藏了第一個工具，代表已經學會，提示功成身退 */
