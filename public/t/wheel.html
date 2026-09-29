@@ -6,7 +6,7 @@
 <title>幸運輪盤｜自訂選項線上轉盤抽獎 - 順手工具箱</title>
 <meta name="description" content="免費線上轉盤，自己輸入選項就能轉。吃什麼、誰請客、抽獎順序交給輪盤決定，支援抽中後移除選項，結果只存在你的瀏覽器。">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
-<link rel="stylesheet" href="../assets/css/main.css?v=d01f1aa8">
+<link rel="stylesheet" href="../assets/css/main.css?v=e31a9644">
 <style>
   .wheel-layout { display: grid; gap: 24px; grid-template-columns: minmax(0, 1fr) 300px; align-items: start; }
   @media (max-width: 780px) { .wheel-layout { grid-template-columns: 1fr; } }
@@ -193,6 +193,17 @@
         <div class="btn-group">
           <button class="btn btn--ghost btn--sm" type="button" id="shuffleBtn">打散順序</button>
           <button class="btn btn--ghost btn--sm" type="button" id="clearBtn">清空</button>
+          <button class="btn btn--ghost btn--sm" type="button" id="shareBtn">複製分享連結</button>
+        </div>
+
+        <!-- 名單儲存。跟抽籤點名、隨機分組共用同一份，在這裡存的那邊也叫得到 -->
+        <div class="lists">
+          <div class="lists__row">
+            <input type="text" id="listName" maxlength="30" autocomplete="off"
+                   placeholder="幫這份名單取個名字，例如「午餐店家」">
+            <button class="btn btn--sm" type="button" id="saveListBtn">存起來</button>
+          </div>
+          <div class="lists__saved" id="savedLists"></div>
         </div>
       </div>
     </div>
@@ -234,7 +245,7 @@
 </main>
 
 <script src="../assets/js/catalog.js?v=d1c0e87c"></script>
-<script src="../assets/js/layout.js?v=9eb1e43a"></script>
+<script src="../assets/js/layout.js?v=6b0c1a21"></script>
 <script>
 (function () {
   'use strict';
@@ -402,9 +413,82 @@
     input.focus();
   });
 
+  /* ---------- 分享連結 ----------
+     把選項編進網址，傳給朋友打開就是同一個轉盤。
+     決定午餐吃什麼這種事本來就是一群人的，讓他們在群組裡直接開。 */
+  $('#shareBtn').addEventListener('click', () => {
+    const items = lines(input.value);
+    if (!items.length) { window.toast('清單是空的，沒東西可以分享'); return; }
+    const url = window.ShareList.url(items);
+    if (!url) { window.toast('產生連結失敗'); return; }
+    if (url.length > 1800) {
+      window.toast('選項太多，連結會過長，建議少於 60 個');
+      return;
+    }
+    window.copyText(url, '已複製分享連結，貼到群組就能一起轉');
+  });
+
+  /* ---------- 名單儲存 ---------- */
+  function renderSaved() {
+    const host = $('#savedLists');
+    const all = window.NameLists.all();
+    if (!all.length) {
+      host.innerHTML = '<p class="hint mb-0">存起來的名單會出現在這裡，' +
+        '跟抽籤點名、隨機分組共用。</p>';
+      return;
+    }
+    host.innerHTML = all.map(l => `
+      <span class="chip chip--list">
+        <button type="button" data-load="${esc(l.name)}"
+                title="載入這份名單（${l.items.length} 項）">${esc(l.name)}
+          <span class="chip__n">${l.items.length}</span></button>
+        <button type="button" class="chip__x" data-del="${esc(l.name)}"
+                aria-label="刪除名單 ${esc(l.name)}">✕</button>
+      </span>`).join('');
+  }
+
+  $('#saveListBtn').addEventListener('click', () => {
+    const r = window.NameLists.save($('#listName').value, lines(input.value));
+    if (!r.ok) { window.toast(r.msg); return; }
+    $('#listName').value = '';
+    renderSaved();
+    window.toast('名單已存到這台裝置');
+  });
+
+  $('#savedLists').addEventListener('click', e => {
+    const load = e.target.closest('[data-load]');
+    if (load) {
+      const l = window.NameLists.get(load.dataset.load);
+      if (l) {
+        input.value = l.items.join('\n');
+        readOptions();
+        window.toast('已載入「' + l.name + '」');
+      }
+      return;
+    }
+    const del = e.target.closest('[data-del]');
+    if (del) {
+      window.NameLists.remove(del.dataset.del);
+      renderSaved();
+    }
+  });
+
+  /* ---------- 從分享連結開啟 ----------
+     別人給的資料一律只寫進 textarea.value，絕不碰 innerHTML。 */
+  const shared = window.ShareList.fromUrl();
+  if (shared.length) {
+    input.value = shared.join('\n');
+    const note = document.createElement('p');
+    note.className = 'hint';
+    note.textContent = '這份清單是從分享連結帶進來的，共 ' + shared.length + ' 個選項。';
+    input.parentNode.appendChild(note);
+  }
+
+  renderSaved();
   readOptions();
 })();
 </script>
+
 
 <div data-static-foot>
 <footer class="site-footer">

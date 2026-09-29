@@ -301,6 +301,28 @@ p { margin: 0 0 1em; }
   .stats__list { gap: 4px 14px; }
 }
 
+/* ---------- 名單儲存（輪盤、抽籤、分組共用） ---------- */
+.lists { margin-top: 16px; padding-top: 14px; border-top: 1px dashed var(--border); }
+.lists__row { display: flex; gap: 8px; margin-bottom: 10px; }
+.lists__row input { flex: 1; min-width: 0; }
+.lists__row .btn { flex: none; }
+.lists__saved { display: flex; flex-wrap: wrap; gap: 7px; }
+
+.chip--list { display: inline-flex; align-items: stretch; padding: 0; overflow: hidden; }
+.chip--list button {
+  border: 0; background: none; cursor: pointer; font: inherit;
+  color: var(--ink-2); padding: 6px 10px; display: inline-flex;
+  align-items: center; gap: 6px;
+}
+.chip--list button:hover { color: var(--brand); }
+.chip__n {
+  font-family: var(--mono); font-size: .72rem; color: var(--ink-3);
+  background: var(--bg-sunk); border-radius: 99px; padding: 1px 6px;
+}
+.chip__x { border-left: 1px solid var(--border) !important; color: var(--ink-3) !important; }
+.chip__x:hover { color: var(--danger) !important; background: var(--bg-sunk); }
+@media (pointer: coarse) { .chip--list button { padding: 9px 12px; } }
+
 /* ---------- 隨便看看 ----------
    刻意做得比工具卡片低一階：一整條、窄、沒有陰影，
    它是輔助入口，不該跟下面真正的工具清單搶注意力。 */

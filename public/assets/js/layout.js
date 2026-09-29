@@ -360,6 +360,98 @@
     window.toast(added ? '已加入我的工具' : '已從我的工具移除');
   });
 
+  /* ---------- 名單儲存（輪盤、抽籤、分組、抽獎共用） ----------
+     常用的名單（午餐店家、班級名單）存起來下次直接叫出來。
+     跟收藏一樣只存在使用者自己的瀏覽器，沒有帳號也不同步。
+
+     四個吃名單的工具共用同一份儲存，所以在輪盤存的名單，
+     到抽籤點名也叫得出來——這是分開存做不到的。 */
+  const LIST_KEY = 'sst-lists';
+  const LIST_MAX = 20;          // 最多存幾份，避免把 localStorage 塞爆
+  const ITEM_MAX = 200;         // 單份最多幾個項目
+
+  function readLists() {
+    try {
+      const raw = localStorage.getItem(LIST_KEY);
+      const arr = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(arr)) return [];
+      return arr.filter(x => x && typeof x.name === 'string' && Array.isArray(x.items));
+    } catch (e) {
+      return [];
+    }
+  }
+
+  window.NameLists = {
+    all: readLists,
+    /** 存一份名單。同名會覆蓋，最新的排前面。 */
+    save(name, items) {
+      name = String(name || '').trim().slice(0, 30);
+      if (!name) return { ok: false, msg: '請先給這份名單一個名字' };
+      const clean = (items || []).map(s => String(s).trim())
+        .filter(Boolean).slice(0, ITEM_MAX);
+      if (!clean.length) return { ok: false, msg: '名單是空的' };
+
+      const list = readLists().filter(x => x.name !== name);
+      list.unshift({ name, items: clean, at: Date.now() });
+      try {
+        localStorage.setItem(LIST_KEY, JSON.stringify(list.slice(0, LIST_MAX)));
+        return { ok: true };
+      } catch (e) {
+        /* 無痕模式，或空間滿了 */
+        return { ok: false, msg: '瀏覽器不允許儲存，無法保存名單' };
+      }
+    },
+    remove(name) {
+      try {
+        localStorage.setItem(LIST_KEY,
+          JSON.stringify(readLists().filter(x => x.name !== name)));
+      } catch (e) { /* 存不進去就算了 */ }
+    },
+    get(name) { return readLists().find(x => x.name === name) || null; }
+  };
+
+  /* ---------- 分享連結 ----------
+     把名單編進網址，傳給別人打開就是同一份。
+
+     用 base64url 是為了讓中文能安全塞進網址。
+     **只用在名單這類非個人資料**——薪資、BMI 那種絕對不能進網址，
+     網址會留在瀏覽器歷史與 referrer 裡，等於把資料洩出去。 */
+  window.ShareList = {
+    encode(items) {
+      try {
+        const text = (items || []).join('\n');
+        const b64 = btoa(String.fromCharCode(...new TextEncoder().encode(text)));
+        return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+      } catch (e) {
+        return '';
+      }
+    },
+    decode(str) {
+      try {
+        const b64 = String(str).replace(/-/g, '+').replace(/_/g, '/');
+        const bin = atob(b64);
+        const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+        const text = new TextDecoder().decode(bytes);
+        /* 別人給的網址，長度要設上限，免得塞一大包進來把頁面卡住 */
+        return text.split(/\r?\n/).map(s => s.trim())
+          .filter(Boolean).slice(0, ITEM_MAX);
+      } catch (e) {
+        return [];
+      }
+    },
+    /** 產生可分享的完整網址 */
+    url(items) {
+      const code = window.ShareList.encode(items);
+      if (!code) return '';
+      return location.origin + location.pathname + '?list=' + code;
+    },
+    /** 從目前網址讀出名單，沒有就回空陣列 */
+    fromUrl() {
+      const v = new URLSearchParams(location.search).get('list');
+      return v ? window.ShareList.decode(v) : [];
+    }
+  };
+
   /* ---------- 這個工具被用過幾次 ----------
      數字太小的時候不顯示。工具剛上線只有個位數，
      寫「已使用 3 次」反而讓人覺得沒人用，不如先不寫。 */
