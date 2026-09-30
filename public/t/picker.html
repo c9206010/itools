@@ -59,7 +59,7 @@
   "browserRequirements": "需要啟用 JavaScript",
   "inLanguage": "zh-Hant",
   "isAccessibleForFree": true,
-  "dateModified": "2026-09-29",
+  "dateModified": "2026-09-30",
   "offers": {
     "@type": "Offer",
     "price": "0",
@@ -341,9 +341,17 @@
     refresh();
   });
 
+  /* 分享連結與名單儲存由 layout.js 的共用模組處理，
+     跟輪盤、隨機分組共用同一份儲存 */
+  window.setupListTools({ input: '#names', onChange: refresh });
+
   refresh();
 })();
 </script>
+
+
+
+
 
 
 

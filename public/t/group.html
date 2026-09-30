@@ -50,7 +50,7 @@
   "browserRequirements": "需要啟用 JavaScript",
   "inLanguage": "zh-Hant",
   "isAccessibleForFree": true,
-  "dateModified": "2026-09-29",
+  "dateModified": "2026-09-30",
   "offers": {
     "@type": "Offer",
     "price": "0",
@@ -171,6 +171,20 @@
 蔡明哲
 周思妤</textarea>
       <p class="hint">目前 <strong id="nameCount">0</strong> 人</p>
+
+      <div class="btn-group">
+        <button class="btn btn--ghost btn--sm" type="button" id="shareBtn">複製分享連結</button>
+      </div>
+
+      <!-- 名單儲存，跟輪盤、抽籤點名共用同一份 -->
+      <div class="lists">
+        <div class="lists__row">
+          <input type="text" id="listName" maxlength="30" autocomplete="off"
+                 placeholder="幫這份名單取個名字，例如「專題小組」">
+          <button class="btn btn--sm" type="button" id="saveListBtn">存起來</button>
+        </div>
+        <div class="lists__saved" id="savedLists"></div>
+      </div>
     </div>
 
     <div class="row mb-2">
@@ -295,9 +309,17 @@
     window.copyText(asText(), '已複製分組結果');
   });
 
+  /* 分享連結與名單儲存由 layout.js 的共用模組處理，
+     跟輪盤、抽籤點名共用同一份儲存 */
+  window.setupListTools({ input: '#names', onChange: count });
+
   count();
 })();
 </script>
+
+
+
+
 
 
 
