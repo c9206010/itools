@@ -275,17 +275,45 @@ GA4 的資源是「順手工具箱」，評估 ID `G-P6F2324FNV`，掛在既有�
 
   | 項目 | 應該設成 | 原因 |
   |---|---|---|
-  | Bot Fight 模式 | **關** | 它種 `cf_clearance` cookie、注入 `/cdn-cgi/challenge-platform` 腳本。這兩樣被瀏覽器擴充功能擋掉時，一般視窗會間歇性回 403（無痕正常、同時間 curl 回 200）。靜態站沒有登入沒有表單，計數器自己有機器人過濾，代價遠大於價值 |
+  | Bot Fight 模式 | **關** | 靜態站沒有登入沒有表單，計數器自己有機器人過濾，保護價值很低。（註：它不是 2026-10-02 那次 403 的原因，關掉之後 403 照樣出現） |
   | AI 機器人政策 → 搜尋／代理／訓練 | **全部「允許」** | 2025-07-01 之後開的 zone 預設會擋 AI 爬蟲，而且擋在讀 robots.txt 之前。擋掉的話 `llms.txt` 跟整個 GEO 的工作都到不了 GPTBot / ClaudeBot / PerplexityBot |
   | AI 迷宮 | **關** | 餵 AI 生成的假內容給爬蟲，對想被 AI 引用的站是反效果 |
   | Bot Preference Sync | **關** | 會自動在 `robots.txt` 前面插入 Cloudflare 的設定，跟我們自己維護的 `robots.txt` 打架 |
   | Cloudflare 受控規則集 | **開** | 這是擋真正攻擊的 WAF，跟機器人防護是兩回事 |
 
-  2026-10-02 曾經誤判整站 403 是自己打太兇造成的。查 Security Events
-  用 IP 查無事件、用「動作＝封鎖＋台灣」也查無事件——**Cloudflare 沒擋過**，
-  問題在瀏覽器端。下次遇到 403 先看那一頁是 Cloudflare 的錯誤頁
-  （有 Error 1020 跟 Ray ID）還是 Chrome 自己的（什麼都沒有），
-  是後者就不要往 Cloudflare 的封鎖紀錄找。
+- **免費方案的「安全性事件」是抽樣的，查不到不等於沒發生。**
+  那一頁的標題就寫著「取樣的記錄」。2026-10-02 查 403 時，用 IP 篩、
+  用「動作＝封鎖＋台灣」篩、用 Ray ID 篩，三次都查無事件，
+  一度據此判定 Cloudflare 沒有擋過——**這個推論是錯的**。
+
+  真正可靠的證據在瀏覽器的 Network 面板，看回應標頭：
+
+  | 標頭 | 代表 |
+  |---|---|
+  | 有 `Cf-Ray` | Cloudflare 在邊緣回的，請求沒進到 Pages |
+  | `Cache-Control: ... post-check=0, pre-check=0` ＋ `Expires: Thu, 01 Jan 1970` | Cloudflare 封鎖頁的標準簽名 |
+  | `Referrer-Policy: same-origin` | 不是我們的（我們在 `_headers` 設的是 `strict-origin-when-cross-origin`） |
+
+  **`Cf-Ray` 結尾的三個字母是機房代碼**，可以反推請求從哪裡出去的。
+  在台灣用中華電信正常會命中 `TPE` 或 `HKG`；出現 `SJC`（聖荷西）
+  就表示流量繞到美國出口了，多半是瀏覽器裝了 VPN／Proxy 擴充功能。
+  這也解釋了為什麼用「台灣」篩選永遠查不到——來源根本不是台灣。
+
+  **要判斷流量從哪裡出去，開 `https://www.cloudflare.com/cdn-cgi/trace`**，
+  看 `ip` / `colo` / `loc` 三行。這是 Cloudflare 官網的診斷端點，
+  不會碰到自己的站，也不會污染快取。懷疑哪個瀏覽器有問題就用哪個開，
+  跟正常的瀏覽器對照。
+
+  2026-10-02 那次整站間歇性 403 的真正原因：Chrome 裝了三個 VPN／
+  Proxy 類擴充功能（Browsec VPN、ZenMate VPN、WebChatGPT），
+  流量被導到美國出口。免費 VPN 的出口 IP 是幾萬人共用的，
+  Cloudflare 對這種 IP 的信任分數極低，直接在邊緣擋成 403。
+  移除三個擴充功能後 `colo` 從 `SJC` 回到 `HKG`、`loc` 回到 `TW`。
+
+  **排查順序的教訓**：這題花了很久，因為前三個假設都從伺服器端猜
+  （以為是自己打太兇、以為是 Bot Fight Mode、以為是 WAF 規則）。
+  實際上「Firefox 正常、無痕正常、curl 回 200、只有一般 Chrome 不行」
+  這組事實一開始就指向瀏覽器設定檔，應該先做 trace 對照，再談伺服器。
 
 - **臺灣銀行牌告匯率抓不到。** `rate.bot.com.tw` 有機器人驗證，
   網頁跟 CSV 端點都會回一頁 proof-of-work 挑戰。所以改用 `open.er-api.com`
