@@ -89,13 +89,19 @@ const NAV_MARK = 'data-static-nav';
 const FOOT_MARK = 'data-static-foot';
 
 function staticHeader(SITE, CATEGORIES, root) {
+  /* 指向目錄本身而不是 index.html：Cloudflare Pages 會把 /index.html
+     用 308 轉到 /，而 canonical 與 sitemap 寫的都是 /。連到 index.html
+     等於每條內部連結都多一次轉址，全站近百頁都這樣，白白吃掉爬取預算。
+     （踩過：Network 面板裡每次回首頁都先出現一筆 308。）
+     用 './' 而非 '/' 是為了保留相對路徑，本機直接開檔也能用。 */
+  const home = root || './';
   const cats = CATEGORIES.map(c =>
-    `<a href="${root}index.html#${c.id}">${attrEsc(c.name)}</a>`).join('');
+    `<a href="${home}#${c.id}">${attrEsc(c.name)}</a>`).join('');
   return `<div ${NAV_MARK}>
 <a class="skip-link" href="#main">跳到主要內容</a>
 <header class="site-header">
   <div class="wrap site-header__bar">
-    <a class="brand" href="${root}index.html">
+    <a class="brand" href="${home}">
       <span class="brand__mark">${SITE.mark}</span>
       <span>${attrEsc(SITE.name)}</span>
     </a>
@@ -111,7 +117,7 @@ function staticHeader(SITE, CATEGORIES, root) {
   </div>
   <nav class="catnav" aria-label="工具分類">
     <div class="wrap catnav__inner">
-      <a href="${root}index.html">全部</a>${cats}
+      <a href="${home}">全部</a>${cats}
     </div>
   </nav>
 </header></div>`;
@@ -183,8 +189,8 @@ function prefillGroups(html, CATEGORIES, TOOLS) {
 /** 工具頁：預填麵包屑與相關工具。
  *  layout.js 偵測到已經有內容就不會重畫。 */
 function prefillToolPage(html, tool, cat, TOOLS) {
-  const crumb = `<a href="../index.html">首頁</a><span>›</span>` +
-    `<a href="../index.html#${cat.id}">${attrEsc(cat.name)}</a><span>›</span>` +
+  const crumb = `<a href="../">首頁</a><span>›</span>` +
+    `<a href="../#${cat.id}">${attrEsc(cat.name)}</a><span>›</span>` +
     attrEsc(tool.name);
 
   let pool = TOOLS.filter(t => t.cat === tool.cat && t.slug !== tool.slug);

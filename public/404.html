@@ -8,7 +8,7 @@
 <!-- 錯誤頁不該被索引 -->
 <meta name="robots" content="noindex, follow">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
-<link rel="stylesheet" href="assets/css/main.css?v=e31a9644">
+<link rel="stylesheet" href="/assets/css/main.css?v=e31a9644">
 <style>
   .err {
     text-align: center;
@@ -26,7 +26,7 @@
   .suggest h2 { font-size: 1.05rem; margin-bottom: 12px; }
 </style>
 </head>
-<body data-root="">
+<body data-root="/">
 
 <main id="main" class="wrap">
   <section class="err">
@@ -37,7 +37,7 @@
       用上面的搜尋框找找看，或從下面挑一個。
     </p>
     <div class="err__actions btn-group" style="justify-content:center">
-      <a class="btn btn--lg" href="index.html">回到全部工具</a>
+      <a class="btn btn--lg" href="/">回到全部工具</a>
       <button class="btn btn--ghost btn--lg" type="button" id="focusSearch">搜尋工具</button>
     </div>
   </section>
@@ -53,8 +53,8 @@
   </section>
 </main>
 
-<script src="assets/js/catalog.js?v=d1c0e87c"></script>
-<script src="assets/js/layout.js?v=971b856d"></script>
+<script src="/assets/js/catalog.js?v=d1c0e87c"></script>
+<script src="/assets/js/layout.js?v=c2932820"></script>
 <script>
 (function () {
   'use strict';
@@ -63,7 +63,7 @@
   /* 分類卡片 */
   $('#catGrid').innerHTML = CATEGORIES.map(c => {
     const n = byCat(c.id).length;
-    return `<a class="card" href="index.html#${c.id}">
+    return `<a class="card" href="/#${c.id}">
       <span class="card__top">
         <span class="card__icon" aria-hidden="true">${c.icon}</span>
         <span class="card__title">${esc(c.name)}</span>
@@ -77,7 +77,7 @@
   $('#popular').innerHTML = PICKS
     .map(getTool)
     .filter(Boolean)
-    .map(t => `<a class="card" href="t/${t.slug}.html">
+    .map(t => `<a class="card" href="/t/${t.slug}.html">
       <span class="card__top">
         <span class="card__icon" aria-hidden="true">${t.icon}</span>
         <span class="card__title">${esc(t.name)}</span>

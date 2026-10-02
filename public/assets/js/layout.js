@@ -11,6 +11,13 @@
   const ROOT = document.body.dataset.root || '';
   const CURRENT = document.body.dataset.tool || '';
 
+  /* 回首頁的連結要指向目錄本身（'/'），不要指向 'index.html'。
+     Cloudflare Pages 會把 /index.html 用 308 轉到 /，而 canonical 與
+     sitemap 都寫 /——連到 index.html 等於每一條內部連結都多跑一趟轉址，
+     全站 91 頁、每頁好幾條，爬取預算就這樣耗掉了。
+     用 './' 而不是 '/' 是為了保留相對路徑，本機直接開檔也能用。 */
+  const HOME = ROOT || './';
+
   /* ---------- 小工具函式（全站共用） ---------- */
   const $ = (sel, ctx) => (ctx || document).querySelector(sel);
   const $$ = (sel, ctx) => Array.from((ctx || document).querySelectorAll(sel));
@@ -41,14 +48,14 @@
     /* 導覽列不放圖示：分類一多，圖示佔掉的寬度會讓最後幾個被擠出可視範圍。
        圖示保留在首頁的分類標題與工具卡片上，那裡才真的幫助辨識。 */
     const catLinks = CATEGORIES.map(c =>
-      `<a href="${ROOT}index.html#${c.id}">${esc(c.name)}</a>`
+      `<a href="${HOME}#${c.id}">${esc(c.name)}</a>`
     ).join('');
 
     return `
 <a class="skip-link" href="#main">跳到主要內容</a>
 <header class="site-header">
   <div class="wrap site-header__bar">
-    <a class="brand" href="${ROOT}index.html">
+    <a class="brand" href="${HOME}">
       <span class="brand__mark">${SITE.mark}</span>
       <span>${esc(SITE.name)}</span>
     </a>
@@ -64,7 +71,7 @@
   </div>
   <nav class="catnav" aria-label="工具分類">
     <div class="wrap catnav__inner">
-      <a href="${ROOT}index.html">全部</a>${catLinks}
+      <a href="${HOME}">全部</a>${catLinks}
     </div>
   </nav>
 </header>`;
@@ -205,8 +212,8 @@
     if (!me) return;
     const c = getCat(me.cat);
     host.innerHTML =
-      `<a href="${ROOT}index.html">首頁</a><span>›</span>` +
-      `<a href="${ROOT}index.html#${c.id}">${esc(c.name)}</a><span>›</span>` +
+      `<a href="${HOME}">首頁</a><span>›</span>` +
+      `<a href="${HOME}#${c.id}">${esc(c.name)}</a><span>›</span>` +
       esc(me.name);
   }
 
