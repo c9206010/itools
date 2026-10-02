@@ -22,148 +22,148 @@
 
 決定不了的時候交給機率
 
-- [幸運輪盤](https://tools.luka-life.com/t/wheel.html)：自訂選項轉盤，動畫轉出結果
-- [線上擲骰子](https://tools.luka-life.com/t/dice.html)：1 到 10 顆骰子，支援多種面數
-- [擲硬幣](https://tools.luka-life.com/t/coin.html)：正面反面二選一，附統計
-- [隨機數字產生器](https://tools.luka-life.com/t/number.html)：指定範圍抽號，可不重複
-- [隨機分組](https://tools.luka-life.com/t/group.html)：名單貼上自動平均分隊
-- [隨機抽籤點名](https://tools.luka-life.com/t/picker.html)：從名單抽一個或多個
-- [猜拳](https://tools.luka-life.com/t/rps.html)：跟電腦剪刀石頭布，記錄戰績
-- [FB 留言抽獎](https://tools.luka-life.com/t/fb-draw.html)：貼上留言自動去重複並抽出得獎者
+- [幸運輪盤](https://tools.luka-life.com/t/wheel)：自訂選項轉盤，動畫轉出結果
+- [線上擲骰子](https://tools.luka-life.com/t/dice)：1 到 10 顆骰子，支援多種面數
+- [擲硬幣](https://tools.luka-life.com/t/coin)：正面反面二選一，附統計
+- [隨機數字產生器](https://tools.luka-life.com/t/number)：指定範圍抽號，可不重複
+- [隨機分組](https://tools.luka-life.com/t/group)：名單貼上自動平均分隊
+- [隨機抽籤點名](https://tools.luka-life.com/t/picker)：從名單抽一個或多個
+- [猜拳](https://tools.luka-life.com/t/rps)：跟電腦剪刀石頭布，記錄戰績
+- [FB 留言抽獎](https://tools.luka-life.com/t/fb-draw)：貼上留言自動去重複並抽出得獎者
 
 ### 時間計時
 
 倒數、碼錶、日期天數
 
-- [倒數計時器](https://tools.luka-life.com/t/countdown.html)：大字幕倒數，時間到提示音
-- [番茄鐘](https://tools.luka-life.com/t/pomodoro.html)：25 分工作 5 分休息，可自訂
-- [線上碼錶](https://tools.luka-life.com/t/stopwatch.html)：正數計時，支援分段記錄
-- [線上時鐘](https://tools.luka-life.com/t/clock.html)：全螢幕大字時鐘與日期
-- [日期天數計算](https://tools.luka-life.com/t/date-diff.html)：算兩天相差幾天，或推算日期
-- [年齡計算器](https://tools.luka-life.com/t/age.html)：精確到天，附生肖與星座
+- [倒數計時器](https://tools.luka-life.com/t/countdown)：大字幕倒數，時間到提示音
+- [番茄鐘](https://tools.luka-life.com/t/pomodoro)：25 分工作 5 分休息，可自訂
+- [線上碼錶](https://tools.luka-life.com/t/stopwatch)：正數計時，支援分段記錄
+- [線上時鐘](https://tools.luka-life.com/t/clock)：全螢幕大字時鐘與日期
+- [日期天數計算](https://tools.luka-life.com/t/date-diff)：算兩天相差幾天，或推算日期
+- [年齡計算器](https://tools.luka-life.com/t/age)：精確到天，附生肖與星座
 
 ### 文字處理
 
 比對、統計、整理大量文字
 
-- [文字比對](https://tools.luka-life.com/t/diff.html)：逐行找出兩段文字的差異
-- [字數統計](https://tools.luka-life.com/t/count.html)：字數、字元、行數、中英分計
-- [大小寫轉換](https://tools.luka-life.com/t/case.html)：全大寫、全小寫、駝峰、蛇形
-- [重複行移除](https://tools.luka-life.com/t/dedupe.html)：去除重複、空行，可排序
-- [文字排序](https://tools.luka-life.com/t/sort.html)：依筆畫、字母、數字、長度排
-- [批次取代](https://tools.luka-life.com/t/replace.html)：一次換掉全部，支援正規表示式
-- [酷炫字體產生器](https://tools.luka-life.com/t/fancy.html)：英數轉花體、圓圈、粗體字
-- [繁簡轉換](https://tools.luka-life.com/t/zh-convert.html)：詞彙級判斷，台灣用語一併轉
+- [文字比對](https://tools.luka-life.com/t/diff)：逐行找出兩段文字的差異
+- [字數統計](https://tools.luka-life.com/t/count)：字數、字元、行數、中英分計
+- [大小寫轉換](https://tools.luka-life.com/t/case)：全大寫、全小寫、駝峰、蛇形
+- [重複行移除](https://tools.luka-life.com/t/dedupe)：去除重複、空行，可排序
+- [文字排序](https://tools.luka-life.com/t/sort)：依筆畫、字母、數字、長度排
+- [批次取代](https://tools.luka-life.com/t/replace)：一次換掉全部，支援正規表示式
+- [酷炫字體產生器](https://tools.luka-life.com/t/fancy)：英數轉花體、圓圈、粗體字
+- [繁簡轉換](https://tools.luka-life.com/t/zh-convert)：詞彙級判斷，台灣用語一併轉
 
 ### 符號表情
 
 特殊符號與表情一鍵複製
 
-- [特殊符號大全](https://tools.luka-life.com/t/symbols.html)：箭頭、星星、數學、貨幣一鍵複製
-- [Emoji 表情符號](https://tools.luka-life.com/t/emoji.html)：分類瀏覽並複製 Emoji
-- [顏文字](https://tools.luka-life.com/t/kaomoji.html)：日系顏文字分類收錄
+- [特殊符號大全](https://tools.luka-life.com/t/symbols)：箭頭、星星、數學、貨幣一鍵複製
+- [Emoji 表情符號](https://tools.luka-life.com/t/emoji)：分類瀏覽並複製 Emoji
+- [顏文字](https://tools.luka-life.com/t/kaomoji)：日系顏文字分類收錄
 
 ### 開發編碼
 
 編碼、雜湊、格式化
 
-- [Base64 編碼解碼](https://tools.luka-life.com/t/base64.html)：文字與 Base64 雙向轉換
-- [URL 編碼解碼](https://tools.luka-life.com/t/urlencode.html)：網址參數編碼與還原
-- [JSON 格式化](https://tools.luka-life.com/t/json.html)：排版美化、壓縮、語法檢查
-- [雜湊值產生器](https://tools.luka-life.com/t/hash.html)：MD5 / SHA-1 / SHA-256 / SHA-512
-- [QR Code 產生器](https://tools.luka-life.com/t/qrcode.html)：網址文字轉 QR，可下載 PNG
-- [UUID 產生器](https://tools.luka-life.com/t/uuid.html)：批次產生 v4 UUID
-- [密碼產生器](https://tools.luka-life.com/t/password.html)：自訂長度與字元，附強度檢測
-- [色碼轉換器](https://tools.luka-life.com/t/color.html)：HEX / RGB / HSL 互轉與配色
-- [Unix 時間戳轉換](https://tools.luka-life.com/t/timestamp.html)：時間戳與日期互轉，自動辨識秒毫秒
+- [Base64 編碼解碼](https://tools.luka-life.com/t/base64)：文字與 Base64 雙向轉換
+- [URL 編碼解碼](https://tools.luka-life.com/t/urlencode)：網址參數編碼與還原
+- [JSON 格式化](https://tools.luka-life.com/t/json)：排版美化、壓縮、語法檢查
+- [雜湊值產生器](https://tools.luka-life.com/t/hash)：MD5 / SHA-1 / SHA-256 / SHA-512
+- [QR Code 產生器](https://tools.luka-life.com/t/qrcode)：網址文字轉 QR，可下載 PNG
+- [UUID 產生器](https://tools.luka-life.com/t/uuid)：批次產生 v4 UUID
+- [密碼產生器](https://tools.luka-life.com/t/password)：自訂長度與字元，附強度檢測
+- [色碼轉換器](https://tools.luka-life.com/t/color)：HEX / RGB / HSL 互轉與配色
+- [Unix 時間戳轉換](https://tools.luka-life.com/t/timestamp)：時間戳與日期互轉，自動辨識秒毫秒
 
 ### 計算換算
 
 單位、百分比、分帳
 
-- [單位換算](https://tools.luka-life.com/t/unit.html)：長度、重量、溫度、面積、容量
-- [BMI 計算器](https://tools.luka-life.com/t/bmi.html)：身高體重算 BMI 與標準體重
-- [百分比計算](https://tools.luka-life.com/t/percent.html)：折扣、成長率、佔比一次算
-- [分帳計算機](https://tools.luka-life.com/t/split.html)：均分帳單、含服務費與小費
-- [進位轉換](https://tools.luka-life.com/t/radix.html)：2 / 8 / 10 / 16 進位互轉
-- [複利與定存試算](https://tools.luka-life.com/t/compound.html)：單筆與定期定額的本利和
-- [TDEE 基礎代謝計算](https://tools.luka-life.com/t/tdee.html)：算 BMR 與每日總消耗，附熱量目標
-- [折扣比價計算機](https://tools.luka-life.com/t/discount.html)：促銷換算成折數，每單位價格比一比
+- [單位換算](https://tools.luka-life.com/t/unit)：長度、重量、溫度、面積、容量
+- [BMI 計算器](https://tools.luka-life.com/t/bmi)：身高體重算 BMI 與標準體重
+- [百分比計算](https://tools.luka-life.com/t/percent)：折扣、成長率、佔比一次算
+- [分帳計算機](https://tools.luka-life.com/t/split)：均分帳單、含服務費與小費
+- [進位轉換](https://tools.luka-life.com/t/radix)：2 / 8 / 10 / 16 進位互轉
+- [複利與定存試算](https://tools.luka-life.com/t/compound)：單筆與定期定額的本利和
+- [TDEE 基礎代謝計算](https://tools.luka-life.com/t/tdee)：算 BMR 與每日總消耗，附熱量目標
+- [折扣比價計算機](https://tools.luka-life.com/t/discount)：促銷換算成折數，每單位價格比一比
 
 ### 圖片處理
 
 壓縮、縮放、轉檔，不上傳
 
-- [圖片壓縮](https://tools.luka-life.com/t/image-compress.html)：調畫質縮檔案，不上傳伺服器
-- [圖片尺寸調整](https://tools.luka-life.com/t/image-resize.html)：指定寬高縮放，可鎖定比例
-- [照片 EXIF 檢視與移除](https://tools.luka-life.com/t/exif.html)：看有沒有藏 GPS，無損清除不減畫質
-- [圖片格式轉換](https://tools.luka-life.com/t/image-convert.html)：PNG / JPG / WebP 互轉
+- [圖片壓縮](https://tools.luka-life.com/t/image-compress)：調畫質縮檔案，不上傳伺服器
+- [圖片尺寸調整](https://tools.luka-life.com/t/image-resize)：指定寬高縮放，可鎖定比例
+- [照片 EXIF 檢視與移除](https://tools.luka-life.com/t/exif)：看有沒有藏 GPS，無損清除不減畫質
+- [圖片格式轉換](https://tools.luka-life.com/t/image-convert)：PNG / JPG / WebP 互轉
 
 ### PDF 文件
 
 合併、分割、轉檔，檔案不上傳
 
-- [PDF 合併](https://tools.luka-life.com/t/pdf-merge.html)：多個 PDF 串成一份，可調順序
-- [PDF 分割取頁](https://tools.luka-life.com/t/pdf-split.html)：指定頁碼抽出或拆成單頁
-- [PDF 旋轉與刪頁](https://tools.luka-life.com/t/pdf-organize.html)：轉正掃描檔、刪掉不要的頁
-- [圖片轉 PDF](https://tools.luka-life.com/t/img-to-pdf.html)：多張照片合成一份 PDF
+- [PDF 合併](https://tools.luka-life.com/t/pdf-merge)：多個 PDF 串成一份，可調順序
+- [PDF 分割取頁](https://tools.luka-life.com/t/pdf-split)：指定頁碼抽出或拆成單頁
+- [PDF 旋轉與刪頁](https://tools.luka-life.com/t/pdf-organize)：轉正掃描檔、刪掉不要的頁
+- [圖片轉 PDF](https://tools.luka-life.com/t/img-to-pdf)：多張照片合成一份 PDF
 
 ### 社群小幫手
 
 IG、FB、Threads 貼文排版
 
-- [IG 空白字元產生器](https://tools.luka-life.com/t/ig-space.html)：讓 IG 貼文與簡介正常換行
-- [社群貼文字數計算](https://tools.luka-life.com/t/social-count.html)：各平台字數上限即時檢查
-- [Hashtag 整理器](https://tools.luka-life.com/t/hashtag.html)：自動加井號、去重複、排版
-- [社群圖片尺寸裁切](https://tools.luka-life.com/t/social-crop.html)：內建 IG、FB、YT 各版位尺寸
-- [YouTube 縮圖擷取](https://tools.luka-life.com/t/yt-thumbnail.html)：貼網址取得各尺寸封面圖
-- [分隔線裝飾產生器](https://tools.luka-life.com/t/divider.html)：貼文用的線條與裝飾框
-- [九宮格切圖](https://tools.luka-life.com/t/grid-split.html)：大圖切成 IG 版面，附上傳順序
-- [圖片轉正方形](https://tools.luka-life.com/t/square-fit.html)：不裁切放進正方形，可模糊補邊
-- [圖片浮水印](https://tools.luka-life.com/t/watermark.html)：批次加上帳號名稱或標誌
-- [多圖拼貼](https://tools.luka-life.com/t/collage.html)：2 到 6 張合成一張，可調邊框
-- [封面安全區預覽](https://tools.luka-life.com/t/cover-safe.html)：FB、YT 封面被裁掉哪裡先看清楚
+- [IG 空白字元產生器](https://tools.luka-life.com/t/ig-space)：讓 IG 貼文與簡介正常換行
+- [社群貼文字數計算](https://tools.luka-life.com/t/social-count)：各平台字數上限即時檢查
+- [Hashtag 整理器](https://tools.luka-life.com/t/hashtag)：自動加井號、去重複、排版
+- [社群圖片尺寸裁切](https://tools.luka-life.com/t/social-crop)：內建 IG、FB、YT 各版位尺寸
+- [YouTube 縮圖擷取](https://tools.luka-life.com/t/yt-thumbnail)：貼網址取得各尺寸封面圖
+- [分隔線裝飾產生器](https://tools.luka-life.com/t/divider)：貼文用的線條與裝飾框
+- [九宮格切圖](https://tools.luka-life.com/t/grid-split)：大圖切成 IG 版面，附上傳順序
+- [圖片轉正方形](https://tools.luka-life.com/t/square-fit)：不裁切放進正方形，可模糊補邊
+- [圖片浮水印](https://tools.luka-life.com/t/watermark)：批次加上帳號名稱或標誌
+- [多圖拼貼](https://tools.luka-life.com/t/collage)：2 到 6 張合成一張，可調邊框
+- [封面安全區預覽](https://tools.luka-life.com/t/cover-safe)：FB、YT 封面被裁掉哪裡先看清楚
 
 ### 旅遊出行
 
 匯率、行李、時差，出國前先查
 
-- [世界時區換算](https://tools.luka-life.com/t/timezone.html)：一百多個城市，時差一次看
-- [匯率換算](https://tools.luka-life.com/t/exchange.html)：即時參考匯率，可估算銀行價差
-- [航班時間轉機計算](https://tools.luka-life.com/t/flight.html)：跨時區飛行時數與轉機空檔
-- [行李打包清單](https://tools.luka-life.com/t/packing.html)：依天數行程自動算件數
-- [旅遊天氣穿搭建議](https://tools.luka-life.com/t/weather.html)：七天預報換成該穿什麼
-- [出國退稅計算器](https://tools.luka-life.com/t/tax-refund.html)：估算扣手續費後實拿多少
-- [行李重量尺寸檢查](https://tools.luka-life.com/t/luggage.html)：算線性尺寸，比對手提託運上限
-- [各國插頭電壓查詢](https://tools.luka-life.com/t/plug.html)：附插頭圖，判斷要帶轉接頭還是變壓器
-- [護照效期檢查](https://tools.luka-life.com/t/passport.html)：六個月規定一秒判斷能不能出國
+- [世界時區換算](https://tools.luka-life.com/t/timezone)：一百多個城市，時差一次看
+- [匯率換算](https://tools.luka-life.com/t/exchange)：即時參考匯率，可估算銀行價差
+- [航班時間轉機計算](https://tools.luka-life.com/t/flight)：跨時區飛行時數與轉機空檔
+- [行李打包清單](https://tools.luka-life.com/t/packing)：依天數行程自動算件數
+- [旅遊天氣穿搭建議](https://tools.luka-life.com/t/weather)：七天預報換成該穿什麼
+- [出國退稅計算器](https://tools.luka-life.com/t/tax-refund)：估算扣手續費後實拿多少
+- [行李重量尺寸檢查](https://tools.luka-life.com/t/luggage)：算線性尺寸，比對手提託運上限
+- [各國插頭電壓查詢](https://tools.luka-life.com/t/plug)：附插頭圖，判斷要帶轉接頭還是變壓器
+- [護照效期檢查](https://tools.luka-life.com/t/passport)：六個月規定一秒判斷能不能出國
 
 ### 台灣生活
 
 房貸、薪資、勞基法、發票對獎
 
-- [房貸試算](https://tools.luka-life.com/t/mortgage.html)：本息本金攤還、寬限期、提前還款
-- [薪資實領計算](https://tools.luka-life.com/t/salary.html)：勞健保、勞退扣完實領多少
-- [綜合所得稅試算](https://tools.luka-life.com/t/income-tax.html)：免稅額扣除額算應繳稅額
-- [油錢與里程計算](https://tools.luka-life.com/t/fuel.html)：算油耗、單趟油錢與每人分攤
-- [統一發票對獎](https://tools.luka-life.com/t/invoice.html)：輸入號碼比對本期中獎號碼
-- [特休天數計算](https://tools.luka-life.com/t/annual-leave.html)：依到職日算年資與應有特休
-- [加班費計算](https://tools.luka-life.com/t/overtime.html)：平日、休息日、國定假日費率
-- [資遣費計算](https://tools.luka-life.com/t/severance.html)：新舊制年資分開算應領金額
-- [電費計算](https://tools.luka-life.com/t/electricity.html)：台電累進電價，夏月非夏月分開算
-- [股票手續費計算](https://tools.luka-life.com/t/stock-fee.html)：手續費、證交稅與損益兩平價
-- [統一編號驗證](https://tools.luka-life.com/t/tax-id.html)：檢查公司統編格式是否正確
-- [牌照稅燃料費試算](https://tools.luka-life.com/t/car-tax.html)：按排氣量算車稅，附級距懸崖提醒
-- [二代健保補充保費](https://tools.luka-life.com/t/nhi-supplement.html)：股利租金兼職獎金要扣多少
+- [房貸試算](https://tools.luka-life.com/t/mortgage)：本息本金攤還、寬限期、提前還款
+- [薪資實領計算](https://tools.luka-life.com/t/salary)：勞健保、勞退扣完實領多少
+- [綜合所得稅試算](https://tools.luka-life.com/t/income-tax)：免稅額扣除額算應繳稅額
+- [油錢與里程計算](https://tools.luka-life.com/t/fuel)：算油耗、單趟油錢與每人分攤
+- [統一發票對獎](https://tools.luka-life.com/t/invoice)：輸入號碼比對本期中獎號碼
+- [特休天數計算](https://tools.luka-life.com/t/annual-leave)：依到職日算年資與應有特休
+- [加班費計算](https://tools.luka-life.com/t/overtime)：平日、休息日、國定假日費率
+- [資遣費計算](https://tools.luka-life.com/t/severance)：新舊制年資分開算應領金額
+- [電費計算](https://tools.luka-life.com/t/electricity)：台電累進電價，夏月非夏月分開算
+- [股票手續費計算](https://tools.luka-life.com/t/stock-fee)：手續費、證交稅與損益兩平價
+- [統一編號驗證](https://tools.luka-life.com/t/tax-id)：檢查公司統編格式是否正確
+- [牌照稅燃料費試算](https://tools.luka-life.com/t/car-tax)：按排氣量算車稅，附級距懸崖提醒
+- [二代健保補充保費](https://tools.luka-life.com/t/nhi-supplement)：股利租金兼職獎金要扣多少
 
 ### 裝置檢測
 
 鍵盤、麥克風、螢幕快速測試
 
-- [鍵盤按鍵測試](https://tools.luka-life.com/t/keyboard-test.html)：檢查有沒有卡鍵或失靈
-- [麥克風與鏡頭測試](https://tools.luka-life.com/t/av-test.html)：開會前先確認收音與畫面
-- [螢幕壞點檢測](https://tools.luka-life.com/t/screen-test.html)：純色全螢幕找亮點與暗點
-- [打字速度測試](https://tools.luka-life.com/t/typing.html)：測每分鐘字數與正確率
+- [鍵盤按鍵測試](https://tools.luka-life.com/t/keyboard-test)：檢查有沒有卡鍵或失靈
+- [麥克風與鏡頭測試](https://tools.luka-life.com/t/av-test)：開會前先確認收音與畫面
+- [螢幕壞點檢測](https://tools.luka-life.com/t/screen-test)：純色全螢幕找亮點與暗點
+- [打字速度測試](https://tools.luka-life.com/t/typing)：測每分鐘字數與正確率
 
 ---
 

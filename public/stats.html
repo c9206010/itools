@@ -64,7 +64,7 @@
 </main>
 
 <script src="assets/js/catalog.js?v=d1c0e87c"></script>
-<script src="assets/js/layout.js?v=c2932820"></script>
+<script src="assets/js/layout.js?v=06795e71"></script>
 <script>
 (function () {
   'use strict';
@@ -118,7 +118,7 @@
               <tr class="${r.views ? '' : 'zero'}">
                 <td class="num">${r.views ? i + 1 : '—'}</td>
                 <td>
-                  <a href="t/${r.t.slug}.html">${r.t.icon} ${esc(r.t.name)}</a>
+                  <a href="t/${r.t.slug}">${r.t.icon} ${esc(r.t.name)}</a>
                   ${r.views ? `<span class="bar" style="width:${
                     Math.max(2, r.views / max * 100).toFixed(1)}%"></span>` : ''}
                 </td>

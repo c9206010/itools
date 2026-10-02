@@ -126,7 +126,7 @@ function staticHeader(SITE, CATEGORIES, root) {
 function staticFooter(SITE, CATEGORIES, TOOLS, root) {
   const cols = CATEGORIES.map(c => {
     const items = TOOLS.filter(t => t.cat === c.id).slice(0, 6)
-      .map(t => `<li><a href="${root}t/${t.slug}.html">${attrEsc(t.name)}</a></li>`).join('');
+      .map(t => `<li><a href="${root}t/${t.slug}">${attrEsc(t.name)}</a></li>`).join('');
     return `<div><h4>${c.icon} ${attrEsc(c.name)}</h4><ul>${items}</ul></div>`;
   }).join('');
   return `<div ${FOOT_MARK}>
@@ -136,7 +136,7 @@ function staticFooter(SITE, CATEGORIES, TOOLS, root) {
     <div class="site-footer__base">
       <span>© ${new Date().getFullYear()} ${attrEsc(SITE.name)}．${attrEsc(SITE.tagline)}</span>
       <span>所有運算都在你的瀏覽器完成，輸入的內容不會上傳</span>
-      <span><a href="${root}privacy.html">隱私權政策</a></span>
+      <span><a href="${root}privacy">隱私權政策</a></span>
     </div>
   </div>
 </footer></div>`;
@@ -145,7 +145,7 @@ function staticFooter(SITE, CATEGORIES, TOOLS, root) {
 /** 一張工具卡片。跟 index.html 的 cardHTML 與 layout.js 的相關工具卡一致。
  *  收藏星星是互動元素，靜態版不放，JS 接手時會補上。 */
 function card(t, root) {
-  return `<a class="card" href="${root}t/${t.slug}.html">` +
+  return `<a class="card" href="${root}t/${t.slug}">` +
     `<span class="card__top">` +
     `<span class="card__icon" aria-hidden="true">${t.icon}</span>` +
     `<span class="card__title">${attrEsc(t.name)}</span>` +
@@ -378,7 +378,7 @@ const sitemapEntries = [];
           position: i + 1,
           name: t.name,
           description: t.desc,
-          url: `${ORIGIN}/t/${t.slug}.html`
+          url: `${ORIGIN}/t/${t.slug}`
         }))
       }
     })
@@ -405,7 +405,7 @@ for (const tool of TOOLS) {
   const html = readFileSync(file, 'utf8');
   const title = extractTag(html, 'title');
   const desc = extractMeta(html, 'description') || tool.desc;
-  const url = `${ORIGIN}/t/${tool.slug}.html`;
+  const url = `${ORIGIN}/t/${tool.slug}`;
   const cat = CATEGORIES.find(c => c.id === tool.cat);
   const faq = extractFaq(html);
 
@@ -513,7 +513,7 @@ for (const tool of TOOLS) {
     const html = readFileSync(file, 'utf8');
     const title = extractTag(html, 'title');
     const desc = extractMeta(html, 'description');
-    const url = `${ORIGIN}/privacy.html`;
+    const url = `${ORIGIN}/privacy`;
 
     const block = [
       `<link rel="canonical" href="${attrEsc(url)}">`,
@@ -577,7 +577,7 @@ writeFileSync(join(ROOT, 'robots.txt'), robots, 'utf8');
     const list = TOOLS.filter(t => t.cat === c.id);
     if (!list.length) return '';
     return `### ${c.name}\n\n${c.desc}\n\n` +
-      list.map(t => `- [${t.name}](${ORIGIN}/t/${t.slug}.html)：${t.desc}`).join('\n');
+      list.map(t => `- [${t.name}](${ORIGIN}/t/${t.slug})：${t.desc}`).join('\n');
   }).filter(Boolean).join('\n\n');
 
   const llms = `# ${SITE.name}

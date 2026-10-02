@@ -350,6 +350,27 @@ GA4 的資源是「順手工具箱」，評估 ID `G-P6F2324FNV`，掛在既有�
   DevTools → 網路 → 勾選 Keep log → 等問題出現 → 在失敗那筆上
   右鍵 Copy as cURL。截圖會漏行，純文字不會。
 
+- **Cloudflare Pages 會把網址裡的 `.html` 拿掉，站內網址一律不要帶副檔名。**
+
+  實體檔案是 `public/t/wheel.html`，但 Pages 是用 `/t/wheel` 在服務它：
+
+  ```
+  /t/wheel.html  →  308 Permanent Redirect  →  /t/wheel  →  200
+  ```
+
+  2026-10-02 之前全站都寫 `.html`——canonical、sitemap 的 88 筆、
+  `llms.txt`、每一條內部連結。等於**給 Google 的每個網址都會轉址**，
+  而且 `/t/wheel` 這一頁的 canonical 指向 `/t/wheel.html`，那個網址
+  又轉回 `/t/wheel`，是自我矛盾的訊號。Google 遇到這種情況常見的
+  處理方式就是先不收，在索引報表上會顯示「網頁會自動重新導向」
+  或「替代網頁」。
+
+  現在全部改成不帶副檔名。新增工具或改動 `build-seo.mjs` 時要維持：
+  產生**網址**用 `/t/${slug}`，讀取**檔案**才用 `t/${slug}.html`。
+
+  測試腳本的 Playwright route 攔截也要比照：找不到檔案時補上 `.html`
+  再試一次，否則本機測試會全部 404。
+
 - **臺灣銀行牌告匯率抓不到。** `rate.bot.com.tw` 有機器人驗證，
   網頁跟 CSV 端點都會回一頁 proof-of-work 挑戰。所以改用 `open.er-api.com`
   的國際參考價，頁面上有標示這不是銀行牌告價。

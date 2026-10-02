@@ -81,7 +81,7 @@
   function buildFooter() {
     const cols = CATEGORIES.map(c => {
       const items = byCat(c.id).slice(0, 6).map(t =>
-        `<li><a href="${ROOT}t/${t.slug}.html">${esc(t.name)}</a></li>`
+        `<li><a href="${ROOT}t/${t.slug}">${esc(t.name)}</a></li>`
       ).join('');
       return `<div><h4>${c.icon} ${esc(c.name)}</h4><ul>${items}</ul></div>`;
     }).join('');
@@ -93,7 +93,7 @@
     <div class="site-footer__base">
       <span>© ${new Date().getFullYear()} ${esc(SITE.name)}．${esc(SITE.tagline)}</span>
       <span>所有運算都在你的瀏覽器完成，輸入的內容不會上傳</span>
-      <span><a href="${ROOT}privacy.html">隱私權政策</a></span>
+      <span><a href="${ROOT}privacy">隱私權政策</a></span>
     </div>
   </div>
 </footer>`;
@@ -122,7 +122,7 @@
         box.innerHTML = '<div class="empty">找不到符合的工具，換個關鍵字試試</div>';
       } else {
         box.innerHTML = list.map(t =>
-          `<a href="${ROOT}t/${t.slug}.html" role="option">${t.icon} ${esc(t.name)}
+          `<a href="${ROOT}t/${t.slug}" role="option">${t.icon} ${esc(t.name)}
              <span class="muted">${esc(t.desc)}</span></a>`
         ).join('');
       }
@@ -193,7 +193,7 @@
       pool = pool.concat(TOOLS.filter(t => t.cat !== me.cat && t.slug !== CURRENT).slice(0, 4 - pool.length));
     }
     const cards = pool.slice(0, 4).map(t => `
-      <a class="card" href="${ROOT}t/${t.slug}.html">
+      <a class="card" href="${ROOT}t/${t.slug}">
         <span class="card__top"><span class="card__icon">${t.icon}</span>
         <span class="card__title">${esc(t.name)}</span>
         ${favButton(t.slug, 'sm')}</span>
