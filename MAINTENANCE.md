@@ -262,6 +262,15 @@ GA4 的資源是「順手工具箱」，評估 ID `G-P6F2324FNV`，掛在既有�
   要確認部署狀態則看 Cloudflare Pages 後台的 Deployments。
   已經踩到的話，去 Cloudflare 後台清除該網址的快取。
 
+- **不要用自動化請求狂打線上站。** 在本機跑的 curl、Playwright 測試都是從
+  這台電腦的 IP 出去的，對 `tools.luka-life.com` 發大量請求等於用自己家的 IP
+  打自己的網站。實際發生過：輪詢部署狀態加上對 `/api/hit` 連續 POST
+  （而且每次換一個偽造的 User-Agent），觸發 Cloudflare 的機器人防護，
+  **整站回 403，包含首頁，自己也進不去**，等速率限制時間窗過了才恢復。
+
+  測試一律打本機檔案（用 Playwright 的 route 把網域導到 `public/`），
+  確認部署看 Pages 後台的 Deployments，線上驗證壓到一兩次請求就好。
+
 - **臺灣銀行牌告匯率抓不到。** `rate.bot.com.tw` 有機器人驗證，
   網頁跟 CSV 端點都會回一頁 proof-of-work 挑戰。所以改用 `open.er-api.com`
   的國際參考價，頁面上有標示這不是銀行牌告價。
