@@ -5,15 +5,29 @@
 # 所以一旦被邊緣節點長時間快取，更新後訪客會拿到舊版，
 # 出現「新工具上線了但首頁看不到」的狀況。
 #
-# 解法是讓所有檔案都必須回源驗證。檔案都很小（最大約 20KB），
-# 而且內容沒變時會回 304 不傳輸內容，效能影響很小。
+# 解法分兩層：
+#   HTML 每次回源驗證（內容沒變會回 304，不傳輸內容，成本很低）。
+#   共用的 JS／CSS 則由 build-seo.mjs 的 versionAssets() 在網址後面
+#   加上 ?v=<內容雜湊>，檔案一改網址就跟著變，舊快取自然命中不到。
+#   既然網址本身就是版本，這些檔案就不需要每次回源問「變了沒」。
 
 /*
   Cache-Control: public, max-age=0, must-revalidate
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
 
-# 資料檔每期會由 Actions 更新，同樣不能快取住
+# 全部都帶 ?v= 內容雜湊（清單在 build-seo.mjs 的 SHARED_ASSETS），
+# 所以可以快取一年。zh-dict.js 有 362KB，這條省下的流量最明顯。
+#
+# 新增共用檔案時務必同步加進 SHARED_ASSETS——漏掉的話那個檔案
+# 會被快取一年而且更新不了。
+/assets/js/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/css/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# 資料檔每期會由 Actions 更新，網址不變，所以不能快取住
 /assets/data/*
   Cache-Control: public, max-age=0, must-revalidate
 

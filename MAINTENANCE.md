@@ -264,12 +264,28 @@ GA4 的資源是「順手工具箱」，評估 ID `G-P6F2324FNV`，掛在既有�
 
 - **不要用自動化請求狂打線上站。** 在本機跑的 curl、Playwright 測試都是從
   這台電腦的 IP 出去的，對 `tools.luka-life.com` 發大量請求等於用自己家的 IP
-  打自己的網站。實際發生過：輪詢部署狀態加上對 `/api/hit` 連續 POST
-  （而且每次換一個偽造的 User-Agent），觸發 Cloudflare 的機器人防護，
-  **整站回 403，包含首頁，自己也進不去**，等速率限制時間窗過了才恢復。
+  打自己的網站。實際做過：輪詢部署狀態、對 `/api/hit` 連續 POST
+  （而且每次換一個偽造的 User-Agent）——同 IP 重複 POST 加上 UA 不斷變化，
+  是標準的機器人特徵。那些 POST 確實汙染了統計數據。
 
   測試一律打本機檔案（用 Playwright 的 route 把網域導到 `public/`），
   確認部署看 Pages 後台的 Deployments，線上驗證壓到一兩次請求就好。
+
+- **Cloudflare 的機器人設定（安全性 → Bots）。** 正確狀態：
+
+  | 項目 | 應該設成 | 原因 |
+  |---|---|---|
+  | Bot Fight 模式 | **關** | 它種 `cf_clearance` cookie、注入 `/cdn-cgi/challenge-platform` 腳本。這兩樣被瀏覽器擴充功能擋掉時，一般視窗會間歇性回 403（無痕正常、同時間 curl 回 200）。靜態站沒有登入沒有表單，計數器自己有機器人過濾，代價遠大於價值 |
+  | AI 機器人政策 → 搜尋／代理／訓練 | **全部「允許」** | 2025-07-01 之後開的 zone 預設會擋 AI 爬蟲，而且擋在讀 robots.txt 之前。擋掉的話 `llms.txt` 跟整個 GEO 的工作都到不了 GPTBot / ClaudeBot / PerplexityBot |
+  | AI 迷宮 | **關** | 餵 AI 生成的假內容給爬蟲，對想被 AI 引用的站是反效果 |
+  | Bot Preference Sync | **關** | 會自動在 `robots.txt` 前面插入 Cloudflare 的設定，跟我們自己維護的 `robots.txt` 打架 |
+  | Cloudflare 受控規則集 | **開** | 這是擋真正攻擊的 WAF，跟機器人防護是兩回事 |
+
+  2026-10-02 曾經誤判整站 403 是自己打太兇造成的。查 Security Events
+  用 IP 查無事件、用「動作＝封鎖＋台灣」也查無事件——**Cloudflare 沒擋過**，
+  問題在瀏覽器端。下次遇到 403 先看那一頁是 Cloudflare 的錯誤頁
+  （有 Error 1020 跟 Ray ID）還是 Chrome 自己的（什麼都沒有），
+  是後者就不要往 Cloudflare 的封鎖紀錄找。
 
 - **臺灣銀行牌告匯率抓不到。** `rate.bot.com.tw` 有機器人驗證，
   網頁跟 CSV 端點都會回一頁 proof-of-work 挑戰。所以改用 `open.er-api.com`
@@ -283,4 +299,4 @@ GA4 的資源是「順手工具箱」，評估 ID `G-P6F2324FNV`，掛在既有�
 
 ---
 
-最後更新：2026-09-24（新增八個工具、繁簡轉換字典）
+最後更新：2026-10-02（記錄 Cloudflare 機器人設定的正確狀態）
