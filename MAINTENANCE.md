@@ -319,6 +319,37 @@ GA4 的資源是「順手工具箱」，評估 ID `G-P6F2324FNV`，掛在既有�
   （Argo Smart Routing 要付費），目前無解，但要知道有這回事——
   測速結果偏慢時，先想到這個，不要去怪自己的程式。
 
+- **間歇性 403 的真正原因：DevTools 的裝置模擬會改掉 User-Agent，
+  而 `cf_clearance` 綁定在「IP ＋ User-Agent」上。**
+
+  2026-10-02 查了很久的那個 403，抓到失敗請求的標頭後才看出來：
+
+  ```
+  sec-ch-ua-mobile: ?1
+  sec-ch-ua-platform: "Android"
+  user-agent: Mozilla/5.0 (Linux; Android 16; Pixel 10) ... Mobile Safari/537.36
+  ```
+
+  Windows 桌機的 Chrome 對外宣稱自己是 Pixel 10。底層的 TLS 與
+  HTTP/2 指紋仍然是 Windows，宣稱的身分跟實際指紋對不上——這是
+  Cloudflare 判定機器人的核心規則之一。再加上手上那張 `cf_clearance`
+  是用桌機 UA 換來的，UA 一變這張票就失效，於是回 403。
+
+  **處理方式**：`Ctrl + Shift + M` 關掉裝置模擬，刪掉 `cf_clearance`
+  這一筆 cookie，重新載入。
+
+  **要注意的副作用**：只要開著裝置模擬逛自己的站就會踩到。做手機版
+  測試時遇到 403，先想到這個，不要又去翻 Cloudflare 的設定。
+
+  **排查順序的教訓**：這題前後猜錯四次（自動化請求觸發防護、
+  Bot Fight Mode、VPN 擴充功能、Cf-Ray 的機房代碼），全部是在
+  「猜原因」而不是「讀證據」。真正解決它的是一個動作——在失敗的當下
+  按右鍵 Copy as cURL，把完整的請求標頭讀一遍。
+
+  **下次遇到類似的間歇性問題，第一件事就是這個**：
+  DevTools → 網路 → 勾選 Keep log → 等問題出現 → 在失敗那筆上
+  右鍵 Copy as cURL。截圖會漏行，純文字不會。
+
 - **臺灣銀行牌告匯率抓不到。** `rate.bot.com.tw` 有機器人驗證，
   網頁跟 CSV 端點都會回一頁 proof-of-work 挑戰。所以改用 `open.er-api.com`
   的國際參考價，頁面上有標示這不是銀行牌告價。
