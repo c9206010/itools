@@ -59,7 +59,7 @@
   "browserRequirements": "需要啟用 JavaScript",
   "inLanguage": "zh-Hant",
   "isAccessibleForFree": true,
-  "dateModified": "2026-09-30",
+  "dateModified": "2026-10-02",
   "offers": {
     "@type": "Offer",
     "price": "0",
@@ -368,9 +368,9 @@
       ctx.stroke();
 
       /* 文字沿半徑排，過長截斷 */
+      const mid = start + slice / 2;
       ctx.save();
-      ctx.rotate(start + slice / 2);
-      ctx.textAlign = 'right';
+      ctx.rotate(mid);
       ctx.textBaseline = 'middle';
       ctx.fillStyle = '#fff';
       const fs = Math.max(15, Math.min(34, 400 / n + 14));
@@ -380,7 +380,20 @@
       if (label.length > maxChars) label = label.slice(0, maxChars - 1) + '…';
       ctx.shadowColor = 'rgba(0,0,0,.35)';
       ctx.shadowBlur = 4;
-      ctx.fillText(label, r - 30, 0);
+
+      /* 落在轉盤左半邊的文字會上下顛倒，所以再轉 180 度並改成從內往外對齊。
+         判斷要用「螢幕上的實際角度」——也就是把轉盤本身的 angle 也算進去，
+         只看 mid 的話轉盤一轉起來就又歪了。 */
+      const TWO_PI = Math.PI * 2;
+      const screenAngle = ((angle + mid) % TWO_PI + TWO_PI) % TWO_PI;
+      if (screenAngle > Math.PI / 2 && screenAngle < Math.PI * 1.5) {
+        ctx.rotate(Math.PI);
+        ctx.textAlign = 'left';
+        ctx.fillText(label, -(r - 30), 0);
+      } else {
+        ctx.textAlign = 'right';
+        ctx.fillText(label, r - 30, 0);
+      }
       ctx.restore();
     }
 
@@ -471,6 +484,10 @@
   readOptions();
 })();
 </script>
+
+
+
+
 
 
 
