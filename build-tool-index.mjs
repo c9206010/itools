@@ -132,7 +132,7 @@ if (missing.length) {
   process.exit(1);
 }
 
-const link = c => `[${byId[c.slug].name}](${SITE_URL}/t/${c.slug}.html)`;
+const link = c => `[${byId[c.slug].name}](${SITE_URL}/t/${c.slug})`;
 const of = type => CONTEXTS.filter(c => c.type === type);
 
 const travelRows = of('travel').map(c =>
@@ -181,7 +181,7 @@ ${threeCRows}
 單行 HTML，照旅咖的排版規則：
 
 \`\`\`html
-<p>前面自然的句子，<a href="${SITE_URL}/t/SLUG.html" target="_blank" rel="noopener">工具名稱</a>，後面接著講下去</p>
+<p>前面自然的句子，<a href="${SITE_URL}/t/SLUG" target="_blank" rel="noopener">工具名稱</a>，後面接著講下去</p>
 \`\`\`
 
 ## 尚未歸類的工具（${unclassified.length} 個）
