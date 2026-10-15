@@ -25,14 +25,41 @@ const src = readFileSync(join(ROOT, 'assets', 'js', 'catalog.js'), 'utf8');
 const TOOLS = new Function(src + '; return TOOLS;')();
 
 /* ==========================================================================
+   文章類型（每一類輸出一張表，對應寫文章時的類型技能）
+   rule:     這一類獨有的額外規則，會原樣印在該表上方
+   hasScope: 旅遊文才需要分國內／出國
+   ========================================================================== */
+const SECTIONS = [
+  { type: 'travel', title: '旅遊文章', hasScope: true,
+    rule: '**國內文不要放出國工具**，護照效期、插頭電壓放在台中親子遊記裡只會顯得荒謬。\n「適用」欄位就是在管這件事。' },
+
+  { type: '3c', title: '3C 開箱評測',
+    rule: '**檢測類工具放在「實測表現」那個 H2，不要放在規格表旁邊**。\n讀者看規格時還在比較要不要買，看實測時才是已經買了、想自己驗證。\n放錯位置會變成干擾購買決策。' },
+
+  { type: 'food', title: '餐廳食記與在地小吃',
+    rule: '**食記的讀者在想吃什麼，不是在想行李**。旅遊工具（護照、匯率、行李）一律不放進食記。\n這一類只有少數工具對得上，沒有就不放，不用湊數。' },
+
+  { type: 'cosmetics', title: '保養品與化妝品',
+    rule: '工具只當成生活上的輔助計算，**不要跟功效描述放在同一段**，以免被讀成功效宣稱。\n**業配合作文不放比價類工具**，讀者會拿工具去比業主產品的價格。' },
+
+  { type: 'supplement', title: '保健食品',
+    rule: '保健食品有廣告法規。**BMI、熱量這類工具只能放在談「飲食與生活習慣」的段落，\n不可以跟產品功效、改善、減重效果放在同一段**，也不要寫成「吃了之後再算一次看看」這種暗示療效的句子。\n**業配合作文不放比價類工具**。' },
+
+  { type: 'delivery', title: '宅配美食與伴手禮',
+    rule: '宅配與伴手禮的讀者在決定要不要買、買多少，這一類偏實用計算。\n**業配合作文不放比價類工具**（折扣比價計算機），其他的可以放。' }
+];
+
+/* ==========================================================================
    情境對照
-   type:  'travel' 旅遊文用、'3c' 開箱評測用。兩張表分開輸出。
-   scope: 旅遊文才有意義——'out' 只適合出國文、'in' 只適合國內文、'both' 皆可
+   type:  對應上面 SECTIONS 的 type
+   scope: 只有 travel 用——'out' 只適合出國文、'in' 只適合國內文、'both' 皆可
    when:  什麼時候放
    where: 放在文章的哪個位置
    line:  建議的帶入句（寫作時要依文章語氣改寫，不要原封不動貼）
+   同一個工具可以出現在不同類型（各寫一筆，句子依該類型的語氣寫）
    ========================================================================== */
 const CONTEXTS = [
+  /* ---------- 旅遊 ---------- */
   { slug: 'passport', type: 'travel', scope: 'out', when: '文章談到行前準備、第一次出國、辦簽證',
     where: '行前準備段落',
     line: '護照效期不足六個月會在報到櫃檯就被擋下來，出發前先確認一次比較保險' },
@@ -85,6 +112,18 @@ const CONTEXTS = [
     where: '拍照段落',
     line: '同一張照片發不同平台，尺寸不對會被裁掉重點' },
 
+  { slug: 'age', type: 'travel', scope: 'both', when: '親子出遊，文章談到兒童票、嬰幼兒免費、身高年齡限制',
+    where: '票價或費用段落',
+    line: '兒童票看的是入園當天幾歲，把日期設成出發那天算一次比較準' },
+
+  { slug: 'date-diff', type: 'travel', scope: 'out', when: '文章談到免簽停留天數、簽證有效期、訂房晚數',
+    where: '行前準備段落',
+    line: '免簽天數是從入境那天起算，算清楚再決定要待幾晚' },
+
+  { slug: 'unit', type: 'travel', scope: 'out', when: '文章出現英哩、華氏、磅等當地單位（例如美國自駕、氣溫、行李磅數）',
+    where: '第一次出現當地單位的地方',
+    line: '美國的路標跟氣溫都是英制，換算過才有感覺' },
+
   /* ---------- 3C 開箱評測 ---------- */
   { slug: 'screen-test', type: '3c', when: '螢幕、筆電、手機、平板、電視的開箱評測',
     where: '第三個 H2「實際使用體驗／實測表現」',
@@ -116,7 +155,63 @@ const CONTEXTS = [
 
   { slug: 'unit', type: '3c', when: '開箱文出現英吋、磅、盎司等進口規格',
     where: '規格表附近',
-    line: '國外規格常用英制，換算過來比較好想像' }
+    line: '國外規格常用英制，換算過來比較好想像' },
+
+  { slug: 'password', type: '3c', when: '軟體評測談到密碼管理、VPN、帳號安全、路由器設定',
+    where: '設定或安全性段落',
+    line: '密碼越長越安全但人腦記不住，隨機產生一組再交給密碼管理員記就好' },
+
+  /* ---------- 餐廳食記 ---------- */
+  { slug: 'split', type: 'food', when: '文章是多人聚餐、合菜、包廂，或提到服務費',
+    where: '價位或用餐人數那一段',
+    line: '多人聚餐加上一成服務費，最後怎麼分最容易算不清楚' },
+
+  { slug: 'discount', type: 'food', when: '店家有買一送一、第二杯半價、第二件折扣這類促銷',
+    where: '價位或優惠段落',
+    line: '第二杯半價聽起來划算，換算成折數再決定要不要湊一杯' },
+
+  /* ---------- 保養品與化妝品 ---------- */
+  { slug: 'date-diff', type: 'cosmetics', when: '文章談到開封後使用期限（開封後 6 個月、12 個月那種標示）',
+    where: '使用方式或保存段落',
+    line: '開封後的使用期限是從打開那天算，在盒子上記下日期，過期的時候才不會忘' },
+
+  { slug: 'unit', type: 'cosmetics', when: '文章是國外品牌，容量標示是盎司、液體盎司',
+    where: '規格或容量那一段',
+    line: '國外品牌常用盎司標示，換算成毫升比較好比較' },
+
+  { slug: 'discount', type: 'cosmetics', when: '非業配文，且文章談到組合價、不同容量、大小瓶怎麼買',
+    where: '購買建議段落',
+    line: '大小瓶價差看總價看不出來，換算成每毫升多少錢才比得準' },
+
+  /* ---------- 保健食品 ---------- */
+  { slug: 'bmi', type: 'supplement', when: '文章談到適用族群、體位、飲食與生活習慣',
+    where: '「適合哪些人」或生活習慣段落，不要靠近功效描述',
+    line: '不確定自己的體位落在哪裡，先算一次 BMI 當作參考' },
+
+  { slug: 'tdee', type: 'supplement', when: '文章談到飲食、熱量、運動、蛋白質補給',
+    where: '飲食或運動段落，不要靠近功效描述',
+    line: '一天大概消耗多少熱量，自己算過一次心裡比較有數' },
+
+  { slug: 'discount', type: 'supplement', when: '非業配文，且文章談到不同規格、瓶數、組合怎麼買',
+    where: '購買建議段落',
+    line: '不同規格的粒數不一樣，換算成每一份多少錢才比得準' },
+
+  { slug: 'date-diff', type: 'supplement', when: '文章談到保存期限、開封後建議食用期限',
+    where: '保存方式段落',
+    line: '開封日期寫在包裝上，往後推算一下什麼時候要吃完' },
+
+  /* ---------- 宅配美食與伴手禮 ---------- */
+  { slug: 'discount', type: 'delivery', when: '非業配文，且文章談到組合價、買二送一、不同規格比價',
+    where: '購買建議或價位段落。滿額折抵類促銷不要換算成折數，只用在買幾送幾、第二件折扣、不同規格比較',
+    line: '不同規格的重量不一樣，換算成每一百公克多少錢才比得準' },
+
+  { slug: 'date-diff', type: 'delivery', when: '文章談到保存期限、賞味期限、送禮要算日子（例如彌月、中秋）',
+    where: '保存方式或送禮建議段落',
+    line: '收到那天往後推算，賞味期限到哪天、要不要趕在送禮前訂，算過比較安心' },
+
+  { slug: 'split', type: 'delivery', when: '文章提到揪團、多人合購、湊免運門檻',
+    where: '購買建議段落',
+    line: '揪人一起買湊免運，最後怎麼分攤算一下比較不尷尬' }
 ];
 
 const byId = Object.fromEntries(TOOLS.map(t => [t.slug, t]));
@@ -124,6 +219,7 @@ const SCOPE_LABEL = { out: '出國', in: '國內', both: '國內外皆可' };
 
 const used = new Set(CONTEXTS.map(c => c.slug));
 const missing = CONTEXTS.filter(c => !byId[c.slug]);
+const unknownType = CONTEXTS.filter(c => !SECTIONS.some(s => s.type === c.type));
 const unclassified = TOOLS.filter(t => !used.has(t.slug));
 
 if (missing.length) {
@@ -131,22 +227,40 @@ if (missing.length) {
   missing.forEach(c => console.error('  ✕ ' + c.slug));
   process.exit(1);
 }
+if (unknownType.length) {
+  console.error('這些項目的 type 不在 SECTIONS 裡，請修正：');
+  unknownType.forEach(c => console.error(`  ✕ ${c.slug}（${c.type}）`));
+  process.exit(1);
+}
 
 const link = c => `[${byId[c.slug].name}](${SITE_URL}/t/${c.slug})`;
 const of = type => CONTEXTS.filter(c => c.type === type);
 
-const travelRows = of('travel').map(c =>
-  `| ${SCOPE_LABEL[c.scope]} | ${link(c)} | ${c.when} | ${c.where} | ${c.line} |`).join('\n');
+function renderSection(s) {
+  const rows = of(s.type);
+  const head = s.hasScope
+    ? '| 適用 | 工具 | 什麼時候放 | 放在哪 | 建議帶入句 |\n|---|---|---|---|---|'
+    : '| 工具 | 什麼時候放 | 放在哪 | 建議帶入句 |\n|---|---|---|---|';
+  const lines = rows.map(c => s.hasScope
+    ? `| ${SCOPE_LABEL[c.scope]} | ${link(c)} | ${c.when} | ${c.where} | ${c.line} |`
+    : `| ${link(c)} | ${c.when} | ${c.where} | ${c.line} |`);
+  return `## ${s.title}（${rows.length} 個）
 
-const threeCRows = of('3c').map(c =>
-  `| ${link(c)} | ${c.when} | ${c.where} | ${c.line} |`).join('\n');
+額外規則：${s.rule}
+
+${head}
+${lines.join('\n')}
+`;
+}
+
+const counts = SECTIONS.map(s => `${s.title.split('與')[0]} ${of(s.type).length}`).join('、');
 
 const body = `# 文章置入工具對照表
 
 > 由 \`build-tool-index.mjs\` 從 \`catalog.js\` 自動產生，**請勿手動編輯**。
 > 工具有增減時重跑 \`node build-tool-index.mjs\`。
 > 產生時間：${new Date(Date.now() + 8 * 3600 * 1000).toISOString().slice(0, 10)}（台北）
-> 目前站上共 ${TOOLS.length} 個工具，其中 ${CONTEXTS.length} 個適合置入文章（旅遊 ${of('travel').length}、3C ${of('3c').length}）。
+> 目前站上共 ${TOOLS.length} 個工具，其中 ${used.size} 個適合置入文章（共 ${CONTEXTS.length} 筆情境：${counts}）。
 
 ## 共通置入原則
 
@@ -156,26 +270,9 @@ const body = `# 文章置入工具對照表
 4. **不要放在文章開頭**。開頭是聯盟連結的位置，兩者搶同一個版位會互相稀釋。
 5. **同一個 H2 底下最多一個**，同一個工具一篇只出現一次。
 6. **建議句要改寫**，配合該篇文章的語氣，不要原封不動貼上。
+7. **找不到對得上的就不放**。沒有配額要達成，這張表寧可空著也不要湊數。
 
-## 旅遊文章（${of('travel').length} 個）
-
-額外規則：**國內文不要放出國工具**，護照效期、插頭電壓放在台中親子遊記裡只會顯得荒謬。
-「適用」欄位就是在管這件事。
-
-| 適用 | 工具 | 什麼時候放 | 放在哪 | 建議帶入句 |
-|---|---|---|---|---|
-${travelRows}
-
-## 3C 開箱評測（${of('3c').length} 個）
-
-額外規則：**檢測類工具放在「實測表現」那個 H2，不要放在規格表旁邊**。
-讀者看規格時還在比較要不要買，看實測時才是已經買了、想自己驗證。
-放錯位置會變成干擾購買決策。
-
-| 工具 | 什麼時候放 | 放在哪 | 建議帶入句 |
-|---|---|---|---|
-${threeCRows}
-
+${SECTIONS.map(renderSection).join('\n')}
 ## 連結寫法
 
 單行 HTML，照旅咖的排版規則：
@@ -184,10 +281,13 @@ ${threeCRows}
 <p>前面自然的句子，<a href="${SITE_URL}/t/SLUG" target="_blank" rel="noopener">工具名稱</a>，後面接著講下去</p>
 \`\`\`
 
+**網址結尾不可帶 \`.html\`**，帶了會被 Pages 用 308 轉址，Google Search Console 會回報「頁面會重新導向」。
+
 ## 尚未歸類的工具（${unclassified.length} 個）
 
-這些目前不在置入清單裡。多數是與文章主題無關的工具（開發編碼那類），不必處理；
-如果其中有適合放進文章的，到 \`build-tool-index.mjs\` 的 CONTEXTS 加一筆再重跑。
+這些目前不在置入清單裡。多數是與文章主題無關的工具（開發編碼、文字處理、PDF、
+薪資稅務那類），不必處理；如果其中有適合放進文章的，到 \`build-tool-index.mjs\` 的
+CONTEXTS 加一筆再重跑。
 
 ${unclassified.map(t => `- ${t.name}（${t.cat}／\`${t.slug}\`）`).join('\n')}
 `;
@@ -196,5 +296,5 @@ writeFileSync('tool-index.md', body, 'utf8');
 
 console.log(`已寫入 tool-index.md`);
 console.log(`  站上工具 ${TOOLS.length} 個`);
-console.log(`  已歸類可置入 ${CONTEXTS.length} 個`);
+console.log(`  已歸類可置入 ${used.size} 個（${CONTEXTS.length} 筆情境）`);
 console.log(`  尚未歸類 ${unclassified.length} 個`);

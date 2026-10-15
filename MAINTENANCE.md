@@ -102,8 +102,10 @@ git push
 3. 跑 `node build-seo.mjs`，然後 commit、push。
 
 4. **如果這個工具適合放進部落格文章**，到 `build-tool-index.mjs` 的
-   `CONTEXTS` 加一筆（寫清楚 type 是 travel 還是 3c、什麼時候放、建議帶入句），
-   再跑 `node build-tool-index.mjs`。
+   `CONTEXTS` 加一筆（type 可選 `travel`、`3c`、`food`、`cosmetics`、`supplement`、
+   `delivery`，寫清楚什麼時候放、建議帶入句），再跑 `node build-tool-index.mjs`。
+   同一個工具可以在不同 type 各寫一筆，帶入句依該類文章的語氣寫。
+   保養品與保健食品有廣告法規，每類的額外規則寫在 `SECTIONS` 裡，新增前先看一眼。
 
    產出的 `tool-index.md` 是寫文章時的技能
    （`travel-affiliate-optimizer` 第 9 個模組）會去讀的對照表。
