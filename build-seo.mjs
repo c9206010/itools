@@ -210,12 +210,17 @@ function prefillToolPage(html, tool, cat, TOOLS) {
 
 /** 把骨架塞進頁面。已經有的話先換掉，避免重複執行時越長越多。 */
 function injectSkeleton(html, header, footer) {
+  /* 頁首要精準結束在 </header></div>。以前是「非貪婪比對到下一個 </div>
+     且後面接 <main」，結果頁首與 <main> 中間的任何元素都會被一起吃掉
+     （螢幕壞點檢測的 #fsLayer 就是這樣在 9/29 被洗掉，整個工具壞了）。
+     頁尾同理吃掉前後空白，否則每跑一次 build 就多一行空白。 */
   let out = html
-    .replace(new RegExp(`<div ${NAV_MARK}>[\\s\\S]*?</div>\\s*(?=<main|<!--)`, ''), '')
-    .replace(new RegExp(`<div ${FOOT_MARK}>[\\s\\S]*?</footer></div>`, ''), '');
+    .replace(new RegExp(`<div ${NAV_MARK}>[\\s\\S]*?</header></div>`, ''), '')
+    .replace(new RegExp(`\\s*<div ${FOOT_MARK}>[\\s\\S]*?</footer></div>\\s*`, ''), '\n');
 
-  out = out.replace(/(<body[^>]*>)/, `$1\n${header}\n`);
-  out = out.replace(/([\s\S]*)<\/body>/, (m, before) => `${before}${footer}\n</body>`);
+  /* 連 <body> 後面的空白一起吃掉再插入，每次執行結果才會一模一樣 */
+  out = out.replace(/(<body[^>]*>)\s*/, `$1\n${header}\n\n`);
+  out = out.replace(/([\s\S]*)<\/body>/, (m, before) => `${before.replace(/\s+$/, '')}\n${footer}\n</body>`);
   return out;
 }
 
