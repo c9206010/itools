@@ -30,7 +30,9 @@ CREATE TABLE IF NOT EXISTS recent (
 CREATE INDEX IF NOT EXISTS idx_recent_ts ON recent(ts);
 
 -- 每個工具一列，用來在工具頁顯示「已經被使用幾次」。
--- slug 對應 catalog.js 的工具代號，寫入前會驗證格式，不會被塞進奇怪的值。
+-- slug 對應 catalog.js 的工具代號。寫入前會比對 functions/api/_slugs.js
+-- （build-seo.mjs 從 catalog.js 產生的真實代號清單），不在清單內的整筆丟掉，
+-- 所以不會被塞進假代號。新增工具後一定要跑 build-seo.mjs，否則新工具的次數不會被記錄。
 -- 只有累計次數，不存誰在什麼時候看了哪一頁。
 CREATE TABLE IF NOT EXISTS pages (
   slug  TEXT PRIMARY KEY,

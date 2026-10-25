@@ -11,10 +11,22 @@
 #   加上 ?v=<內容雜湊>，檔案一改網址就跟著變，舊快取自然命中不到。
 #   既然網址本身就是版本，這些檔案就不需要每次回源問「變了沒」。
 
+# 安全標頭（2026-10-25 稽核後加入）
+#   frame-ancestors / X-Frame-Options：不讓別人把這個站嵌進 iframe 做點擊劫持。
+#     這個站沒有任何地方被嵌入過，要嵌入的話再放寬成指定網域。
+#   base-uri / object-src / form-action：這個站沒有 <base>、<object>、<form>，
+#     先關掉，萬一哪天被注入也少一條路可走。
+#   Permissions-Policy：只有麥克風與鏡頭測試（av-test）需要相機與麥克風，
+#     其他裝置能力一律不給。全螢幕、剪貼簿維持預設（同源可用）。
+#   刻意沒有加 script-src：全站每頁都有行內 script，AdSense 與 GA 的網域又多，
+#     硬加會誤傷。要加之前先用 Report-Only 觀察一陣子。
 /*
   Cache-Control: public, max-age=0, must-revalidate
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Content-Security-Policy: frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self'
+  Permissions-Policy: camera=(self), microphone=(self), geolocation=(), payment=(), usb=(), serial=(), bluetooth=()
 
 # 全部都帶 ?v= 內容雜湊（清單在 build-seo.mjs 的 SHARED_ASSETS），
 # 所以可以快取一年。zh-dict.js 有 362KB，這條省下的流量最明顯。

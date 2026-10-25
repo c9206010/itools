@@ -615,6 +615,20 @@ ${byCat}
   console.log(`✓ llms.txt        已產生（${TOOLS.length} 個工具）`);
 }
 
+/* ---------- 給 /api 用的真實工具代號清單 ----------
+   /api/hit 與 /api/stats 只認這份清單裡的代號。以前只驗格式，
+   任何人都能塞假代號製造資料列、擠掉熱門排行（2026-10-25 稽核）。
+   底線開頭的檔案不會被 Pages Functions 當成路由。 */
+{
+  const slugs = TOOLS.map(t => t.slug).sort();
+  const body = `/* 由 build-seo.mjs 產生，請勿手動編輯。
+   內容是 catalog.js 裡所有工具的代號，/api/hit 與 /api/stats 用它擋掉假代號。 */
+export const SLUGS = new Set(${JSON.stringify(slugs, null, 2)});
+`;
+  writeFileSync(join(ROOT, '..', 'functions', 'api', '_slugs.js'), body, 'utf8');
+  console.log(`✓ _slugs.js       已產生（${slugs.length} 個工具代號，給 /api 驗證用）`);
+}
+
 console.log(`\n完成：處理 ${count} 個頁面，sitemap 收錄 ${sitemapEntries.length} 筆。`);
 if (isPlaceholder) {
   console.log('記得上線前用 --origin 重跑一次。');

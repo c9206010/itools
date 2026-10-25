@@ -12,9 +12,13 @@
    ========================================================================== */
 
 import { taipeiDay, dayBefore, json, ONLINE_WINDOW } from './_shared.js';
+import { SLUGS } from './_slugs.js';
 
 const EMPTY = { ok: false, online: 0, total: 0, today: 0, week: 0, month: 0 };
-const SLUG_RE = /^[a-z0-9][a-z0-9-]{0,39}$/;
+
+/* 排行先多撈一些再用真實代號濾掉：以前資料庫裡若有舊的假代號列，
+   直接 LIMIT n 會讓它們佔掉名額。 */
+const TOP_FETCH = 400;
 
 export async function onRequestGet({ request, env }) {
   if (!env.DB) return json(EMPTY);
@@ -29,8 +33,8 @@ export async function onRequestGet({ request, env }) {
     try {
       const res = await env.DB
         .prepare('SELECT slug, views FROM pages WHERE views > 0 ORDER BY views DESC, slug ASC LIMIT ?')
-        .bind(n).all();
-      const tools = res.results || [];
+        .bind(TOP_FETCH).all();
+      const tools = (res.results || []).filter(t => SLUGS.has(t.slug)).slice(0, n);
       const sum = tools.reduce((s, t) => s + t.views, 0);
       return json({ ok: true, tools, sum }, 120);
     } catch (err) {
@@ -43,7 +47,7 @@ export async function onRequestGet({ request, env }) {
      比每次把 87 個工具的數字全部送過去省得多。 */
   const slug = params.get('t');
   if (slug) {
-    if (!SLUG_RE.test(slug)) return json({ ok: false, views: 0 });
+    if (!SLUGS.has(slug)) return json({ ok: false, views: 0 });
     try {
       const row = await env.DB.prepare('SELECT views FROM pages WHERE slug = ?')
         .bind(slug).first();

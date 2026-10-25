@@ -16,12 +16,9 @@
    ========================================================================== */
 
 import { taipeiDay, visitorId, isBot, KEEP_WINDOW } from './_shared.js';
+import { SLUGS } from './_slugs.js';
 
 const CLEAN_CHANCE = 0.02;   // 每次請求有 2% 機率順手清一次過期足跡
-
-/* 工具代號的合法格式。前端傳什麼都要驗過再進資料庫，
-   否則被亂塞參數就會長出一堆垃圾列。 */
-const SLUG_RE = /^[a-z0-9][a-z0-9-]{0,39}$/;
 
 export async function onRequestPost({ request, env }) {
   const done = new Response(null, { status: 204 });
@@ -32,14 +29,18 @@ export async function onRequestPost({ request, env }) {
   /* 爬蟲不計入，否則首頁的數字會失真 */
   if (isBot(request)) return done;
 
+  /* ?t=<slug>，首頁不帶這個參數。
+     帶了但不是真實工具代號就整筆丟掉，連總數都不算：只驗格式的話，
+     任何人都能塞假代號長出資料列、擠掉熱門排行、灌高別人的次數。
+     清單是 build-seo.mjs 從 catalog.js 產生的（_slugs.js）。 */
+  const slug = new URL(request.url).searchParams.get('t');
+  if (slug && !SLUGS.has(slug)) return done;
+  const validSlug = slug || null;
+
   try {
     const now = Math.floor(Date.now() / 1000);
     const day = taipeiDay();
     const visitor = await visitorId(request);
-
-    /* ?t=<slug>，首頁不帶這個參數 */
-    const slug = new URL(request.url).searchParams.get('t');
-    const validSlug = slug && SLUG_RE.test(slug) ? slug : null;
 
     const writes = [
       env.DB.prepare(

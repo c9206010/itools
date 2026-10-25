@@ -201,6 +201,18 @@ Cloudflare Pages 會自動把它變成 API，不用改建置設定。
 
 **動到這裡記得同步改 `privacy.html` 的第五節**，那是對使用者的承諾。
 
+### 工具代號白名單（2026-10-25）
+
+`/api/hit` 與 `/api/stats` 只認 `functions/api/_slugs.js` 裡的代號，
+這份清單是 `build-seo.mjs` 從 `catalog.js` 自動產生的，**不要手動改**。
+以前只驗格式，任何人都能塞假代號長出資料列、擠掉熱門排行、灌高別人的次數。
+
+- 帶了不在清單內的 `?t=` 會整筆丟掉（回 204，連總數都不算）
+- **新增工具後一定要跑 `node build-seo.mjs`**（本來就是標準流程），
+  否則新工具的使用次數不會被記錄
+- 這只擋「假代號」。用真實代號狂打仍會消耗 D1 每天 10 萬筆的寫入額度
+  （每次 3 筆），影響只是統計數字停擺，網站與工具照常運作
+
 ---
 
 ## 測試
@@ -414,6 +426,12 @@ GA4 的資源是「順手工具箱」，評估 ID `G-P6F2324FNV`，掛在既有�
 
   **改完 build-seo.mjs 一定要連跑兩次比對雜湊**，第二次與第三次必須完全相同。
   也要在瀏覽器實際點一個依賴「頁面上固定元素」的工具（螢幕檢測、輪盤）。
+
+- **安全標頭在 `public/_headers`。** 有防嵌入框架（`frame-ancestors 'none'`、
+  `X-Frame-Options: DENY`）與權限政策（只有 `av-test` 要用相機、麥克風）。
+  **如果之後要把工具用 iframe 嵌進別的網站，要先把 `frame-ancestors` 放寬成指定網域**，
+  否則會一片空白。新增需要新裝置權限的工具（定位、藍牙之類）也要同步改 `Permissions-Policy`。
+  刻意沒有加 `script-src`：全站行內 script 加上 AdSense／GA 太多網域，硬加會誤傷。
 
 - **CDN 腳本要帶 SRI。** `pdf-lib`（四個 PDF／圖片工具）與 `qrcodejs` 從 cdnjs 載入，
   已加上 `integrity="sha512-…" crossorigin="anonymous"`。雜湊是下載後自己算、
